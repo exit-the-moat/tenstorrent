@@ -1,0 +1,14 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/librosa/core/intervals.py:8: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+{"id": "close_s1", "frames": 145, "word_match_ratio": 0.938, "rms_dbfs": -20.2, "clipped_samples": 0, "transcript": "So did we exit the mode? Not yet. But the climb is shorter than I thought."}
+{"id": "close_s2", "frames": 147, "word_match_ratio": 0.938, "rms_dbfs": -21.4, "clipped_samples": 0, "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"id": "close_s3", "frames": 133, "word_match_ratio": 0.938, "rms_dbfs": -21.5, "clipped_samples": 0, "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"id": "close_s4", "frames": 138, "word_match_ratio": 0.938, "rms_dbfs": -22.3, "clipped_samples": 0, "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"id": "close_s5", "frames": 130, "word_match_ratio": 0.938, "rms_dbfs": -21.6, "clipped_samples": 0, "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"id": "fix_s1", "frames": 291, "word_match_ratio": 1.0, "rms_dbfs": -21.9, "clipped_samples": 0, "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time."}
+{"id": "fix_s2", "frames": 276, "word_match_ratio": 1.0, "rms_dbfs": -21.5, "clipped_samples": 0, "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time."}
+{"id": "fix_s3", "frames": 290, "word_match_ratio": 1.0, "rms_dbfs": -21.0, "clipped_samples": 0, "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time."}
+{"id": "fix_s4", "frames": 279, "word_match_ratio": 1.0, "rms_dbfs": -21.0, "clipped_samples": 0, "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time."}
+{"id": "fix_s5", "frames": 281, "word_match_ratio": 1.0, "rms_dbfs": -21.0, "clipped_samples": 0, "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time."}
+{"dir": "/opt/ep0/port8/s_s8b4", "line": "close", "n": 5, "mean_match": 0.938, "frames": [145, 147, 133, 138, 130], "clipped": 0}
+{"dir": "/opt/ep0/port8/s_s8b4", "line": "fix", "n": 5, "mean_match": 1.0, "frames": [291, 276, 290, 279, 281], "clipped": 0}

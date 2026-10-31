@@ -1,0 +1,257 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+2026-10-31 09:28:34.853 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-31 09:28:34.853 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-31 09:28:34.853 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-31 09:28:34.853 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-31 09:28:34.857 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-31 09:28:34.857 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-31 09:28:34.872 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-31 09:28:34.872 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-31 09:28:34.872 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-31 09:28:34.872 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-31 09:28:34.872 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-31 09:28:34.902 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-31 09:28:34.915 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-31 09:28:34.915 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-31 09:28:34.915 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-31 09:28:34.915 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-31 09:28:34.916 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-31 09:28:34.916 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-31 09:28:34.916 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-31 09:28:34.916 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-31 09:28:34.916 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-31 09:28:36.320 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-31 09:28:36.320 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-31 09:28:36.320 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-31 09:28:36.320 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-31 09:28:36.320 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-31 09:28:38.276 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-31 09:28:38.281 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-31 09:28:38.281 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-31 09:28:38.281 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-31 09:28:40.161 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-31 09:28:40.380 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-31 09:28:40.381 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-31 09:28:40.381 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-31 09:28:40.381 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-31 09:28:40.381 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-31 09:28:40.381 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+[09:28:52] fused GDN decode on 30 layers
+[09:28:52] fused router top-k on 40 layers
+[09:28:55] fused attention pre-SDPA on 10 backbone layers
+[09:28:55] fused MoE combine on 40 layers
+[09:28:55] paged backbone resident: DRAM 27.03 GB, built in 15s
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[09:29:10] card codec ready in 8s
+[09:29:10] prefix cache: 677 shared prompt rows of [684, 684, 713, 720, 719, 704, 716, 717, 719, 717], split at 640
+2026-10-31 09:29:11.652 | INFO     | models.demos.blackhole.qwen36.tt.gdn.fused_chunk:chunk_gated_delta_rule_fused_adapter:107 - [GDN] fused chunk_gated_delta_rule active: program_config=None (the op picks fused/phased by its cost model), chunk_size=32, flat_qkv=True, input q/k/v dtype=DataType.BFLOAT16/DataType.BFLOAT16/DataType.BFLOAT16
+2026-10-31 09:29:16.267 | warning  |           Metal | Allocating device buffers is potentially unsafe due to the existence of an active trace. These buffers may be corrupted once a trace is executed if they are not released before then. Use the trace allocation tracker to verify. (allocator.cpp:140)
+2026-10-31 09:29:17.316 | critical |          Always | TT_FATAL: Out of Memory: Not enough space to allocate 671219712 B DRAM buffer across 8 banks, where each bank needs to store 83902464 B, but bank size is 4238786944 B (allocated: 4072184832 B, free: 166602112 B, largest free block: 83886080 B) (assert.hpp:104)
+Traceback (most recent call last):
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/cbatch.py", line 441, in <module>
+    main()
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/cbatch.py", line 409, in main
+    s.set_voice(prompts[ids[0]])
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/generate_fast.py", line 119, in set_voice
+    _, _, _, xn = self.bb.prefill(E, keep_device=True)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/backbone_paged.py", line 293, in prefill
+    y = layer.forward(x, mode="prefill", chunk_size=layer.attention.long_prefill_chunk_size, valid_len=T)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/layer.py", line 303, in forward
+    ff_output = self.feed_forward.forward(ff_input, mode=mode)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/moe_fused_decode.py", line 244, in forward
+    return _orig(x, mode=mode)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/moe.py", line 68, in forward
+    out = self.experts(x4, dense_routing, mode=mode)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/experts.py", line 71, in __call__
+    return grouped_prefill_forward(
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/prefill_grouped.py", line 96, in grouped_prefill_forward
+    return _grouped(hidden_states, r, torch.arange(n), weights, config, mesh_device, force_M, force_A)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/prefill_grouped.py", line 132, in _grouped
+    return _grouped_we(hidden_states, w, e, rows, weights, config, mesh_device, force_M, force_A)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/prefill_grouped.py", line 238, in _grouped_we
+    table = ttnn.to_layout(ttnn.reshape(table, (E * M + TILE, H)), ttnn.ROW_MAJOR_LAYOUT)
+  File "/opt/ep0/tt-metal/ttnn/ttnn/decorators.py", line 1195, in __call__
+    result = self.function(*function_args, **function_kwargs)
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/bank_manager.cpp:495: false
+info:
+Out of Memory: Not enough space to allocate 671219712 B DRAM buffer across 8 banks, where each bank needs to store 83902464 B, but bank size is 4238786944 B (allocated: 4072184832 B, free: 166602112 B, largest free block: 83886080 B)
+backtrace:
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../../build/lib/libtt_metal.so(+0xa9f741) [0x7f164a49f741]
+ --- tt::tt_metal::BankManager::allocate_buffer(unsigned long, unsigned long, bool, tt::tt_metal::CoreRangeSet const&, std::optional<unsigned int>, ttsl::StrongType<unsigned int, tt::tt_metal::AllocatorIDTag>, std::vector<std::pair<unsigned long, unsigned long>, std::allocator<std::pair<unsigned long, unsigned long> > > const&, std::optional<std::unordered_set<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>, std::allocator<unsigned int> > > const&)
+ --- tt::tt_metal::AllocatorImpl::allocate_buffer(tt::tt_metal::Buffer*)
+ --- tt::tt_metal::BufferImpl::allocate_impl(tt::tt_metal::Buffer&)
+ --- tt::tt_metal::BufferImpl::create(tt::tt_metal::IDevice*, unsigned long, unsigned long, tt::tt_metal::BufferType, tt::tt_metal::BufferShardingArgs const&, std::optional<bool>, std::optional<ttsl::StrongType<unsigned char, tt::tt_metal::SubDeviceIdTag> >)
+ --- tt::tt_metal::distributed::MeshBuffer::create(std::variant<tt::tt_metal::distributed::ReplicatedBufferConfig, tt::tt_metal::distributed::ShardedBufferConfig> const&, tt::tt_metal::distributed::DeviceLocalBufferConfig const&, tt::tt_metal::distributed::MeshDevice*, std::optional<unsigned long>)
+ --- tt::tt_metal::tensor_impl::allocate_device_buffer(tt::tt_metal::distributed::MeshDevice*, tt::tt_metal::TensorSpec const&)
+ --- tt::tt_metal::allocate_mesh_tensor_on_device_with_topology(tt::tt_metal::distributed::MeshDevice&, tt::tt_metal::TensorSpec, tt::tt_metal::TensorTopology)
+ --- ttnn::create_device_tensor(tt::tt_metal::TensorSpec const&, tt::tt_metal::distributed::MeshDevice*, std::optional<tt::tt_metal::TensorTopology>)
+ --- ttnn::prim::UntilizeCodegenDeviceOperation::create_output_tensors(ttnn::prim::UntilizeCodegenOperationAttributes const&, ttnn::prim::UntilizeCodegenTensorArgs const&)
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../../build/lib/_ttnncpp.so(_ZN4ttnn16device_operation6detail6launchITkNS0_22DeviceOperationConceptENS_4prim30UntilizeCodegenDeviceOperationEEENT_21tensor_return_value_tERKNS5_22operation_attributes_tERKNS5_13tensor_args_tE+0x70) [0x7f164bfa7510]
+ --- ttnn::prim::untilize_codegen(ttnn::Tensor const&, tt::tt_metal::MemoryConfig)
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../../build/lib/_ttnncpp.so(+0xd6e591) [0x7f164bf6e591]
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../../build/lib/_ttnncpp.so(+0xd1f83b) [0x7f164bf1f83b]
+ --- ttnn::untilize(ttnn::Tensor const&, std::optional<tt::tt_metal::MemoryConfig> const&, bool, std::optional<tt::tt_metal::CoreRangeSet> const&)
+ --- ttnn::to_layout(ttnn::Tensor const&, tt::tt_metal::Layout, std::optional<tt::tt_metal::DataType> const&, std::optional<tt::tt_metal::MemoryConfig> const&, std::optional<tt::tt_metal::CoreRangeSet> const&, float)
+ --- /opt/ep0/tt-metal/ttnn/ttnn/_ttnn.so(+0x88622a) [0x7f164ea8622a]
+ --- /opt/ep0/tt-metal/ttnn/ttnn/_ttnn.so(+0x3b657d) [0x7f164e5b657d]
+ --- python(_PyObject_FastCallDictTstate+0x253) [0x55738f71a723]
+ --- python(_PyObject_Call_Prepend+0x5c) [0x55738f7303cc]
+ --- python(+0x282fc0) [0x55738f84afc0]
+ --- python(PyObject_Call+0xbb) [0x55738f733f8b]
+ --- python(_PyEval_EvalFrameDefault+0x2a49) [0x55738f70fbf9]
+ --- python(_PyObject_FastCallDictTstate+0xc4) [0x55738f71a594]
+ --- python(_PyObject_Call_Prepend+0x5c) [0x55738f7303cc]
+ --- python(+0x282fc0) [0x55738f84afc0]
+ --- python(_PyObject_MakeTpCall+0x25b) [0x55738f71b3fb]
+ --- python(_PyEval_EvalFrameDefault+0x6d9b) [0x55738f713f4b]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyObject_FastCallDictTstate+0x16d) [0x55738f71a63d]
+ --- python(_PyObject_Call_Prepend+0x5c) [0x55738f7303cc]
+ --- python(+0x282fc0) [0x55738f84afc0]
+ --- python(_PyObject_MakeTpCall+0x25b) [0x55738f71b3fb]
+ --- python(_PyEval_EvalFrameDefault+0x7558) [0x55738f714708]
+ --- python(+0x16b341) [0x55738f733341]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(+0x16b341) [0x55738f733341]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(+0x16b341) [0x55738f733341]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x8cf) [0x55738f70da7f]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(+0x238976) [0x55738f800976]
+ --- python(PyEval_EvalCode+0x86) [0x55738f800816]
+ --- python(+0x23e57d) [0x55738f80657d]
+ --- python(+0x15d799) [0x55738f725799]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(+0x255fdd) [0x55738f81dfdd]
+ --- python(Py_RunMain+0x128) [0x55738f81cc78]
+ --- python(Py_BytesMain+0x2d) [0x55738f7f368d]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f1692ad5d90]
+ --- /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80) [0x7f1692ad5e40]
+ --- python(_start+0x25) [0x55738f7f3585]
+
+FAILED
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/cbatch.py", line 441, in <module>
+    main()
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/cbatch.py", line 409, in main
+    s.set_voice(prompts[ids[0]])
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/generate_fast.py", line 119, in set_voice
+    _, _, _, xn = self.bb.prefill(E, keep_device=True)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/backbone_paged.py", line 293, in prefill
+    y = layer.forward(x, mode="prefill", chunk_size=layer.attention.long_prefill_chunk_size, valid_len=T)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/layer.py", line 303, in forward
+    ff_output = self.feed_forward.forward(ff_input, mode=mode)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/moe_fused_decode.py", line 244, in forward
+    return _orig(x, mode=mode)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/moe.py", line 68, in forward
+    out = self.experts(x4, dense_routing, mode=mode)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/experts.py", line 71, in __call__
+    return grouped_prefill_forward(
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/prefill_grouped.py", line 96, in grouped_prefill_forward
+    return _grouped(hidden_states, r, torch.arange(n), weights, config, mesh_device, force_M, force_A)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/prefill_grouped.py", line 132, in _grouped
+    return _grouped_we(hidden_states, w, e, rows, weights, config, mesh_device, force_M, force_A)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/moe/prefill_grouped.py", line 238, in _grouped_we
+    table = ttnn.to_layout(ttnn.reshape(table, (E * M + TILE, H)), ttnn.ROW_MAJOR_LAYOUT)
+  File "/opt/ep0/tt-metal/ttnn/ttnn/decorators.py", line 1195, in __call__
+    result = self.function(*function_args, **function_kwargs)
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/bank_manager.cpp:495: false
+info:
+Out of Memory: Not enough space to allocate 671219712 B DRAM buffer across 8 banks, where each bank needs to store 83902464 B, but bank size is 4238786944 B (allocated: 4072184832 B, free: 166602112 B, largest free block: 83886080 B)
+backtrace:
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../../build/lib/libtt_metal.so(+0xa9f741) [0x7f164a49f741]
+ --- tt::tt_metal::BankManager::allocate_buffer(unsigned long, unsigned long, bool, tt::tt_metal::CoreRangeSet const&, std::optional<unsigned int>, ttsl::StrongType<unsigned int, tt::tt_metal::AllocatorIDTag>, std::vector<std::pair<unsigned long, unsigned long>, std::allocator<std::pair<unsigned long, unsigned long> > > const&, std::optional<std::unordered_set<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>, std::allocator<unsigned int> > > const&)
+ --- tt::tt_metal::AllocatorImpl::allocate_buffer(tt::tt_metal::Buffer*)
+ --- tt::tt_metal::BufferImpl::allocate_impl(tt::tt_metal::Buffer&)
+ --- tt::tt_metal::BufferImpl::create(tt::tt_metal::IDevice*, unsigned long, unsigned long, tt::tt_metal::BufferType, tt::tt_metal::BufferShardingArgs const&, std::optional<bool>, std::optional<ttsl::StrongType<unsigned char, tt::tt_metal::SubDeviceIdTag> >)
+ --- tt::tt_metal::distributed::MeshBuffer::create(std::variant<tt::tt_metal::distributed::ReplicatedBufferConfig, tt::tt_metal::distributed::ShardedBufferConfig> const&, tt::tt_metal::distributed::DeviceLocalBufferConfig const&, tt::tt_metal::distributed::MeshDevice*, std::optional<unsigned long>)
+ --- tt::tt_metal::tensor_impl::allocate_device_buffer(tt::tt_metal::distributed::MeshDevice*, tt::tt_metal::TensorSpec const&)
+ --- tt::tt_metal::allocate_mesh_tensor_on_device_with_topology(tt::tt_metal::distributed::MeshDevice&, tt::tt_metal::TensorSpec, tt::tt_metal::TensorTopology)
+ --- ttnn::create_device_tensor(tt::tt_metal::TensorSpec const&, tt::tt_metal::distributed::MeshDevice*, std::optional<tt::tt_metal::TensorTopology>)
+ --- ttnn::prim::UntilizeCodegenDeviceOperation::create_output_tensors(ttnn::prim::UntilizeCodegenOperationAttributes const&, ttnn::prim::UntilizeCodegenTensorArgs const&)
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../../build/lib/_ttnncpp.so(_ZN4ttnn16device_operation6detail6launchITkNS0_22DeviceOperationConceptENS_4prim30UntilizeCodegenDeviceOperationEEENT_21tensor_return_value_tERKNS5_22operation_attributes_tERKNS5_13tensor_args_tE+0x70) [0x7f164bfa7510]
+ --- ttnn::prim::untilize_codegen(ttnn::Tensor const&, tt::tt_metal::MemoryConfig)
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../../build/lib/_ttnncpp.so(+0xd6e591) [0x7f164bf6e591]
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../../build/lib/_ttnncpp.so(+0xd1f83b) [0x7f164bf1f83b]
+ --- ttnn::untilize(ttnn::Tensor const&, std::optional<tt::tt_metal::MemoryConfig> const&, bool, std::optional<tt::tt_metal::CoreRangeSet> const&)
+ --- ttnn::to_layout(ttnn::Tensor const&, tt::tt_metal::Layout, std::optional<tt::tt_metal::DataType> const&, std::optional<tt::tt_metal::MemoryConfig> const&, std::optional<tt::tt_metal::CoreRangeSet> const&, float)
+ --- /opt/ep0/tt-metal/ttnn/ttnn/_ttnn.so(+0x88622a) [0x7f164ea8622a]
+ --- /opt/ep0/tt-metal/ttnn/ttnn/_ttnn.so(+0x3b657d) [0x7f164e5b657d]
+ --- python(_PyObject_FastCallDictTstate+0x253) [0x55738f71a723]
+ --- python(_PyObject_Call_Prepend+0x5c) [0x55738f7303cc]
+ --- python(+0x282fc0) [0x55738f84afc0]
+ --- python(PyObject_Call+0xbb) [0x55738f733f8b]
+ --- python(_PyEval_EvalFrameDefault+0x2a49) [0x55738f70fbf9]
+ --- python(_PyObject_FastCallDictTstate+0xc4) [0x55738f71a594]
+ --- python(_PyObject_Call_Prepend+0x5c) [0x55738f7303cc]
+ --- python(+0x282fc0) [0x55738f84afc0]
+ --- python(_PyObject_MakeTpCall+0x25b) [0x55738f71b3fb]
+ --- python(_PyEval_EvalFrameDefault+0x6d9b) [0x55738f713f4b]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyObject_FastCallDictTstate+0x16d) [0x55738f71a63d]
+ --- python(_PyObject_Call_Prepend+0x5c) [0x55738f7303cc]
+ --- python(+0x282fc0) [0x55738f84afc0]
+ --- python(_PyObject_MakeTpCall+0x25b) [0x55738f71b3fb]
+ --- python(_PyEval_EvalFrameDefault+0x7558) [0x55738f714708]
+ --- python(+0x16b341) [0x55738f733341]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(+0x16b341) [0x55738f733341]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(+0x16b341) [0x55738f733341]
+ --- python(_PyEval_EvalFrameDefault+0x1a29) [0x55738f70ebd9]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x8cf) [0x55738f70da7f]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(+0x238976) [0x55738f800976]
+ --- python(PyEval_EvalCode+0x86) [0x55738f800816]
+ --- python(+0x23e57d) [0x55738f80657d]
+ --- python(+0x15d799) [0x55738f725799]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(_PyEval_EvalFrameDefault+0x6d9) [0x55738f70d889]
+ --- python(_PyFunction_Vectorcall+0x7c) [0x55738f72553c]
+ --- python(+0x255fdd) [0x55738f81dfdd]
+ --- python(Py_RunMain+0x128) [0x55738f81cc78]
+ --- python(Py_BytesMain+0x2d) [0x55738f7f368d]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f1692ad5d90]
+ --- /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80) [0x7f1692ad5e40]
+ --- python(_start+0x25) [0x55738f7f3585]
+
+2026-10-31 09:29:19.630 | info     |    BuildKernels | JIT cache stats: 2240/2240 hits (100.0%) [2240 cached, 2035 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-31 09:29:19.630 | info     |    BuildKernels | JIT telemetry: 33 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-31 09:29:19.649 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-31 09:29:19.649 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-31 09:29:19.709 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-31 09:29:19.709 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-31 09:29:19.709 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 1

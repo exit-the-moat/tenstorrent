@@ -1,0 +1,68 @@
+[
+ {
+  "f": "/opt/ep0/v20/out_b/s09-08_s0.wav",
+  "id": "s09-08",
+  "take": "s09-08_s0",
+  "ratio": 0.9914529914529915,
+  "dur": 28.23546485260771,
+  "loud": 28.184420969447917,
+  "pitch": 10.262631337031697,
+  "f0": 110.25,
+  "text": "and the price. Fish Audio's own service charges $50 per million bytes of text. My card, speaking 16 lines at once, needs about 2 hours and 20 Euro cents of electricity for the same million bytes. At that rate, the card pays for itself after about 600 hours of speech or 720 with VAT."
+ },
+ {
+  "f": "/opt/ep0/v20/out_b/s09-08_s1.wav",
+  "id": "s09-08",
+  "take": "s09-08_s1",
+  "ratio": 0.9914529914529915,
+  "dur": 29.58222222222222,
+  "loud": 29.157478131796076,
+  "pitch": 7.99084606583393,
+  "f0": 112.93232343104467,
+  "text": "and the price. Fish Audio's own service charges $50 per million bytes of text. My card, speaking 16 lines at once, needs about 2 hours and 20 Euro cents of electricity for the same million bytes. At that rate, the card pays for itself after about 600 hours of speech or 720 with VAT."
+ },
+ {
+  "f": "/opt/ep0/v20/out_b/s09-08_s2.wav",
+  "id": "s09-08",
+  "take": "s09-08_s2",
+  "ratio": 0.9914529914529915,
+  "dur": 28.374784580498865,
+  "loud": 27.864288885121514,
+  "pitch": 6.962319078879409,
+  "f0": 111.08312342569269,
+  "text": "and the price. Fish Audio's own service charges $50 per million bytes of text. My card, speaking 16 lines at once, needs about 2 hours and 20 Euro cents of electricity for the same million bytes. At that rate, the card pays for itself after about 600 hours of speech or 720 with VAT."
+ },
+ {
+  "f": "/opt/ep0/v20/out_b/s09-09_s0.wav",
+  "id": "s09-09",
+  "take": "s09-09_s0",
+  "ratio": 1.0,
+  "dur": 7.058866213151927,
+  "loud": 29.124987401636112,
+  "pitch": 7.454644010166427,
+  "f0": 119.51570613336075,
+  "text": "That's about 60 audiobooks and the card only has to run for about 3 days to speak them."
+ },
+ {
+  "f": "/opt/ep0/v20/out_b/s09-09_s1.wav",
+  "id": "s09-09",
+  "take": "s09-09_s1",
+  "ratio": 1.0,
+  "dur": 7.476825396825397,
+  "loud": 31.307879986532246,
+  "pitch": 7.210370610302585,
+  "f0": 120.32764550855407,
+  "text": "That's about 60 audiobooks, and the card only has to run for about three days to speak them."
+ },
+ {
+  "f": "/opt/ep0/v20/out_b/s09-09_s2.wav",
+  "id": "s09-09",
+  "take": "s09-09_s2",
+  "ratio": 1.0,
+  "dur": 7.337505668934241,
+  "loud": 29.05489400641204,
+  "pitch": 8.880016624852134,
+  "f0": 119.67457582184517,
+  "text": "That's about 60 audiobooks and the card only has to run for about three days to speak them."
+ }
+]

@@ -1,0 +1,32 @@
+gate: wcheck c_cmp n 8 mean match 0.913 min 0.762 clipped 0
+gate: seeds {"dir": "/opt/ep0/port7/s_c_cmp", "line": "close", "n": 5, "mean_match": 0.938, "frames": [145, 144, 139, 145, 145], "clipped": 0} {"dir": "/opt/ep0/port7/s_c_cmp", "line": "fix", "n": 5, "mean_match": 1.0, "frames": [277, 279, 274, 257, 273], "clipped": 0} 
+gate: GATE_DONE
+=== /opt/ep0/port7/c_cmp2 start 02:22:33 io_errors=0
+{'price': (57.0, 183.3), 'model': (52.0, 186.0), 'specs': (57.7, 193.0), 'close': (54.0, 212.0), 'cold_open': (52.7, 203.3), 'server': (56.0, 187.7), 'second_opinion': (57.3, 195.0), 'fix': (60.0, 204.3)}
+SUMS_OK /opt/ep0/port7/c_cmp2
+=== /opt/ep0/port7/c_cmp2 end 02:24:45 io_errors=0 EXIT 0
+=== /opt/ep0/port7/c_cmp3 start 02:24:45 io_errors=0
+{'price': (48.7, 180.0), 'model': (52.0, 186.7), 'specs': (58.8, 203.5), 'close': (54.0, 222.0), 'cold_open': (53.0, 196.3), 'server': (61.3, 205.3), 'second_opinion': (54.2, 186.0), 'fix': (59.5, 184.0)}
+SUMS_OK /opt/ep0/port7/c_cmp3
+=== /opt/ep0/port7/c_cmp3 end 02:26:56 io_errors=0 EXIT 0
+=== /opt/ep0/port7/c_cmpb start 02:26:56 io_errors=0
+{'price': (50.5, 185.0), 'model': (55.2, 199.2), 'specs': (53.0, 181.0), 'close': (58.0, 187.0), 'cold_open': (52.0, 171.7), 'server': (58.0, 208.0), 'second_opinion': (48.8, 183.2), 'fix': (59.0, 207.5)}
+SUMS_OK /opt/ep0/port7/c_cmpb
+=== /opt/ep0/port7/c_cmpb end 02:29:06 io_errors=0 EXIT 0
+SUMS_OK_DISK c_cmp2
+SUMS_OK_DISK c_cmp3
+SUMS_OK_DISK c_cmpb
+c_cmp2 8 of 8 identical to c_cmp
+c_cmp3 8 of 8 identical to c_cmp
+wcheck c_cmpb n 8 mean match 0.911 min 0.762 clipped 0
+{"run": "/opt/ep0/port6/i_qdt", "n": 8, "vs_ref_mean": 0.9477, "vs_ref_min": 0.938, "vs_base_mean": 1.0, "vs_base_min": 1.0}
+{"run": "/opt/ep0/port7/c_cmp", "n": 8, "vs_ref_mean": 0.9554, "vs_ref_min": 0.9415, "vs_base_mean": 0.9698, "vs_base_min": 0.9542}
+{"run": "/opt/ep0/port7/c_cmpb", "n": 8, "vs_ref_mean": 0.9597, "vs_ref_min": 0.949, "vs_base_mean": 0.9736, "vs_base_min": 0.9646}
+{"run": "/opt/ep0/port7/c_ds", "n": 8, "vs_ref_mean": 0.9519, "vs_ref_min": 0.9386, "vs_base_mean": 0.9682, "vs_base_min": 0.9313}
+{"run": "/opt/ep0/port7/c_dsb", "n": 8, "vs_ref_mean": 0.9538, "vs_ref_min": 0.9422, "vs_base_mean": 0.9647, "vs_base_min": 0.9341}
+c_cmp lines 8 RTF 0.512 gen ms/frame 23.47 rtf/line 0.505-0.544 TTFA 0.430-0.477 worst_late 0.000 frames 2083 audio 96.7
+c_cmp2 lines 8 RTF 0.516 gen ms/frame 23.65 rtf/line 0.507-0.554 TTFA 0.437-0.498 worst_late 0.000 frames 2083 audio 96.7
+c_cmp3 lines 8 RTF 0.517 gen ms/frame 23.63 rtf/line 0.508-0.551 TTFA 0.432-0.484 worst_late 0.000 frames 2083 audio 96.7
+c_cmpb lines 8 RTF 0.495 gen ms/frame 22.70 rtf/line 0.490-0.521 TTFA 0.430-0.478 worst_late 0.000 frames 2142 audio 99.5
+io=0
+CHAIN12_DONE

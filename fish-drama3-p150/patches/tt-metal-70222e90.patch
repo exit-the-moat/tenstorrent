@@ -1,0 +1,1277 @@
+# Changes to tt-metal 70222e90 (github.com/tenstorrent/tt-metal, Apache-2.0) made by Exit the Moat for the
+# Drama 3 port, 2026-10. Every file below was changed by us (Apache-2.0 section 4(b)); all changes are opt-in
+# via QWEN36_* environment flags or only reached from models/demos/blackhole/drama3.
+# Apply in a tt-metal checkout at 70222e90: git apply tt-metal-70222e90.patch
+# .../demos/blackhole/qwen36/tt/attention/decode.py  |   2 +
+# .../qwen36/tt/attention/gated_attention.py         |  13 +-
+# .../demos/blackhole/qwen36/tt/attention/weights.py |   6 +-
+# models/demos/blackhole/qwen36/tt/gdn/decode.py     |   1 +
+# .../blackhole/qwen36/tt/gdn/gated_deltanet.py      |   8 +-
+# models/demos/blackhole/qwen36/tt/mlp.py            |   8 +-
+# models/demos/blackhole/qwen36/tt/moe/decode.py     | 142 +++++++++-
+# models/demos/blackhole/qwen36/tt/moe/experts.py    |  39 ++-
+# models/demos/blackhole/qwen36/tt/moe/moe.py        |  42 ++-
+# models/demos/blackhole/qwen36/tt/moe/operations.py |  21 ++
+# models/demos/blackhole/qwen36/tt/moe/prefill.py    |   5 +-
+# .../blackhole/qwen36/tt/moe/prefill_grouped.py     | 308 +++++++++++++++++++++
+# models/demos/blackhole/qwen36/tt/moe/router.py     |  23 ++
+# models/demos/blackhole/qwen36/tt/moe/weights.py    |  17 ++
+# .../tt/ttnn_delta_rule_ops.py                      |  52 ++++
+# .../tt/ttnn_gated_attention.py                     |  50 +++-
+# .../tt/ttnn_gated_deltanet.py                      |  84 +++++-
+# 17 files changed, 796 insertions(+), 25 deletions(-)
+diff --git a/models/demos/blackhole/qwen36/tt/attention/decode.py b/models/demos/blackhole/qwen36/tt/attention/decode.py
+index 916c01b19..64335bd58 100644
+--- a/models/demos/blackhole/qwen36/tt/attention/decode.py
++++ b/models/demos/blackhole/qwen36/tt/attention/decode.py
+@@ -20,6 +20,7 @@ def decode_forward(
+     page_table=None,
+     paged_kv_cache_key=None,
+     paged_kv_cache_value=None,
++    rows_are_batch=False,
+ ):
+     """Branch B — paged decode: paged_update_cache + paged_sdpa_decode via page_table."""
+     output, _, _ = gated_attention_forward_ttnn(
+@@ -45,5 +46,6 @@ def decode_forward(
+         page_table=page_table,
+         paged_kv_cache_key=paged_kv_cache_key,
+         paged_kv_cache_value=paged_kv_cache_value,
++        rows_are_batch=rows_are_batch,
+     )
+     return output
+diff --git a/models/demos/blackhole/qwen36/tt/attention/gated_attention.py b/models/demos/blackhole/qwen36/tt/attention/gated_attention.py
+index d313eac38..3bf24a4fd 100644
+--- a/models/demos/blackhole/qwen36/tt/attention/gated_attention.py
++++ b/models/demos/blackhole/qwen36/tt/attention/gated_attention.py
+@@ -2,6 +2,8 @@
+ # SPDX-License-Identifier: Apache-2.0
+ """The Qwen3.5-9B gated full-attention layer — composes config/weights/prefill/decode."""
+ 
++import os
++
+ import ttnn
+ from models.demos.blackhole.qwen36.tt.attention.config import AttentionConfig
+ from models.demos.blackhole.qwen36.tt.attention.decode import decode_forward
+@@ -23,13 +25,15 @@ class Qwen36GatedAttention:
+ 
+         self.weights = load_attention_weights(mesh_device, state_dict, tensor_cache_path)
+ 
++        # QWEN36_ATTN_MATH_FIDELITY (opt-in, e.g. HiFi2) overrides the prefill LoFi; unset = unchanged.
+         self.compute_kernel_config = ttnn.WormholeComputeKernelConfig(
+-            math_fidelity=ttnn.MathFidelity.LoFi,
++            math_fidelity=getattr(ttnn.MathFidelity, os.environ.get("QWEN36_ATTN_MATH_FIDELITY", "LoFi")),
+             fp32_dest_acc_en=True,
+             packer_l1_acc=False,
+         )
++        # QWEN36_DECODE_MATH_FIDELITY (opt-in) overrides the decode LoFi; unset = unchanged.
+         self.compute_kernel_config_decode = ttnn.WormholeComputeKernelConfig(
+-            math_fidelity=ttnn.MathFidelity.LoFi,
++            math_fidelity=getattr(ttnn.MathFidelity, os.environ.get("QWEN36_DECODE_MATH_FIDELITY", "LoFi")),
+             fp32_dest_acc_en=True,
+             packer_l1_acc=True,
+         )
+@@ -53,7 +57,9 @@ class Qwen36GatedAttention:
+         chunk_start_idx=None,
+         chunk_start_idx_tensor=None,
+     ):
+-        T = x.shape[1]
++        # rows_are_batch (attribute, drama3 batch mode): x [1, B, H] holds B one-token decode rows
++        rows = getattr(self, "rows_are_batch", False)
++        T = 1 if rows else x.shape[1]
+         mc = ttnn.L1_MEMORY_CONFIG if T == 1 else None
+         ckc = self.compute_kernel_config_decode if T <= 1 else self.compute_kernel_config
+ 
+@@ -73,6 +79,7 @@ class Qwen36GatedAttention:
+                 page_table=page_table,
+                 paged_kv_cache_key=self.paged_kv_cache_key,
+                 paged_kv_cache_value=self.paged_kv_cache_value,
++                rows_are_batch=rows,
+             )
+         elif self.use_paged_attention and T > 1 and chunk_page_table is not None:
+             # Branch A — paged prefill
+diff --git a/models/demos/blackhole/qwen36/tt/attention/weights.py b/models/demos/blackhole/qwen36/tt/attention/weights.py
+index 65e0d882b..578cb2259 100644
+--- a/models/demos/blackhole/qwen36/tt/attention/weights.py
++++ b/models/demos/blackhole/qwen36/tt/attention/weights.py
+@@ -15,11 +15,15 @@ class AttentionWeights:
+     k_norm: ttnn.Tensor
+ 
+ 
++# drama3 port8: the projection dtype (the drama3 tower sets bfloat4_b while it builds its layers, DRAMA3_TOWER_ATTN_BFP4)
++PROJ_DTYPE = ttnn.bfloat8_b
++
++
+ def load_attention_weights(mesh_device, state_dict, tensor_cache_path=None) -> AttentionWeights:
+     def load_2d(name):
+         return ttnn.as_tensor(
+             state_dict[f"{name}.weight"],
+-            dtype=ttnn.bfloat8_b,
++            dtype=PROJ_DTYPE,
+             layout=ttnn.TILE_LAYOUT,
+             device=mesh_device,
+             memory_config=ttnn.DRAM_MEMORY_CONFIG,
+diff --git a/models/demos/blackhole/qwen36/tt/gdn/decode.py b/models/demos/blackhole/qwen36/tt/gdn/decode.py
+index 51e08a3a2..c55b8072b 100644
+--- a/models/demos/blackhole/qwen36/tt/gdn/decode.py
++++ b/models/demos/blackhole/qwen36/tt/gdn/decode.py
+@@ -95,6 +95,7 @@ def recurrent_forward(gdn, x, mode="recurrent", chunk_size=None, valid_len=None)
+         use_inplace_state=gdn.use_inplace_state,
+         chunk_seq_masks=seq_masks,
+         valid_len=valid_len,
++        rows_are_batch=getattr(gdn, "rows_are_batch", False),  # drama3 batch mode (attribute, default off)
+     )
+ 
+     if gdn._chunk_inplace_state and mode == "chunk":
+diff --git a/models/demos/blackhole/qwen36/tt/gdn/gated_deltanet.py b/models/demos/blackhole/qwen36/tt/gdn/gated_deltanet.py
+index ebbf1bf7e..2e3eee0b1 100644
+--- a/models/demos/blackhole/qwen36/tt/gdn/gated_deltanet.py
++++ b/models/demos/blackhole/qwen36/tt/gdn/gated_deltanet.py
+@@ -5,6 +5,8 @@
+ Wraps the experimental ``gated_deltanet_forward_ttnn()`` and the on-device GDN prefill
+ kernel into a module that manages weight tensors, recurrent state, and conv state.
+ """
++import os
++
+ import ttnn
+ from models.demos.blackhole.qwen36.tt.gdn.config import GDNConfig
+ from models.demos.blackhole.qwen36.tt.gdn.decode import recurrent_forward
+@@ -35,13 +37,15 @@ class Qwen36GatedDeltaNet:
+         self.norm_eps = config.norm_eps
+         self.long_prefill_chunk_size = config.long_prefill_chunk_size
+ 
++        # QWEN36_ATTN_MATH_FIDELITY (opt-in, e.g. HiFi2) overrides the prefill LoFi; unset = unchanged.
+         self.compute_kernel_config = ttnn.WormholeComputeKernelConfig(
+-            math_fidelity=ttnn.MathFidelity.LoFi,
++            math_fidelity=getattr(ttnn.MathFidelity, os.environ.get("QWEN36_ATTN_MATH_FIDELITY", "LoFi")),
+             fp32_dest_acc_en=True,
+             packer_l1_acc=False,
+         )
++        # QWEN36_DECODE_MATH_FIDELITY (opt-in) overrides the decode LoFi; unset = unchanged.
+         self.compute_kernel_config_decode = ttnn.WormholeComputeKernelConfig(
+-            math_fidelity=ttnn.MathFidelity.LoFi,
++            math_fidelity=getattr(ttnn.MathFidelity, os.environ.get("QWEN36_DECODE_MATH_FIDELITY", "LoFi")),
+             fp32_dest_acc_en=True,
+             packer_l1_acc=True,
+         )
+diff --git a/models/demos/blackhole/qwen36/tt/mlp.py b/models/demos/blackhole/qwen36/tt/mlp.py
+index c2894ae01..48f72e7a4 100644
+--- a/models/demos/blackhole/qwen36/tt/mlp.py
++++ b/models/demos/blackhole/qwen36/tt/mlp.py
+@@ -184,15 +184,19 @@ class Qwen36MLP:
+         self.weights = load_mlp_weights(
+             mesh_device, state_dict, tensor_cache_path, args=args, use_gateup_agmm=use_gateup_agmm
+         )
++        # QWEN36_MLP_MATH_FIDELITY (opt-in, e.g. HiFi2) overrides the prefill LoFi; unset = unchanged.
+         self.compute_kernel_config = ttnn.WormholeComputeKernelConfig(
+-            math_fidelity=ttnn.MathFidelity.LoFi, fp32_dest_acc_en=True, packer_l1_acc=False
++            math_fidelity=getattr(ttnn.MathFidelity, os.environ.get("QWEN36_MLP_MATH_FIDELITY", "LoFi")),
++            fp32_dest_acc_en=True,
++            packer_l1_acc=False,
+         )
+         # fuse_swiglu AGMM: fp32 acc (subblock_w=4) to match GDN/attn in-proj.
+         self.compute_kernel_config_agmm = ttnn.WormholeComputeKernelConfig(
+             math_fidelity=ttnn.MathFidelity.LoFi, fp32_dest_acc_en=True, packer_l1_acc=False
+         )
++        # QWEN36_DECODE_MATH_FIDELITY (opt-in) overrides the decode LoFi; unset = unchanged.
+         self.compute_kernel_config_decode = ttnn.WormholeComputeKernelConfig(
+-            math_fidelity=ttnn.MathFidelity.LoFi, fp32_dest_acc_en=True, packer_l1_acc=True
++            math_fidelity=getattr(ttnn.MathFidelity, os.environ.get("QWEN36_DECODE_MATH_FIDELITY", "LoFi")), fp32_dest_acc_en=True, packer_l1_acc=True
+         )
+ 
+     def forward(self, x, mode=None):
+diff --git a/models/demos/blackhole/qwen36/tt/moe/decode.py b/models/demos/blackhole/qwen36/tt/moe/decode.py
+index f384910a7..2c749f2d1 100644
+--- a/models/demos/blackhole/qwen36/tt/moe/decode.py
++++ b/models/demos/blackhole/qwen36/tt/moe/decode.py
+@@ -10,11 +10,12 @@ stay aligned. sparse_matmul output is 6D: [batch_dims..., num_experts, seq_tiles
+ """
+ 
+ import math
++import os
+ 
+ import ttnn
+ from models.tt_transformers.tt.ccl import tt_all_reduce
+ 
+-from .operations import apply_swiglu
++from .operations import apply_swiglu, expert_decode_compute_kernel_config
+ from .weights import ExpertWeights
+ 
+ 
+@@ -52,6 +53,132 @@ def _build_sparse_matmul_config(m, n, in0_block_w=1):
+     )
+ 
+ 
++def decode_forward_indexed(hidden_states, top_k_values, top_k_indices, weights: ExpertWeights, config, sparsity):
++    """Single device, one token: only the top-k experts, via sparse_matmul's indexed/gather mode (compact
++    [.., k, M, N] outputs), so neither the matmuls nor the glue touch the other experts' slots (the dense path
++    writes, permutes and sums all E = 256 slots). top_k_values [1,1,1,k] (normalised), top_k_indices [1,1,1,k]
++    uint16 (router.topk); sparsity: any [1,1,1,E] bf16 ROW_MAJOR tensor (required operand, not read)."""
++    k, H = config.top_k, config.hidden_size
++    intermediate_size = weights.intermediate_size_per_device
++    idx = ttnn.to_layout(top_k_indices, ttnn.ROW_MAJOR_LAYOUT)
++    output_tile = ttnn.Tile([32, 32])
++    gate_up_config = _build_sparse_matmul_config(
++        1, 2 * intermediate_size, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_GATE_UP", "1"))
++    )
++    down_config = _build_sparse_matmul_config(1, H, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_DOWN", "1")))
++    up_gate = ttnn.sparse_matmul(
++        hidden_states,
++        weights.gate_up_proj,
++        sparsity=sparsity,
++        indices=idx,
++        memory_config=ttnn.L1_MEMORY_CONFIG,
++        output_tile=output_tile,
++        program_config=gate_up_config,
++        compute_kernel_config=expert_decode_compute_kernel_config(),
++        dtype=ttnn.bfloat16,
++    )  # [1, 1, 1, k, 1, 2I]
++    up_gate = ttnn.reshape(up_gate, (1, k, 1, up_gate.shape[-1]))
++    down_input = apply_swiglu(up_gate)  # [1, k, 1, I]
++    up_gate.deallocate(True)
++    prescale = os.environ.get("QWEN36_MOE_DECODE_PRESCALE", "0") == "1"
++    if prescale:  # w_i * (a_i @ W_i) = (w_i * a_i) @ W_i: the routing weights go in before down_proj
++        down_input = ttnn.mul(down_input, ttnn.reshape(top_k_values, (1, k, 1, 1)))
++    down = ttnn.sparse_matmul(
++        down_input,
++        weights.down_proj,
++        sparsity=sparsity,
++        indices=idx,
++        memory_config=ttnn.L1_MEMORY_CONFIG,
++        output_tile=output_tile,
++        program_config=down_config,
++        compute_kernel_config=expert_decode_compute_kernel_config(),
++        is_input_a_sparse=True,
++        dtype=ttnn.bfloat16,
++    )  # [1, k, M, H]: slot i = expert top_k_indices[i]
++    down_input.deallocate(True)
++    ttnn.deallocate(idx)
++    if prescale:  # sum the k weighted slots, then keep row 0 (the token) of the tile-padded M
++        out = ttnn.sum(down, dim=1, keepdim=True)
++        if out.shape[-2] != 1:
++            out = ttnn.slice(out, [0, 0, 0, 0], [1, 1, 1, H])
++        return out
++    if down.shape[-2] != 1:  # the compact-A output keeps the tile-padded M of A (32); row 0 is the token
++        down = ttnn.slice(down, [0, 0, 0, 0], [1, k, 1, H])
++    next_states = ttnn.reshape(down, (1, k, H))
++    next_states = ttnn.mul(next_states, ttnn.reshape(top_k_values, (1, k, 1)))
++    next_states = ttnn.sum(next_states, dim=1)
++    return ttnn.reshape(next_states, (1, 1, 1, H))
++
++
++_BLOCK_MASKS = {}
++
++
++def _block_mask(device, B, k):
++    """[1, B*k, 32, 1] bf16: slot j (row j // k's j % k-th expert) keeps only row j // k of the M tile."""
++    key = (B, k)
++    if key not in _BLOCK_MASKS:
++        import torch
++
++        m = torch.zeros(1, B * k, 32, 1)
++        for j in range(B * k):
++            m[0, j, j // k, 0] = 1.0
++        _BLOCK_MASKS[key] = ttnn.from_torch(m.to(torch.bfloat16), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=device)
++    return _BLOCK_MASKS[key]
++
++
++def decode_forward_indexed_batched(hidden_states, top_k_values, top_k_indices, weights: ExpertWeights, config, sparsity):
++    """decode_forward_indexed for B decode rows (single device, B <= 32, QWEN36_MOE_DECODE_INDEXED_BATCH=1): the
++    B*k routed ids of all rows go to sparse_matmul's gather mode as one index list, every slot computes the whole
++    one-tile M (B rows, the extra rows are free), and a block mask times the routing weights keeps row b's own k
++    slots before the slot sum. hidden_states [1,1,B,H]; top_k_values / _indices [1,1,B,k] -> [1,1,B,H]."""
++    k, H = config.top_k, config.hidden_size
++    B = hidden_states.shape[-2]
++    intermediate_size = weights.intermediate_size_per_device
++    # reshape has no uint16 kernel: [1,1,B,k] -> [1,1,1,B*k] through uint32 (exact for expert ids)
++    idx = ttnn.reshape(ttnn.typecast(top_k_indices, ttnn.uint32), (1, 1, 1, B * k))
++    idx = ttnn.to_layout(ttnn.typecast(idx, ttnn.uint16), ttnn.ROW_MAJOR_LAYOUT)
++    output_tile = ttnn.Tile([32, 32])
++    gate_up_config = _build_sparse_matmul_config(
++        B, 2 * intermediate_size, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_GATE_UP", "1"))
++    )
++    down_config = _build_sparse_matmul_config(B, H, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_DOWN", "1")))
++    up_gate = ttnn.sparse_matmul(
++        hidden_states,
++        weights.gate_up_proj,
++        sparsity=sparsity,
++        indices=idx,
++        memory_config=ttnn.L1_MEMORY_CONFIG,
++        output_tile=output_tile,
++        program_config=gate_up_config,
++        compute_kernel_config=expert_decode_compute_kernel_config(),
++        dtype=ttnn.bfloat16,
++    )  # [1, 1, 1, B*k, M, 2I]
++    up_gate = ttnn.reshape(up_gate, (1, B * k, up_gate.shape[-2], up_gate.shape[-1]))
++    down_input = apply_swiglu(up_gate)  # [1, B*k, M, I]
++    up_gate.deallocate(True)
++    down = ttnn.sparse_matmul(
++        down_input,
++        weights.down_proj,
++        sparsity=sparsity,
++        indices=idx,
++        memory_config=ttnn.L1_MEMORY_CONFIG,
++        output_tile=output_tile,
++        program_config=down_config,
++        compute_kernel_config=expert_decode_compute_kernel_config(),
++        is_input_a_sparse=True,
++        dtype=ttnn.bfloat16,
++    )  # [1, B*k, M, H]
++    down_input.deallocate(True)
++    ttnn.deallocate(idx)
++    w = ttnn.multiply(_block_mask(hidden_states.device(), B, k), ttnn.reshape(top_k_values, (1, B * k, 1, 1)))
++    if down.shape[-2] != 32:
++        down = ttnn.reshape(down, (1, B * k, down.shape[-2], H), (1, B * k, 32, H))
++    out = ttnn.sum(ttnn.multiply(down, w), dim=1, keepdim=True)  # [1, 1, M, H]
++    ttnn.deallocate(down)
++    ttnn.deallocate(w)
++    return ttnn.slice(out, [0, 0, 0, 0], [1, 1, B, H])
++
++
+ def decode_forward(
+     hidden_states,
+     routing_weights,
+@@ -94,8 +221,15 @@ def decode_forward(
+     # up/gate fused into ONE sparse_matmul over concatenated weights (N = 2*full_intermediate),
+     # widening the N-gridded core count (8 -> 32) vs the old intermediate-parallel layout; the
+     # fused output feeds ttnn.swiglu directly as [up | gate].
+-    gate_up_config = _build_sparse_matmul_config(batch_size, 2 * intermediate_size)
+-    down_config = _build_sparse_matmul_config(batch_size, config.hidden_size)
++    # QWEN36_MOE_DECODE_BLOCK_GATE_UP / _DOWN (opt-in): K tiles per block (must divide hidden/32 and I/32).
++    # 1 (unset) streams K one tile at a time; on one P150 32 / 8 run the two matmuls ~4-6x and ~2x faster at the
++    # same PCC when QWEN36_DECODE_MATH_FIDELITY selects an fp32-accumulating compute config.
++    gate_up_config = _build_sparse_matmul_config(
++        batch_size, 2 * intermediate_size, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_GATE_UP", "1"))
++    )
++    down_config = _build_sparse_matmul_config(
++        batch_size, config.hidden_size, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_DOWN", "1"))
++    )
+ 
+     up_gate = ttnn.sparse_matmul(
+         hidden_states,
+@@ -105,6 +239,7 @@ def decode_forward(
+         memory_config=ttnn.L1_MEMORY_CONFIG,
+         output_tile=output_tile,
+         program_config=gate_up_config,
++        compute_kernel_config=expert_decode_compute_kernel_config(),
+         dtype=ttnn.bfloat16,
+     )
+     sm2 = up_gate.shape[-1]  # 2 * intermediate
+@@ -131,6 +266,7 @@ def decode_forward(
+         memory_config=ttnn.L1_MEMORY_CONFIG,
+         output_tile=output_tile,
+         program_config=down_config,
++        compute_kernel_config=expert_decode_compute_kernel_config(),
+         is_input_a_sparse=True,
+         dtype=ttnn.bfloat16,
+     )
+diff --git a/models/demos/blackhole/qwen36/tt/moe/experts.py b/models/demos/blackhole/qwen36/tt/moe/experts.py
+index 23478ba7e..eccd11741 100644
+--- a/models/demos/blackhole/qwen36/tt/moe/experts.py
++++ b/models/demos/blackhole/qwen36/tt/moe/experts.py
+@@ -4,9 +4,16 @@
+ mode, not the input shape: multi-user decode puts the B users on dim-2, so a shape test
+ would misroute B>1 decode into the prefill branch (decode_forward handles any batch)."""
+ 
+-from .decode import decode_forward
++import os
++
++import torch
++
++import ttnn
++
++from .decode import decode_forward, decode_forward_indexed, decode_forward_indexed_batched
+ from .prefill import create_prefill_sparsity, prefill_forward
+-from .weights import load_expert_weights
++from .prefill_grouped import grouped_prefill_forward
++from .weights import gate_up_dtype_for_cache, load_expert_weights
+ 
+ 
+ class Qwen36Experts:
+@@ -16,11 +23,32 @@ class Qwen36Experts:
+         self.num_devices = config.num_devices
+         self.tt_ccl = tt_ccl
+         self.topology = topology
+-        self.weights = load_expert_weights(mesh_device, config, state_dict, tensor_cache_path)
++        self.weights = load_expert_weights(
++            mesh_device, config, state_dict, tensor_cache_path, gate_up_dtype=gate_up_dtype_for_cache(tensor_cache_path)
++        )
+         # Expert-parallel: each device computes only its expert shard, so the all-ones prefill
+         # sparsity is sized to the per-device expert count (num_experts / num_devices).
+         experts_per_device = config.num_experts // self.num_devices if self.num_devices > 1 else config.num_experts
+         self.prefill_sparsity = create_prefill_sparsity(mesh_device, experts_per_device)
++        # opt-in grouped prefill (single device): set by the caller, with the number of real (unpadded) rows
++        self.grouped_prefill = False
++        self.prefill_valid_len = None
++        # opt-in (single device, batch 1): decode only the top-k experts (QWEN36_MOE_DECODE_INDEXED=1)
++        self.indexed_decode = self.num_devices == 1 and os.environ.get("QWEN36_MOE_DECODE_INDEXED", "0") == "1"
++        if self.indexed_decode:
++            self.decode_sparsity = ttnn.from_torch(
++                torch.ones(1, 1, 1, config.num_experts, dtype=torch.bfloat16),
++                dtype=ttnn.bfloat16,
++                layout=ttnn.ROW_MAJOR_LAYOUT,
++                device=mesh_device,
++            )
++
++    def decode_indexed(self, hidden_states, top_k_values, top_k_indices):
++        if hidden_states.shape[-2] > 1:  # QWEN36_MOE_DECODE_INDEXED_BATCH=1 (moe.py): B decode rows
++            return decode_forward_indexed_batched(
++                hidden_states, top_k_values, top_k_indices, self.weights, self.config, self.decode_sparsity
++            )
++        return decode_forward_indexed(hidden_states, top_k_values, top_k_indices, self.weights, self.config, self.decode_sparsity)
+ 
+     def __call__(self, hidden_states, dense_routing, mode="decode"):
+         """hidden_states [1,1,S,H] (S=batch in decode, seq in prefill), dense_routing
+@@ -38,6 +66,11 @@ class Qwen36Experts:
+             )
+         seq_len = hidden_states.shape[2]
+         assert seq_len % 32 == 0, f"Prefill seq_len must be a multiple of 32, got {seq_len}"
++        if self.grouped_prefill and self.num_devices == 1:
++            # opt-in single-device grouped-by-expert prefill (prefill_grouped.py); prefill_valid_len = real rows
++            return grouped_prefill_forward(
++                hidden_states, dense_routing, self.weights, self.config, self.mesh_device, valid_len=self.prefill_valid_len
++            )
+         return prefill_forward(
+             hidden_states,
+             dense_routing,
+diff --git a/models/demos/blackhole/qwen36/tt/moe/moe.py b/models/demos/blackhole/qwen36/tt/moe/moe.py
+index 1029c31d2..9706c3dd9 100644
+--- a/models/demos/blackhole/qwen36/tt/moe/moe.py
++++ b/models/demos/blackhole/qwen36/tt/moe/moe.py
+@@ -5,6 +5,8 @@ forward(x) takes a single (ffn-normed, full-hidden) tensor and returns the same
+ fractured-hidden layout the dense MLP produces.
+ """
+ 
++import os
++
+ import ttnn
+ from models.demos.blackhole.qwen36.tt.moe.experts import Qwen36Experts
+ from models.demos.blackhole.qwen36.tt.moe.router import Qwen36Router
+@@ -32,10 +34,44 @@ class Qwen36MoE:
+             self.shared = Qwen36SharedExpert(mesh_device, state_dict, tensor_cache_path, args=args, tt_ccl=tt_ccl)
+ 
+     def forward(self, x, mode="decode"):
+-        dense_routing = self.router(x)
+-        out = self.experts(x, dense_routing, mode=mode)
++        # Single device: the layer stack hands this block [1, S, H] or (after the framework RMSNorm)
++        # [1, 1, S, H]. The routed experts index tokens on dim 2 ([1, 1, S, H], the TP layout) while the
++        # shared expert (Qwen36MLP) reads its token count from dim 1 ([1, S, H]); give each its view and
++        # return the input's rank. TP keeps the validated 4D path unchanged.
++        single = self.config.num_devices == 1
++        if single:
++            S, H = x.shape[-2], x.shape[-1]
++            x4 = ttnn.reshape(x, (1, 1, S, H))
++            x3 = ttnn.reshape(x, (1, S, H))
++        else:
++            x4 = x3 = x
++        # QWEN36_MOE_DECODE_INDEXED_BATCH=1 (opt-in): the indexed top-k decode for B > 1 rows too
++        batched = S > 1 and os.environ.get("QWEN36_MOE_DECODE_INDEXED_BATCH", "0") == "1"
++        if mode == "decode" and single and (S == 1 or batched) and self.experts.indexed_decode:
++            vals, idx = self.router.topk(x4)
++            out = self.experts.decode_indexed(x4, vals, idx)
++            ttnn.deallocate(vals)
++            ttnn.deallocate(idx)
++        elif (mode == "prefill" and single and self.experts.grouped_prefill
++              and os.environ.get("QWEN36_GROUPED_TOPK_READ", "0") == "1"):
++            # port6 (opt-in): the grouped prefill from the on-card top-k (no dense scatter, no host top-k)
++            from models.demos.blackhole.qwen36.tt.moe.prefill_grouped import grouped_prefill_forward_topk
++
++            vals, idx = self.router.topk(x4)
++            out = grouped_prefill_forward_topk(
++                x4, vals, idx, self.experts.weights, self.config, self.experts.mesh_device, valid_len=self.experts.prefill_valid_len
++            )
++            ttnn.deallocate(vals)
++            ttnn.deallocate(idx)
++        else:
++            dense_routing = self.router(x4)
++            out = self.experts(x4, dense_routing, mode=mode)
+         if self.shared is not None:
+-            shared_out = self.shared.forward(x)
++            shared_out = self.shared.forward(x3)
++            if single:
++                shared_out = ttnn.reshape(shared_out, (1, 1, S, H))
+             out = ttnn.add(out, shared_out)
+             ttnn.deallocate(shared_out)
++        if single:
++            out = ttnn.reshape(out, tuple(x.shape))
+         return out
+diff --git a/models/demos/blackhole/qwen36/tt/moe/operations.py b/models/demos/blackhole/qwen36/tt/moe/operations.py
+index 23627eba8..ad6069539 100644
+--- a/models/demos/blackhole/qwen36/tt/moe/operations.py
++++ b/models/demos/blackhole/qwen36/tt/moe/operations.py
+@@ -2,9 +2,30 @@
+ # SPDX-License-Identifier: Apache-2.0
+ """Expert activation (SwiGLU)."""
+ 
++import os
++
+ import ttnn
+ 
+ 
++def expert_compute_kernel_config():
++    """Opt-in compute config for the routed-expert sparse_matmuls: QWEN36_MOE_MATH_FIDELITY=LoFi|HiFi2|HiFi3|HiFi4
++    (fp32 dest accumulation). Unset -> None, i.e. the sparse_matmul default (unchanged behaviour)."""
++    return _expert_ckc(os.environ.get("QWEN36_MOE_MATH_FIDELITY"))
++
++
++def expert_decode_compute_kernel_config():
++    """Same for the decode sparse_matmuls, from QWEN36_DECODE_MATH_FIDELITY (unset -> None, unchanged)."""
++    return _expert_ckc(os.environ.get("QWEN36_DECODE_MATH_FIDELITY"))
++
++
++def _expert_ckc(name):
++    if not name:
++        return None
++    return ttnn.WormholeComputeKernelConfig(
++        math_fidelity=getattr(ttnn.MathFidelity, name), fp32_dest_acc_en=True, packer_l1_acc=False
++    )
++
++
+ def apply_swiglu(up_gate):
+     """SwiGLU over concatenated [up | gate]: up * silu(gate)."""
+     return ttnn.swiglu(up_gate, dim=-1)
+diff --git a/models/demos/blackhole/qwen36/tt/moe/prefill.py b/models/demos/blackhole/qwen36/tt/moe/prefill.py
+index 1b53b6f6c..223115cc0 100644
+--- a/models/demos/blackhole/qwen36/tt/moe/prefill.py
++++ b/models/demos/blackhole/qwen36/tt/moe/prefill.py
+@@ -16,7 +16,7 @@ import ttnn
+ from models.tt_transformers.tt.ccl import tt_all_reduce
+ 
+ from .decode import _build_sparse_matmul_config
+-from .operations import apply_swiglu
++from .operations import apply_swiglu, expert_compute_kernel_config
+ from .weights import ExpertWeights
+ 
+ TILE_SIZE = 32
+@@ -63,6 +63,7 @@ def _process_prefill_chunk(hidden_states, routing_weights, weights: ExpertWeight
+     nnz = None
+ 
+     output_tile = ttnn.Tile([32, 32])
++    ckc = expert_compute_kernel_config()
+     intermediate_size = weights.intermediate_size_per_device
+     # up/gate fused into ONE sparse_matmul: N = 2*full_intermediate ([up|gate] concatenated), so
+     # the N-gridded core count is 32 (vs 8 for the old intermediate-parallel N=256). M is one
+@@ -79,6 +80,7 @@ def _process_prefill_chunk(hidden_states, routing_weights, weights: ExpertWeight
+         memory_config=ttnn.DRAM_MEMORY_CONFIG,
+         output_tile=output_tile,
+         program_config=gate_up_config,
++        compute_kernel_config=ckc,
+         dtype=ttnn.bfloat16,
+     )
+     # NB: do NOT deallocate hidden_grouped — it is a reshape *view* of the caller's
+@@ -99,6 +101,7 @@ def _process_prefill_chunk(hidden_states, routing_weights, weights: ExpertWeight
+         memory_config=ttnn.DRAM_MEMORY_CONFIG,
+         output_tile=output_tile,
+         program_config=down_config,
++        compute_kernel_config=ckc,
+         is_input_a_sparse=True,
+         dtype=ttnn.bfloat16,
+     )
+diff --git a/models/demos/blackhole/qwen36/tt/moe/prefill_grouped.py b/models/demos/blackhole/qwen36/tt/moe/prefill_grouped.py
+new file mode 100644
+index 000000000..3aef3fb8a
+--- /dev/null
++++ b/models/demos/blackhole/qwen36/tt/moe/prefill_grouped.py
+@@ -0,0 +1,308 @@
++# SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
++# SPDX-License-Identifier: Apache-2.0
++"""Grouped routed-expert prefill for a SINGLE device (opt-in, Qwen36Experts.grouped_prefill = True).
++
++The tile-sparse prefill (prefill.py) streams an expert's weights once per 32-token tile that touches it, and runs
++down_proj for all experts on every row; for a few hundred tokens on one card that is ~0.3 s per layer. Here the
++tokens are grouped by expert instead, so each expert's weights are read once:
++
++  host: routing [S, E] -> per-expert token lists (top-k nonzeros of the first valid_len rows), padded to M rows
++  device: gather the rows -> [1, E, M, H]; up|gate = x @ gate_up_proj (batched over E); swiglu; @ down_proj
++          -> [1, E, M, H]; times each slot's routing weight; gather every token's k slots back and sum.
++Same per-token math as the tile-sparse path (one expert MLP per (token, expert) pair, weighted sum over the top-k).
++Rows past valid_len (bucket padding) come out as zeros. M is bucketed (M_BUCKETS) so no prompt compiles new programs.
++"""
++
++import os
++
++import torch
++
++import ttnn
++
++from .operations import apply_swiglu, expert_compute_kernel_config
++
++TILE = 32
++# Allowed per-expert row counts M. M shapes every op here, so a free M would compile new programs whenever a new
++# prompt routes differently; with a fixed set, warm_buckets() compiles them all up front (needed before a trace is
++# parked). A need above the largest bucket splits the rows into halves and sums the parts. The small buckets serve
++# short prefills (a line suffix after a cached prefix: ~100 rows, 11..72 rows on the busiest expert): the cost
++# scales with E * M (22 ms per layer at M = 128 on a P150).
++M_BUCKETS = (32, 64, 96, 128, 256, 384, 512, 640, 768)
++# QWEN36_GROUPED_COMPACT=1 (port7, opt-in): at M = 32 with the matmul glue, only the experts the rows route to are
++# computed (a line suffix uses ~146 of 256 per layer), as a compact [1, A, M, H] block through sparse_matmul's
++# gather mode (expert ids as indices); A is bucketed. tests/bench_grouped_compact.py: gate_up + down 2.60 ms
++# (batched matmul over 256) -> 1.48 / 1.82 / 2.19 ms at A = 128 / 160 / 192; at M = 64 the gather mode is slower.
++A_BUCKETS = (64, 96, 128, 160, 192, 224)
++
++
++def _bmm_config(mesh_device, M, K, N, down):
++    """Batched expert matmul [1,E,M,K] x [1,E,K,N] (one expert per core block, full N per core): the default
++    program re-reads the weights per 32-row block and runs at ~37 GB/s (7.6 ms for gate_up at M = 32 on a P150).
++    Measured (tests/sweep_grouped_mm.py, ms gate_up / down): M=32 1.36 / 1.26, 64 1.44 / 1.31, 128 1.66 / 2.57,
++    640 8.1 / default 9.98 (the full-N output block of down caps per_core_M at 2 in L1). None = the default.
++    OFF by default (QWEN36_GROUPED_BMM_CONFIG=1 to opt in): each matmul matches the default program in isolation
++    (tests/check_bmm_config.py, PCC 0.999997 on random inputs), but inside the Drama 3 backbone prefill the final
++    norm drops to PCC 0.84 vs the CPU golden (0.994 with the default) and a layer goes NaN; not understood yet."""
++    if os.environ.get("QWEN36_GROUPED_BMM_CONFIG", "0") != "1":
++        return None
++    if M < int(os.environ.get("QWEN36_GROUPED_BMM_MIN_M", "0")):
++        return None
++    Mt, Kt, Nt = M // TILE, K // TILE, N // TILE
++    if down:
++        if Mt <= 2:
++            pcm, ibw = Mt, 4
++        elif Mt == 4:
++            pcm, ibw = 2, 2
++        else:
++            return None
++    else:
++        pcm, ibw = next(m for m in (4, 3, 2, 1) if Mt % m == 0), 8
++    ibw = int(os.environ.get("QWEN36_GROUPED_BMM_IBW", ibw))
++    g = mesh_device.compute_with_storage_grid_size()
++    return ttnn.MatmulMultiCoreReuseProgramConfig(
++        compute_with_storage_grid_size=(g.x, g.y),
++        in0_block_w=min(ibw, Kt),
++        out_subblock_h=1,
++        out_subblock_w=4 if Nt % 4 == 0 else 1,
++        per_core_M=pcm,
++        per_core_N=Nt,
++    )
++
++
++def _u32(mesh_device, t):
++    return ttnn.from_torch(t.to(torch.int32).reshape(1, -1), dtype=ttnn.uint32, layout=ttnn.ROW_MAJOR_LAYOUT, device=mesh_device)
++
++
++_ZEROS = {}
++
++
++def _zeros(mesh_device, S, N):
++    """A persistent zero [1, 1, S, N] bf16 tile tensor per shape (scatter is out of place: it stays zero)."""
++    if (S, N) not in _ZEROS:
++        _ZEROS[(S, N)] = ttnn.zeros([1, 1, S, N], dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh_device)
++    return _ZEROS[(S, N)]
++
++
++def _glue_ckc():
++    # fp32 accumulation, HiFi4: the one-hot gather is exact, the combine sums the k slots in fp32
++    return ttnn.WormholeComputeKernelConfig(math_fidelity=ttnn.MathFidelity.HiFi4, fp32_dest_acc_en=True, packer_l1_acc=False)
++
++
++def grouped_prefill_forward(hidden_states, routing_weights, weights, config, mesh_device, valid_len=None, force_M=None, force_A=None):
++    """hidden_states [1,1,S,H], routing_weights [1,1,S,E] (dense top-k weights) -> [1,1,S,H]."""
++    S, E = hidden_states.shape[-2], config.num_experts
++    n = S if valid_len is None else int(valid_len)
++    r = ttnn.to_torch(routing_weights).float().reshape(S, E)
++    return _grouped(hidden_states, r, torch.arange(n), weights, config, mesh_device, force_M, force_A)
++
++
++def warm_buckets(experts, hidden_states, routing_weights):
++    """Compile the grouped path for every M bucket (few valid rows, so every bucket fits)."""
++    for m in M_BUCKETS:
++        out = grouped_prefill_forward(
++            hidden_states, routing_weights, experts.weights, experts.config, experts.mesh_device, valid_len=TILE, force_M=m
++        )
++        ttnn.deallocate(out)
++    if _compact_on(hidden_states.shape[-2]):
++        for a in A_BUCKETS:
++            out = grouped_prefill_forward(
++                hidden_states, routing_weights, experts.weights, experts.config, experts.mesh_device, valid_len=a // 8, force_M=TILE, force_A=a
++            )
++            ttnn.deallocate(out)
++
++
++def _compact_on(S):
++    return os.environ.get("QWEN36_GROUPED_COMPACT", "0") == "1" and os.environ.get("QWEN36_GROUPED_MM_GLUE", "0") == "1" and S <= 128
++
++
++def grouped_prefill_forward_topk(hidden_states, top_k_values, top_k_indices, weights, config, mesh_device, valid_len=None):
++    """QWEN36_GROUPED_TOPK_READ=1 (port6, opt-in): the same grouped prefill from the router's on-card top-k
++    (values [1,1,S,k] normalised, ids [1,1,S,k]) instead of the scattered dense routing: the host reads S * k
++    values and ids per layer instead of S * E routing weights and runs no top-k of its own."""
++    S, K = hidden_states.shape[-2], config.top_k
++    n = S if valid_len is None else int(valid_len)
++    w = ttnn.to_torch(top_k_values).float().reshape(S, K)[:n]
++    e = ttnn.to_torch(top_k_indices).to(torch.int64).reshape(S, K)[:n]
++    return _grouped_we(hidden_states, w, e, torch.arange(n), weights, config, mesh_device)
++
++
++def _grouped(hidden_states, r_all, rows, weights, config, mesh_device, force_M=None, force_A=None):
++    """Expert MLPs of the given token rows (others -> 0)."""
++    w, e = torch.topk(r_all[rows], config.top_k, dim=-1)  # [n, K] each token's top-k experts and weights
++    return _grouped_we(hidden_states, w, e, rows, weights, config, mesh_device, force_M, force_A)
++
++
++def _grouped_we(hidden_states, w, e, rows, weights, config, mesh_device, force_M=None, force_A=None):
++    """Expert MLPs of the given token rows (others -> 0) from their top-k weights / experts w, e [n, K]."""
++    S, H = hidden_states.shape[-2], hidden_states.shape[-1]
++    E, K = config.num_experts, config.top_k
++    n = rows.numel()
++    flat_e = e.reshape(-1)
++    order = torch.argsort(flat_e, stable=True)
++    counts = torch.bincount(flat_e, minlength=E)
++    need = int(counts.max())
++    if force_M is not None:
++        assert need <= force_M
++        M = force_M
++    elif need > M_BUCKETS[-1]:
++        half = n // 2
++        a = _grouped_we(hidden_states, w[:half], e[:half], rows[:half], weights, config, mesh_device)
++        b = _grouped_we(hidden_states, w[half:], e[half:], rows[half:], weights, config, mesh_device)
++        out = ttnn.add(a, b)
++        ttnn.deallocate(a)
++        ttnn.deallocate(b)
++        return out
++    else:
++        M = next(m for m in M_BUCKETS if m >= need)
++    active = torch.nonzero(counts).reshape(-1)
++    if M == TILE and _compact_on(S) and (force_A is not None or active.numel() <= A_BUCKETS[-1]):
++        A = force_A or next(a for a in A_BUCKETS if a >= active.numel())
++        return _compact(hidden_states, w, e, rows, weights, config, mesh_device, active, A)
++    starts = torch.cumsum(counts, 0) - counts
++    slot = torch.empty_like(flat_e)
++    slot[order] = torch.arange(flat_e.numel()) - starts[flat_e[order]]
++    dest = flat_e * M + slot  # [n*K] row of each (token, k) in the grouped [E*M] layout
++    gather_idx = torch.zeros(E * M, dtype=torch.long)  # padding slots read token 0, weight 0
++    gather_idx[dest] = rows.repeat_interleave(K)
++    slot_w = torch.zeros(E * M)
++    slot_w[dest] = w.reshape(-1)
++    back_idx = torch.full((S, K), E * M, dtype=torch.long)  # other rows read the zero row E*M
++    back_idx[rows] = dest.reshape(n, K)
++
++    # QWEN36_GROUPED_MM_GLUE=1 (opt-in, port6): the row gather and the weighted k-slot combine as two matmuls with
++    # [S, E*M] one-hot / routing-weight matrices that the card builds by scatter from [S, K] lists (one small upload)
++    # instead of embedding gathers over row-major copies (bench_grouped.py: glue 2.85 -> 1.28 ms per layer at M = 32)
++    mm_glue = os.environ.get("QWEN36_GROUPED_MM_GLUE", "0") == "1" and S <= 128 and E * M <= 65536
++    if mm_glue:
++        idx_h = torch.zeros(S, K, dtype=torch.int32)
++        idx_h[rows] = dest.reshape(n, K).to(torch.int32)
++        one_h = torch.zeros(S, K)
++        one_h[rows] = 1.0
++        wk_h = torch.zeros(S, K)
++        wk_h[rows] = w.reshape(n, K)
++        idx_d = ttnn.from_torch(idx_h.reshape(1, 1, S, K), dtype=ttnn.uint16, layout=ttnn.TILE_LAYOUT, device=mesh_device)
++        one_d = ttnn.from_torch(one_h.reshape(1, 1, S, K), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh_device)
++        wk_d = ttnn.from_torch(wk_h.reshape(1, 1, S, K), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh_device)
++        zeros = _zeros(mesh_device, S, E * M)
++        g_t = ttnn.scatter(zeros, dim=-1, index=idx_d, src=one_d)  # [1, 1, S, E*M]: 1 at (token, its slot row)
++        w_c = ttnn.scatter(zeros, dim=-1, index=idx_d, src=wk_d)  # the same pattern with the routing weights
++        for t_ in (idx_d, one_d, wk_d):
++            ttnn.deallocate(t_)
++        hifi = _glue_ckc()
++        xg = ttnn.matmul(g_t, hidden_states, transpose_a=True, compute_kernel_config=hifi, dtype=ttnn.bfloat16)  # [1,1,E*M,H]
++        ttnn.deallocate(g_t)
++    else:
++        x_rm = ttnn.to_layout(ttnn.reshape(hidden_states, (S, H)), ttnn.ROW_MAJOR_LAYOUT)
++        gi = _u32(mesh_device, gather_idx)
++        xg = ttnn.embedding(gi, x_rm, layout=ttnn.TILE_LAYOUT, dtype=ttnn.bfloat16)  # [1, E*M, H]
++        ttnn.deallocate(gi)
++        ttnn.deallocate(x_rm)
++    xg = ttnn.reshape(xg, (1, E, M, H))
++    ckc = expert_compute_kernel_config()
++    gu, dp = weights.gate_up_proj, weights.down_proj
++    cfg_gu = _bmm_config(mesh_device, M, gu.shape[-2], gu.shape[-1], down=False)
++    cfg_dn = _bmm_config(mesh_device, M, dp.shape[-2], dp.shape[-1], down=True)
++    # QWEN36_GROUPED_GU_GRID_MIN_M=256 (opt-in): gate_up on an 8x8 core grid from this M up: the program ttnn
++    # then picks is bit-identical to the default one at M = 640 and 1.8x faster (16.8 -> 9.2 ms, sweep_grouped_grid.py)
++    gu_kw = {}
++    min_m = int(os.environ.get("QWEN36_GROUPED_GU_GRID_MIN_M", "0"))
++    if cfg_gu is None and min_m and M >= min_m:
++        gu_kw["core_grid"] = ttnn.CoreGrid(y=8, x=8)
++    # QWEN36_GROUPED_SMALL_GRID=1 (opt-in): below M = 256 both matmuls on the full 11x10 grid (M = 32: gate_up
++    # 7.6 -> 1.4 ms, down 2.4 -> 1.3 ms; NOT bit-identical to the default: max |diff| 0.125 / 0.03)
++    dn_kw = {}
++    if os.environ.get("QWEN36_GROUPED_SMALL_GRID", "0") == "1" and M < 256:
++        if cfg_gu is None:
++            gu_kw["core_grid"] = ttnn.CoreGrid(y=10, x=11)
++        dn_kw["core_grid"] = ttnn.CoreGrid(y=10, x=11)
++    ug = ttnn.matmul(xg, gu, program_config=cfg_gu, compute_kernel_config=ckc, dtype=ttnn.bfloat16, **gu_kw)  # [1, E, M, 2I]
++    ttnn.deallocate(xg)
++    act = apply_swiglu(ug)  # [up | gate] -> up * silu(gate)
++    ttnn.deallocate(ug)
++    if cfg_dn is not None:
++        dn_kw = {}
++    dn = ttnn.matmul(act, dp, program_config=cfg_dn, compute_kernel_config=ckc, dtype=ttnn.bfloat16, **dn_kw)  # [1, E, M, H]
++    ttnn.deallocate(act)
++    if mm_glue:
++        out = ttnn.matmul(w_c, ttnn.reshape(dn, (1, 1, E * M, H)), compute_kernel_config=hifi, dtype=ttnn.bfloat16)
++        ttnn.deallocate(w_c)
++        ttnn.deallocate(dn)
++        return out  # [1, 1, S, H]; rows past valid_len are zero
++    sw = ttnn.from_torch(slot_w.reshape(1, E, M, 1), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh_device)
++    dn = ttnn.multiply(dn, sw)
++    ttnn.deallocate(sw)
++    # one zero row at E*M for the padded tokens, then gather each token's K slots and sum them
++    zero = ttnn.from_torch(torch.zeros(1, 1, TILE, H), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh_device)
++    table = ttnn.concat([ttnn.reshape(dn, (1, 1, E * M, H)), zero], dim=2)
++    ttnn.deallocate(dn)
++    table = ttnn.to_layout(ttnn.reshape(table, (E * M + TILE, H)), ttnn.ROW_MAJOR_LAYOUT)
++    bi = _u32(mesh_device, back_idx)
++    per_k = ttnn.embedding(bi, table, layout=ttnn.TILE_LAYOUT, dtype=ttnn.bfloat16)  # [1, S*K, H]
++    ttnn.deallocate(bi)
++    ttnn.deallocate(table)
++    per_k = ttnn.reshape(per_k, (1, S, K, H))
++    out = ttnn.sum(per_k, dim=2)  # [1, S, H]
++    ttnn.deallocate(per_k)
++    return ttnn.reshape(out, (1, 1, S, H))
++
++
++def _compact(hidden_states, w, e, rows, weights, config, mesh_device, active, A):
++    """QWEN36_GROUPED_COMPACT: the M = 32 grouped prefill over the active experts only (compact slot c = position
++    in `active`, padded to A with the first active expert on zero rows), sparse_matmul gather mode, matmul glue."""
++    from .decode import _build_sparse_matmul_config
++
++    S, H = hidden_states.shape[-2], hidden_states.shape[-1]
++    E, K, M = config.num_experts, config.top_k, TILE
++    n = rows.numel()
++    flat_e = e.reshape(-1)
++    pos = torch.full((E,), -1, dtype=torch.long)
++    pos[active] = torch.arange(active.numel())
++    flat_c = pos[flat_e]
++    order = torch.argsort(flat_c, stable=True)
++    counts = torch.bincount(flat_c, minlength=A)
++    starts = torch.cumsum(counts, 0) - counts
++    slot = torch.empty_like(flat_c)
++    slot[order] = torch.arange(flat_c.numel()) - starts[flat_c[order]]
++    dest = flat_c * M + slot  # row of each (token, k) in the compact [A*M] layout
++    ids = torch.full((A,), int(active[0]) if active.numel() else 0, dtype=torch.int32)
++    ids[: active.numel()] = active.to(torch.int32)
++    idx_h = torch.zeros(S, K, dtype=torch.int32)
++    idx_h[rows] = dest.reshape(n, K).to(torch.int32)
++    one_h = torch.zeros(S, K)
++    one_h[rows] = 1.0
++    wk_h = torch.zeros(S, K)
++    wk_h[rows] = w.reshape(n, K)
++    idx_d = ttnn.from_torch(idx_h.reshape(1, 1, S, K), dtype=ttnn.uint16, layout=ttnn.TILE_LAYOUT, device=mesh_device)
++    one_d = ttnn.from_torch(one_h.reshape(1, 1, S, K), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh_device)
++    wk_d = ttnn.from_torch(wk_h.reshape(1, 1, S, K), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh_device)
++    ex = ttnn.from_torch(ids.reshape(1, A), dtype=ttnn.uint16, layout=ttnn.ROW_MAJOR_LAYOUT, device=mesh_device)
++    if ("sp", E) not in _ZEROS:  # the required (unread in gather mode) sparsity operand
++        _ZEROS[("sp", E)] = ttnn.from_torch(torch.ones(1, 1, 1, E), dtype=ttnn.bfloat16, layout=ttnn.ROW_MAJOR_LAYOUT, device=mesh_device)
++    sp = _ZEROS[("sp", E)]
++    zeros = _zeros(mesh_device, S, A * M)
++    g_t = ttnn.scatter(zeros, dim=-1, index=idx_d, src=one_d)  # [1, 1, S, A*M]
++    w_c = ttnn.scatter(zeros, dim=-1, index=idx_d, src=wk_d)
++    for t_ in (idx_d, one_d, wk_d):
++        ttnn.deallocate(t_)
++    hifi = _glue_ckc()
++    xg = ttnn.matmul(g_t, hidden_states, transpose_a=True, compute_kernel_config=hifi, dtype=ttnn.bfloat16)  # [1,1,A*M,H]
++    ttnn.deallocate(g_t)
++    xg = ttnn.reshape(xg, (1, A, M, H))
++    ckc = expert_compute_kernel_config()
++    gu, dp = weights.gate_up_proj, weights.down_proj
++    ot = ttnn.Tile([32, 32])
++    ug = ttnn.sparse_matmul(xg, gu, sparsity=sp, indices=ex, memory_config=ttnn.DRAM_MEMORY_CONFIG, output_tile=ot,
++                            program_config=_build_sparse_matmul_config(M, gu.shape[-1], in0_block_w=32), compute_kernel_config=ckc,
++                            is_input_a_sparse=True, dtype=ttnn.bfloat16)
++    ttnn.deallocate(xg)
++    act = apply_swiglu(ttnn.reshape(ug, (1, A, M, gu.shape[-1])))
++    ttnn.deallocate(ug)
++    dn = ttnn.sparse_matmul(act, dp, sparsity=sp, indices=ex, memory_config=ttnn.DRAM_MEMORY_CONFIG, output_tile=ot,
++                            program_config=_build_sparse_matmul_config(M, dp.shape[-1], in0_block_w=16), compute_kernel_config=ckc,
++                            is_input_a_sparse=True, dtype=ttnn.bfloat16)
++    ttnn.deallocate(act)
++    ttnn.deallocate(ex)
++    out = ttnn.matmul(w_c, ttnn.reshape(dn, (1, 1, A * M, H)), compute_kernel_config=hifi, dtype=ttnn.bfloat16)
++    ttnn.deallocate(w_c)
++    ttnn.deallocate(dn)
++    return out  # [1, 1, S, H]; rows past valid_len are zero
+diff --git a/models/demos/blackhole/qwen36/tt/moe/router.py b/models/demos/blackhole/qwen36/tt/moe/router.py
+index 4fccecb43..ad75173b9 100644
+--- a/models/demos/blackhole/qwen36/tt/moe/router.py
++++ b/models/demos/blackhole/qwen36/tt/moe/router.py
+@@ -12,6 +12,8 @@ routing precision.
+ 
+ import torch
+ 
++import os
++
+ import ttnn
+ from models.demos.blackhole.qwen36.tt import tp_common as tpc
+ 
+@@ -41,6 +43,27 @@ class Qwen36Router:
+         )
+         self.compute_kernel_config = tpc.COMPUTE_HIFI2  # fp32 accumulate (see module docstring)
+ 
++    def topk(self, hidden_states):
++        """hidden_states: [1,1,S,H] -> (top-k weights [1,1,S,k] (sum-normalised if norm_topk_prob), expert ids
++        [1,1,S,k] uint16), the dense routing's ingredients without the scatter."""
++        expert_scores = ttnn.linear(hidden_states, self.proj_weight, compute_kernel_config=self.compute_kernel_config)
++        if self.norm_topk_prob and os.environ.get("QWEN36_ROUTER_TOPK_FIRST", "0") == "1":
++            # softmax is monotonic and the renormalised top-k of softmax(s) is softmax(top-k of s): 3 ops fewer
++            top_k_scores, top_k_indices = ttnn.topk(expert_scores, k=self.top_k, dim=-1)
++            expert_scores.deallocate(True)
++            top_k_values = ttnn.softmax(top_k_scores, dim=-1)
++            top_k_scores.deallocate(True)
++            return top_k_values, top_k_indices
++        router_probs = ttnn.softmax(expert_scores, dim=-1)
++        expert_scores.deallocate(True)
++        top_k_values, top_k_indices = ttnn.topk(router_probs, k=self.top_k, dim=-1)
++        router_probs.deallocate(True)
++        if self.norm_topk_prob:
++            top_k_sum = ttnn.sum(top_k_values, dim=-1, keepdim=True)
++            top_k_values = ttnn.div(top_k_values, top_k_sum)
++            top_k_sum.deallocate(True)
++        return top_k_values, top_k_indices
++
+     def __call__(self, hidden_states):
+         """hidden_states: [1,1,S,H] (replicated full hidden). Returns [1,1,S,E]."""
+         expert_scores = ttnn.linear(hidden_states, self.proj_weight, compute_kernel_config=self.compute_kernel_config)
+diff --git a/models/demos/blackhole/qwen36/tt/moe/weights.py b/models/demos/blackhole/qwen36/tt/moe/weights.py
+index ee9562a88..61b57992a 100644
+--- a/models/demos/blackhole/qwen36/tt/moe/weights.py
++++ b/models/demos/blackhole/qwen36/tt/moe/weights.py
+@@ -18,7 +18,9 @@ then sums each device's expert-partial across the mesh (mathematically identical
+ intermediate-partial sum, sum being associative). gate/up are bfloat4_b, down is bfloat8_b.
+ """
+ 
++import os
+ from dataclasses import dataclass
++from pathlib import Path
+ 
+ import torch
+ 
+@@ -49,6 +51,21 @@ def _stack_per_expert(state_dict, intermediate_size):
+     return {"gate_up_proj": torch.stack(gate_ups, 0), "down_proj": torch.stack(downs, 0)}
+ 
+ 
++def gate_up_dtype_for_cache(tensor_cache_path, default=ttnn.bfloat4_b):
++    """Opt-in per-layer gate/up precision (single-device experiments): QWEN36_EXPERT_GU_BFP8_LAYERS = "all" or a
++    comma list of layer ids -> bfloat8_b for those layers. The layer id is read from the per-layer cache dir name
++    (``layers.N``); unset (default) or no cache path -> ``default`` (bfloat4_b)."""
++    spec = os.environ.get("QWEN36_EXPERT_GU_BFP8_LAYERS", "").strip()
++    if not spec or tensor_cache_path is None:
++        return default
++    name = Path(tensor_cache_path).name
++    if not name.startswith("layers."):
++        return default
++    if spec == "all" or int(name.split(".")[1]) in {int(x) for x in spec.split(",") if x}:
++        return ttnn.bfloat8_b
++    return default
++
++
+ def load_expert_weights(
+     mesh_device,
+     config,
+diff --git a/models/experimental/gated_attention_gated_deltanet/tt/ttnn_delta_rule_ops.py b/models/experimental/gated_attention_gated_deltanet/tt/ttnn_delta_rule_ops.py
+index 05c2ef2d2..d8bdca810 100644
+--- a/models/experimental/gated_attention_gated_deltanet/tt/ttnn_delta_rule_ops.py
++++ b/models/experimental/gated_attention_gated_deltanet/tt/ttnn_delta_rule_ops.py
+@@ -481,6 +481,54 @@ def recurrent_gated_delta_rule_decode_ttnn(
+     return o, h
+ 
+ 
++def recurrent_gated_delta_rule_decode_lean_ttnn(q, k, v, beta, g, state_buffer, scale=None, device=None):
++    """recurrent_gated_delta_rule_decode_ttnn + the in-place state copy, with every per-head row kept as
++    [B, H, 1, X]: q/k/v/beta/g reshaped once, delta and the outer-product row used as they come, k as a column by
++    one transpose. Same values op for op (only layouts differ). q, k: [B, 1, H, K]; v: [B, 1, H, V]."""
++    B, H, K, V = q.shape[0], q.shape[2], q.shape[3], v.shape[3]
++    L1 = ttnn.L1_MEMORY_CONFIG
++    import os
++
++    if os.environ.get("QWEN36_GDN_LEAN_QSCALE", "0") == "1":
++        # q's l2 norm (rms_norm * K^-0.5) and the K^-0.5 scale in ONE multiply (by 1 / K, exact in bf16)
++        q = ttnn.rms_norm(q, epsilon=1e-6 / K)
++        q = ttnn.multiply(q, K**-0.5 * (scale if scale is not None else K**-0.5), memory_config=L1)
++    else:
++        q = l2_norm_ttnn(q, dim=-1)
++        q = ttnn.multiply(q, scale if scale is not None else K**-0.5, memory_config=L1)
++    k = l2_norm_ttnn(k, dim=-1)
++    q_row = ttnn.reshape(q, [B, H, 1, K], memory_config=L1)
++    k_row = ttnn.reshape(k, [B, H, 1, K], memory_config=L1)
++    v_row = ttnn.reshape(v, [B, H, 1, V], memory_config=L1)
++    g4 = ttnn.reshape(g, [B, H, 1, 1], memory_config=L1)
++    b4 = ttnn.reshape(beta, [B, H, 1, 1], memory_config=L1)
++    h = ttnn.to_memory_config(state_buffer, L1)
++    read_ckc = ttnn.WormholeComputeKernelConfig(
++        math_fidelity=ttnn.MathFidelity.HiFi2, math_approx_mode=False, fp32_dest_acc_en=True, packer_l1_acc=True
++    )
++    write_ckc = ttnn.WormholeComputeKernelConfig(
++        math_fidelity=ttnn.MathFidelity.HiFi2, math_approx_mode=False, fp32_dest_acc_en=True, packer_l1_acc=False
++    )
++    read_cfg = None
++    if device is not None:
++        try:
++            read_cfg = _recurrent_read_query_program_config(device, K, V)
++        except Exception:
++            pass
++    h = ttnn.multiply(h, g4, input_tensor_b_activations=[ttnn.UnaryOpType.EXP], memory_config=L1)
++    v_read = ttnn.matmul(k_row, h, memory_config=L1, program_config=read_cfg, compute_kernel_config=read_ckc)
++    delta = ttnn.subtract(v_row, v_read, memory_config=L1)
++    k_col = ttnn.transpose(k_row, -2, -1, memory_config=L1)
++    outer = ttnn.matmul(k_col, delta, memory_config=L1, compute_kernel_config=write_ckc)
++    outer = ttnn.multiply(outer, b4, memory_config=L1)
++    h = ttnn.add(h, outer, memory_config=L1)
++    o = ttnn.matmul(q_row, h, memory_config=L1, program_config=read_cfg, compute_kernel_config=read_ckc)
++    o = ttnn.reshape(o, [B, 1, H, V], memory_config=L1)
++    ttnn.copy(h, state_buffer)
++    ttnn.deallocate(h)
++    return o, state_buffer
++
++
+ def recurrent_gated_delta_rule_decode_inplace_ttnn(
+     q,
+     k,
+@@ -493,6 +541,10 @@ def recurrent_gated_delta_rule_decode_inplace_ttnn(
+     high_precision=False,
+ ):
+     """Decode with in-place state copy to pre-allocated buffer (trace-safe addresses)."""
++    import os
++
++    if not high_precision and os.environ.get("QWEN36_GDN_LEAN_DECODE", "0") == "1":
++        return recurrent_gated_delta_rule_decode_lean_ttnn(q, k, v, beta, g, state_buffer, scale=scale, device=device)
+     o, new_h = recurrent_gated_delta_rule_decode_ttnn(
+         q=q,
+         k=k,
+diff --git a/models/experimental/gated_attention_gated_deltanet/tt/ttnn_gated_attention.py b/models/experimental/gated_attention_gated_deltanet/tt/ttnn_gated_attention.py
+index 3e4b14f16..841c3385c 100644
+--- a/models/experimental/gated_attention_gated_deltanet/tt/ttnn_gated_attention.py
++++ b/models/experimental/gated_attention_gated_deltanet/tt/ttnn_gated_attention.py
+@@ -19,8 +19,40 @@ def rotate_half_ttnn(x):
+     return ttnn.concat([ttnn.neg(x2), x1], dim=-1)
+ 
+ 
++_PARTIAL_ROPE_P = {}  # head_dim -> device [1, 1, D, D] matrix: x @ P = rotate_half(x[:rd]) | 0 (register_partial_rope)
++
++
++def register_partial_rope(device, head_dim, rotary_dim):
++    """Opt-in (single device): with this registered, a call whose cos / sin are FULL width
++    ([cos(rd) | 1], [sin(rd) | 0]) applies the partial rotary as x * C + (x @ P) * S, 4 ops per tensor instead
++    of the slices / neg / concats (same values: P only moves and negates entries, the 1 / 0 are exact)."""
++    import torch
++
++    half = rotary_dim // 2
++    p = torch.zeros(head_dim, head_dim)
++    for i in range(half):
++        p[i + half, i] = -1.0  # out[i] = -x[i + half]
++        p[i, i + half] = 1.0  # out[i + half] = x[i]
++    _PARTIAL_ROPE_P[head_dim] = (
++        ttnn.from_torch(
++            p.reshape(1, 1, head_dim, head_dim).to(torch.bfloat16), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=device
++        ),
++        ttnn.init_device_compute_kernel_config(  # HiFi4: the +-1 products keep every mantissa bit of x
++            device.arch(), math_fidelity=ttnn.MathFidelity.HiFi4, fp32_dest_acc_en=True, packer_l1_acc=False
++        ),
++    )
++
++
+ def apply_rotary_pos_emb_ttnn(q, k, cos, sin):
+     """Apply RoPE to query and key tensors using TTNN ops."""
++    if cos.shape[-1] == q.shape[-1] and q.shape[-1] in _PARTIAL_ROPE_P:
++        if len(cos.shape) < 4:
++            cos = ttnn.unsqueeze(cos, 1)
++            sin = ttnn.unsqueeze(sin, 1)
++        p, ckc = _PARTIAL_ROPE_P[q.shape[-1]]
++        q_embed = ttnn.add(ttnn.multiply(q, cos), ttnn.multiply(ttnn.matmul(q, p, compute_kernel_config=ckc), sin))
++        k_embed = ttnn.add(ttnn.multiply(k, cos), ttnn.multiply(ttnn.matmul(k, p, compute_kernel_config=ckc), sin))
++        return q_embed, k_embed
+     if len(cos.shape) < 4:
+         cos = ttnn.unsqueeze(cos, 1)  # [B, 1, T, D]
+         sin = ttnn.unsqueeze(sin, 1)
+@@ -207,6 +239,7 @@ def gated_attention_forward_ttnn(
+     chunk_page_table=None,  # [1, num_blocks_in_chunk] int32 — blocks for this chunk only
+     chunk_start_idx=None,  # int — absolute position of this chunk in the full sequence
+     chunk_start_idx_tensor=None,  # device tensor [1] int32 — runtime offset for trace-replay (flexible SDPA)
++    rows_are_batch=False,  # drama3 batch mode: hidden [1, B, H] = B sequences of one decode token each
+ ):
+     """
+     TTNN forward pass for Gated Attention with KV cache support.
+@@ -237,6 +270,8 @@ def gated_attention_forward_ttnn(
+     """
+     B = hidden_states.shape[0]
+     T = hidden_states.shape[1]
++    if rows_are_batch:  # the projections run on the one-tile [1, B, H]; heads / rope / cache per sequence
++        B, T = T, 1
+     scaling = head_dim**-0.5
+ 
+     # Q projection: 2x wide
+@@ -353,6 +388,8 @@ def gated_attention_forward_ttnn(
+         )
+         # Paged SDPA decode
+         q_decode = ttnn.transpose(query_states, 1, 2)  # [B, H_q, 1, D] -> [B, 1, H_q, D] = [1, B, H_q, D] for B=1
++        if B > 1:  # several decode rows (drama3 batch mode): sdpa decode wants [1, B, H_q, D]
++            q_decode = ttnn.reshape(q_decode, [1, B, num_attention_heads, head_dim])
+         # paged_scaled_dot_product_attention_decode requires Q in DRAM when not sharded
+         # (sdpa_decode_device_operation.cpp:89). transpose preserves L1 layout from query_states.
+         q_decode = ttnn.to_memory_config(q_decode, ttnn.DRAM_MEMORY_CONFIG)
+@@ -368,6 +405,8 @@ def gated_attention_forward_ttnn(
+                 device, paged_kv_cache_key.shape[0] * paged_kv_cache_key.shape[2]
+             ),
+         )
++        if B > 1:  # [1, B, H_q, D] -> [B, 1, H_q, D]
++            attn_output = ttnn.reshape(attn_output, [B, 1, num_attention_heads, head_dim])
+         attn_output = ttnn.transpose(attn_output, 1, 2)  # back to [B, H_q, 1, D]
+         new_key = paged_kv_cache_key
+         new_value = paged_kv_cache_value
+@@ -554,12 +593,17 @@ def gated_attention_forward_ttnn(
+         attn_output = ttnn.transpose(attn_output, 1, 2)
+         attn_output = ttnn.reshape(attn_output, [B, T, num_attention_heads * head_dim])
+ 
+-    # Apply sigmoid gate
+-    gate = ttnn.sigmoid(gate)
+-    attn_output = ttnn.multiply(attn_output, gate)
++    # Apply sigmoid gate (QWEN36_ATTN_GATE_FUSED=1, one token: the sigmoid as the multiply's input activation)
++    if T == 1 and _os.environ.get("QWEN36_ATTN_GATE_FUSED", "0") == "1":
++        attn_output = ttnn.multiply(attn_output, gate, input_tensor_b_activations=[ttnn.UnaryOpType.SIGMOID])
++    else:
++        gate = ttnn.sigmoid(gate)
++        attn_output = ttnn.multiply(attn_output, gate)
+     ttnn.deallocate(gate)
+ 
+     # Output projection
++    if rows_are_batch:  # [B, 1, H*D] -> the one-tile [1, B, H*D]
++        attn_output = ttnn.reshape(attn_output, [1, B, attn_output.shape[-1]])
+     attn_output = ttnn.linear(attn_output, o_proj_weight, compute_kernel_config=ckc, memory_config=memory_config)
+ 
+     return attn_output, new_key, new_value
+diff --git a/models/experimental/gated_attention_gated_deltanet/tt/ttnn_gated_deltanet.py b/models/experimental/gated_attention_gated_deltanet/tt/ttnn_gated_deltanet.py
+index d9b92c216..9e59f4644 100644
+--- a/models/experimental/gated_attention_gated_deltanet/tt/ttnn_gated_deltanet.py
++++ b/models/experimental/gated_attention_gated_deltanet/tt/ttnn_gated_deltanet.py
+@@ -8,15 +8,20 @@ TTNN implementation of the Gated DeltaNet layer.
+ 
+ import torch
+ 
++import os as _os
++
+ import ttnn
+ 
+ from .ttnn_delta_rule_ops import (
+     recurrent_gated_delta_rule_ttnn,
+     recurrent_gated_delta_rule_decode_ttnn,
+     recurrent_gated_delta_rule_decode_inplace_ttnn,
++    l2_norm_ttnn,
+ )
+ from .ttnn_delta_rule_seq import chunk_gated_delta_rule_seq_adapter
+ 
++_FUSED_CONST = None  # QWEN36_GDN_FUSED_PREFILL: the fused op's constant tiles, built once
++
+ _L1_SEQ_THRESHOLD = 512
+ 
+ 
+@@ -63,11 +68,47 @@ def _causal_conv1d_decode_t1_split(
+     return ttnn.silu(out, memory_config=mc), new_state_list
+ 
+ 
++class ConvPartialSums(list):
++    """Decode conv state held as running partial sums Q[0..K-2] instead of the last K-1 inputs:
++    Q[j] = sum_{i <= K-2-j} w[i] * x[t-(K-2-j)+i] (+ bias): the parts of the next K-1 outputs already known.
++    One step: y = Q[0] + w[K-1] * x;  Q[j] = Q[j+1] + w[K-2-j] * x;  Q[K-2] = w[0] * x (+ bias)."""
++
++    partial_sums = True
++
++
++def _conv_partials_step(x, q, kernel_size, mc, weight_taps, bias_dev):
++    K = kernel_size
++    out = ttnn.addcmul(q[0], x, weight_taps[K - 1], value=1.0, memory_config=mc)
++    for j in range(K - 2):
++        ttnn.addcmul(q[j + 1], x, weight_taps[K - 2 - j], value=1.0, output_tensor=q[j])
++    if bias_dev is not None:
++        ttnn.addcmul(bias_dev, x, weight_taps[0], value=1.0, output_tensor=q[K - 2])
++    else:
++        ttnn.multiply(x, weight_taps[0], output_tensor=q[K - 2])
++    return ttnn.silu(out, memory_config=mc), q
++
++
++def conv_partials_from_states(states, weight_taps, bias_dev, q):
++    """Fill the partial sums q (ConvPartialSums of K-1 [B,1,D]) from the last K-1 inputs states[0..K-2]
++    (oldest first), in place."""
++    K = len(states) + 1
++    for j in range(K - 1):  # q[j] = sum_i w[i] * states[j + i] over the states that remain
++        acc = None
++        for i in range(K - 1 - j):
++            term = ttnn.multiply(states[j + i], weight_taps[i])
++            acc = term if acc is None else ttnn.add(acc, term)
++        if bias_dev is not None:
++            acc = ttnn.add(acc, bias_dev)
++        ttnn.copy(acc, q[j])
++
++
+ def _causal_conv1d_decode_t1_split_inplace(
+     x, conv_state_list, kernel_size, device, memory_config=None, weight_taps=None, bias_dev=None
+ ):
+     """Split-state T=1 conv; inplace copy for trace-stable addresses."""
+     mc = memory_config
++    if getattr(conv_state_list, "partial_sums", False):
++        return _conv_partials_step(x, conv_state_list, kernel_size, mc, weight_taps, bias_dev)
+ 
+     out = ttnn.multiply(x, weight_taps[kernel_size - 1], memory_config=mc)
+     for k in range(kernel_size - 1):
+@@ -397,6 +438,7 @@ def gated_deltanet_forward_ttnn(
+     use_inplace_state=False,  # ttnn.copy for trace-stable state
+     chunk_seq_masks=None,  # cached masks for gated_delta_attn_seq prefill
+     valid_len=None,  # fixed-bucket padding; zeros padded positions in scan
++    rows_are_batch=False,  # drama3 batch mode: hidden [1, B, H] = B sequences of one decode token each
+ ):
+     """Gated DeltaNet forward. mode: recurrent (decode T=1) or chunk (prefill T>1).
+ 
+@@ -407,6 +449,8 @@ def gated_deltanet_forward_ttnn(
+ 
+     B = hidden_states.shape[0]
+     T = hidden_states.shape[1]
++    if rows_are_batch:  # projections / conv / gates on the one-tile [1, B, .]; the recurrence per sequence
++        B, T = T, 1
+     # valid_len path forces DRAM (bucket 512 hits L1 CB clash on _seq_memory_config threshold)
+     mc = None if valid_len is not None else _seq_memory_config(T)
+ 
+@@ -698,7 +742,33 @@ def gated_deltanet_forward_ttnn(
+         g = ttnn.multiply(A_neg, sp, memory_config=mc)
+ 
+     # Gated delta rule: chunk prefill (fp32 seq kernel) vs decode (optimized T=1) vs recurrent fallback
+-    if mode == "chunk" and T > 1:
++    if mode == "chunk" and T > 1 and _os.environ.get("QWEN36_GDN_FUSED_PREFILL", "0") == "1":
++        # opt-in (drama3 port5): the one-op fused chunk kernel (ttnn.transformer.chunk_gated_delta_rule, qwen36
++        # fused_chunk.py, as the TP prefill uses it) instead of the seq adapter's ~40 relayout / cast glue ops
++        from models.demos.blackhole.qwen36.tt.gdn.fused_chunk import (
++            _FUSED_CHUNK_SIZE,
++            build_fused_const_tiles,
++            chunk_gated_delta_rule_fused_adapter,
++        )
++
++        global _FUSED_CONST
++        if _FUSED_CONST is None:
++            _FUSED_CONST = build_fused_const_tiles(device, _FUSED_CHUNK_SIZE)
++        o, new_state = chunk_gated_delta_rule_fused_adapter(
++            l2_norm_ttnn(q, dim=-1),  # the op does not normalise 4D q / k (the seq adapter does it inside)
++            l2_norm_ttnn(k, dim=-1),
++            v,
++            beta,
++            g,
++            chunk_size=chunk_size,
++            initial_state=recurrent_state,
++            device=device,
++            valid_len=valid_len,
++            const_tiles=_FUSED_CONST,
++        )
++        if new_state.dtype != ttnn.bfloat16 and _os.environ.get("QWEN_GDN_FP32_STATE", "0") != "1":
++            new_state = ttnn.typecast(new_state, ttnn.bfloat16)  # the decode state dtype, as the seq adapter returns
++    elif mode == "chunk" and T > 1:
+         o, new_state = chunk_gated_delta_rule_seq_adapter(
+             q=q,
+             k=k,
+@@ -750,12 +820,18 @@ def gated_deltanet_forward_ttnn(
+         else:
+             gate = ttnn.linear(hidden_states, g_proj_weight, memory_config=mc, compute_kernel_config=ckc)
+             gate = ttnn.reshape(gate, [B, T, num_v_heads, head_v_dim], memory_config=mc)
+-        o = rms_norm_gated_ttnn(o, gate, o_norm_weight, eps=norm_eps, memory_config=mc)
++        if T == 1 and _os.environ.get("QWEN36_GDN_DECODE_NOCLIP", "0") == "1":
++            # one token: the +-1e4 clips (against overflow at long T) never bind; silu fused into the multiply
++            o = ttnn.rms_norm(o, weight=o_norm_weight, epsilon=norm_eps, memory_config=mc)
++            o = ttnn.multiply(o, gate, input_tensor_b_activations=[ttnn.UnaryOpType.SILU], memory_config=mc)
++        else:
++            o = rms_norm_gated_ttnn(o, gate, o_norm_weight, eps=norm_eps, memory_config=mc)
+     else:
+         o = rms_norm_ttnn(o, o_norm_weight, eps=norm_eps, memory_config=mc)
+ 
+-    o = ttnn.clip(o, min=-1e4, max=1e4, memory_config=mc)
+-    o = ttnn.reshape(o, [B, T, num_v_heads * head_v_dim], memory_config=mc)
++    if not (T == 1 and _os.environ.get("QWEN36_GDN_DECODE_NOCLIP", "0") == "1"):
++        o = ttnn.clip(o, min=-1e4, max=1e4, memory_config=mc)
++    o = ttnn.reshape(o, [1, B, num_v_heads * head_v_dim] if rows_are_batch else [B, T, num_v_heads * head_v_dim], memory_config=mc)
+     if mc is not None:
+         o = ttnn.to_memory_config(o, mc)
+     o = ttnn.linear(o, o_proj_weight, memory_config=mc, compute_kernel_config=ckc)

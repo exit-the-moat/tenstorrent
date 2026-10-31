@@ -1,0 +1,57 @@
+{
+ "backbone_ms_per_step": {
+  "1": 12.91,
+  "8": 39.52
+ },
+ "8": {
+  "row0": {
+   "pcc_min": 0.9994422,
+   "maxdiff": 0.86628,
+   "top1": "30/32",
+   "identical": false
+  },
+  "row1": {
+   "pcc_min": 0.9994422,
+   "maxdiff": 0.86628,
+   "top1": "30/32",
+   "identical": false
+  },
+  "row2": {
+   "pcc_min": 0.9994422,
+   "maxdiff": 0.86628,
+   "top1": "30/32",
+   "identical": false
+  },
+  "row3": {
+   "pcc_min": 0.9994422,
+   "maxdiff": 0.86628,
+   "top1": "30/32",
+   "identical": false
+  },
+  "row4": {
+   "pcc_min": 0.9994422,
+   "maxdiff": 0.86628,
+   "top1": "30/32",
+   "identical": false
+  },
+  "row5": {
+   "pcc_min": 0.9994422,
+   "maxdiff": 0.86628,
+   "top1": "30/32",
+   "identical": false
+  },
+  "row6": {
+   "pcc_min": 0.9994422,
+   "maxdiff": 0.86628,
+   "top1": "30/32",
+   "identical": false
+  },
+  "row7": {
+   "pcc_min": 0.9994422,
+   "maxdiff": 0.86628,
+   "top1": "30/32",
+   "identical": false
+  },
+  "rows_equal_each_other": true
+ }
+}

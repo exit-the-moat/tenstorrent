@@ -1,0 +1,38 @@
+{
+ "1": {
+  "backbone": 22.244,
+  "gdn_mixer": 0.369,
+  "attn_mixer": 0.258,
+  "moe": 0.222,
+  "norm": 0.015,
+  "moe_dense": 0.222,
+  "tower": 9.323
+ },
+ "2": {
+  "backbone": 26.511,
+  "gdn_mixer": 0.379,
+  "attn_mixer": 0.275,
+  "moe": 0.303,
+  "norm": 0.015,
+  "moe_dense": 0.985,
+  "tower": 9.798
+ },
+ "4": {
+  "backbone": 35.342,
+  "gdn_mixer": 0.454,
+  "attn_mixer": 0.33,
+  "moe": 0.478,
+  "norm": 0.015,
+  "moe_dense": 1.121,
+  "tower": 10.482
+ },
+ "8": {
+  "backbone": 53.53,
+  "gdn_mixer": 0.584,
+  "attn_mixer": 0.431,
+  "moe": 0.795,
+  "norm": 0.015,
+  "moe_dense": 1.447,
+  "tower": 11.816
+ }
+}

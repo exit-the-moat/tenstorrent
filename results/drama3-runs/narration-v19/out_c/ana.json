@@ -1,0 +1,101 @@
+[
+ {
+  "f": "/opt/ep0/v19/out_c/s06-05_s0.wav",
+  "id": "s06-05",
+  "take": "s06-05_s0",
+  "ratio": 1.0,
+  "dur": 12.30657596371882,
+  "loud": 29.944944665202083,
+  "pitch": 7.3304884977907285,
+  "f0": 112.64386189258312,
+  "text": "Lesson 1 of this channel, RTFM, not the one for the shiny new card, the one for the boring power supply you already own."
+ },
+ {
+  "f": "/opt/ep0/v19/out_c/s06-05_s1.wav",
+  "id": "s06-05",
+  "take": "s06-05_s1",
+  "ratio": 1.0,
+  "dur": 11.656417233560092,
+  "loud": 31.327582119868055,
+  "pitch": 7.40512212168948,
+  "f0": 112.5,
+  "text": "Lesson 1 of this channel, RTFM, not the one for the shiny new card, the one for the boring power supply you already own."
+ },
+ {
+  "f": "/opt/ep0/v19/out_c/s06-05_s2.wav",
+  "id": "s06-05",
+  "take": "s06-05_s2",
+  "ratio": 1.0,
+  "dur": 12.213696145124716,
+  "loud": 28.264425103683806,
+  "pitch": 8.824666226208892,
+  "f0": 102.08333333333333,
+  "text": "Lesson 1 of this channel, RTFM, not the one for the shiny new card, the one for the boring power supply you already own."
+ },
+ {
+  "f": "/opt/ep0/v19/out_c/s06-05n_s0.wav",
+  "id": "s06-05n",
+  "take": "s06-05n_s0",
+  "ratio": 1.0,
+  "dur": 11.656417233560092,
+  "loud": 31.972168037771283,
+  "pitch": 6.657199179611159,
+  "f0": 109.9757462686567,
+  "text": "Lesson 1 of this channel, RTFM, not the one for the shiny new card, the one for the boring power supply you already own."
+ },
+ {
+  "f": "/opt/ep0/v19/out_c/s06-05n_s1.wav",
+  "id": "s06-05n",
+  "take": "s06-05n_s1",
+  "ratio": 1.0,
+  "dur": 12.167256235827665,
+  "loud": 28.86401036931346,
+  "pitch": 7.8337108539828675,
+  "f0": 108.62068965517241,
+  "text": "Lesson 1 of this channel, RTFM, not the one for the shiny new card, the one for the boring power supply you already own."
+ },
+ {
+  "f": "/opt/ep0/v19/out_c/s06-05n_s2.wav",
+  "id": "s06-05n",
+  "take": "s06-05n_s2",
+  "ratio": 1.0,
+  "dur": 12.213696145124716,
+  "loud": 31.402134634165535,
+  "pitch": 5.593919578922791,
+  "f0": 107.95609808715662,
+  "text": "Lesson 1 of this channel, RTFM, not the one for the shiny new card, the one for the boring power supply you already own."
+ },
+ {
+  "f": "/opt/ep0/v19/out_c/s09-06_s0.wav",
+  "id": "s09-06",
+  "take": "s09-06_s0",
+  "ratio": 0.9655172413793104,
+  "dur": 15.650249433106575,
+  "loud": 27.02549900790321,
+  "pitch": 6.3322530344685894,
+  "f0": 105.37649450160441,
+  "text": "Lesson two, same as lesson one, R-T-F-M. My family said this voice sounded sleepy. Turns out the model takes stage directions. It was in the docks the whole time."
+ },
+ {
+  "f": "/opt/ep0/v19/out_c/s09-06_s1.wav",
+  "id": "s09-06",
+  "take": "s09-06_s1",
+  "ratio": 0.8571428571428571,
+  "dur": 15.836009070294784,
+  "loud": 28.89370354524481,
+  "pitch": 8.286061582506662,
+  "f0": 110.9435717630976,
+  "text": "Ha ha, lesson 2, same as lesson 1, RT FM. My family said this voice sounded sleepy. Ha ha, turns out the model takes stage directions. It was in the docks the whole time."
+ },
+ {
+  "f": "/opt/ep0/v19/out_c/s09-06_s2.wav",
+  "id": "s09-06",
+  "take": "s09-06_s2",
+  "ratio": 0.9152542372881356,
+  "dur": 14.86077097505669,
+  "loud": 28.22301445262776,
+  "pitch": 7.921646132733607,
+  "f0": 108.88888888888889,
+  "text": "Lesson 2, same as lesson 1, RT-FM. My family said this voice sounded sleepy. Turns out the model takes stage directions. It was in the docks the whole time."
+ }
+]

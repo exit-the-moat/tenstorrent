@@ -1,0 +1,154 @@
+2026-10-30 00:01:51.798 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-30 00:01:51.798 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-30 00:01:51.798 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-30 00:01:51.798 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-30 00:01:51.802 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-30 00:01:51.802 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-30 00:01:51.815 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-30 00:01:51.815 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-30 00:01:51.815 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-30 00:01:51.815 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-30 00:01:51.816 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-30 00:01:51.871 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-30 00:01:51.884 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-30 00:01:51.884 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-30 00:01:51.884 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-30 00:01:51.884 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-30 00:01:51.885 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-30 00:01:51.885 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-30 00:01:51.885 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-30 00:01:51.885 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-30 00:01:51.885 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-30 00:01:51.994 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-30 00:01:51.994 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-30 00:01:51.994 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-30 00:01:51.995 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-30 00:01:51.995 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-30 00:01:53.870 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-30 00:01:53.875 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-30 00:01:53.875 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-30 00:01:53.875 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-30 00:01:55.599 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-30 00:01:55.781 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-30 00:01:55.781 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-30 00:01:55.781 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-30 00:01:55.781 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-30 00:01:55.781 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-30 00:01:55.781 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+paged backbone resident: DRAM 26.09 GB, built in 12s
+  0.0052  ttnn.to_memory_config                      decode_norm.py:35
+  0.0118  ttnn.rms_norm                              decode_norm.py:36
+  0.0026  ttnn.deallocate                            decode_norm.py:37
+  0.0050  ttnn.to_memory_config                      decode_norm.py:38
+  0.0023  ttnn.deallocate                            decode_norm.py:39
+  0.0051  ttnn.to_memory_config                      decode_norm.py:35
+  0.0113  ttnn.rms_norm                              decode_norm.py:36
+  0.0023  ttnn.deallocate                            decode_norm.py:37
+  0.0049  ttnn.to_memory_config                      decode_norm.py:38
+  0.0023  ttnn.deallocate                            decode_norm.py:39
+  0.0093  ttnn.add                                   tower_device.py:139
+  0.0024  ttnn.deallocate                            tower_device.py:140
+  0.0022  ttnn.deallocate                            tower_device.py:141
+  0.0048  ttnn.to_memory_config                      decode_norm.py:35
+  0.0113  ttnn.rms_norm                              decode_norm.py:36
+  0.0023  ttnn.deallocate                            decode_norm.py:37
+  0.0051  ttnn.to_memory_config                      decode_norm.py:38
+  0.0023  ttnn.deallocate                            decode_norm.py:39
+  0.0133  ttnn.reshape                               ttnn_gated_attention.py:245
+  0.0065  ttnn.chunk                                 ttnn_gated_attention.py:247
+  0.0022  ttnn.deallocate                            ttnn_gated_attention.py:248
+  0.0103  ttnn.reshape                               ttnn_gated_attention.py:249
+  0.0087  ttnn.rms_norm                              ttnn_gated_attention.py:253
+  0.0098  ttnn.transpose                             ttnn_gated_attention.py:256
+  0.0054  ttnn.reshape                               ttnn_gated_attention.py:260
+  0.0086  ttnn.rms_norm                              ttnn_gated_attention.py:262
+  0.0063  ttnn.transpose                             ttnn_gated_attention.py:265
+  0.0055  ttnn.reshape                               ttnn_gated_attention.py:269
+  0.0062  ttnn.transpose                             ttnn_gated_attention.py:270
+  0.0023  ttnn.reshape                               ttnn_gated_attention.py:274
+  0.0023  ttnn.reshape                               ttnn_gated_attention.py:275
+  0.0065  Tensor.__getitem__                         ttnn_gated_attention.py:31
+  0.0041  Tensor.__getitem__                         ttnn_gated_attention.py:32
+  0.0099  ttnn.multiply                              ttnn_gated_attention.py:35
+  0.0059  Tensor.__getitem__                         ttnn_gated_attention.py:17
+  0.0058  Tensor.__getitem__                         ttnn_gated_attention.py:18
+  0.0087  ttnn.neg                                   ttnn_gated_attention.py:19
+  0.0066  ttnn.concat                                ttnn_gated_attention.py:19
+  0.0098  ttnn.multiply                              ttnn_gated_attention.py:36
+  0.0090  ttnn.add                                   ttnn_gated_attention.py:34
+  0.0096  ttnn.multiply                              ttnn_gated_attention.py:39
+  0.0041  Tensor.__getitem__                         ttnn_gated_attention.py:17
+  0.0042  Tensor.__getitem__                         ttnn_gated_attention.py:18
+  0.0085  ttnn.neg                                   ttnn_gated_attention.py:19
+  0.0042  ttnn.concat                                ttnn_gated_attention.py:19
+  0.0097  ttnn.multiply                              ttnn_gated_attention.py:40
+  0.0091  ttnn.add                                   ttnn_gated_attention.py:38
+  0.0094  Tensor.__getitem__                         ttnn_gated_attention.py:44
+  0.0058  Tensor.__getitem__                         ttnn_gated_attention.py:45
+  0.0090  ttnn.concat                                ttnn_gated_attention.py:46
+  0.0059  ttnn.concat                                ttnn_gated_attention.py:47
+  0.0058  ttnn.reshape                               ttnn_gated_attention.py:339
+  0.0055  ttnn.reshape                               ttnn_gated_attention.py:340
+  0.0042  ttnn.to_memory_config                      ttnn_gated_attention.py:345
+  0.0043  ttnn.to_memory_config                      ttnn_gated_attention.py:346
+  0.0076  ttnn.experimental.paged_update_cache       ttnn_gated_attention.py:348
+  0.0075  ttnn.experimental.paged_update_cache       ttnn_gated_attention.py:351
+  0.0095  ttnn.transpose                             ttnn_gated_attention.py:355
+  0.0023  ttnn.to_memory_config                      ttnn_gated_attention.py:358
+  0.0330  ttnn.transformer.paged_scaled_dot_product_attention_decode ttnn_gated_attention.py:359
+  0.0099  ttnn.transpose                             ttnn_gated_attention.py:371
+  0.0025  ttnn.deallocate                            ttnn_gated_attention.py:548
+  0.0165  ttnn.transformer.concatenate_heads         ttnn_gated_attention.py:552
+  0.0103  ttnn.sigmoid                               ttnn_gated_attention.py:558
+  0.0106  ttnn.multiply                              ttnn_gated_attention.py:559
+  0.0023  ttnn.deallocate                            ttnn_gated_attention.py:560
+  0.0023  ttnn.deallocate                            tower_device.py:147
+  0.0092  ttnn.add                                   tower_device.py:150
+  0.0022  ttnn.deallocate                            tower_device.py:151
+  0.0022  ttnn.deallocate                            tower_device.py:152
+  0.0048  ttnn.to_memory_config                      decode_norm.py:35
+  0.0114  ttnn.rms_norm                              decode_norm.py:36
+  0.0023  ttnn.deallocate                            decode_norm.py:37
+  0.0049  ttnn.to_memory_config                      decode_norm.py:38
+  0.0024  ttnn.deallocate                            decode_norm.py:39
+  0.0024  ttnn.deallocate                            tower_device.py:156
+  0.0124  ttnn.mul                                   tower_device.py:157
+  0.0023  ttnn.deallocate                            tower_device.py:158
+  0.0022  ttnn.deallocate                            tower_device.py:159
+  0.0023  ttnn.deallocate                            tower_device.py:161
+  0.0093  ttnn.add                                   tower_device.py:162
+  0.0023  ttnn.deallocate                            tower_device.py:163
+  0.0023  ttnn.deallocate                            tower_device.py:164
+  0.0049  ttnn.to_memory_config                      decode_norm.py:35
+  0.0113  ttnn.rms_norm                              decode_norm.py:36
+  0.0023  ttnn.deallocate                            decode_norm.py:37
+  0.0050  ttnn.to_memory_config                      decode_norm.py:38
+  0.0023  ttnn.deallocate                            decode_norm.py:39
+  0.0022  ttnn.deallocate                            tower_device.py:166
+  0.0023  ttnn.deallocate                            profile_ops.py:35
+layer 5 (tower): whole layer traced 0.573 ms, 90 ops, sum of one-op traces 0.565 ms
+  0.0744 ms  ttnn.rms_norm
+  0.0605 ms  ttnn.to_memory_config
+  0.0598 ms  ttnn.deallocate
+  0.0504 ms  ttnn.reshape
+  0.0496 ms  ttnn.multiply
+  0.0458 ms  ttnn.add
+  0.0457 ms  Tensor.__getitem__
+  0.0417 ms  ttnn.transpose
+  0.0330 ms  ttnn.transformer.paged_scaled_dot_product_attention_decode
+  0.0257 ms  ttnn.concat
+  0.0172 ms  ttnn.neg
+  0.0165 ms  ttnn.transformer.concatenate_heads
+  0.0152 ms  ttnn.experimental.paged_update_cache
+  0.0124 ms  ttnn.mul
+  0.0103 ms  ttnn.sigmoid
+DONE
+2026-10-30 00:02:14.348 | info     |    BuildKernels | JIT cache stats: 165/165 hits (100.0%) [165 cached, 59 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-30 00:02:14.348 | info     |    BuildKernels | JIT telemetry: 33 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-30 00:02:14.351 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-30 00:02:14.351 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-30 00:02:14.376 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-30 00:02:14.376 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-30 00:02:14.376 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

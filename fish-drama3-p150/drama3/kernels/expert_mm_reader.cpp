@@ -1,0 +1,93 @@
+// SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
+// SPDX-License-Identifier: Apache-2.0
+//
+// drama3 port5: one-token indexed expert matmul (the decode MoE's sparse_matmul with k routed experts), reader.
+// out[j, n] = A_j[1, K] @ W[ids[j]][K, n-tile] for the jobs (slot j, output tile n) j0 .. j0 + nj of this core
+// (job = j * NT + n). A is either one shared row (gate_up: the token, SHARED_A = 1, read once and kept) or one row per
+// slot (down: the SwiGLU output of slot j). The expert ids come from the router top-k (uint16 ROW_MAJOR, in L1).
+// Weights stream in blocks of KB K-tiles, split over both data-movement RISCs: this reader takes the even K tiles,
+// the writer the odd ones (both NOCs pull weights).
+
+#include "api/dataflow/dataflow_api.h"
+#include "api/dataflow/noc.h"
+#include "api/dataflow/circular_buffer.h"
+#include "api/tensor/noc_traits.h"
+
+constexpr uint32_t cb_a = 0, cb_w = 1, cb_ids = 2, cb_stage = 3;
+
+void kernel_main() {
+    constexpr uint32_t KT = get_compile_time_arg_val(0);  // K tiles
+    constexpr uint32_t NT = get_compile_time_arg_val(1);  // output N tiles per slot
+    constexpr uint32_t KB = get_compile_time_arg_val(2);  // K tiles per weight block
+    constexpr uint32_t SHARED_A = get_compile_time_arg_val(3);
+    constexpr uint32_t NSLOT = get_compile_time_arg_val(4);
+    constexpr auto a_a = TensorAccessorArgs<5>();
+    constexpr auto w_a = TensorAccessorArgs<a_a.next_compile_time_args_offset()>();
+    constexpr auto i_a = TensorAccessorArgs<w_a.next_compile_time_args_offset()>();
+    const uint32_t a_addr = get_arg_val<uint32_t>(0);
+    const uint32_t w_addr = get_arg_val<uint32_t>(1);
+    const uint32_t i_addr = get_arg_val<uint32_t>(2);
+    const uint32_t j0 = get_arg_val<uint32_t>(3);
+    const uint32_t nj = get_arg_val<uint32_t>(4);
+
+    const uint32_t ta = get_tile_size(cb_a), tw = get_tile_size(cb_w);
+    const auto a = TensorAccessor(a_a, a_addr, ta);
+    const auto w = TensorAccessor(w_a, w_addr, tw);
+    const auto ids = TensorAccessor(i_a, i_addr, 2 * NSLOT);
+    Noc noc;
+    CircularBuffer ca(cb_a), cw(cb_w), ci(cb_ids);
+    ci.reserve_back(1);
+    noc_async_read(ids.get_noc_addr(0, 0), ci.get_write_ptr(), 2 * NSLOT);
+    if constexpr (SHARED_A) {
+        // every core needs the whole token row: read only row 0 of its KT tiles (64-byte chunks: rows 0-1 of faces 0
+        // and 1) and build the tiles in L1 (MEM_ZEROS fill + 32-byte copies), instead of each core pulling KT full
+        // tiles out of the L1 banks (that congested the NOC: more cores were slower)
+        CircularBuffer stg(cb_stage);
+        ca.reserve_back(KT);
+        stg.reserve_back(KT / 16);
+        const uint32_t s0 = stg.get_write_ptr(), pa = ca.get_write_ptr();
+        const uint64_t zeros = get_noc_addr(MEM_ZEROS_BASE);
+        for (uint32_t k = 0; k < KT; k++) {
+            noc_async_read(a.get_noc_addr(k, 0), s0 + (2 * k) * 64, 64);
+            noc_async_read(a.get_noc_addr(k, 512), s0 + (2 * k + 1) * 64, 64);
+            const uint32_t p = pa + k * ta;
+            noc_async_read(zeros, p + 32, 480);
+            noc_async_read(zeros, p + 512 + 32, 480);
+            noc_async_read(zeros, p + 1024, 512);
+            noc_async_read(zeros, p + 1536, 512);
+        }
+        noc.async_read_barrier();
+        for (uint32_t k = 0; k < KT; k++) {
+            noc_async_read(get_noc_addr(s0 + (2 * k) * 64), pa + k * ta, 32);
+            noc_async_read(get_noc_addr(s0 + (2 * k + 1) * 64), pa + k * ta + 512, 32);
+        }
+    }
+    noc.async_read_barrier();
+    if constexpr (SHARED_A) {
+        ca.push_back(KT);
+    }
+    volatile tt_l1_ptr uint16_t* id = reinterpret_cast<volatile tt_l1_ptr uint16_t*>(ci.get_write_ptr());
+    for (uint32_t q = 0; q < nj; q++) {
+        const uint32_t job = j0 + q, j = job / NT, n = job % NT;
+        const uint32_t e = id[j];
+        if constexpr (!SHARED_A) {
+            ca.reserve_back(KT);
+            for (uint32_t k = 0; k < KT; k++) {
+                noc.async_read(a, ca, ta, {.page_id = j * KT + k}, {.offset_bytes = k * ta});
+            }
+        }
+        for (uint32_t k0 = 0; k0 < KT; k0 += KB) {
+            cw.reserve_back(KB / 2);
+            for (uint32_t k = 0; k < KB / 2; k++) {  // the even K tiles (the writer reads the odd ones)
+                noc.async_read(w, cw, tw, {.page_id = (e * KT + k0 + 2 * k) * NT + n}, {.offset_bytes = k * tw});
+            }
+            noc.async_read_barrier();
+            if constexpr (!SHARED_A) {
+                if (k0 == 0) {
+                    ca.push_back(KT);
+                }
+            }
+            cw.push_back(KB / 2);
+        }
+    }
+}

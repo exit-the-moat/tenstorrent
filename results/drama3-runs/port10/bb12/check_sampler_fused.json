@@ -1,0 +1,36 @@
+{
+ "n": 2000,
+ "fused_vs_lean": 0,
+ "fused_vs_host": 0,
+ "lean_vs_host": 0,
+ "onehot_bad": 0,
+ "examples": [],
+ "check_s": 6.2,
+ "trace_ms_9_draws": {
+  "lean": 1.754,
+  "lean_codes": [
+   330.0,
+   435.0,
+   332.0,
+   749.0,
+   847.0,
+   152.0,
+   892.0,
+   997.0,
+   294.0
+  ],
+  "fused": 0.814,
+  "fused_codes": [
+   330.0,
+   435.0,
+   332.0,
+   749.0,
+   847.0,
+   152.0,
+   892.0,
+   997.0,
+   294.0
+  ]
+ },
+ "traced_codes_equal": true
+}

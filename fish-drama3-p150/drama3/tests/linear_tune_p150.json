@@ -1,0 +1,598 @@
+[
+ {
+  "sig": {
+   "act": "None",
+   "ckc": null,
+   "mc": null,
+   "out": "None",
+   "w": [
+    1,
+    1,
+    2048,
+    1
+   ],
+   "wdt": "DataType.BFLOAT16",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.L1",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 40,
+  "default_ms": 0.0488,
+  "best": {
+   "pn": 1,
+   "ibw": 16,
+   "sw": 1,
+   "cores": 1,
+   "gx": 1,
+   "gy": 1,
+   "ms": 0.0084,
+   "rel_diff": 0.01064
+  },
+  "saved_ms_per_frame_est": 1.6148
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.LoFi",
+    "True"
+   ],
+   "mc": "BufferType.L1",
+   "out": "None",
+   "w": [
+    4096,
+    2048
+   ],
+   "wdt": "DataType.BFLOAT8_B",
+   "x": [
+    1,
+    1,
+    4096
+   ],
+   "xbuf": "BufferType.L1",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 30,
+  "default_ms": 0.0842,
+  "best": {
+   "pn": 3,
+   "ibw": 16,
+   "sw": 1,
+   "cores": 22,
+   "gx": 11,
+   "gy": 2,
+   "ms": 0.0326,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 1.5476
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.HiFi2",
+    "True"
+   ],
+   "mc": null,
+   "out": "None",
+   "w": [
+    1,
+    1,
+    2048,
+    256
+   ],
+   "wdt": "DataType.BFLOAT16",
+   "x": [
+    1,
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.L1",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 40,
+  "default_ms": 0.0511,
+  "best": {
+   "pn": 1,
+   "ibw": 16,
+   "sw": 1,
+   "cores": 8,
+   "gx": 8,
+   "gy": 1,
+   "ms": 0.0133,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 1.512
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.LoFi",
+    "True"
+   ],
+   "mc": "BufferType.L1",
+   "out": "None",
+   "w": [
+    4096,
+    2048
+   ],
+   "wdt": "DataType.BFLOAT8_B",
+   "x": [
+    1,
+    1,
+    4096
+   ],
+   "xbuf": "BufferType.DRAM",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 23,
+  "default_ms": 0.0851,
+  "best": {
+   "pn": 3,
+   "ibw": 16,
+   "sw": 1,
+   "cores": 22,
+   "gx": 11,
+   "gy": 2,
+   "ms": 0.0323,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 1.2133
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.LoFi",
+    "True"
+   ],
+   "mc": "BufferType.L1",
+   "out": "None",
+   "w": [
+    2048,
+    512
+   ],
+   "wdt": "DataType.BFLOAT4_B",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.L1",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 40,
+  "default_ms": 0.0334,
+  "best": {
+   "pn": 2,
+   "ibw": 16,
+   "sw": 2,
+   "cores": 8,
+   "gx": 8,
+   "gy": 1,
+   "ms": 0.0143,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.7647
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.HiFi4",
+    "True"
+   ],
+   "mc": null,
+   "out": "None",
+   "w": [
+    6144,
+    2048
+   ],
+   "wdt": "DataType.BFLOAT16",
+   "x": [
+    1,
+    1,
+    6144
+   ],
+   "xbuf": "BufferType.DRAM",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 13,
+  "default_ms": 0.1215,
+  "best": {
+   "pn": 3,
+   "ibw": 4,
+   "sw": 1,
+   "cores": 22,
+   "gx": 11,
+   "gy": 2,
+   "ms": 0.07,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.67
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.LoFi",
+    "True"
+   ],
+   "mc": "BufferType.L1",
+   "out": "None",
+   "w": [
+    2048,
+    512
+   ],
+   "wdt": "DataType.BFLOAT8_B",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.DRAM",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 26,
+  "default_ms": 0.0366,
+  "best": {
+   "pn": 2,
+   "ibw": 16,
+   "sw": 2,
+   "cores": 8,
+   "gx": 8,
+   "gy": 1,
+   "ms": 0.0145,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.5734
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.HiFi4",
+    "True"
+   ],
+   "mc": null,
+   "out": "None",
+   "w": [
+    2048,
+    2048
+   ],
+   "wdt": "DataType.BFLOAT16",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.DRAM",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 26,
+  "default_ms": 0.0489,
+  "best": {
+   "pn": 3,
+   "ibw": 4,
+   "sw": 1,
+   "cores": 22,
+   "gx": 11,
+   "gy": 2,
+   "ms": 0.0302,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.4873
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.LoFi",
+    "True"
+   ],
+   "mc": "BufferType.L1",
+   "out": "None",
+   "w": [
+    2048,
+    512
+   ],
+   "wdt": "DataType.BFLOAT8_B",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.L1",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 20,
+  "default_ms": 0.0336,
+  "best": {
+   "pn": 2,
+   "ibw": 16,
+   "sw": 2,
+   "cores": 8,
+   "gx": 8,
+   "gy": 1,
+   "ms": 0.0144,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.3836
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.HiFi4",
+    "True"
+   ],
+   "mc": null,
+   "out": "DataType.FLOAT32",
+   "w": [
+    2048,
+    1024
+   ],
+   "wdt": "DataType.BFLOAT16",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.DRAM",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 9,
+  "default_ms": 0.0406,
+  "best": {
+   "pn": 2,
+   "ibw": 16,
+   "sw": 2,
+   "cores": 16,
+   "gx": 11,
+   "gy": 2,
+   "ms": 0.0208,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.1785
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.LoFi",
+    "True"
+   ],
+   "mc": "BufferType.L1",
+   "out": "None",
+   "w": [
+    2048,
+    12352
+   ],
+   "wdt": "DataType.BFLOAT8_B",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.L1",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 30,
+  "default_ms": 0.082,
+  "best": {
+   "pn": 12,
+   "ibw": 1,
+   "sw": 4,
+   "cores": 33,
+   "gx": 11,
+   "gy": 3,
+   "ms": 0.0795,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.0743
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.LoFi",
+    "True"
+   ],
+   "mc": "BufferType.L1",
+   "out": "None",
+   "w": [
+    2048,
+    8192
+   ],
+   "wdt": "DataType.BFLOAT8_B",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.DRAM",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 13,
+  "default_ms": 0.0594,
+  "best": {
+   "pn": 12,
+   "ibw": 4,
+   "sw": 4,
+   "cores": 22,
+   "gx": 11,
+   "gy": 2,
+   "ms": 0.0566,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.0359
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.LoFi",
+    "True"
+   ],
+   "mc": "BufferType.L1",
+   "out": "None",
+   "w": [
+    2048,
+    8192
+   ],
+   "wdt": "DataType.BFLOAT8_B",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.L1",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 10,
+  "default_ms": 0.0592,
+  "best": {
+   "pn": 12,
+   "ibw": 4,
+   "sw": 4,
+   "cores": 22,
+   "gx": 11,
+   "gy": 2,
+   "ms": 0.0565,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.0268
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.HiFi4",
+    "True"
+   ],
+   "mc": null,
+   "out": "None",
+   "w": [
+    2048,
+    6144
+   ],
+   "wdt": "DataType.BFLOAT16",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.DRAM",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 13,
+  "default_ms": 0.0765,
+  "best": {
+   "pn": 3,
+   "ibw": 2,
+   "sw": 1,
+   "cores": 64,
+   "gx": 11,
+   "gy": 6,
+   "ms": 0.0751,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.0188
+ },
+ {
+  "sig": {
+   "act": "None",
+   "ckc": [
+    "MathFidelity.HiFi4",
+    "True"
+   ],
+   "mc": null,
+   "out": "DataType.FLOAT32",
+   "w": [
+    2048,
+    4128
+   ],
+   "wdt": "DataType.BFLOAT16",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.DRAM",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 1,
+  "default_ms": 0.0561,
+  "best": {
+   "pn": 6,
+   "ibw": 4,
+   "sw": 2,
+   "cores": 22,
+   "gx": 11,
+   "gy": 2,
+   "ms": 0.0533,
+   "rel_diff": 0.0
+  },
+  "saved_ms_per_frame_est": 0.0028
+ },
+ {
+  "sig": {
+   "act": "silu",
+   "ckc": [
+    "MathFidelity.LoFi",
+    "True"
+   ],
+   "mc": "BufferType.L1",
+   "out": "None",
+   "w": [
+    2048,
+    512
+   ],
+   "wdt": "DataType.BFLOAT4_B",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.L1",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 40,
+  "default_ms": 0.0357,
+  "best": null,
+  "saved_ms_per_frame_est": 0
+ },
+ {
+  "sig": {
+   "act": "silu",
+   "ckc": [
+    "MathFidelity.HiFi4",
+    "True"
+   ],
+   "mc": null,
+   "out": "None",
+   "w": [
+    2048,
+    6144
+   ],
+   "wdt": "DataType.BFLOAT16",
+   "x": [
+    1,
+    1,
+    2048
+   ],
+   "xbuf": "BufferType.DRAM",
+   "xdt": "DataType.BFLOAT16"
+  },
+  "calls": 13,
+  "default_ms": 0.0813,
+  "best": null,
+  "saved_ms_per_frame_est": 0
+ }
+]

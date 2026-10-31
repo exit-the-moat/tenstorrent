@@ -1,0 +1,159 @@
+--- codec_device.py.orig	2026-10-31 14:00:34.522856398 +0100
++++ /opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/codec_device.py	2026-10-31 14:10:25.209284004 +0100
+@@ -53,6 +53,19 @@
+ # port10 precision candidate (opt-in): math fidelity of the convs / pointwise matmuls (default HiFi4)
+ FIDELITY = getattr(ttnn.MathFidelity, os.environ.get("DRAMA3_CODEC_FIDELITY", "HiFi4"))
+ KDIR = "models/demos/blackhole/drama3/kernels"
++# cc13 (opt-in): DRAMA3_CODEC_CORES="x0,y0,x1,y1" (or DeviceDecoder(cores=..., sub_device_id=...)): every program of
++# the decoder on that core rectangle only (its own sub-device, so it can run beside the decode on the other cores):
++# conv1d core_grid override, matmuls on the sub-device, sub_core_grids on the eltwise / layout ops, the snake kernel
++# on those cores, and the channel-0 tail as slice + tanh + untilize (no transpose: it has no core option)
++CORES = os.environ.get("DRAMA3_CODEC_CORES", "")
++
++
++def core_rect(spec):
++    """"x0,y0,x1,y1" -> CoreRangeSet of that rectangle (None for "")."""
++    if not spec:
++        return None
++    x0, y0, x1, y1 = (int(v) for v in spec.split(","))
++    return ttnn.CoreRangeSet({ttnn.CoreRange(ttnn.CoreCoord(x0, y0), ttnn.CoreCoord(x1, y1))})
+ 
+ 
+ class _Conv:
+@@ -70,9 +83,16 @@
+ 
+ 
+ class DeviceDecoder:
+-    def __init__(self, mesh, codec, length):
+-        """codec: the host codec (fold_weight_norm()'d); length: latent rows per call (window frames * 4)."""
++    def __init__(self, mesh, codec, length, cores=None, sub_device_id=None, layout_full=False):
++        """codec: the host codec (fold_weight_norm()'d); length: latent rows per call (window frames * 4).
++        cores / sub_device_id (cc13, opt-in): the core rectangle (CoreRangeSet) of the codec sub-device and its id
++        (without an id the matmuls run on a grid of the rectangle's size at (0, 0): timing only).
++        layout_full (cc13, timing estimate only): the tile <-> row-major conversions and the channel-0 tail on the full
++        grid (sub_core_grids untilize takes one tile row only), so no sub-device can be loaded."""
+         self.mesh, self.L0 = mesh, length
++        self.crs = cores if cores is not None else core_rect(CORES)
++        self.sd = sub_device_id
++        self.layout_full = layout_full
+         self._sk = {}  # fused snake kernel: per-shape program parts
+         self.ckc = ttnn.init_device_compute_kernel_config(
+             mesh.arch(), math_fidelity=FIDELITY, fp32_dest_acc_en=True, packer_l1_acc=True
+@@ -130,7 +150,12 @@
+         """x [1, L, cin] (interleaved) -> [1, L, cout] TILE interleaved."""
+         if c.k == 1:
+             if CONV_IN_BF16 and x.dtype != ttnn.bfloat16:
+-                x = ttnn.typecast(x, ttnn.bfloat16)
++                x = self._typecast(x, ttnn.bfloat16)
++            if self.crs is not None and self.sd is not None:
++                return ttnn.linear(x, c.w, bias=c.b, compute_kernel_config=self.ckc, dtype=ACT, sub_device_id=self.sd)
++            if self.crs is not None:
++                g = self.crs.bounding_box().grid_size()
++                return ttnn.linear(x, c.w, bias=c.b, compute_kernel_config=self.ckc, dtype=ACT, core_grid=ttnn.CoreGrid(y=g.y, x=g.x))
+             return ttnn.linear(x, c.w, bias=c.b, compute_kernel_config=self.ckc, dtype=ACT)
+         cfg = ttnn.Conv1dConfig(weights_dtype=WDT, shard_layout=c.layout, deallocate_activation=False)
+         for o in CONV_OPTS:
+@@ -146,14 +171,32 @@
+                 cfg.enable_activation_reuse = True
+             elif o.startswith("abh="):
+                 cfg.act_block_h_override = int(o[4:])
++        if self.crs is not None:
++            cfg.core_grid = self.crs
++            cfg.override_sharding_config = True
+         try:
+             return self._conv_inner(x, L, c, cfg)
+         except Exception as e:
+             raise RuntimeError(f"conv1d L={L} cin={c.cin} cout={c.cout} k={c.k} d={c.d} layout={c.layout}: {str(e)[:200]}") from None
+ 
++    def _typecast(self, x, dt):
++        if self.crs is not None:
++            return ttnn.typecast(x, dt, sub_core_grids=self.crs)
++        return ttnn.typecast(x, dt)
++
++    def _to_layout(self, x, layout):
++        if self.crs is not None and not self.layout_full:
++            return ttnn.to_layout(x, layout, sub_core_grids=self.crs)
++        return ttnn.to_layout(x, layout)
++
++    def _add(self, x, y):
++        if self.crs is not None:
++            return ttnn.add(x, y, sub_core_grids=self.crs)
++        return ttnn.add(x, y)
++
+     def _conv_inner(self, x, L, c, cfg):
+         if CONV_IN_BF16 and x.dtype != ttnn.bfloat16:
+-            x = ttnn.typecast(x, ttnn.bfloat16)
++            x = self._typecast(x, ttnn.bfloat16)
+         out, [c.w, c.b] = ttnn.conv1d(
+             input_tensor=x,
+             weight_tensor=c.w,
+@@ -182,7 +225,7 @@
+         if n != L:
+             out = ttnn.slice(out, [0, 0, 0], [1, L, out.shape[-1]])
+         if out.layout != ttnn.TILE_LAYOUT:
+-            out = ttnn.to_layout(out, ttnn.TILE_LAYOUT)
++            out = self._to_layout(out, ttnn.TILE_LAYOUT)
+         return out
+ 
+     def _snake_op(self, x, ai):
+@@ -213,9 +256,14 @@
+             R, CT = L // 32, C // 32
+             items = R * CT
+             g = self.mesh.compute_with_storage_grid_size()
++            x0 = y0 = 0
++            if self.crs is not None:  # cc13: the codec rectangle
++                bb = self.crs.bounding_box()
++                x0, y0 = bb.start.x, bb.start.y
++                g = ttnn.CoreCoord(bb.end.x - x0 + 1, bb.end.y - y0 + 1)
+             per = max(-(-items // (g.x * g.y)), min(8, items))  # >= 8 tiles per core (fewer runtime args to set)
+             nc = -(-items // per)
+-            cores = [ttnn.CoreCoord(i % g.x, i // g.x) for i in range(nc)]
++            cores = [ttnn.CoreCoord(x0 + i % g.x, y0 + i // g.x) for i in range(nc)]
+             crs = ttnn.CoreRangeSet([ttnn.CoreRange(c, c) for c in cores])
+             work = [(c, i * per, min(per, items - i * per)) for i, c in enumerate(cores)]
+             ta = lambda t: list(ttnn.TensorAccessorArgs(t).get_compile_time_args())  # noqa: E731
+@@ -274,7 +322,7 @@
+         pend = None  # SNAKE_ADD: the residual branch output whose add is fused into the next snake
+         for kind, p in self.stages:
+             if pend is not None and kind not in ("snake", "res"):
+-                x, pend = ttnn.add(x, pend), None
++                x, pend = self._add(x, pend), None
+             if kind == "conv":
+                 x = self._conv(x, L, p)
+             elif kind == "snake":
+@@ -286,10 +334,10 @@
+             elif kind == "trans":
+                 c, s, cout = p
+                 y = self._conv(x, L, c)  # [1, L, s * cout]
+-                y = ttnn.to_layout(y, ttnn.ROW_MAJOR_LAYOUT)
++                y = self._to_layout(y, ttnn.ROW_MAJOR_LAYOUT)
+                 y = ttnn.reshape(y, (1, L * s, cout))
+                 L = L * s
+-                x = ttnn.to_layout(y, ttnn.TILE_LAYOUT)
++                x = self._to_layout(y, ttnn.TILE_LAYOUT)
+             elif kind == "res":
+                 s1, c7, s2, c1 = p
+                 if pend is not None:
+@@ -303,15 +351,19 @@
+                 if fuse and x.dtype == ttnn.float32 and y.dtype == ttnn.float32:
+                     pend = y
+                 else:
+-                    x = ttnn.add(x, y)
++                    x = self._add(x, y)
+             elif kind == "tanh":
+-                if OUT_CH0:  # [1, L, 32] -> row 0 of [1, 32, L], tanh, row major [1, 1, L]
++                if OUT_CH0 and self.crs is not None and not self.layout_full:  # cc13: column 0 as [1, L, 1], tanh, row major (= L samples)
++                    x = ttnn.slice(x, [0, 0, 0], [1, L, 1], sub_core_grids=self.crs)
++                    x = ttnn.tanh(x, sub_core_grids=self.crs)
++                    x = self._to_layout(x, ttnn.ROW_MAJOR_LAYOUT)
++                elif OUT_CH0:  # [1, L, 32] -> row 0 of [1, 32, L], tanh, row major [1, 1, L]
+                     x = ttnn.transpose(x, -2, -1)
+                     x = ttnn.slice(x, [0, 0, 0], [1, 1, L])
+                     x = ttnn.tanh(x)
+                     x = ttnn.to_layout(x, ttnn.ROW_MAJOR_LAYOUT)
+                 else:
+-                    x = ttnn.tanh(x)
++                    x = ttnn.tanh(x, sub_core_grids=self.crs) if self.crs is not None else ttnn.tanh(x)
+             if collect:
+                 outs.append((kind, ttnn.to_torch(x).float()))
+         self.L_out = L

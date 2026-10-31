@@ -1,0 +1,38 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/librosa/core/intervals.py:8: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+s04-05 canonical s0 small 1.000 base 0.750 moat None bills None | S: That logic felt airtight. | B: that logic felled airtight.
+s05-02 canonical s0 small 0.833 base 0.667 moat None bills None | S: Card 2. Identical. Two Dead Cards. | B: Card 2, Identical, 2 Dead Cards
+s02-01 canonical s0 small 0.857 base 0.857 moat False bills None | S: This channel is called exit the mode. | B: This channel is called Exit the Mode.
+s02-02 canonical s0 small 0.857 base 0.786 moat False bills False | S: In AI, the mode is CUDA and the cloud builds that keep you inside. | B: In AI, the mode is cooler and the cloud builds that keep you inside.
+s10-02 canonical s0 small 0.875 base 0.875 moat False bills None | S: So, did we exit the mode? Not yet. | B: So, did we exit the mode? Not yet.
+s04-05 orig      s1 small 1.000 base 1.000 moat None bills None | S: that logic felt airtight. | B: that logic felt airtight.
+s04-05 orig      s2 small 1.000 base 1.000 moat None bills None | S: that logic felt airtight. | B: that logic felt airtight.
+s04-05 orig      s3 small 1.000 base 1.000 moat None bills None | S: that logic felt airtight. | B: that logic felt airtight.
+s05-02 orig      s1 small 0.833 base 0.667 moat None bills None | S: Card 2. Identical. Two dead cards. | B: Card 2, Identical, 2 Dead Cards.
+s05-02 orig      s2 small 0.667 base 0.667 moat None bills None | S: Cart 2. Identical. Two Dead Cards. | B: Card 2, Identical, 2 Dead Cards
+s05-02 orig      s3 small 0.833 base 0.667 moat None bills None | S: Card 2. Identical. Two Dead Cards. | B: Card 2, Identical, 2 Dead Cards
+s02-01 orig      s1 small 0.857 base 0.857 moat False bills None | S: This channel is called exit the mode. | B: This channel is called Exit the Mode.
+s02-01 orig      s2 small 0.857 base 0.857 moat False bills None | S: This channel is called exit the mode. | B: This channel is called Exit the Mode
+s02-01 orig      s3 small 0.857 base 0.857 moat False bills None | S: This channel is called exit the mode. | B: This channel is called Exit the Mode
+s02-02 orig      s1 small 0.759 base 0.690 moat False bills False | S: In a i, the mode is CUDA and the cloud builds that keep you inside. | B: In a i, the mode is cooler and the cloud builds that keep you inside.
+s02-02 orig      s2 small 0.690 base 0.690 moat False bills False | S: In her eye, the mode is cooter and the cloud builds that keep you inside. | B: In a i, the mode is cooler and the cloud builds that keep you inside.
+s02-02 orig      s3 small 0.857 base 0.690 moat False bills False | S: In AI, the mode is CUDA and the cloud builds that keep you inside. | B: In a i, the mode is cooler and the cloud builds that keep you inside.
+s10-02 orig      s1 small 0.875 base 0.875 moat False bills None | S: So, did we exit the mode? Not yet. | B: So, did we exit the mode? Not yet.
+s10-02 orig      s2 small 0.875 base 0.875 moat False bills None | S: So did we exit the mode? Not yet. | B: So, did we exit the mode? Not yet.
+s10-02 orig      s3 small 0.875 base 0.875 moat False bills None | S: So, did we exit the mode? Not yet. | B: So, did we exit the mode? Not yet.
+s02-01 mote      s1 small 0.857 base 0.857 moat False bills None | S: This channel is called exit the mode. | B: This channel is called Exit The Mode.
+s02-01 mote      s2 small 0.857 base 0.857 moat False bills None | S: This channel is called exit the mode. | B: This channel is called Exit the Mode.
+s02-01 mote      s3 small 0.857 base 0.857 moat False bills None | S: This channel is called exit the mode. | B: This channel is called Exit the Mode.
+s10-02 mote      s1 small 0.875 base 0.875 moat False bills None | S: So, did we exit the mode? Not yet. | B: So, did we exit the mode? Not yet.
+s10-02 mote      s2 small 0.875 base 0.875 moat False bills None | S: So, did we exit the mode? Not yet. | B: So did we exit the mode? Not yet.
+s10-02 mote      s3 small 0.875 base 0.875 moat False bills None | S: So, did we exit the mode? Not yet. | B: So did we exit the mode? Not yet.
+s02-02 mote      s1 small 0.759 base 0.690 moat False bills False | S: In her eye, the mode is CUDA and the cloud builds that keep you inside. | B: In a i, the mode is cooler and the cloud builds that keep you inside.
+s02-02 mote      s2 small 0.857 base 0.786 moat False bills False | S: In AI the mode is CUDA and the cloud builds that keep you inside. | B: In AI, the mode is cooler and the cloud builds that keep you inside.
+s02-02 mote      s3 small 0.857 base 0.786 moat False bills False | S: In AI the mode is CUDA and the cloud builds that keep you inside. | B: In AI, the mode is cooler and the cloud builds that keep you inside.
+RECOMMEND s04-05: orig s1 (/opt/ep0/day6/narration_retry/s04-05_orig_s1.wav)
+RECOMMEND s05-02: canonical s0 (/opt/ep0/day6/narration/s05-02.wav)
+RECOMMEND s02-01: canonical s0 (/opt/ep0/day6/narration/s02-01.wav)
+RECOMMEND s02-02: canonical s0 (/opt/ep0/day6/narration/s02-02.wav)
+RECOMMEND s10-02: canonical s0 (/opt/ep0/day6/narration/s10-02.wav)
+DONE
+EXIT 0

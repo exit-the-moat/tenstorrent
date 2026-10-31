@@ -1,0 +1,19 @@
+ft9_off rc=0 EXIT 0 io=0 disk=70%
+off {'backbone_trace_ms': 10.55, 'tower_trace_ms': 6.288, 'bb_plus_tower_trace_ms': 16.842, 'gen_ms_per_frame': 22.138}
+ft9_bb rc=0 EXIT 1 io=0 disk=70%
+2026-10-31 13:19:15.974 | critical |          Always | TT_THROW: Statically allocated circular buffers in program 2850 clash with L1 buffers on core range [0-0 - 0-0]. L1 buffer allocated at 1316608 and static circular buffer region ends at 1346688 (assert.hpp:104)
+RuntimeError: TT_THROW @ /work/tt_metal/impl/program/program.cpp:2527: tt::exception
+RuntimeError: TT_THROW @ /work/tt_metal/impl/program/program.cpp:2527: tt::exception
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/bb12/ft9_bb.json'
+ft9_smp rc=0 EXIT 0 io=0 disk=70%
+smp {'backbone_trace_ms': 10.553, 'tower_trace_ms': 5.128, 'bb_plus_tower_trace_ms': 15.68, 'gen_ms_per_frame': 21.049}
+ft9_off2 rc=0 EXIT 0 io=0 disk=70%
+off2 {'backbone_trace_ms': 10.552, 'tower_trace_ms': 6.289, 'bb_plus_tower_trace_ms': 16.841, 'gen_ms_per_frame': 21.939}
+ft9_bb2 rc=0 EXIT 1 io=0 disk=70%
+2026-10-31 13:26:22.381 | critical |          Always | TT_THROW: Statically allocated circular buffers in program 2880 clash with L1 buffers on core range [0-0 - 0-0]. L1 buffer allocated at 1316608 and static circular buffer region ends at 1346688 (assert.hpp:104)
+RuntimeError: TT_THROW @ /work/tt_metal/impl/program/program.cpp:2527: tt::exception
+RuntimeError: TT_THROW @ /work/tt_metal/impl/program/program.cpp:2527: tt::exception
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/bb12/ft9_bb2.json'
+ft9_smp2 rc=0 EXIT 0 io=0 disk=70%
+smp2 {'backbone_trace_ms': 10.553, 'tower_trace_ms': 5.129, 'bb_plus_tower_trace_ms': 15.686, 'gen_ms_per_frame': 20.945}
+A9_DONE

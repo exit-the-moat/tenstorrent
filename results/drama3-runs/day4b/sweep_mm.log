@@ -1,0 +1,301 @@
+2026-10-29 21:29:15.703 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-29 21:29:15.703 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-29 21:29:15.703 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-29 21:29:15.703 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-29 21:29:15.707 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-29 21:29:15.707 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-29 21:29:15.720 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-29 21:29:15.720 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-29 21:29:15.720 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-29 21:29:15.720 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-29 21:29:15.720 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-29 21:29:15.733 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-29 21:29:15.745 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-29 21:29:15.745 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-29 21:29:15.745 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-29 21:29:15.746 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-29 21:29:15.746 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-29 21:29:15.746 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-29 21:29:15.746 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-29 21:29:15.746 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-29 21:29:15.747 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-29 21:29:15.853 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-29 21:29:15.854 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-29 21:29:15.854 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-29 21:29:15.854 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-29 21:29:15.854 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-29 21:29:17.725 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-29 21:29:17.731 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-29 21:29:17.731 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-29 21:29:17.731 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-29 21:29:19.469 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-29 21:29:19.651 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-29 21:29:19.652 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-29 21:29:19.652 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-29 21:29:19.652 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 21:29:19.652 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 21:29:19.652 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+weights Shape([1, 256, 2048, 1024]) DataType.BFLOAT4_B Shape([1, 256, 512, 2048]) DataType.BFLOAT8_B
+grid 11 10
+{"M": 32, "mm": "gate_up", "default_ms": 7.6}
+2026-10-29 21:29:20.265 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 1, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.275 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 1, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.276 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 1, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.277 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 1, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.278 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 2, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.279 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 2, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.280 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 2, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.281 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 2, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.282 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 4, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.283 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 4, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.284 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 4, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.285 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 4, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.286 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 8, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.287 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 8, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.288 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 8, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.289 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 8, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.290 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 16, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.291 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 16, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.292 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 16, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.293 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "gate_up", "pcn": 16, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+BEST null
+{"M": 32, "mm": "down", "default_ms": 2.35}
+2026-10-29 21:29:20.390 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 1, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.391 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 1, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.392 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 1, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.393 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 1, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.394 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 2, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.395 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 2, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.396 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 2, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.397 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 2, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.398 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 4, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.399 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 4, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.400 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 4, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.401 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 4, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.402 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 8, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.403 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 8, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.404 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 8, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.405 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 8, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.406 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 16, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.407 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 16, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.408 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 16, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+2026-10-29 21:29:20.409 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: out_subblock_w 8 times out_subblock_h 1 needs to be at most 4 to fit in hardware (assert.hpp:104)
+{"M": 32, "mm": "down", "pcn": 16, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:590: program_config.out_subblock_h *"}
+BEST null
+{"M": 64, "mm": "gate_up", "default_ms": 8.37}
+2026-10-29 21:29:20.860 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 1, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.862 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 1, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.863 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 1, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.864 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 1, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.865 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 2, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.866 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 2, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.867 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 2, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.868 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 2, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.869 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 4, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.870 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 4, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.871 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 4, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.872 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 4, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.873 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (8) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 8, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.874 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (8) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 8, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.875 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (8) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 8, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.876 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (8) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 8, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.877 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (16) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 16, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.878 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (16) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 16, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.879 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (16) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 16, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:20.880 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (16) (assert.hpp:104)
+{"M": 64, "mm": "gate_up", "pcn": 16, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+BEST null
+{"M": 64, "mm": "down", "default_ms": 2.6}
+2026-10-29 21:29:21.063 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 1, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.064 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 1, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.066 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 1, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.067 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 1, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.068 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 2, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.069 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 2, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.070 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 2, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.071 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 2, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.072 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 4, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.073 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 4, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.074 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 4, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.075 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 4, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.076 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (8) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 8, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.077 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (8) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 8, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.078 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (8) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 8, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.079 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (8) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 8, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.080 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (16) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 16, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.081 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (16) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 16, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.082 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (16) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 16, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.083 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (16) (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 16, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+BEST null
+{"M": 128, "mm": "gate_up", "default_ms": 11.61}
+2026-10-29 21:29:21.956 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 1, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.958 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 1, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.959 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 1, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.960 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (1) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 1, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.961 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 2, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.962 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 2, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.963 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 2, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.964 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (2) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 2, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.965 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 4, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.966 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 4, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.967 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 4, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.968 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (4) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 4, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.969 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (8) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 8, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.970 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (8) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 8, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.971 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (8) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 8, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.972 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (8) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 8, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.974 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (16) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 16, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.975 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (16) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 16, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.976 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (16) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 16, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:21.977 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (32) must equal per_core_N (16) (assert.hpp:104)
+{"M": 128, "mm": "gate_up", "pcn": 16, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+BEST null
+{"M": 128, "mm": "down", "default_ms": 3.54}
+2026-10-29 21:29:22.378 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 1, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.380 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 1, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.381 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 1, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.382 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (1) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 1, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.383 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 2, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.384 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 2, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.385 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 2, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.386 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (2) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 2, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.387 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 4, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.388 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 4, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.389 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 4, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.390 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (4) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 4, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.391 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (8) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 8, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.392 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (8) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 8, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.393 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (8) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 8, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.394 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (8) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 8, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.395 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (16) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 16, "ibw": 1, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.396 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (16) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 16, "ibw": 2, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.397 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (16) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 16, "ibw": 4, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+2026-10-29 21:29:22.398 | critical |          Always | TT_FATAL: MatmulMultiCoreReuseProgramConfig: N (64) must equal per_core_N (16) (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 16, "ibw": 8, "err": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/matmul/device/matmul_device_operation.cpp:1789: N == per_core_N\ninfo:\nMatmulMu"}
+BEST null
+DONE
+2026-10-29 21:29:23.319 | info     |    BuildKernels | JIT cache stats: 55/55 hits (100.0%) [55 cached, 2 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-29 21:29:23.320 | info     |    BuildKernels | JIT telemetry: 33 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-29 21:29:23.322 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-29 21:29:23.322 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-29 21:29:23.337 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-29 21:29:23.337 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-29 21:29:23.337 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

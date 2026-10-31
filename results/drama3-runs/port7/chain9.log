@@ -1,0 +1,45 @@
+=== chain9 start 01:38:42 io=0
+=== /opt/ep0/port7/r4 start 01:38:42 io_errors=0
+{'price': (57.0, 203.7), 'model': (57.7, 190.7), 'specs': (58.3, 192.7), 'close': (58.0, 202.0), 'cold_open': (63.3, 240.3), 'server': (60.3, 188.0), 'second_opinion': (51.8, 189.8), 'fix': (65.5, 183.5)}
+SUMS_OK /opt/ep0/port7/r4
+=== /opt/ep0/port7/r4 end 01:41:01 io_errors=0 EXIT 0
+=== /opt/ep0/port7/b4 start 01:41:01 io_errors=0
+{'price': (50.0, 162.0), 'model': (56.7, 214.0), 'specs': (49.7, 203.7), 'close': (70.0, 190.5), 'cold_open': (57.7, 197.7), 'server': (53.3, 185.0), 'second_opinion': (58.0, 188.0), 'fix': (63.3, 186.7)}
+SUMS_OK /opt/ep0/port7/b4
+=== /opt/ep0/port7/b4 end 01:43:12 io_errors=0 EXIT 0
+=== /opt/ep0/port7/r5 start 01:43:12 io_errors=0
+{'price': (62.3, 205.3), 'model': (51.3, 182.3), 'specs': (59.7, 200.0), 'close': (57.0, 179.0), 'cold_open': (56.3, 239.0), 'server': (56.5, 167.0), 'second_opinion': (54.8, 185.5), 'fix': (61.5, 195.0)}
+SUMS_OK /opt/ep0/port7/r5
+=== /opt/ep0/port7/r5 end 01:45:19 io_errors=0 EXIT 0
+=== /opt/ep0/port7/b5 start 01:45:19 io_errors=0
+{'price': (70.7, 208.3), 'model': (50.8, 192.8), 'specs': (58.0, 207.7), 'close': (58.0, 240.0), 'cold_open': (54.7, 200.3), 'server': (45.0, 169.0), 'second_opinion': (55.0, 194.7), 'fix': (61.3, 198.0)}
+SUMS_OK /opt/ep0/port7/b5
+=== /opt/ep0/port7/b5 end 01:47:29 io_errors=0 EXIT 0
+=== /opt/ep0/port7/r6 start 01:47:29 io_errors=0
+{'price': (62.3, 193.0), 'model': (56.0, 180.3), 'specs': (63.5, 179.0), 'close': (57.0, 205.0), 'cold_open': (53.5, 197.5), 'server': (58.0, 189.3), 'second_opinion': (56.0, 193.7), 'fix': (56.0, 191.0)}
+SUMS_OK /opt/ep0/port7/r6
+=== /opt/ep0/port7/r6 end 01:49:42 io_errors=0 EXIT 0
+=== /opt/ep0/port7/b6 start 01:49:42 io_errors=0
+{'price': (53.0, 188.3), 'model': (55.3, 183.7), 'specs': (84.7, 173.3), 'close': (58.5, 185.5), 'cold_open': (52.0, 178.0), 'server': (50.7, 188.0), 'second_opinion': (60.3, 188.0), 'fix': (60.3, 214.3)}
+SUMS_OK /opt/ep0/port7/b6
+=== /opt/ep0/port7/b6 end 01:51:49 io_errors=0 EXIT 0
+SUMS_OK_DISK r4
+SUMS_OK_DISK b4
+SUMS_OK_DISK r5
+SUMS_OK_DISK b5
+SUMS_OK_DISK r6
+SUMS_OK_DISK b6
+r4 8 of 8 identical to i_et2
+r5 8 of 8 identical to i_et2
+r6 8 of 8 identical to i_et2
+b4 8 of 8 identical to i_bf8
+b5 8 of 8 identical to i_bf8
+b6 8 of 8 identical to i_bf8
+r4 lines 8 RTF 0.517 gen ms/frame 23.67 rtf/line 0.510-0.556 TTFA 0.449-0.485 worst_late 0.000 frames 2087 audio 96.9
+r5 lines 8 RTF 0.515 gen ms/frame 23.59 rtf/line 0.508-0.560 TTFA 0.469-0.496 worst_late 0.000 frames 2087 audio 96.9
+r6 lines 8 RTF 0.518 gen ms/frame 23.68 rtf/line 0.510-0.555 TTFA 0.452-0.490 worst_late 0.000 frames 2087 audio 96.9
+b4 lines 8 RTF 0.512 gen ms/frame 23.44 rtf/line 0.491-0.634 TTFA 0.458-0.486 worst_late 1.459 frames 2117 audio 98.3
+b5 lines 8 RTF 0.493 gen ms/frame 22.64 rtf/line 0.488-0.525 TTFA 0.444-0.478 worst_late 0.000 frames 2117 audio 98.3
+b6 lines 8 RTF 0.498 gen ms/frame 22.82 rtf/line 0.491-0.528 TTFA 0.450-0.483 worst_late 0.000 frames 2117 audio 98.3
+=== chain9 end 01:52:37 io=0 disk= 70%
+CHAIN9_DONE

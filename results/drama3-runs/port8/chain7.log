@@ -1,0 +1,12 @@
+start 04:28:28 io=0
+=== /opt/ep0/port8/s8b4c start 04:28:28 io_errors=0
+{'price': (56.7, 191.7), 'model': (54.5, 182.2), 'specs': (53.3, 182.7), 'close': (57.0, 182.0), 'cold_open': (59.0, 197.0), 'server': (56.3, 185.7), 'second_opinion': (54.0, 175.7), 'fix': (59.0, 199.3)}
+SUMS_OK /opt/ep0/port8/s8b4c
+=== /opt/ep0/port8/s8b4c end 04:30:34 io_errors=0 EXIT 0
+tune_b4 EXIT 1 04:31:15
+s8_1 lines 8 RTF 0.506 gen ms/frame 23.18 rtf/line 0.494-0.541 TTFA 0.433-0.496 worst_late 0.008 frames 2056 audio 95.5
+s8b4 lines 8 RTF 0.507 gen ms/frame 23.25 rtf/line 0.501-0.538 TTFA 0.434-0.482 worst_late 0.000 frames 2122 audio 98.5
+s8b4c lines 8 RTF 0.475 gen ms/frame 21.79 rtf/line 0.469-0.513 TTFA 0.434-0.483 worst_late 0.000 frames 2115 audio 98.2
+s8b8 lines 8 RTF 0.478 gen ms/frame 21.89 rtf/line 0.473-0.508 TTFA 0.434-0.473 worst_late 0.000 frames 2110 audio 98.0
+io=0
+CHAIN7_DONE

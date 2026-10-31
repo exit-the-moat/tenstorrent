@@ -1,0 +1,14 @@
+# Never commit weights, caches or secrets
+*.safetensors
+*.tensorbin
+*.gguf
+*.bin
+*.pt
+hf_cache/
+profiles/*.tracy
+.env
+*token*.txt
+__pycache__/
+.venv/
+.idea/
+*.iml

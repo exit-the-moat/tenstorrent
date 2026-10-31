@@ -1,0 +1,189 @@
+{
+ "args": {
+  "layers": 1,
+  "n": 50,
+  "gcb_kb": 512,
+  "rpb": 4,
+  "ibw": 8,
+  "variants": "a2,b",
+  "fid": "HiFi4",
+  "prof": "a2_with_small_ops",
+  "out": "/opt/ep0/port10/prefetch/pr_a2_with_small_ops.json"
+ },
+ "grid": [
+  11,
+  10
+ ],
+ "dram_banks": 8,
+ "prefetcher_supported": true,
+ "weight_MB_per_layer": 112.85,
+ "b_setup": {
+  "ring": 32,
+  "receiver_grid": [
+   8,
+   4
+  ],
+  "gcb_bytes_per_core": 524288,
+  "block_counts": {
+   "eh_h": 8,
+   "qkvg": 8,
+   "o_proj": 16,
+   "w1": 8,
+   "w3": 8,
+   "w2": 24
+  },
+  "page_bytes": {
+   "eh_h": 32768,
+   "qkvg": 78336,
+   "o_proj": 17408,
+   "w1": 98304,
+   "w3": 98304,
+   "w2": 32768
+  },
+  "per_core_N": {
+   "eh_h": 2,
+   "qkvg": 9,
+   "o_proj": 2,
+   "w1": 6,
+   "w3": 6,
+   "w2": 2
+  }
+ },
+ "check": {
+  "L0_eh_h": {
+   "a2_pcc_torch": 0.999997
+  },
+  "L0_qkvg": {
+   "a2_pcc_torch": 0.99997
+  },
+  "L0_o_proj": {
+   "a2_pcc_torch": 0.999971
+  },
+  "L0_w1": {
+   "a2_pcc_torch": 0.999997
+  },
+  "L0_w3": {
+   "a2_pcc_torch": 0.999997
+  },
+  "L0_w2": {
+   "a2_pcc_torch": 0.999997
+  }
+ },
+ "prof": {
+  "name": "a2_with_small_ops",
+  "span_us": 510.7,
+  "sum_kernel_us": 498.6,
+  "ops": [
+   {
+    "i": 0,
+    "start_us": 0.0,
+    "dur_us": 22.49
+   },
+   {
+    "i": 1,
+    "start_us": 23.56,
+    "dur_us": 19.09
+   },
+   {
+    "i": 2,
+    "start_us": 42.88,
+    "dur_us": 2.42
+   },
+   {
+    "i": 3,
+    "start_us": 45.65,
+    "dur_us": 70.63
+   },
+   {
+    "i": 4,
+    "start_us": 116.91,
+    "dur_us": 19.12
+   },
+   {
+    "i": 5,
+    "start_us": 136.25,
+    "dur_us": 2.42
+   },
+   {
+    "i": 6,
+    "start_us": 140.08,
+    "dur_us": 19.11
+   },
+   {
+    "i": 7,
+    "start_us": 159.41,
+    "dur_us": 2.41
+   },
+   {
+    "i": 8,
+    "start_us": 163.22,
+    "dur_us": 19.18
+   },
+   {
+    "i": 9,
+    "start_us": 182.63,
+    "dur_us": 2.45
+   },
+   {
+    "i": 10,
+    "start_us": 186.47,
+    "dur_us": 19.17
+   },
+   {
+    "i": 11,
+    "start_us": 205.86,
+    "dur_us": 2.42
+   },
+   {
+    "i": 12,
+    "start_us": 208.64,
+    "dur_us": 25.4
+   },
+   {
+    "i": 13,
+    "start_us": 235.45,
+    "dur_us": 19.25
+   },
+   {
+    "i": 14,
+    "start_us": 254.92,
+    "dur_us": 2.46
+   },
+   {
+    "i": 15,
+    "start_us": 257.71,
+    "dur_us": 73.36
+   },
+   {
+    "i": 16,
+    "start_us": 331.3,
+    "dur_us": 72.28
+   },
+   {
+    "i": 17,
+    "start_us": 404.21,
+    "dur_us": 19.15
+   },
+   {
+    "i": 18,
+    "start_us": 423.58,
+    "dur_us": 2.47
+   },
+   {
+    "i": 19,
+    "start_us": 426.35,
+    "dur_us": 61.64
+   },
+   {
+    "i": 20,
+    "start_us": 488.82,
+    "dur_us": 19.16
+   },
+   {
+    "i": 21,
+    "start_us": 508.2,
+    "dur_us": 2.5
+   }
+  ]
+ }
+}

@@ -1,0 +1,127 @@
+=== sim qwen36 start 02:58:25
+[01:58:41] rows (742, 11) (593 semantic) -> embeddings (1, 742, 2048)
+2026-10-30 01:58:52.501 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-30 01:58:52.501 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-30 01:58:52.505 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-30 01:58:52.505 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-30 01:58:52.514 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-30 01:58:52.514 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-30 01:58:52.587 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-30 01:58:52.587 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-30 01:58:52.587 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-30 01:58:52.587 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-30 01:58:52.592 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-30 01:58:52.636 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+[01:59:04] layer  0 linear_attention load  17.8s run  2.88s peak RSS 10.8 GB
+[01:59:21] layer  1 linear_attention load  16.0s run  0.94s peak RSS 12.0 GB
+[01:59:35] layer  2 linear_attention load  13.4s run  0.80s peak RSS 12.0 GB
+[01:59:50] layer  3 full_attention   load  13.7s run  1.04s peak RSS 12.0 GB
+[02:00:05] layer  4 linear_attention load  14.3s run  0.80s peak RSS 12.0 GB
+[02:00:19] layer  5 linear_attention load  12.9s run  0.80s peak RSS 12.0 GB
+[02:00:35] layer  6 linear_attention load  15.2s run  0.82s peak RSS 12.0 GB
+[02:00:50] layer  7 full_attention   load  14.2s run  0.74s peak RSS 12.0 GB
+[02:01:05] layer  8 linear_attention load  13.3s run  0.80s peak RSS 12.0 GB
+[02:01:20] layer  9 linear_attention load  14.5s run  0.80s peak RSS 12.0 GB
+[02:01:34] layer 10 linear_attention load  13.4s run  0.79s peak RSS 12.0 GB
+[02:01:48] layer 11 full_attention   load  13.3s run  0.76s peak RSS 12.0 GB
+[02:02:04] layer 12 linear_attention load  15.2s run  0.80s peak RSS 12.0 GB
+[02:02:20] layer 13 linear_attention load  14.9s run  0.73s peak RSS 12.0 GB
+[02:02:36] layer 14 linear_attention load  15.2s run  0.72s peak RSS 12.0 GB
+[02:02:51] layer 15 full_attention   load  14.7s run  0.66s peak RSS 12.0 GB
+[02:03:06] layer 16 linear_attention load  14.2s run  0.79s peak RSS 12.0 GB
+[02:03:22] layer 17 linear_attention load  14.8s run  0.78s peak RSS 12.0 GB
+[02:03:38] layer 18 linear_attention load  15.6s run  0.80s peak RSS 12.0 GB
+[02:03:54] layer 19 full_attention   load  15.0s run  0.72s peak RSS 12.0 GB
+[02:04:10] layer 20 linear_attention load  15.5s run  0.80s peak RSS 12.0 GB
+[02:04:26] layer 21 linear_attention load  14.5s run  0.80s peak RSS 12.0 GB
+[02:04:41] layer 22 linear_attention load  14.3s run  0.78s peak RSS 12.0 GB
+[02:04:55] layer 23 full_attention   load  13.6s run  0.73s peak RSS 12.0 GB
+[02:05:12] layer 24 linear_attention load  15.7s run  0.79s peak RSS 12.0 GB
+[02:05:26] layer 25 linear_attention load  13.9s run  0.77s peak RSS 12.0 GB
+[02:05:42] layer 26 linear_attention load  14.8s run  0.78s peak RSS 12.0 GB
+[02:05:58] layer 27 full_attention   load  14.8s run  0.74s peak RSS 12.0 GB
+[02:06:12] layer 28 linear_attention load  14.0s run  0.75s peak RSS 12.0 GB
+[02:06:28] layer 29 linear_attention load  15.0s run  0.77s peak RSS 12.0 GB
+[02:06:44] layer 30 linear_attention load  15.2s run  0.78s peak RSS 12.0 GB
+[02:07:01] layer 31 full_attention   load  15.8s run  0.65s peak RSS 12.0 GB
+[02:07:16] layer 32 linear_attention load  14.5s run  0.69s peak RSS 12.0 GB
+[02:07:32] layer 33 linear_attention load  15.7s run  0.78s peak RSS 12.0 GB
+[02:07:47] layer 34 linear_attention load  13.7s run  0.76s peak RSS 12.0 GB
+[02:08:01] layer 35 full_attention   load  14.0s run  0.63s peak RSS 12.0 GB
+[02:08:16] layer 36 linear_attention load  13.5s run  0.78s peak RSS 12.0 GB
+[02:08:33] layer 37 linear_attention load  16.7s run  0.79s peak RSS 12.0 GB
+[02:08:49] layer 38 linear_attention load  14.9s run  0.77s peak RSS 12.0 GB
+[02:09:08] layer 39 full_attention   load  18.4s run  0.64s peak RSS 12.0 GB
+[02:09:09] top5 last row: [248253, 251610, 251001, 250199, 251425]; peak RSS 12.0 GB
+DONE
+2026-10-30 02:09:10.685 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-30 02:09:10.685 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-30 02:09:10.741 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-30 02:09:10.741 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-30 02:09:10.741 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+=== sim qwen36 rc=0 end 03:09:12
+=== sim bfp8 start 03:09:12
+[02:09:22] rows (742, 11) (593 semantic) -> embeddings (1, 742, 2048)
+2026-10-30 02:09:27.283 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-30 02:09:27.284 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-30 02:09:27.284 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-30 02:09:27.284 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-30 02:09:27.287 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-30 02:09:27.287 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-30 02:09:27.300 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-30 02:09:27.300 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-30 02:09:27.300 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-30 02:09:27.300 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-30 02:09:27.300 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-30 02:09:27.341 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+[02:09:34] layer  0 linear_attention load  10.4s run  0.60s peak RSS 11.3 GB
+[02:09:43] layer  1 linear_attention load   8.5s run  0.80s peak RSS 12.9 GB
+[02:09:51] layer  2 linear_attention load   6.8s run  0.66s peak RSS 12.9 GB
+[02:09:58] layer  3 full_attention   load   6.7s run  0.59s peak RSS 12.9 GB
+[02:10:05] layer  4 linear_attention load   6.7s run  0.73s peak RSS 12.9 GB
+[02:10:13] layer  5 linear_attention load   6.7s run  0.80s peak RSS 12.9 GB
+[02:10:20] layer  6 linear_attention load   6.7s run  0.79s peak RSS 12.9 GB
+[02:10:27] layer  7 full_attention   load   6.7s run  0.59s peak RSS 12.9 GB
+[02:10:35] layer  8 linear_attention load   6.7s run  0.80s peak RSS 12.9 GB
+[02:10:43] layer  9 linear_attention load   7.4s run  0.80s peak RSS 12.9 GB
+[02:10:51] layer 10 linear_attention load   7.3s run  0.66s peak RSS 12.9 GB
+[02:10:58] layer 11 full_attention   load   6.6s run  0.74s peak RSS 12.9 GB
+[02:11:06] layer 12 linear_attention load   6.6s run  0.82s peak RSS 12.9 GB
+[02:11:13] layer 13 linear_attention load   6.8s run  0.80s peak RSS 12.9 GB
+[02:11:22] layer 14 linear_attention load   7.5s run  0.81s peak RSS 12.9 GB
+[02:11:29] layer 15 full_attention   load   6.7s run  0.58s peak RSS 12.9 GB
+[02:11:37] layer 16 linear_attention load   6.8s run  0.78s peak RSS 12.9 GB
+[02:11:44] layer 17 linear_attention load   6.8s run  0.78s peak RSS 12.9 GB
+[02:11:51] layer 18 linear_attention load   6.2s run  0.78s peak RSS 12.9 GB
+[02:11:58] layer 19 full_attention   load   6.7s run  0.59s peak RSS 12.9 GB
+[02:12:06] layer 20 linear_attention load   6.7s run  0.81s peak RSS 12.9 GB
+[02:12:13] layer 21 linear_attention load   6.7s run  0.78s peak RSS 12.9 GB
+[02:12:21] layer 22 linear_attention load   6.7s run  0.65s peak RSS 12.9 GB
+[02:12:28] layer 23 full_attention   load   6.7s run  0.59s peak RSS 12.9 GB
+[02:12:36] layer 24 linear_attention load   6.7s run  0.77s peak RSS 12.9 GB
+[02:12:43] layer 25 linear_attention load   6.6s run  0.77s peak RSS 12.9 GB
+[02:12:50] layer 26 linear_attention load   6.7s run  0.78s peak RSS 12.9 GB
+[02:12:57] layer 27 full_attention   load   6.0s run  0.63s peak RSS 12.9 GB
+[02:13:05] layer 28 linear_attention load   6.7s run  0.77s peak RSS 12.9 GB
+[02:13:12] layer 29 linear_attention load   6.7s run  0.77s peak RSS 12.9 GB
+[02:13:19] layer 30 linear_attention load   6.6s run  0.69s peak RSS 12.9 GB
+[02:13:27] layer 31 full_attention   load   6.7s run  0.56s peak RSS 12.9 GB
+[02:13:34] layer 32 linear_attention load   6.7s run  0.76s peak RSS 12.9 GB
+[02:13:41] layer 33 linear_attention load   6.3s run  0.71s peak RSS 12.9 GB
+[02:13:49] layer 34 linear_attention load   6.7s run  0.75s peak RSS 12.9 GB
+[02:13:56] layer 35 full_attention   load   6.7s run  0.57s peak RSS 12.9 GB
+[02:14:03] layer 36 linear_attention load   6.7s run  0.76s peak RSS 12.9 GB
+[02:14:11] layer 37 linear_attention load   6.7s run  0.78s peak RSS 12.9 GB
+[02:14:18] layer 38 linear_attention load   6.7s run  0.76s peak RSS 12.9 GB
+[02:14:25] layer 39 full_attention   load   6.6s run  0.57s peak RSS 12.9 GB
+[02:14:26] top5 last row: [248253, 250199, 251001, 251610, 251425]; peak RSS 12.9 GB
+DONE
+2026-10-30 02:14:26.871 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-30 02:14:26.871 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-30 02:14:26.893 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-30 02:14:26.893 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-30 02:14:26.893 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+=== sim bfp8 rc=0 end 03:14:27
+SIMS_DONE

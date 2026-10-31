@@ -1,0 +1,5 @@
+c1_s16 EXIT 0 10:09:41 io=0 disk=70%
+{"run": "c1_s16", "B": 16, "jobs": 32, "audio_s": 386.613, "wall_s": 115.138, "audio_per_wall": 3.358, "mean_active": 12.88, "ms_step": "45.24 + 9.67 + 75.39", "rtf_decode": "2.48 / 3.98 / 5.32", "rtf": "4.42 / 6.09 / 14.20", "ttfa_admit": "1.16 / 3.78 / 13.88", "ttfa_t0": "13.88 / 25.68 / 80.15", "worst_late": "13.71 / 32.88 / 49.33", "eos": 32, "dram_gb": 31.38, "board_W": "181.2 (275.0)"}
+c1e_s16 EXIT 0 10:12:00 io=0 disk=70%
+{"run": "c1e_s16", "B": 16, "jobs": 32, "audio_s": 386.613, "wall_s": 57.4, "audio_per_wall": 6.735, "mean_active": 12.88, "ms_step": "35.75 + 9.32 + 23.1", "rtf_decode": "1.41 / 1.94 / 2.43", "rtf": "2.14 / 2.87 / 6.89", "ttfa_admit": "0.90 / 2.44 / 7.23", "ttfa_t0": "7.23 / 12.79 / 36.93", "worst_late": "4.15 / 11.44 / 15.60", "eos": 32, "dram_gb": 31.38, "board_W": "202.6 (262.0)"}
+CHAIN_C_DONE

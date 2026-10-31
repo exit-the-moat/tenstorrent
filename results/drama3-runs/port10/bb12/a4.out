@@ -1,0 +1,5 @@
+cbp rc=0 EXIT 0 io=0 disk=70%
+backbone prefetch: 80 weights, 1.52 GB copies in 14s
+copies 80 mismatching: []
+matmuls mismatching: []
+A4_DONE

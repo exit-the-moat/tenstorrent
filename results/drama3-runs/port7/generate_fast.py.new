@@ -1,0 +1,472 @@
+# SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+"""Drama 3 TTS, Day 4 pipeline: backbone (paged, one masked prefill, traced decode) and codebook tower both on the
+P150; sampling and codec on the host.
+
+Per line: mixed embeddings -> one masked-bucket prefill of the whole prompt -> tower prefill from the device
+final-norm rows -> per frame: host samples the main token from the candidate logits, the card tower runs its 13
+layers (host samples each code from a head's 1024 logits) -> host embeds the frame -> traced backbone decode ->
+... until end of speech -> codec.
+Every program is compiled on a warm-up sequence before the decode trace is captured (no compile while parked).
+
+    run_gen.sh <log> --fast --lines all --out /opt/ep0/day4/out    (run_gen.sh switches module with --fast)
+"""
+
+import argparse
+import json
+import os
+import time
+from pathlib import Path
+
+import torch
+import yaml
+
+import ttnn
+from models.demos.blackhole.drama3.host.generate import MODEL, TT_ENV, VOICE, log, reference_codes
+
+
+class FastSession:
+    def __init__(self, mesh, tower_mlp="bf16", tower_fidelity="HiFi4"):
+        from tokenizers import Tokenizer
+
+        from models.demos.blackhole.drama3.host.prompt import FrameEmbedder
+        from models.demos.blackhole.drama3.host.tower import CodebookTower
+        from models.demos.blackhole.drama3.tt.backbone_paged import PagedBackbone
+        from models.demos.blackhole.drama3.tt.tower_device import TowerDevice
+        from models.demos.blackhole.drama3.tt.weight_mapping import read_tensors, weight_map
+        from models.demos.blackhole.qwen36.tt.model_config import Qwen36ModelArgs
+
+        self.mesh = mesh
+        self.config = json.load(open(f"{MODEL}/config.json"))
+        self.tok = Tokenizer.from_file(f"{MODEL}/tokenizer.json")
+        wmap = weight_map(MODEL)
+        self.host = CodebookTower(MODEL, wmap, self.config)  # weights + embedding tables + sampler
+        e = read_tensors(MODEL, wmap, ["model.language_model.embed_tokens.weight"])["model.language_model.embed_tokens.weight"]
+        self.embedder = FrameEmbedder(
+            e, self.host.codebook_embeddings, self.config["semantic_start_token_id"], self.config["semantic_end_token_id"]
+        )
+        args = Qwen36ModelArgs(mesh_device=mesh, max_batch_size=1, max_seq_len=4096, enable_mtp=False)
+        self.bb = PagedBackbone(mesh, args, args.weight_cache_path(), wmap, self.host.candidates, log=log)
+        self.tower = TowerDevice(
+            mesh,
+            self.host,
+            self.bb.rope,
+            mlp_dtype={"bf16": ttnn.bfloat16, "bfp8": ttnn.bfloat8_b}[tower_mlp],
+            fidelity=getattr(ttnn.MathFidelity, tower_fidelity),
+            cos_sin_host=self.bb.cos_sin_host,
+        )
+        if os.environ.get("DRAMA3_SHARED_POS", "1") == "1":  # tower + backbone share the position / rope buffers
+            self.tower.share_pos(self.bb)
+        self.eos = self.config["eos_token_id"]
+        self.warm = False
+        # voice-reference prefix cache (DRAMA3_PREFIX_CACHE=0: whole-prompt prefill per line, as Day 4)
+        self.prefix_cache = os.environ.get("DRAMA3_PREFIX_CACHE", "1") == "1"
+        self.P, self.voice, self.gdn_snap = 0, None, None
+        self.tower_trace = os.environ.get("DRAMA3_TOWER_TRACE", "1") == "1"
+        # codebook draws on the card, the whole tower frame as one trace (default; DRAMA3_TOWER_DEVICE_SAMPLING=0:
+        # 9 segment traces with host draws, bit-identical codes);
+        # DRAMA3_SAMPLER_CHECK=1 re-draws every code on the host from the card's logits and counts disagreements
+        self.device_sampling = self.tower_trace and os.environ.get("DRAMA3_TOWER_DEVICE_SAMPLING", "1") == "1"
+        self.sampler_check = os.environ.get("DRAMA3_SAMPLER_CHECK", "0") == "1"
+        # DRAMA3_TTFA_PROFILE=1: device syncs at the TTFA breakdown points (tower prefill end); timing only
+        self.ttfa_profile = os.environ.get("DRAMA3_TTFA_PROFILE", "0") == "1"
+        # DRAMA3_FIRST_WINDOW_WAIT=1 (opt-in): wait for the first stream window's latent and decode it right away
+        self.first_wait = os.environ.get("DRAMA3_FIRST_WINDOW_WAIT", "0") == "1"
+        # DRAMA3_PREWARM_VOICE=1 (opt-in): the voice prefix prefill of the warm-up line stays cached after warm-up,
+        # so the session's first line starts like any later line (default: it prefills the voice again)
+        self.prewarm_voice = os.environ.get("DRAMA3_PREWARM_VOICE", "0") == "1"
+        # DRAMA3_FRAME_PIPE=1 (port7, opt-in): the backbone input row is embedded on the card from the tower's code 1,
+        # so the next backbone step is enqueued right behind the tower replay (no host round trip in between); the
+        # codes are read back while the backbone runs
+        self.pipe = self.device_sampling and os.environ.get("DRAMA3_FRAME_PIPE", "0") == "1"
+        # the codec decoder runs on the card (default; the codec process only computes the window latents);
+        # DRAMA3_CARD_CODEC=0: the Day 4 CPU codec process
+        self.card_codec = None
+        if os.environ.get("DRAMA3_CARD_CODEC", "1") == "1":
+            from models.demos.blackhole.drama3.host.stream_codec import CardCodec
+
+            t0 = time.time()
+            self.card_codec = CardCodec(mesh)
+            log(f"card codec ready in {time.time() - t0:.0f}s")
+
+    def prompt(self, text, references):
+        from models.demos.blackhole.drama3.host.prompt import build_prompt_rows
+
+        return build_prompt_rows(text, references, self.tok)
+
+    def _row_dev(self, row):
+        return ttnn.from_torch(row.reshape(1, 1, -1), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=self.mesh)
+
+    def split_point(self, prompts):
+        """Prefix-cache split: the longest prefix shared by every prompt (the voice reference block), cut back to a
+        multiple of 128 and so that row P (the label of the prefix's last tower row) is shared too. 0 = no cache."""
+        if not self.prefix_cache:
+            return 0
+        rows = list(prompts)
+        n = min(r.shape[0] for r in rows)
+        shared = next((k for k in range(n) if any(not torch.equal(r[k], rows[0][k]) for r in rows[1:])), n)
+        self.P = max(0, ((shared - 1) // 128) * 128)
+        log(f"prefix cache: {shared} shared prompt rows of {[r.shape[0] for r in rows]}, split at {self.P}")
+        return self.P
+
+    def set_voice(self, rows):
+        """Prefill the shared prefix rows[:P] once (backbone + tower), snapshot the GDN state; its paged K/V stays
+        in blocks < P / 64, which no suffix prefill or decode writes."""
+        P = self.P
+        E = self.embedder(rows[:P])
+        self.bb.reset()
+        _, _, _, xn = self.bb.prefill(E, keep_device=True)
+        self.tower.prefill(xn, rows, P, last=False)
+        ttnn.deallocate(xn)
+        self.gdn_snap = self.bb.snapshot_gdn(into=self.gdn_snap)  # first call (warm-up, before capture) allocates
+        self.voice = rows[: P + 1].clone()
+
+    def _prefill_line(self, rows):
+        """Backbone + tower prefill of one line's prompt (the suffix after the cached prefix, or all of it).
+        Returns (final-norm rows of the prefilled part, last-row candidate logits)."""
+        T, P = rows.shape[0], self.P
+        t0 = time.time()
+        if P:
+            self.bb.restore_gdn(self.gdn_snap)
+        else:
+            self.bb.reset()
+        normed, logits, _, xn = self.bb.prefill(self.embedder(rows[P:]), keep_device=True, start=P)
+        t1 = time.time()  # the backbone prefill ends with host reads (final-norm rows, logits): its device work is done
+        self.tower.prefill(xn, rows, T, start=P)
+        if self.ttfa_profile:
+            ttnn.synchronize_device(self.mesh)
+        ttnn.deallocate(xn)
+        self.prefill_split = (t1 - t0, time.time() - t1)
+        return normed, logits
+
+    def warmup(self, rows, capture=True):
+        """Compile every program on one sequence (prefill buckets, tower prefill, tower step), then capture.
+        capture=False (batch mode, host/batch.py): no one-row traces; the batch captures its own."""
+        t0 = time.time()
+        T, P = rows.shape[0], self.P
+        if P:
+            self.bb.warm_grouped(self.bb.bucket_for(P))
+            self.set_voice(rows)
+        self.bb.warm_grouped(self.bb.bucket_for(T - P))
+        self.host.reset(8)
+        normed, last = self._prefill_line(rows)
+        hd = self._row_dev(normed[-1])
+        self.tower.step(last, hd, T - 1, rows[T - 1], [], torch.Generator().manual_seed(0))
+        ttnn.deallocate(hd)
+        if self.device_sampling:
+            self.tower.prepare_fused()  # its persistent buffers must exist before the backbone capture
+        if self.pipe:
+            self.bb.prepare_embed(self.host.codebook_embeddings, self.embedder.scale, len(self.host.residual))
+        if not capture:
+            self.voice = None
+            return
+        self.bb.capture(pos=T)
+        if self.device_sampling:
+            self.tower.capture_fused(self.bb.dec_out[0])
+        if self.pipe:
+            self.bb.capture_embed(self.tower.fused_codes)
+        elif self.tower_trace:
+            self.tower.capture(self.bb.dec_out[0])  # the tower reads the backbone trace's output in place
+        if self.card_codec is not None:
+            self.card_codec.capture()  # last: see DeviceDecoder.capture
+        self.voice = None  # the first line prefills the voice again, so its timing includes it
+        if self.prewarm_voice and P:
+            t1 = time.time()
+            self.set_voice(rows)  # the same prefill line 1 would run at its start, now at startup
+            ttnn.synchronize_device(self.mesh)
+            log(f"voice prefix pre-warmed in {time.time() - t1:.2f}s")
+        self.warm = True
+        from models.demos.blackhole.drama3.tt.device_check import dram_used_gb
+
+        log(f"warm-up + trace capture {time.time() - t0:.1f}s, card DRAM {dram_used_gb(self.mesh)[0]:.2f} GB")
+
+    def _check_draws(self, frame, noise, temperature, top_p, top_k):
+        """Host re-draw of the 9 codes from the card's head logits with the same noise -> number of differences."""
+        from models.demos.blackhole.drama3.host.tower import CODEBOOK_TOP_K, RESIDUAL_CODEBOOK_SIZE
+
+        k = min(top_k or len(self.host.candidates), CODEBOOK_TOP_K)
+        n = 0
+        for r, lg in enumerate(self.tower.fused_lgs):
+            x = ttnn.to_torch(lg).float().reshape(-1)[:RESIDUAL_CODEBOOK_SIZE]
+            x = torch.cat([x, torch.full((self.host.cb_size - RESIDUAL_CODEBOOK_SIZE,), float("-inf"))]) / max(temperature, 1e-5)
+            srt, ids = torch.sort(x, descending=True)
+            cum = torch.cumsum(torch.softmax(srt, -1), -1)
+            drop = (cum > top_p) | (torch.arange(srt.numel()) >= k)
+            drop[0] = False
+            probs = torch.softmax(srt.masked_fill(drop, float("-inf")), -1)
+            n += int(int(ids[torch.argmax(probs / noise[r])]) != int(frame[2 + r]))
+        return n
+
+    def run(self, rows, seed, max_frames, temperature=1.0, top_p=0.9, top_k=None, codec=None):
+        """Generate one line; with codec (a stream_codec.CodecProcess) the audio is decoded while generating
+        (Fish's stream windows, in the codec process) and returned as the third value."""
+        assert self.warm
+        T = rows.shape[0]
+        P = self.P
+        assert self.bb.bucket_for(T - P) == self.bb.bucket_for(self._warm_T - P), "a new prefill bucket would compile while the trace is parked"
+        t = dict(prompt_rows=T, prefix_rows=P, prefill_bucket=self.bb.bucket_for(T - P))
+        t_start = time.time()
+        sd = codec.stream(self.card_codec) if codec is not None else None
+        if P and (self.voice is None or not torch.equal(self.voice, rows[: P + 1])):
+            t0 = time.time()
+            self.set_voice(rows)
+            t["voice_prefill_s"] = time.time() - t0
+        t0 = time.time()
+        normed, logits = self._prefill_line(rows)
+        t["prefill_s"] = time.time() - t0
+        t["prefill_backbone_s"], t["prefill_tower_s"] = self.prefill_split
+        from models.demos.blackhole.drama3.host.stream_codec import first_window
+
+        w1, t_w1 = first_window(), None
+
+        gen = torch.Generator().manual_seed(seed)
+        frames, window, ras = [], [], 0
+        if self.tower_trace:  # the first frame's backbone row goes into the backbone trace's output buffer
+            ttnn.copy_host_to_device_tensor(
+                ttnn.from_torch(normed[-1].reshape(1, 1, -1), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT), self.bb.dec_out[0]
+            )
+            h_dev = first_h = None
+        else:
+            h_dev = self._row_dev(normed[-1])
+            first_h = h_dev
+        pos, inp = T - 1, rows[T - 1]
+        t_bb = t_tw = t_emb = 0.0
+        t_first = None
+        mism = 0
+        # DRAMA3_HOST_OVERLAP (default 1): the next frame's logit-independent host work (noise draws, shared
+        # input) runs while the backbone trace executes
+        overlap = self.device_sampling and not self.sampler_check and os.environ.get("DRAMA3_HOST_OVERLAP", "1") == "1"
+        pre = self.tower.prepare_frame(inp, gen) if overlap else None
+        if self.pipe:  # port7: same draws in the same RNG order as the overlap loop below
+            assert overlap
+            pt = dict.fromkeys(("main_upload", "stage_enqueue", "noise", "codes_wait", "codec_push", "logits_wait"), 0.0)
+            noise_early = os.environ.get("DRAMA3_PIPE_NOISE_EARLY", "0") == "1"  # next frame's noise uploaded behind the backbone step
+            n_res = len(self.host.residual)
+
+            def deliver(frame):
+                frames.append(frame)
+                t0 = time.time()
+                if sd is not None:
+                    sd.push(frame[1:])
+                    if self.card_codec is not None:
+                        if self.first_wait and len(frames) == w1:
+                            sd.wait_first()
+                        sd.poll()
+                pt["codec_push"] += time.time() - t0
+
+            while len(frames) < max_frames:
+                t0 = time.time()
+                main, code0, redrawn = self.tower.enqueue_fused_pre(logits, pos, window, temperature, top_p, top_k, pre)
+                ras += int(redrawn)
+                t1 = time.time()
+                pt["main_upload"] += t1 - t0
+                if main == self.eos:
+                    t_tw += t1 - t0
+                    t_first = t_first if t_first is not None else time.time() - t_start
+                    break
+                # the frame that completes the first stream window is read and decoded before the backbone step is
+                # queued (first audio as in the overlap loop); every other frame is read behind the backbone step
+                early = sd is not None and len(frames) + 1 == w1
+                if early:
+                    frame = torch.cat([torch.tensor([main, code0]), self.tower.read_fused()])
+                    deliver(frame)
+                    t_w1 = time.time() - t_start
+                t1b = time.time()
+                self.bb.stage_text(self.embedder.embed[main])
+                self.bb.stage_pos(pos + 1)  # behind the tower replay in the queue (the tower reads the current one)
+                self.bb.embed_decode_start()
+                t2 = time.time()
+                pre = self.tower.prepare_frame(None, gen)
+                if noise_early:
+                    self.tower.upload_noise(pre)
+                t3 = time.time()
+                if not early:
+                    frame = torch.cat([torch.tensor([main, code0]), self.bb.read_codes(n_res)])
+                t4 = time.time()
+                pt["stage_enqueue"] += t2 - t1b
+                pt["noise"] += t3 - t2
+                pt["codes_wait"] += t4 - t3
+                t_tw += t4 - t0
+                if t_first is None:
+                    t_first = time.time() - t_start
+                if not early:
+                    deliver(frame)
+                pre["si"] = self.host.shared_input(frame.reshape(1, -1))
+                window = (window + [main])[-16:]
+                pos += 1
+                t6 = time.time()
+                logits = self.bb.decode_finish()
+                t7 = time.time()
+                pt["logits_wait"] += t7 - t6
+                t_bb += t7 - t6
+                inp = frame
+                if len(frames) % 50 == 0:
+                    log(f"  frame {len(frames)}: backbone wait {t_bb / len(frames) * 1e3:.1f} ms, tower + host {t_tw / len(frames) * 1e3:.1f} ms per frame")
+            t["pipe_ms_per_frame"] = {k: round(v / max(len(frames), 1) * 1e3, 3) for k, v in pt.items()}
+        for i in [] if self.pipe else range(max_frames):
+            t0 = time.time()
+            if self.device_sampling:
+                frame, redrawn, noise = self.tower.step_fused(
+                    logits, pos, inp, window, gen, temperature, top_p, top_k, debug=True, pre=pre
+                )
+                if self.sampler_check:
+                    mism += self._check_draws(frame, noise, temperature, top_p, top_k)
+            elif self.tower_trace:
+                frame, redrawn = self.tower.step_traced(logits, pos, inp, window, gen, temperature, top_p, top_k)
+            else:
+                frame, redrawn = self.tower.step(logits, h_dev, pos, inp, window, gen, temperature, top_p, top_k)
+            t_tw += time.time() - t0
+            ras += int(redrawn)
+            if t_first is None:
+                t_first = time.time() - t_start
+                if first_h is not None:
+                    ttnn.deallocate(first_h)
+            if int(frame[0]) == self.eos:
+                break
+            frames.append(frame)
+            if sd is not None:
+                sd.push(frame[1:])
+                if len(frames) == w1:
+                    t_w1 = time.time() - t_start
+                if self.card_codec is not None:
+                    if self.first_wait and len(frames) == w1:
+                        sd.wait_first()
+                    sd.poll()
+            window = (window + [int(frame[0])])[-16:]
+            pos += 1
+            t0 = time.time()
+            emb = self.embedder(frame[None])[0]
+            t_emb += time.time() - t0
+            t0 = time.time()
+            if overlap:
+                self.bb.decode_start(emb, pos)
+                pre = self.tower.prepare_frame(frame, gen)
+                logits = self.bb.decode_finish()
+            else:
+                _, logits = self.bb.decode(emb, pos, hidden=False)  # the tower reads the hidden row on the card
+            h_dev = self.bb.dec_out[0]  # the trace's persistent final-norm output feeds the tower directly
+            t_bb += time.time() - t0
+            inp = frame
+            if (i + 1) % 50 == 0:
+                log(f"  frame {i + 1}: backbone {t_bb / (i + 1) * 1e3:.1f} ms, tower {t_tw / (i + 1) * 1e3:.1f} ms per frame")
+        n = len(frames)
+        t_gen_end = time.time()
+        audio = None
+        if sd is not None:
+            audio = sd.finish()
+            if self.card_codec is not None:
+                t["card_codec_s"] = sd.card_s
+            t.update(
+                codec_decode_s=sd.decode_s,
+                codec_tail_s=time.time() - t_gen_end,
+                ttfa_s=(sd.first_audio_t - t_start) if sd.first_audio_t else None,
+                first_window=w1,
+                first_window_pushed_s=t_w1,
+            )
+            if getattr(sd, "first_z_t", None) is not None:
+                t.update(first_z_taken_s=sd.first_z_t - t_start, first_card_decode_s=sd.first_card_s)
+            if getattr(sd, "chunk_t", None):  # port6: would playback from the first audio run without gaps?
+                from models.demos.blackhole.drama3.host.stream_codec import playback_check
+
+                u, worst, lead = playback_check(sd.chunk_t, codec.sr)
+                t.update(windows=len(sd.chunk_t), underruns=u, worst_late_s=worst, min_lead_s=lead)
+        t.update(
+            frames=n,
+            decode_backbone_s=t_bb,
+            tower_steps_s=t_tw,
+            embed_s=t_emb,
+            backbone_ms_per_frame=1e3 * t_bb / max(n, 1),
+            tower_ms_per_frame=1e3 * t_tw / max(n + 1, 1),
+            ras_redraws=ras,
+            device_sampling=self.device_sampling,
+            sampler_mismatch=mism if self.sampler_check else None,
+            first_frame_s=t_first,
+            stopped_by_eos=n < max_frames,
+            gen_s=t_gen_end - t_start,
+        )
+        return (torch.stack(frames) if frames else torch.zeros(0, 11, dtype=torch.long)), t, audio
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--lines", default="close")
+    ap.add_argument("--lines-file", default="", help="JSON list of {id, spoken, written} (Day 6 card_lines.json): text = spoken")
+    ap.add_argument("--ref", default=str(VOICE / "ref_long.wav"))
+    ap.add_argument("--out", default="/opt/ep0/day4/out")
+    ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--seeds", default="", help="comma list: every line once per seed, tagged _s<seed>")
+    ap.add_argument("--max-frames", type=int, default=600)
+    ap.add_argument("--tower-mlp", default="bf16")
+    ap.add_argument("--tower-fidelity", default="HiFi4")
+    ap.add_argument("--tag", default="")
+    ap.add_argument("--no-compile-codec", action="store_true")
+    ap.add_argument("--codec-threads", type=int, default=6)
+    ap.add_argument("--codec-tail-threads", type=int, default=0, help="threads for the windows left after the last frame (0 = same)")
+    a = ap.parse_args()
+    for k, v in TT_ENV.items():
+        os.environ.setdefault(k, v)
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    if a.lines_file:
+        lines = {l["id"]: dict(l, text=l["spoken"]) for l in json.load(open(a.lines_file))}
+    else:
+        lines = {l["id"]: l for l in yaml.safe_load(open(VOICE / "lines.yaml"))["lines"]}
+    ids = list(lines) if a.lines == "all" else a.lines.split(",")
+    ref_text = Path(a.ref).with_suffix(".txt").read_text().strip()
+    codes = reference_codes(a.ref, "/opt/ep0/day3")  # cached codes of the reference clip
+
+    from models.demos.blackhole.drama3.host.codec import save_wav
+    from models.demos.blackhole.drama3.host.stream_codec import CodecProcess
+    from models.demos.blackhole.qwen36.tt.model_config import GDN_CONV1D_L1_SMALL_SIZE
+
+    t0 = time.time()
+    cc = CodecProcess(threads=a.codec_threads, compile=not a.no_compile_codec, tail_threads=a.codec_tail_threads or None)
+    log(f"codec ready ({'compiled' if not a.no_compile_codec else 'eager'}) in {time.time() - t0:.0f}s")
+    timing_path = out / "timing.json"
+    timing = json.loads(timing_path.read_text()) if timing_path.exists() else {}
+    # DRAMA3_L1_SMALL: L1_SMALL bytes per core; default 65536 (the GDN conv needs 24576, the card codec decoders at
+    # 3 window sizes keep conv1d sliding-window buffers there too)
+    l1_small = int(os.environ.get("DRAMA3_L1_SMALL", 65536))
+    mesh = ttnn.open_mesh_device(ttnn.MeshShape(1, 1), l1_small_size=l1_small, trace_region_size=256 << 20)
+    try:
+        s = FastSession(mesh, a.tower_mlp, a.tower_fidelity)
+        prompts = {lid: s.prompt(lines[lid]["text"], [(ref_text, codes)]) for lid in ids}
+        s._warm_T = max(r.shape[0] for r in prompts.values())
+        # split from the template alone (two one-letter lines), so any later line of this voice reuses the prefix
+        s.split_point([s.prompt(x, [(ref_text, codes)]) for x in ("A", "Z")] + list(prompts.values()))
+        s.warmup(prompts[ids[0]])
+        log(f"fidelity env {({k: v for k, v in os.environ.items() if k.startswith('QWEN36_')})}, tower {a.tower_mlp}/{a.tower_fidelity}")
+        runs = [(lid, a.seed, a.tag) for lid in ids]
+        if a.seeds:
+            runs = [(lid, int(sd), f"{a.tag}_s{sd}") for sd in a.seeds.split(",") for lid in ids]
+        for lid, seed, tag in runs:
+            t_line = time.time()
+            frames, t, audio = s.run(prompts[lid], seed, a.max_frames, codec=cc)
+            t["compute_s"] = round(time.time() - t_line, 3)  # audio complete (before the file write, Day 4b)
+            t0 = time.time()
+            save_wav(out / f"{lid}{tag}.wav", audio, cc.sr)
+            t["save_s"] = round(time.time() - t0, 3)
+            t["audio_s"] = round(frames.shape[0] * cc.frame_length / cc.sr, 3)
+            t["rtf"] = round(t["compute_s"] / t["audio_s"], 3) if t["audio_s"] else None
+            t["start_epoch"], t["end_epoch"] = t_line, time.time()
+            t = {k: (round(v, 3) if isinstance(v, float) else v) for k, v in t.items()}
+            torch.save(frames, out / f"{lid}{tag}.frames.pt")
+            timing[lid + tag] = t
+            json.dump(timing, open(timing_path, "w"), indent=1)
+            log(f"{lid}: {json.dumps(t)}")
+    finally:
+        ttnn.close_device(mesh)
+        cc.close()
+    print("DONE", flush=True)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception:
+        import traceback
+
+        traceback.print_exc()
+        print("FAILED", flush=True)
+        raise

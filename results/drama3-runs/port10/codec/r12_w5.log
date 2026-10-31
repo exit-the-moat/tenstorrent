@@ -1,0 +1,61 @@
+2026-10-31 10:10:27.059 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-31 10:10:27.059 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-31 10:10:27.059 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-31 10:10:27.059 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-31 10:10:27.063 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-31 10:10:27.063 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-31 10:10:27.079 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[1] and remote chip ids {} (cluster.cpp:172)
+2026-10-31 10:10:27.079 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-31 10:10:27.079 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-31 10:10:27.079 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-31 10:10:27.080 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-31 10:10:27.102 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-31 10:10:27.122 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-31 10:10:27.122 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-31 10:10:27.122 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x4) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-31 10:10:27.122 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-31 10:10:27.123 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-31 10:10:27.124 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-31 10:10:27.124 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-31 10:10:27.124 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-31 10:10:27.124 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+2026-10-31 10:10:51.175 | warning  |           Metal | Allocating device buffers is potentially unsafe due to the existence of an active trace. These buffers may be corrupted once a trace is executed if they are not released before then. Use the trace allocation tracker to verify. (allocator.cpp:140)
+8 all {"min_ms": 18.64, "med_ms": 40.53, "med_ms_per_frame": 5.066, "bit_identical": true, "max_abs": 0.0, "snr_db": 321.66}
+8 all trace {"trace_bit_identical": true, "trace_snr_db": 321.66, "trace_min_ms": 7.43, "trace_med_ms": 7.86}
+16 all {"min_ms": 30.53, "med_ms": 36.51, "med_ms_per_frame": 2.282, "bit_identical": true, "max_abs": 0.0, "snr_db": 324.94}
+16 all trace {"trace_bit_identical": true, "trace_snr_db": 324.94, "trace_min_ms": 10.35, "trace_med_ms": 10.81}
+32 all {"min_ms": 47.18, "med_ms": 54.76, "med_ms_per_frame": 1.711, "bit_identical": true, "max_abs": 0.0, "snr_db": 326.59}
+32 all trace {"trace_bit_identical": true, "trace_snr_db": 326.59, "trace_min_ms": 15.82, "trace_med_ms": 16.7}
+64 all {"min_ms": 72.18, "med_ms": 77.58, "med_ms_per_frame": 1.212, "bit_identical": true, "max_abs": 0.0, "snr_db": 330.75}
+64 all trace {"trace_bit_identical": true, "trace_snr_db": 330.75, "trace_min_ms": 28.79, "trace_med_ms": 29.04}
+96 all {"min_ms": 51.03, "med_ms": 51.62, "med_ms_per_frame": 0.538, "bit_identical": true, "max_abs": 0.0, "snr_db": 332.38}
+96 all trace {"trace_bit_identical": true, "trace_snr_db": 332.38, "trace_min_ms": 40.06, "trace_med_ms": 40.74}
+cross n 4 w 8 vs w 32 {"bit_identical": false, "snr_db": -0.88}
+cross n 4 w 16 vs w 32 {"bit_identical": false, "snr_db": 2.2}
+cross n 4 w 32 vs w 32 {"bit_identical": true, "snr_db": 260.61}
+cross n 4 w 64 vs w 32 {"bit_identical": false, "snr_db": -0.83}
+cross n 4 w 96 vs w 32 {"bit_identical": false, "snr_db": -0.83}
+cross n 8 w 8 vs w 32 {"bit_identical": false, "snr_db": 50.4}
+cross n 8 w 16 vs w 32 {"bit_identical": false, "snr_db": 57.49}
+cross n 8 w 32 vs w 32 {"bit_identical": true, "snr_db": 321.66}
+cross n 8 w 64 vs w 32 {"bit_identical": false, "snr_db": 48.51}
+cross n 8 w 96 vs w 32 {"bit_identical": false, "snr_db": 48.51}
+cross n 10 w 16 vs w 32 {"bit_identical": false, "snr_db": 57.22}
+cross n 10 w 32 vs w 32 {"bit_identical": true, "snr_db": 322.69}
+cross n 10 w 64 vs w 32 {"bit_identical": false, "snr_db": 48.13}
+cross n 10 w 96 vs w 32 {"bit_identical": false, "snr_db": 48.13}
+cross n 16 w 16 vs w 32 {"bit_identical": false, "snr_db": 56.19}
+cross n 16 w 32 vs w 32 {"bit_identical": true, "snr_db": 324.94}
+cross n 16 w 64 vs w 32 {"bit_identical": false, "snr_db": 47.43}
+cross n 16 w 96 vs w 32 {"bit_identical": false, "snr_db": 47.43}
+DONE
+2026-10-31 10:10:58.642 | info     |    BuildKernels | JIT cache stats: 1309/1332 hits (98.3%) [1309 cached, 1984 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-31 10:10:58.642 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-31 10:10:58.685 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-31 10:10:58.685 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-31 10:10:58.709 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-31 10:10:58.709 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-31 10:10:58.709 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

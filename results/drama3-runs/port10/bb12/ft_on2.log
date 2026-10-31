@@ -1,0 +1,133 @@
+2026-10-31 13:04:07.968 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-31 13:04:07.968 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-31 13:04:07.968 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-31 13:04:07.968 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-31 13:04:07.973 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-31 13:04:07.973 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-31 13:04:07.991 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-31 13:04:07.991 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-31 13:04:07.991 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-31 13:04:07.991 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-31 13:04:07.992 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-31 13:04:08.011 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-31 13:04:08.025 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-31 13:04:08.025 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-31 13:04:08.025 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-31 13:04:08.025 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-31 13:04:08.026 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-31 13:04:08.026 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-31 13:04:08.026 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-31 13:04:08.026 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-31 13:04:08.026 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-31 13:04:09.705 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-31 13:04:09.705 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-31 13:04:09.705 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-31 13:04:09.705 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-31 13:04:09.705 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-31 13:04:12.004 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-31 13:04:12.012 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-31 13:04:12.012 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-31 13:04:12.012 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-31 13:04:14.517 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-31 13:04:14.817 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-31 13:04:14.818 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-31 13:04:14.818 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-31 13:04:14.818 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-31 13:04:14.818 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-31 13:04:14.818 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+[13:04:28] fused GDN decode on 30 layers
+[13:04:28] fused router top-k on 40 layers
+[13:04:31] fused attention pre-SDPA on 10 backbone layers
+[13:04:31] fused MoE combine on 40 layers
+[13:04:44] backbone prefetch: 80 weights, 1.52 GB copies in 13s
+[13:04:44] paged backbone resident: DRAM 27.88 GB, built in 30s
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+Traceback (most recent call last):
+  File "/opt/ep0/tt-metal/ttnn/ttnn/decorators.py", line 1195, in __call__
+    result = self.function(*function_args, **function_kwargs)
+TypeError: __call__(): incompatible function arguments. The following argument types are supported:
+    1. __call__(self, tensor: ttnn._ttnn.tensor.Tensor, layout: ttnn._ttnn.tensor.Layout, dtype: ttnn._ttnn.tensor.DataType | None = None, memory_config: ttnn._ttnn.tensor.MemoryConfig | None = None, sub_core_grids: ttnn._ttnn.tensor.CoreRangeSet | None = None, pad_value: float = 0.0) -> ttnn._ttnn.tensor.Tensor
+
+Invoked with types: ttnn._ttnn.operations.core.to_layout_t, int, int
+FAILED
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/profile_frame7.py", line 182, in <module>
+    main()
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/profile_frame7.py", line 168, in main
+    s, rows = session(mesh, a.line, a.tower_mlp)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/profile_frame7.py", line 33, in session
+    s = FastSession(mesh, tower_mlp)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/generate_fast.py", line 90, in __init__
+    self.card_codec = CardCodec(mesh)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/stream_codec.py", line 331, in __init__
+    self.decs[w] = DeviceDecoder(mesh, codec, 4 * w)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/codec_device.py", line 98, in __init__
+    self.stages.append(("conv", self._causal(m[0].conv)))
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/codec_device.py", line 122, in _causal
+    return _Conv(w, b, k, d, (k - 1) * d, cin, w.shape[0], self._layout(cin, w.shape[0]), self.mesh)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/codec_device.py", line 183, in _layout
+    return ttnn.to_layout(x, layout)
+  File "/opt/ep0/tt-metal/ttnn/ttnn/decorators.py", line 1203, in __call__
+    raise TypeError(enhanced_msg) from e
+TypeError: 
+ttnn.to_layout(): incompatible function arguments.
+
+Called with:
+  to_layout(int, int)
+
+Available signatures:
+  to_layout(tensor: ttnn.Tensor, layout: ttnn.Layout, dtype: ttnn.DataType | None = None, memory_config: ttnn.MemoryConfig | None = None, sub_core_grids: ttnn.CoreRangeSet | None = None, pad_value: float = 0.0)
+Traceback (most recent call last):
+  File "/opt/ep0/tt-metal/ttnn/ttnn/decorators.py", line 1195, in __call__
+    result = self.function(*function_args, **function_kwargs)
+TypeError: __call__(): incompatible function arguments. The following argument types are supported:
+    1. __call__(self, tensor: ttnn._ttnn.tensor.Tensor, layout: ttnn._ttnn.tensor.Layout, dtype: ttnn._ttnn.tensor.DataType | None = None, memory_config: ttnn._ttnn.tensor.MemoryConfig | None = None, sub_core_grids: ttnn._ttnn.tensor.CoreRangeSet | None = None, pad_value: float = 0.0) -> ttnn._ttnn.tensor.Tensor
+
+Invoked with types: ttnn._ttnn.operations.core.to_layout_t, int, int
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/profile_frame7.py", line 182, in <module>
+    main()
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/profile_frame7.py", line 168, in main
+    s, rows = session(mesh, a.line, a.tower_mlp)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/profile_frame7.py", line 33, in session
+    s = FastSession(mesh, tower_mlp)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/generate_fast.py", line 90, in __init__
+    self.card_codec = CardCodec(mesh)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/stream_codec.py", line 331, in __init__
+    self.decs[w] = DeviceDecoder(mesh, codec, 4 * w)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/codec_device.py", line 98, in __init__
+    self.stages.append(("conv", self._causal(m[0].conv)))
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/codec_device.py", line 122, in _causal
+    return _Conv(w, b, k, d, (k - 1) * d, cin, w.shape[0], self._layout(cin, w.shape[0]), self.mesh)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/codec_device.py", line 183, in _layout
+    return ttnn.to_layout(x, layout)
+  File "/opt/ep0/tt-metal/ttnn/ttnn/decorators.py", line 1203, in __call__
+    raise TypeError(enhanced_msg) from e
+TypeError: 
+ttnn.to_layout(): incompatible function arguments.
+
+Called with:
+  to_layout(int, int)
+
+Available signatures:
+  to_layout(tensor: ttnn.Tensor, layout: ttnn.Layout, dtype: ttnn.DataType | None = None, memory_config: ttnn.MemoryConfig | None = None, sub_core_grids: ttnn.CoreRangeSet | None = None, pad_value: float = 0.0)
+2026-10-31 13:04:57.056 | info     |    BuildKernels | JIT cache stats: 58/58 hits (100.0%) [58 cached, 7 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-31 13:04:57.056 | info     |    BuildKernels | JIT telemetry: 33 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-31 13:04:57.062 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-31 13:04:57.062 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-31 13:04:57.118 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-31 13:04:57.118 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-31 13:04:57.118 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 1

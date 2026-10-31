@@ -1,0 +1,11 @@
+x24 EXIT 0 10:14:21 io=0 disk=70%
+{"run": "x24", "B": 24, "jobs": 32, "audio_s": 378.763, "wall_s": 61.057, "audio_per_wall": 6.203, "mean_active": 14.81, "ms_step": "41.35 + 10.38 + 34.25", "rtf_decode": "1.60 / 2.71 / 3.69", "rtf": "3.22 / 3.40 / 8.01", "ttfa_admit": "0.70 / 4.26 / 10.24", "ttfa_t0": "10.24 / 10.72 / 38.54", "worst_late": "9.29 / 17.91 / 22.72", "eos": 32, "dram_gb": 31.88, "board_W": "202.8 (320.0)"}
+i_dd8 EXIT 0 10:16:59 io=0 disk=70%
+{"run": "i_dd8", "B": 8, "jobs": 32, "audio_s": 393.114, "wall_s": 80.721, "audio_per_wall": 4.87, "mean_active": 7.01, "ms_step": "27.67 + 8.69 + 18.88", "rtf_decode": "1.02 / 1.48 / 1.62", "rtf": "1.55 / 3.89 / 10.29", "ttfa_admit": "0.56 / 0.65 / 3.68", "ttfa_t0": "3.68 / 28.31 / 67.09", "worst_late": "3.40 / 7.73 / 11.12", "eos": 32, "dram_gb": 30.24, "board_W": "202.3 (347.0)"}
+i_vd8 EXIT 0 10:19:42 io=0 disk=70%
+{"run": "i_vd8", "B": 8, "jobs": 32, "audio_s": 391.581, "wall_s": 89.922, "audio_per_wall": 4.355, "mean_active": 7.06, "ms_step": "39.35 + 8.73 + 16.18", "rtf_decode": "1.27 / 1.63 / 1.80", "rtf": "1.64 / 4.30 / 11.26", "ttfa_admit": "0.55 / 0.69 / 3.18", "ttfa_t0": "3.18 / 30.62 / 72.59", "worst_late": "4.84 / 10.01 / 13.78", "eos": 32, "dram_gb": 30.24, "board_W": "206.4 (302.0)"}
+i_dd8 vs base: frames identical 10/32
+i_vd8 vs base: frames identical 32/32
+x16_t4 EXIT 0 10:22:04 io=0 disk=70%
+{"run": "x16_t4", "B": 16, "jobs": 32, "audio_s": 386.613, "wall_s": 59.441, "audio_per_wall": 6.504, "mean_active": 12.88, "ms_step": "35.73 + 9.32 + 27.8", "rtf_decode": "1.44 / 2.05 / 2.63", "rtf": "2.22 / 3.07 / 7.16", "ttfa_admit": "0.57 / 1.40 / 6.15", "ttfa_t0": "6.15 / 12.14 / 38.74", "worst_late": "6.06 / 12.66 / 18.58", "eos": 32, "dram_gb": 30.93, "board_W": "204.7 (243.0)"}
+CHAIN_F_DONE

@@ -1,0 +1,6914 @@
+{
+ "backbone": {
+  "n_programs": 620,
+  "n_names": 722,
+  "span_ms": 12.146,
+  "sum_kernel_ms": 10.796,
+  "gaps_ms": 1.35,
+  "by_op": {
+   "?": {
+    "n": 620,
+    "ms": 10.796
+   }
+  },
+  "ops": [
+   {
+    "i": 0,
+    "name": "GenericOp",
+    "start_us": 0.0,
+    "dur_us": 6.13
+   },
+   {
+    "i": 1,
+    "name": "Matmul",
+    "start_us": 6.55,
+    "dur_us": 71.38
+   },
+   {
+    "i": 2,
+    "name": "GenericOp",
+    "start_us": 81.57,
+    "dur_us": 36.15
+   },
+   {
+    "i": 3,
+    "name": "Matmul",
+    "start_us": 117.97,
+    "dur_us": 24.53
+   },
+   {
+    "i": 4,
+    "name": "GenericOp",
+    "start_us": 142.94,
+    "dur_us": 8.44
+   },
+   {
+    "i": 5,
+    "name": "Matmul",
+    "start_us": 151.99,
+    "dur_us": 8.13
+   },
+   {
+    "i": 6,
+    "name": "GenericOp",
+    "start_us": 161.38,
+    "dur_us": 9.72
+   },
+   {
+    "i": 7,
+    "name": "SparseMatmul",
+    "start_us": 171.35,
+    "dur_us": 2.61
+   },
+   {
+    "i": 8,
+    "name": "Unary",
+    "start_us": 174.25,
+    "dur_us": 44.63
+   },
+   {
+    "i": 9,
+    "name": "GenericOp",
+    "start_us": 219.17,
+    "dur_us": 5.21
+   },
+   {
+    "i": 10,
+    "name": "SparseMatmul",
+    "start_us": 224.64,
+    "dur_us": 3.24
+   },
+   {
+    "i": 11,
+    "name": "Unary",
+    "start_us": 228.15,
+    "dur_us": 31.9
+   },
+   {
+    "i": 12,
+    "name": "Matmul",
+    "start_us": 261.36,
+    "dur_us": 4.82
+   },
+   {
+    "i": 13,
+    "name": "Matmul",
+    "start_us": 266.45,
+    "dur_us": 9.18
+   },
+   {
+    "i": 14,
+    "name": "GenericOp",
+    "start_us": 276.66,
+    "dur_us": 2.89
+   },
+   {
+    "i": 15,
+    "name": "Matmul",
+    "start_us": 279.79,
+    "dur_us": 11.16
+   },
+   {
+    "i": 16,
+    "name": "GenericOp",
+    "start_us": 291.93,
+    "dur_us": 5.69
+   },
+   {
+    "i": 17,
+    "name": "GenericOp",
+    "start_us": 298.6,
+    "dur_us": 7.78
+   },
+   {
+    "i": 18,
+    "name": "Matmul",
+    "start_us": 306.75,
+    "dur_us": 71.62
+   },
+   {
+    "i": 19,
+    "name": "GenericOp",
+    "start_us": 378.64,
+    "dur_us": 36.53
+   },
+   {
+    "i": 20,
+    "name": "Matmul",
+    "start_us": 415.34,
+    "dur_us": 24.21
+   },
+   {
+    "i": 21,
+    "name": "GenericOp",
+    "start_us": 439.97,
+    "dur_us": 8.4
+   },
+   {
+    "i": 22,
+    "name": "Matmul",
+    "start_us": 449.13,
+    "dur_us": 7.91
+   },
+   {
+    "i": 23,
+    "name": "GenericOp",
+    "start_us": 458.32,
+    "dur_us": 9.65
+   },
+   {
+    "i": 24,
+    "name": "SparseMatmul",
+    "start_us": 468.23,
+    "dur_us": 2.62
+   },
+   {
+    "i": 25,
+    "name": "Unary",
+    "start_us": 471.2,
+    "dur_us": 46.32
+   },
+   {
+    "i": 26,
+    "name": "GenericOp",
+    "start_us": 517.7,
+    "dur_us": 5.36
+   },
+   {
+    "i": 27,
+    "name": "SparseMatmul",
+    "start_us": 523.24,
+    "dur_us": 4.54
+   },
+   {
+    "i": 28,
+    "name": "Unary",
+    "start_us": 528.24,
+    "dur_us": 31.32
+   },
+   {
+    "i": 29,
+    "name": "Matmul",
+    "start_us": 560.58,
+    "dur_us": 4.83
+   },
+   {
+    "i": 30,
+    "name": "Matmul",
+    "start_us": 565.67,
+    "dur_us": 9.19
+   },
+   {
+    "i": 31,
+    "name": "GenericOp",
+    "start_us": 575.91,
+    "dur_us": 2.87
+   },
+   {
+    "i": 32,
+    "name": "Matmul",
+    "start_us": 579.04,
+    "dur_us": 11.14
+   },
+   {
+    "i": 33,
+    "name": "GenericOp",
+    "start_us": 591.12,
+    "dur_us": 5.78
+   },
+   {
+    "i": 34,
+    "name": "GenericOp",
+    "start_us": 597.84,
+    "dur_us": 7.85
+   },
+   {
+    "i": 35,
+    "name": "Matmul",
+    "start_us": 606.01,
+    "dur_us": 71.59
+   },
+   {
+    "i": 36,
+    "name": "GenericOp",
+    "start_us": 681.18,
+    "dur_us": 36.7
+   },
+   {
+    "i": 37,
+    "name": "Matmul",
+    "start_us": 718.06,
+    "dur_us": 24.47
+   },
+   {
+    "i": 38,
+    "name": "GenericOp",
+    "start_us": 742.89,
+    "dur_us": 8.45
+   },
+   {
+    "i": 39,
+    "name": "Matmul",
+    "start_us": 752.21,
+    "dur_us": 7.82
+   },
+   {
+    "i": 40,
+    "name": "GenericOp",
+    "start_us": 761.32,
+    "dur_us": 9.45
+   },
+   {
+    "i": 41,
+    "name": "SparseMatmul",
+    "start_us": 771.03,
+    "dur_us": 2.59
+   },
+   {
+    "i": 42,
+    "name": "Unary",
+    "start_us": 773.91,
+    "dur_us": 46.26
+   },
+   {
+    "i": 43,
+    "name": "GenericOp",
+    "start_us": 820.36,
+    "dur_us": 5.32
+   },
+   {
+    "i": 44,
+    "name": "SparseMatmul",
+    "start_us": 825.85,
+    "dur_us": 3.21
+   },
+   {
+    "i": 45,
+    "name": "Unary",
+    "start_us": 829.25,
+    "dur_us": 31.86
+   },
+   {
+    "i": 46,
+    "name": "Matmul",
+    "start_us": 862.21,
+    "dur_us": 4.95
+   },
+   {
+    "i": 47,
+    "name": "Matmul",
+    "start_us": 867.42,
+    "dur_us": 9.16
+   },
+   {
+    "i": 48,
+    "name": "GenericOp",
+    "start_us": 877.64,
+    "dur_us": 2.87
+   },
+   {
+    "i": 49,
+    "name": "Matmul",
+    "start_us": 880.79,
+    "dur_us": 11.06
+   },
+   {
+    "i": 50,
+    "name": "GenericOp",
+    "start_us": 892.83,
+    "dur_us": 5.79
+   },
+   {
+    "i": 51,
+    "name": "GenericOp",
+    "start_us": 899.51,
+    "dur_us": 7.82
+   },
+   {
+    "i": 52,
+    "name": "Matmul",
+    "start_us": 907.57,
+    "dur_us": 57.51
+   },
+   {
+    "i": 53,
+    "name": "GenericOp",
+    "start_us": 965.58,
+    "dur_us": 12.13
+   },
+   {
+    "i": 54,
+    "name": "PagedUpdateCache",
+    "start_us": 978.33,
+    "dur_us": 4.07
+   },
+   {
+    "i": 55,
+    "name": "PagedUpdateCache",
+    "start_us": 983.81,
+    "dur_us": 4.07
+   },
+   {
+    "i": 56,
+    "name": "SdpaDecode",
+    "start_us": 990.22,
+    "dur_us": 27.99
+   },
+   {
+    "i": 57,
+    "name": "GenericOp",
+    "start_us": 1018.43,
+    "dur_us": 4.04
+   },
+   {
+    "i": 58,
+    "name": "Matmul",
+    "start_us": 1022.67,
+    "dur_us": 24.31
+   },
+   {
+    "i": 59,
+    "name": "GenericOp",
+    "start_us": 1047.4,
+    "dur_us": 8.38
+   },
+   {
+    "i": 60,
+    "name": "Matmul",
+    "start_us": 1056.55,
+    "dur_us": 8.0
+   },
+   {
+    "i": 61,
+    "name": "GenericOp",
+    "start_us": 1065.8,
+    "dur_us": 10.15
+   },
+   {
+    "i": 62,
+    "name": "SparseMatmul",
+    "start_us": 1076.21,
+    "dur_us": 2.62
+   },
+   {
+    "i": 63,
+    "name": "Unary",
+    "start_us": 1079.13,
+    "dur_us": 45.16
+   },
+   {
+    "i": 64,
+    "name": "GenericOp",
+    "start_us": 1124.58,
+    "dur_us": 5.22
+   },
+   {
+    "i": 65,
+    "name": "SparseMatmul",
+    "start_us": 1130.07,
+    "dur_us": 3.32
+   },
+   {
+    "i": 66,
+    "name": "Unary",
+    "start_us": 1133.72,
+    "dur_us": 31.53
+   },
+   {
+    "i": 67,
+    "name": "Matmul",
+    "start_us": 1166.72,
+    "dur_us": 4.79
+   },
+   {
+    "i": 68,
+    "name": "Matmul",
+    "start_us": 1171.77,
+    "dur_us": 9.18
+   },
+   {
+    "i": 69,
+    "name": "GenericOp",
+    "start_us": 1181.94,
+    "dur_us": 2.95
+   },
+   {
+    "i": 70,
+    "name": "Matmul",
+    "start_us": 1185.16,
+    "dur_us": 11.09
+   },
+   {
+    "i": 71,
+    "name": "GenericOp",
+    "start_us": 1197.22,
+    "dur_us": 5.84
+   },
+   {
+    "i": 72,
+    "name": "GenericOp",
+    "start_us": 1203.92,
+    "dur_us": 7.91
+   },
+   {
+    "i": 73,
+    "name": "Matmul",
+    "start_us": 1212.07,
+    "dur_us": 71.35
+   },
+   {
+    "i": 74,
+    "name": "GenericOp",
+    "start_us": 1289.29,
+    "dur_us": 36.99
+   },
+   {
+    "i": 75,
+    "name": "Matmul",
+    "start_us": 1326.46,
+    "dur_us": 24.51
+   },
+   {
+    "i": 76,
+    "name": "GenericOp",
+    "start_us": 1351.36,
+    "dur_us": 8.38
+   },
+   {
+    "i": 77,
+    "name": "Matmul",
+    "start_us": 1360.46,
+    "dur_us": 8.04
+   },
+   {
+    "i": 78,
+    "name": "GenericOp",
+    "start_us": 1369.79,
+    "dur_us": 9.38
+   },
+   {
+    "i": 79,
+    "name": "SparseMatmul",
+    "start_us": 1379.42,
+    "dur_us": 2.6
+   },
+   {
+    "i": 80,
+    "name": "Unary",
+    "start_us": 1382.34,
+    "dur_us": 46.15
+   },
+   {
+    "i": 81,
+    "name": "GenericOp",
+    "start_us": 1428.67,
+    "dur_us": 5.33
+   },
+   {
+    "i": 82,
+    "name": "SparseMatmul",
+    "start_us": 1434.18,
+    "dur_us": 3.2
+   },
+   {
+    "i": 83,
+    "name": "Unary",
+    "start_us": 1437.61,
+    "dur_us": 31.9
+   },
+   {
+    "i": 84,
+    "name": "Matmul",
+    "start_us": 1470.79,
+    "dur_us": 4.8
+   },
+   {
+    "i": 85,
+    "name": "Matmul",
+    "start_us": 1475.85,
+    "dur_us": 9.17
+   },
+   {
+    "i": 86,
+    "name": "GenericOp",
+    "start_us": 1486.08,
+    "dur_us": 2.88
+   },
+   {
+    "i": 87,
+    "name": "Matmul",
+    "start_us": 1489.21,
+    "dur_us": 11.14
+   },
+   {
+    "i": 88,
+    "name": "GenericOp",
+    "start_us": 1501.27,
+    "dur_us": 5.75
+   },
+   {
+    "i": 89,
+    "name": "GenericOp",
+    "start_us": 1507.98,
+    "dur_us": 7.85
+   },
+   {
+    "i": 90,
+    "name": "Matmul",
+    "start_us": 1516.07,
+    "dur_us": 71.24
+   },
+   {
+    "i": 91,
+    "name": "GenericOp",
+    "start_us": 1603.51,
+    "dur_us": 36.51
+   },
+   {
+    "i": 92,
+    "name": "Matmul",
+    "start_us": 1640.31,
+    "dur_us": 24.23
+   },
+   {
+    "i": 93,
+    "name": "GenericOp",
+    "start_us": 1664.88,
+    "dur_us": 8.54
+   },
+   {
+    "i": 94,
+    "name": "Matmul",
+    "start_us": 1674.09,
+    "dur_us": 8.1
+   },
+   {
+    "i": 95,
+    "name": "GenericOp",
+    "start_us": 1683.52,
+    "dur_us": 9.69
+   },
+   {
+    "i": 96,
+    "name": "SparseMatmul",
+    "start_us": 1693.47,
+    "dur_us": 2.59
+   },
+   {
+    "i": 97,
+    "name": "Unary",
+    "start_us": 1696.36,
+    "dur_us": 45.39
+   },
+   {
+    "i": 98,
+    "name": "GenericOp",
+    "start_us": 1741.94,
+    "dur_us": 5.34
+   },
+   {
+    "i": 99,
+    "name": "SparseMatmul",
+    "start_us": 1747.48,
+    "dur_us": 3.2
+   },
+   {
+    "i": 100,
+    "name": "Unary",
+    "start_us": 1750.95,
+    "dur_us": 31.67
+   },
+   {
+    "i": 101,
+    "name": "Matmul",
+    "start_us": 1783.91,
+    "dur_us": 4.81
+   },
+   {
+    "i": 102,
+    "name": "Matmul",
+    "start_us": 1788.99,
+    "dur_us": 9.18
+   },
+   {
+    "i": 103,
+    "name": "GenericOp",
+    "start_us": 1799.18,
+    "dur_us": 2.91
+   },
+   {
+    "i": 104,
+    "name": "Matmul",
+    "start_us": 1802.38,
+    "dur_us": 11.01
+   },
+   {
+    "i": 105,
+    "name": "GenericOp",
+    "start_us": 1814.36,
+    "dur_us": 5.84
+   },
+   {
+    "i": 106,
+    "name": "GenericOp",
+    "start_us": 1821.04,
+    "dur_us": 7.84
+   },
+   {
+    "i": 107,
+    "name": "Matmul",
+    "start_us": 1829.12,
+    "dur_us": 71.25
+   },
+   {
+    "i": 108,
+    "name": "GenericOp",
+    "start_us": 1903.96,
+    "dur_us": 39.03
+   },
+   {
+    "i": 109,
+    "name": "Matmul",
+    "start_us": 1943.29,
+    "dur_us": 24.56
+   },
+   {
+    "i": 110,
+    "name": "GenericOp",
+    "start_us": 1968.09,
+    "dur_us": 8.54
+   },
+   {
+    "i": 111,
+    "name": "Matmul",
+    "start_us": 1977.22,
+    "dur_us": 8.17
+   },
+   {
+    "i": 112,
+    "name": "GenericOp",
+    "start_us": 1986.77,
+    "dur_us": 9.14
+   },
+   {
+    "i": 113,
+    "name": "SparseMatmul",
+    "start_us": 1996.16,
+    "dur_us": 2.58
+   },
+   {
+    "i": 114,
+    "name": "Unary",
+    "start_us": 1999.15,
+    "dur_us": 44.57
+   },
+   {
+    "i": 115,
+    "name": "GenericOp",
+    "start_us": 2043.92,
+    "dur_us": 5.35
+   },
+   {
+    "i": 116,
+    "name": "SparseMatmul",
+    "start_us": 2049.46,
+    "dur_us": 3.22
+   },
+   {
+    "i": 117,
+    "name": "Unary",
+    "start_us": 2052.95,
+    "dur_us": 32.21
+   },
+   {
+    "i": 118,
+    "name": "Matmul",
+    "start_us": 2086.57,
+    "dur_us": 4.79
+   },
+   {
+    "i": 119,
+    "name": "Matmul",
+    "start_us": 2091.63,
+    "dur_us": 9.23
+   },
+   {
+    "i": 120,
+    "name": "GenericOp",
+    "start_us": 2101.9,
+    "dur_us": 2.87
+   },
+   {
+    "i": 121,
+    "name": "Matmul",
+    "start_us": 2105.06,
+    "dur_us": 11.12
+   },
+   {
+    "i": 122,
+    "name": "GenericOp",
+    "start_us": 2117.12,
+    "dur_us": 5.73
+   },
+   {
+    "i": 123,
+    "name": "GenericOp",
+    "start_us": 2123.83,
+    "dur_us": 7.65
+   },
+   {
+    "i": 124,
+    "name": "Matmul",
+    "start_us": 2131.81,
+    "dur_us": 58.24
+   },
+   {
+    "i": 125,
+    "name": "GenericOp",
+    "start_us": 2190.44,
+    "dur_us": 12.12
+   },
+   {
+    "i": 126,
+    "name": "PagedUpdateCache",
+    "start_us": 2203.18,
+    "dur_us": 4.08
+   },
+   {
+    "i": 127,
+    "name": "PagedUpdateCache",
+    "start_us": 2208.68,
+    "dur_us": 4.06
+   },
+   {
+    "i": 128,
+    "name": "SdpaDecode",
+    "start_us": 2212.98,
+    "dur_us": 26.33
+   },
+   {
+    "i": 129,
+    "name": "GenericOp",
+    "start_us": 2239.51,
+    "dur_us": 4.01
+   },
+   {
+    "i": 130,
+    "name": "Matmul",
+    "start_us": 2243.71,
+    "dur_us": 24.62
+   },
+   {
+    "i": 131,
+    "name": "GenericOp",
+    "start_us": 2268.79,
+    "dur_us": 8.34
+   },
+   {
+    "i": 132,
+    "name": "Matmul",
+    "start_us": 2277.91,
+    "dur_us": 7.86
+   },
+   {
+    "i": 133,
+    "name": "GenericOp",
+    "start_us": 2287.12,
+    "dur_us": 9.37
+   },
+   {
+    "i": 134,
+    "name": "SparseMatmul",
+    "start_us": 2296.74,
+    "dur_us": 2.6
+   },
+   {
+    "i": 135,
+    "name": "Unary",
+    "start_us": 2299.7,
+    "dur_us": 45.6
+   },
+   {
+    "i": 136,
+    "name": "GenericOp",
+    "start_us": 2345.6,
+    "dur_us": 5.2
+   },
+   {
+    "i": 137,
+    "name": "SparseMatmul",
+    "start_us": 2351.05,
+    "dur_us": 3.22
+   },
+   {
+    "i": 138,
+    "name": "Unary",
+    "start_us": 2354.55,
+    "dur_us": 31.99
+   },
+   {
+    "i": 139,
+    "name": "Matmul",
+    "start_us": 2387.84,
+    "dur_us": 4.84
+   },
+   {
+    "i": 140,
+    "name": "Matmul",
+    "start_us": 2392.95,
+    "dur_us": 9.17
+   },
+   {
+    "i": 141,
+    "name": "GenericOp",
+    "start_us": 2403.11,
+    "dur_us": 2.87
+   },
+   {
+    "i": 142,
+    "name": "Matmul",
+    "start_us": 2406.23,
+    "dur_us": 11.2
+   },
+   {
+    "i": 143,
+    "name": "GenericOp",
+    "start_us": 2418.34,
+    "dur_us": 5.71
+   },
+   {
+    "i": 144,
+    "name": "GenericOp",
+    "start_us": 2425.0,
+    "dur_us": 7.82
+   },
+   {
+    "i": 145,
+    "name": "Matmul",
+    "start_us": 2433.18,
+    "dur_us": 71.41
+   },
+   {
+    "i": 146,
+    "name": "GenericOp",
+    "start_us": 2508.19,
+    "dur_us": 36.37
+   },
+   {
+    "i": 147,
+    "name": "Matmul",
+    "start_us": 2544.85,
+    "dur_us": 26.64
+   },
+   {
+    "i": 148,
+    "name": "GenericOp",
+    "start_us": 2571.76,
+    "dur_us": 8.45
+   },
+   {
+    "i": 149,
+    "name": "Matmul",
+    "start_us": 2580.8,
+    "dur_us": 8.25
+   },
+   {
+    "i": 150,
+    "name": "GenericOp",
+    "start_us": 2590.34,
+    "dur_us": 9.46
+   },
+   {
+    "i": 151,
+    "name": "SparseMatmul",
+    "start_us": 2600.05,
+    "dur_us": 2.61
+   },
+   {
+    "i": 152,
+    "name": "Unary",
+    "start_us": 2602.98,
+    "dur_us": 45.72
+   },
+   {
+    "i": 153,
+    "name": "GenericOp",
+    "start_us": 2648.91,
+    "dur_us": 5.34
+   },
+   {
+    "i": 154,
+    "name": "SparseMatmul",
+    "start_us": 2654.46,
+    "dur_us": 3.25
+   },
+   {
+    "i": 155,
+    "name": "Unary",
+    "start_us": 2657.98,
+    "dur_us": 31.73
+   },
+   {
+    "i": 156,
+    "name": "Matmul",
+    "start_us": 2691.07,
+    "dur_us": 4.76
+   },
+   {
+    "i": 157,
+    "name": "Matmul",
+    "start_us": 2696.1,
+    "dur_us": 9.15
+   },
+   {
+    "i": 158,
+    "name": "GenericOp",
+    "start_us": 2706.25,
+    "dur_us": 2.89
+   },
+   {
+    "i": 159,
+    "name": "Matmul",
+    "start_us": 2709.39,
+    "dur_us": 11.16
+   },
+   {
+    "i": 160,
+    "name": "GenericOp",
+    "start_us": 2721.53,
+    "dur_us": 5.78
+   },
+   {
+    "i": 161,
+    "name": "GenericOp",
+    "start_us": 2728.2,
+    "dur_us": 7.87
+   },
+   {
+    "i": 162,
+    "name": "Matmul",
+    "start_us": 2736.43,
+    "dur_us": 71.29
+   },
+   {
+    "i": 163,
+    "name": "GenericOp",
+    "start_us": 2824.08,
+    "dur_us": 37.41
+   },
+   {
+    "i": 164,
+    "name": "Matmul",
+    "start_us": 2861.69,
+    "dur_us": 24.61
+   },
+   {
+    "i": 165,
+    "name": "GenericOp",
+    "start_us": 2886.67,
+    "dur_us": 8.52
+   },
+   {
+    "i": 166,
+    "name": "Matmul",
+    "start_us": 2895.94,
+    "dur_us": 7.78
+   },
+   {
+    "i": 167,
+    "name": "GenericOp",
+    "start_us": 2905.04,
+    "dur_us": 9.1
+   },
+   {
+    "i": 168,
+    "name": "SparseMatmul",
+    "start_us": 2914.39,
+    "dur_us": 2.58
+   },
+   {
+    "i": 169,
+    "name": "Unary",
+    "start_us": 2917.27,
+    "dur_us": 46.07
+   },
+   {
+    "i": 170,
+    "name": "GenericOp",
+    "start_us": 2963.51,
+    "dur_us": 5.35
+   },
+   {
+    "i": 171,
+    "name": "SparseMatmul",
+    "start_us": 2969.03,
+    "dur_us": 3.21
+   },
+   {
+    "i": 172,
+    "name": "Unary",
+    "start_us": 2972.45,
+    "dur_us": 31.9
+   },
+   {
+    "i": 173,
+    "name": "Matmul",
+    "start_us": 3005.53,
+    "dur_us": 4.83
+   },
+   {
+    "i": 174,
+    "name": "Matmul",
+    "start_us": 3010.62,
+    "dur_us": 9.15
+   },
+   {
+    "i": 175,
+    "name": "GenericOp",
+    "start_us": 3020.83,
+    "dur_us": 2.89
+   },
+   {
+    "i": 176,
+    "name": "Matmul",
+    "start_us": 3024.02,
+    "dur_us": 11.02
+   },
+   {
+    "i": 177,
+    "name": "GenericOp",
+    "start_us": 3036.03,
+    "dur_us": 5.75
+   },
+   {
+    "i": 178,
+    "name": "GenericOp",
+    "start_us": 3042.67,
+    "dur_us": 7.81
+   },
+   {
+    "i": 179,
+    "name": "Matmul",
+    "start_us": 3050.83,
+    "dur_us": 71.41
+   },
+   {
+    "i": 180,
+    "name": "GenericOp",
+    "start_us": 3125.86,
+    "dur_us": 36.7
+   },
+   {
+    "i": 181,
+    "name": "Matmul",
+    "start_us": 3162.79,
+    "dur_us": 24.57
+   },
+   {
+    "i": 182,
+    "name": "GenericOp",
+    "start_us": 3187.66,
+    "dur_us": 8.49
+   },
+   {
+    "i": 183,
+    "name": "Matmul",
+    "start_us": 3196.75,
+    "dur_us": 8.18
+   },
+   {
+    "i": 184,
+    "name": "GenericOp",
+    "start_us": 3206.19,
+    "dur_us": 9.66
+   },
+   {
+    "i": 185,
+    "name": "SparseMatmul",
+    "start_us": 3216.1,
+    "dur_us": 2.59
+   },
+   {
+    "i": 186,
+    "name": "Unary",
+    "start_us": 3218.99,
+    "dur_us": 45.59
+   },
+   {
+    "i": 187,
+    "name": "GenericOp",
+    "start_us": 3264.77,
+    "dur_us": 5.35
+   },
+   {
+    "i": 188,
+    "name": "SparseMatmul",
+    "start_us": 3270.29,
+    "dur_us": 3.22
+   },
+   {
+    "i": 189,
+    "name": "Unary",
+    "start_us": 3273.73,
+    "dur_us": 31.81
+   },
+   {
+    "i": 190,
+    "name": "Matmul",
+    "start_us": 3306.86,
+    "dur_us": 4.82
+   },
+   {
+    "i": 191,
+    "name": "Matmul",
+    "start_us": 3311.94,
+    "dur_us": 9.19
+   },
+   {
+    "i": 192,
+    "name": "GenericOp",
+    "start_us": 3322.2,
+    "dur_us": 2.84
+   },
+   {
+    "i": 193,
+    "name": "Matmul",
+    "start_us": 3325.35,
+    "dur_us": 11.12
+   },
+   {
+    "i": 194,
+    "name": "GenericOp",
+    "start_us": 3337.41,
+    "dur_us": 5.71
+   },
+   {
+    "i": 195,
+    "name": "GenericOp",
+    "start_us": 3344.09,
+    "dur_us": 7.69
+   },
+   {
+    "i": 196,
+    "name": "Matmul",
+    "start_us": 3352.15,
+    "dur_us": 57.51
+   },
+   {
+    "i": 197,
+    "name": "GenericOp",
+    "start_us": 3410.37,
+    "dur_us": 12.07
+   },
+   {
+    "i": 198,
+    "name": "PagedUpdateCache",
+    "start_us": 3423.06,
+    "dur_us": 4.17
+   },
+   {
+    "i": 199,
+    "name": "PagedUpdateCache",
+    "start_us": 3428.79,
+    "dur_us": 3.95
+   },
+   {
+    "i": 200,
+    "name": "SdpaDecode",
+    "start_us": 3432.97,
+    "dur_us": 26.36
+   },
+   {
+    "i": 201,
+    "name": "GenericOp",
+    "start_us": 3459.5,
+    "dur_us": 4.04
+   },
+   {
+    "i": 202,
+    "name": "Matmul",
+    "start_us": 3463.71,
+    "dur_us": 24.6
+   },
+   {
+    "i": 203,
+    "name": "GenericOp",
+    "start_us": 3488.64,
+    "dur_us": 8.35
+   },
+   {
+    "i": 204,
+    "name": "Matmul",
+    "start_us": 3497.71,
+    "dur_us": 7.72
+   },
+   {
+    "i": 205,
+    "name": "GenericOp",
+    "start_us": 3506.76,
+    "dur_us": 9.37
+   },
+   {
+    "i": 206,
+    "name": "SparseMatmul",
+    "start_us": 3516.38,
+    "dur_us": 2.46
+   },
+   {
+    "i": 207,
+    "name": "Unary",
+    "start_us": 3519.33,
+    "dur_us": 45.13
+   },
+   {
+    "i": 208,
+    "name": "GenericOp",
+    "start_us": 3564.63,
+    "dur_us": 5.34
+   },
+   {
+    "i": 209,
+    "name": "SparseMatmul",
+    "start_us": 3570.16,
+    "dur_us": 3.23
+   },
+   {
+    "i": 210,
+    "name": "Unary",
+    "start_us": 3573.58,
+    "dur_us": 31.43
+   },
+   {
+    "i": 211,
+    "name": "Matmul",
+    "start_us": 3606.12,
+    "dur_us": 4.69
+   },
+   {
+    "i": 212,
+    "name": "Matmul",
+    "start_us": 3611.06,
+    "dur_us": 9.02
+   },
+   {
+    "i": 213,
+    "name": "GenericOp",
+    "start_us": 3620.95,
+    "dur_us": 2.95
+   },
+   {
+    "i": 214,
+    "name": "Matmul",
+    "start_us": 3624.16,
+    "dur_us": 10.92
+   },
+   {
+    "i": 215,
+    "name": "GenericOp",
+    "start_us": 3636.06,
+    "dur_us": 5.8
+   },
+   {
+    "i": 216,
+    "name": "GenericOp",
+    "start_us": 3642.67,
+    "dur_us": 7.95
+   },
+   {
+    "i": 217,
+    "name": "Matmul",
+    "start_us": 3650.88,
+    "dur_us": 71.46
+   },
+   {
+    "i": 218,
+    "name": "GenericOp",
+    "start_us": 3725.91,
+    "dur_us": 36.46
+   },
+   {
+    "i": 219,
+    "name": "Matmul",
+    "start_us": 3762.65,
+    "dur_us": 24.53
+   },
+   {
+    "i": 220,
+    "name": "GenericOp",
+    "start_us": 3787.55,
+    "dur_us": 8.26
+   },
+   {
+    "i": 221,
+    "name": "Matmul",
+    "start_us": 3796.61,
+    "dur_us": 7.82
+   },
+   {
+    "i": 222,
+    "name": "GenericOp",
+    "start_us": 3805.71,
+    "dur_us": 9.32
+   },
+   {
+    "i": 223,
+    "name": "SparseMatmul",
+    "start_us": 3815.28,
+    "dur_us": 2.43
+   },
+   {
+    "i": 224,
+    "name": "Unary",
+    "start_us": 3818.21,
+    "dur_us": 44.89
+   },
+   {
+    "i": 225,
+    "name": "GenericOp",
+    "start_us": 3863.39,
+    "dur_us": 5.05
+   },
+   {
+    "i": 226,
+    "name": "SparseMatmul",
+    "start_us": 3868.79,
+    "dur_us": 3.28
+   },
+   {
+    "i": 227,
+    "name": "Unary",
+    "start_us": 3872.45,
+    "dur_us": 31.82
+   },
+   {
+    "i": 228,
+    "name": "Matmul",
+    "start_us": 3905.44,
+    "dur_us": 4.74
+   },
+   {
+    "i": 229,
+    "name": "Matmul",
+    "start_us": 3910.44,
+    "dur_us": 8.97
+   },
+   {
+    "i": 230,
+    "name": "GenericOp",
+    "start_us": 3920.46,
+    "dur_us": 2.89
+   },
+   {
+    "i": 231,
+    "name": "Matmul",
+    "start_us": 3923.59,
+    "dur_us": 10.93
+   },
+   {
+    "i": 232,
+    "name": "GenericOp",
+    "start_us": 3935.51,
+    "dur_us": 5.87
+   },
+   {
+    "i": 233,
+    "name": "GenericOp",
+    "start_us": 3942.14,
+    "dur_us": 7.97
+   },
+   {
+    "i": 234,
+    "name": "Matmul",
+    "start_us": 3950.36,
+    "dur_us": 72.06
+   },
+   {
+    "i": 235,
+    "name": "GenericOp",
+    "start_us": 4038.61,
+    "dur_us": 36.65
+   },
+   {
+    "i": 236,
+    "name": "Matmul",
+    "start_us": 4075.54,
+    "dur_us": 24.59
+   },
+   {
+    "i": 237,
+    "name": "GenericOp",
+    "start_us": 4100.41,
+    "dur_us": 8.42
+   },
+   {
+    "i": 238,
+    "name": "Matmul",
+    "start_us": 4109.62,
+    "dur_us": 7.7
+   },
+   {
+    "i": 239,
+    "name": "GenericOp",
+    "start_us": 4118.62,
+    "dur_us": 9.46
+   },
+   {
+    "i": 240,
+    "name": "SparseMatmul",
+    "start_us": 4128.33,
+    "dur_us": 2.42
+   },
+   {
+    "i": 241,
+    "name": "Unary",
+    "start_us": 4131.2,
+    "dur_us": 44.21
+   },
+   {
+    "i": 242,
+    "name": "GenericOp",
+    "start_us": 4175.71,
+    "dur_us": 5.07
+   },
+   {
+    "i": 243,
+    "name": "SparseMatmul",
+    "start_us": 4181.04,
+    "dur_us": 3.13
+   },
+   {
+    "i": 244,
+    "name": "Unary",
+    "start_us": 4184.46,
+    "dur_us": 32.12
+   },
+   {
+    "i": 245,
+    "name": "Matmul",
+    "start_us": 4217.67,
+    "dur_us": 4.72
+   },
+   {
+    "i": 246,
+    "name": "Matmul",
+    "start_us": 4222.65,
+    "dur_us": 8.99
+   },
+   {
+    "i": 247,
+    "name": "GenericOp",
+    "start_us": 4232.7,
+    "dur_us": 2.89
+   },
+   {
+    "i": 248,
+    "name": "Matmul",
+    "start_us": 4235.88,
+    "dur_us": 10.91
+   },
+   {
+    "i": 249,
+    "name": "GenericOp",
+    "start_us": 4247.77,
+    "dur_us": 5.91
+   },
+   {
+    "i": 250,
+    "name": "GenericOp",
+    "start_us": 4254.46,
+    "dur_us": 7.89
+   },
+   {
+    "i": 251,
+    "name": "Matmul",
+    "start_us": 4262.63,
+    "dur_us": 71.75
+   },
+   {
+    "i": 252,
+    "name": "GenericOp",
+    "start_us": 4337.98,
+    "dur_us": 37.09
+   },
+   {
+    "i": 253,
+    "name": "Matmul",
+    "start_us": 4375.25,
+    "dur_us": 24.51
+   },
+   {
+    "i": 254,
+    "name": "GenericOp",
+    "start_us": 4400.13,
+    "dur_us": 8.25
+   },
+   {
+    "i": 255,
+    "name": "Matmul",
+    "start_us": 4409.2,
+    "dur_us": 7.66
+   },
+   {
+    "i": 256,
+    "name": "GenericOp",
+    "start_us": 4418.21,
+    "dur_us": 9.24
+   },
+   {
+    "i": 257,
+    "name": "SparseMatmul",
+    "start_us": 4427.7,
+    "dur_us": 2.42
+   },
+   {
+    "i": 258,
+    "name": "Unary",
+    "start_us": 4430.61,
+    "dur_us": 44.27
+   },
+   {
+    "i": 259,
+    "name": "GenericOp",
+    "start_us": 4475.17,
+    "dur_us": 5.02
+   },
+   {
+    "i": 260,
+    "name": "SparseMatmul",
+    "start_us": 4480.44,
+    "dur_us": 3.25
+   },
+   {
+    "i": 261,
+    "name": "Unary",
+    "start_us": 4484.1,
+    "dur_us": 31.54
+   },
+   {
+    "i": 262,
+    "name": "Matmul",
+    "start_us": 4516.75,
+    "dur_us": 4.85
+   },
+   {
+    "i": 263,
+    "name": "Matmul",
+    "start_us": 4521.87,
+    "dur_us": 9.02
+   },
+   {
+    "i": 264,
+    "name": "GenericOp",
+    "start_us": 4531.9,
+    "dur_us": 2.87
+   },
+   {
+    "i": 265,
+    "name": "Matmul",
+    "start_us": 4535.05,
+    "dur_us": 10.91
+   },
+   {
+    "i": 266,
+    "name": "GenericOp",
+    "start_us": 4546.91,
+    "dur_us": 5.78
+   },
+   {
+    "i": 267,
+    "name": "GenericOp",
+    "start_us": 4553.56,
+    "dur_us": 7.69
+   },
+   {
+    "i": 268,
+    "name": "Matmul",
+    "start_us": 4561.62,
+    "dur_us": 59.8
+   },
+   {
+    "i": 269,
+    "name": "GenericOp",
+    "start_us": 4621.82,
+    "dur_us": 12.09
+   },
+   {
+    "i": 270,
+    "name": "PagedUpdateCache",
+    "start_us": 4634.54,
+    "dur_us": 5.76
+   },
+   {
+    "i": 271,
+    "name": "PagedUpdateCache",
+    "start_us": 4641.68,
+    "dur_us": 3.95
+   },
+   {
+    "i": 272,
+    "name": "SdpaDecode",
+    "start_us": 4645.86,
+    "dur_us": 26.47
+   },
+   {
+    "i": 273,
+    "name": "GenericOp",
+    "start_us": 4672.49,
+    "dur_us": 3.99
+   },
+   {
+    "i": 274,
+    "name": "Matmul",
+    "start_us": 4676.66,
+    "dur_us": 24.56
+   },
+   {
+    "i": 275,
+    "name": "GenericOp",
+    "start_us": 4701.59,
+    "dur_us": 8.41
+   },
+   {
+    "i": 276,
+    "name": "Matmul",
+    "start_us": 4710.72,
+    "dur_us": 7.53
+   },
+   {
+    "i": 277,
+    "name": "GenericOp",
+    "start_us": 4719.6,
+    "dur_us": 9.58
+   },
+   {
+    "i": 278,
+    "name": "SparseMatmul",
+    "start_us": 4729.43,
+    "dur_us": 2.43
+   },
+   {
+    "i": 279,
+    "name": "Unary",
+    "start_us": 4732.41,
+    "dur_us": 45.33
+   },
+   {
+    "i": 280,
+    "name": "GenericOp",
+    "start_us": 4777.97,
+    "dur_us": 5.27
+   },
+   {
+    "i": 281,
+    "name": "SparseMatmul",
+    "start_us": 4783.42,
+    "dur_us": 3.2
+   },
+   {
+    "i": 282,
+    "name": "Unary",
+    "start_us": 4786.86,
+    "dur_us": 31.81
+   },
+   {
+    "i": 283,
+    "name": "Matmul",
+    "start_us": 4819.85,
+    "dur_us": 4.72
+   },
+   {
+    "i": 284,
+    "name": "Matmul",
+    "start_us": 4824.83,
+    "dur_us": 9.03
+   },
+   {
+    "i": 285,
+    "name": "GenericOp",
+    "start_us": 4834.79,
+    "dur_us": 2.92
+   },
+   {
+    "i": 286,
+    "name": "Matmul",
+    "start_us": 4837.95,
+    "dur_us": 10.9
+   },
+   {
+    "i": 287,
+    "name": "GenericOp",
+    "start_us": 4849.8,
+    "dur_us": 5.73
+   },
+   {
+    "i": 288,
+    "name": "GenericOp",
+    "start_us": 4856.41,
+    "dur_us": 7.91
+   },
+   {
+    "i": 289,
+    "name": "Matmul",
+    "start_us": 4864.69,
+    "dur_us": 72.46
+   },
+   {
+    "i": 290,
+    "name": "GenericOp",
+    "start_us": 4940.81,
+    "dur_us": 36.46
+   },
+   {
+    "i": 291,
+    "name": "Matmul",
+    "start_us": 4977.57,
+    "dur_us": 24.29
+   },
+   {
+    "i": 292,
+    "name": "GenericOp",
+    "start_us": 5002.24,
+    "dur_us": 8.27
+   },
+   {
+    "i": 293,
+    "name": "Matmul",
+    "start_us": 5011.24,
+    "dur_us": 7.9
+   },
+   {
+    "i": 294,
+    "name": "GenericOp",
+    "start_us": 5020.41,
+    "dur_us": 9.58
+   },
+   {
+    "i": 295,
+    "name": "SparseMatmul",
+    "start_us": 5030.25,
+    "dur_us": 2.42
+   },
+   {
+    "i": 296,
+    "name": "Unary",
+    "start_us": 5033.15,
+    "dur_us": 45.2
+   },
+   {
+    "i": 297,
+    "name": "GenericOp",
+    "start_us": 5078.65,
+    "dur_us": 5.18
+   },
+   {
+    "i": 298,
+    "name": "SparseMatmul",
+    "start_us": 5084.01,
+    "dur_us": 3.16
+   },
+   {
+    "i": 299,
+    "name": "Unary",
+    "start_us": 5087.45,
+    "dur_us": 31.94
+   },
+   {
+    "i": 300,
+    "name": "Matmul",
+    "start_us": 5120.7,
+    "dur_us": 4.74
+   },
+   {
+    "i": 301,
+    "name": "Matmul",
+    "start_us": 5125.7,
+    "dur_us": 8.97
+   },
+   {
+    "i": 302,
+    "name": "GenericOp",
+    "start_us": 5135.72,
+    "dur_us": 2.86
+   },
+   {
+    "i": 303,
+    "name": "Matmul",
+    "start_us": 5138.88,
+    "dur_us": 11.02
+   },
+   {
+    "i": 304,
+    "name": "GenericOp",
+    "start_us": 5150.79,
+    "dur_us": 5.73
+   },
+   {
+    "i": 305,
+    "name": "GenericOp",
+    "start_us": 5157.38,
+    "dur_us": 7.85
+   },
+   {
+    "i": 306,
+    "name": "Matmul",
+    "start_us": 5165.5,
+    "dur_us": 71.86
+   },
+   {
+    "i": 307,
+    "name": "GenericOp",
+    "start_us": 5253.56,
+    "dur_us": 38.77
+   },
+   {
+    "i": 308,
+    "name": "Matmul",
+    "start_us": 5292.63,
+    "dur_us": 24.46
+   },
+   {
+    "i": 309,
+    "name": "GenericOp",
+    "start_us": 5317.35,
+    "dur_us": 8.31
+   },
+   {
+    "i": 310,
+    "name": "Matmul",
+    "start_us": 5326.54,
+    "dur_us": 7.37
+   },
+   {
+    "i": 311,
+    "name": "GenericOp",
+    "start_us": 5344.38,
+    "dur_us": 2.14
+   },
+   {
+    "i": 312,
+    "name": "SparseMatmul",
+    "start_us": 5347.25,
+    "dur_us": 45.29
+   },
+   {
+    "i": 313,
+    "name": "Unary",
+    "start_us": 5392.71,
+    "dur_us": 5.35
+   },
+   {
+    "i": 314,
+    "name": "GenericOp",
+    "start_us": 5398.25,
+    "dur_us": 3.24
+   },
+   {
+    "i": 315,
+    "name": "SparseMatmul",
+    "start_us": 5401.7,
+    "dur_us": 31.61
+   },
+   {
+    "i": 316,
+    "name": "Unary",
+    "start_us": 5439.33,
+    "dur_us": 8.82
+   },
+   {
+    "i": 317,
+    "name": "Matmul",
+    "start_us": 5449.25,
+    "dur_us": 2.81
+   },
+   {
+    "i": 318,
+    "name": "Matmul",
+    "start_us": 5452.35,
+    "dur_us": 10.89
+   },
+   {
+    "i": 319,
+    "name": "GenericOp",
+    "start_us": 5464.25,
+    "dur_us": 5.67
+   },
+   {
+    "i": 320,
+    "name": "Matmul",
+    "start_us": 5470.86,
+    "dur_us": 7.35
+   },
+   {
+    "i": 321,
+    "name": "GenericOp",
+    "start_us": 5478.79,
+    "dur_us": 71.69
+   },
+   {
+    "i": 322,
+    "name": "GenericOp",
+    "start_us": 5554.05,
+    "dur_us": 36.76
+   },
+   {
+    "i": 323,
+    "name": "Matmul",
+    "start_us": 5591.08,
+    "dur_us": 24.34
+   },
+   {
+    "i": 324,
+    "name": "GenericOp",
+    "start_us": 5615.91,
+    "dur_us": 8.15
+   },
+   {
+    "i": 325,
+    "name": "Matmul",
+    "start_us": 5624.79,
+    "dur_us": 7.66
+   },
+   {
+    "i": 326,
+    "name": "GenericOp",
+    "start_us": 5642.63,
+    "dur_us": 2.1
+   },
+   {
+    "i": 327,
+    "name": "Matmul",
+    "start_us": 5645.51,
+    "dur_us": 44.29
+   },
+   {
+    "i": 328,
+    "name": "GenericOp",
+    "start_us": 5690.43,
+    "dur_us": 4.98
+   },
+   {
+    "i": 329,
+    "name": "SparseMatmul",
+    "start_us": 5695.71,
+    "dur_us": 3.34
+   },
+   {
+    "i": 330,
+    "name": "Unary",
+    "start_us": 5699.37,
+    "dur_us": 31.72
+   },
+   {
+    "i": 331,
+    "name": "GenericOp",
+    "start_us": 5737.1,
+    "dur_us": 8.89
+   },
+   {
+    "i": 332,
+    "name": "SparseMatmul",
+    "start_us": 5746.97,
+    "dur_us": 2.85
+   },
+   {
+    "i": 333,
+    "name": "Unary",
+    "start_us": 5750.08,
+    "dur_us": 10.94
+   },
+   {
+    "i": 334,
+    "name": "Matmul",
+    "start_us": 5761.94,
+    "dur_us": 5.65
+   },
+   {
+    "i": 335,
+    "name": "Matmul",
+    "start_us": 5768.51,
+    "dur_us": 7.6
+   },
+   {
+    "i": 336,
+    "name": "GenericOp",
+    "start_us": 5776.36,
+    "dur_us": 59.25
+   },
+   {
+    "i": 337,
+    "name": "Matmul",
+    "start_us": 5836.01,
+    "dur_us": 12.15
+   },
+   {
+    "i": 338,
+    "name": "GenericOp",
+    "start_us": 5858.32,
+    "dur_us": 26.5
+   },
+   {
+    "i": 339,
+    "name": "GenericOp",
+    "start_us": 5884.98,
+    "dur_us": 4.04
+   },
+   {
+    "i": 340,
+    "name": "Matmul",
+    "start_us": 5889.2,
+    "dur_us": 26.68
+   },
+   {
+    "i": 341,
+    "name": "GenericOp",
+    "start_us": 5916.25,
+    "dur_us": 8.16
+   },
+   {
+    "i": 342,
+    "name": "PagedUpdateCache",
+    "start_us": 5924.96,
+    "dur_us": 7.87
+   },
+   {
+    "i": 343,
+    "name": "PagedUpdateCache",
+    "start_us": 5943.42,
+    "dur_us": 2.1
+   },
+   {
+    "i": 344,
+    "name": "SdpaDecode",
+    "start_us": 5946.37,
+    "dur_us": 45.75
+   },
+   {
+    "i": 345,
+    "name": "GenericOp",
+    "start_us": 5992.3,
+    "dur_us": 5.3
+   },
+   {
+    "i": 346,
+    "name": "Matmul",
+    "start_us": 5997.76,
+    "dur_us": 3.26
+   },
+   {
+    "i": 347,
+    "name": "GenericOp",
+    "start_us": 6001.22,
+    "dur_us": 31.51
+   },
+   {
+    "i": 348,
+    "name": "Matmul",
+    "start_us": 6038.21,
+    "dur_us": 8.85
+   },
+   {
+    "i": 349,
+    "name": "GenericOp",
+    "start_us": 6047.99,
+    "dur_us": 2.94
+   },
+   {
+    "i": 350,
+    "name": "SparseMatmul",
+    "start_us": 6051.14,
+    "dur_us": 11.01
+   },
+   {
+    "i": 351,
+    "name": "Unary",
+    "start_us": 6063.1,
+    "dur_us": 5.72
+   },
+   {
+    "i": 352,
+    "name": "GenericOp",
+    "start_us": 6069.62,
+    "dur_us": 7.75
+   },
+   {
+    "i": 353,
+    "name": "SparseMatmul",
+    "start_us": 6077.62,
+    "dur_us": 70.73
+   },
+   {
+    "i": 354,
+    "name": "Unary",
+    "start_us": 6152.02,
+    "dur_us": 36.65
+   },
+   {
+    "i": 355,
+    "name": "Matmul",
+    "start_us": 6188.96,
+    "dur_us": 24.26
+   },
+   {
+    "i": 356,
+    "name": "Matmul",
+    "start_us": 6213.59,
+    "dur_us": 8.17
+   },
+   {
+    "i": 357,
+    "name": "GenericOp",
+    "start_us": 6222.36,
+    "dur_us": 7.78
+   },
+   {
+    "i": 358,
+    "name": "Matmul",
+    "start_us": 6241.04,
+    "dur_us": 2.09
+   },
+   {
+    "i": 359,
+    "name": "GenericOp",
+    "start_us": 6243.9,
+    "dur_us": 44.03
+   },
+   {
+    "i": 360,
+    "name": "GenericOp",
+    "start_us": 6288.56,
+    "dur_us": 4.98
+   },
+   {
+    "i": 361,
+    "name": "Matmul",
+    "start_us": 6293.84,
+    "dur_us": 3.31
+   },
+   {
+    "i": 362,
+    "name": "GenericOp",
+    "start_us": 6297.48,
+    "dur_us": 31.81
+   },
+   {
+    "i": 363,
+    "name": "Matmul",
+    "start_us": 6335.32,
+    "dur_us": 8.84
+   },
+   {
+    "i": 364,
+    "name": "GenericOp",
+    "start_us": 6345.15,
+    "dur_us": 2.87
+   },
+   {
+    "i": 365,
+    "name": "Matmul",
+    "start_us": 6348.26,
+    "dur_us": 10.97
+   },
+   {
+    "i": 366,
+    "name": "GenericOp",
+    "start_us": 6360.16,
+    "dur_us": 5.69
+   },
+   {
+    "i": 367,
+    "name": "SparseMatmul",
+    "start_us": 6366.74,
+    "dur_us": 7.57
+   },
+   {
+    "i": 368,
+    "name": "Unary",
+    "start_us": 6374.67,
+    "dur_us": 71.46
+   },
+   {
+    "i": 369,
+    "name": "GenericOp",
+    "start_us": 6462.31,
+    "dur_us": 36.64
+   },
+   {
+    "i": 370,
+    "name": "SparseMatmul",
+    "start_us": 6499.24,
+    "dur_us": 25.05
+   },
+   {
+    "i": 371,
+    "name": "Unary",
+    "start_us": 6524.66,
+    "dur_us": 8.33
+   },
+   {
+    "i": 372,
+    "name": "Matmul",
+    "start_us": 6533.55,
+    "dur_us": 7.66
+   },
+   {
+    "i": 373,
+    "name": "Matmul",
+    "start_us": 6551.62,
+    "dur_us": 2.11
+   },
+   {
+    "i": 374,
+    "name": "GenericOp",
+    "start_us": 6554.46,
+    "dur_us": 45.43
+   },
+   {
+    "i": 375,
+    "name": "Matmul",
+    "start_us": 6600.35,
+    "dur_us": 5.06
+   },
+   {
+    "i": 376,
+    "name": "GenericOp",
+    "start_us": 6605.6,
+    "dur_us": 3.23
+   },
+   {
+    "i": 377,
+    "name": "GenericOp",
+    "start_us": 6609.1,
+    "dur_us": 32.14
+   },
+   {
+    "i": 378,
+    "name": "Matmul",
+    "start_us": 6647.32,
+    "dur_us": 8.87
+   },
+   {
+    "i": 379,
+    "name": "GenericOp",
+    "start_us": 6657.16,
+    "dur_us": 2.89
+   },
+   {
+    "i": 380,
+    "name": "Matmul",
+    "start_us": 6660.33,
+    "dur_us": 10.9
+   },
+   {
+    "i": 381,
+    "name": "GenericOp",
+    "start_us": 6672.2,
+    "dur_us": 5.67
+   },
+   {
+    "i": 382,
+    "name": "Matmul",
+    "start_us": 6678.75,
+    "dur_us": 7.58
+   },
+   {
+    "i": 383,
+    "name": "GenericOp",
+    "start_us": 6686.56,
+    "dur_us": 71.38
+   },
+   {
+    "i": 384,
+    "name": "SparseMatmul",
+    "start_us": 6761.57,
+    "dur_us": 36.86
+   },
+   {
+    "i": 385,
+    "name": "Unary",
+    "start_us": 6798.72,
+    "dur_us": 25.03
+   },
+   {
+    "i": 386,
+    "name": "GenericOp",
+    "start_us": 6823.92,
+    "dur_us": 8.14
+   },
+   {
+    "i": 387,
+    "name": "SparseMatmul",
+    "start_us": 6832.66,
+    "dur_us": 7.81
+   },
+   {
+    "i": 388,
+    "name": "Unary",
+    "start_us": 6851.19,
+    "dur_us": 2.1
+   },
+   {
+    "i": 389,
+    "name": "Matmul",
+    "start_us": 6854.06,
+    "dur_us": 44.89
+   },
+   {
+    "i": 390,
+    "name": "Matmul",
+    "start_us": 6899.13,
+    "dur_us": 5.37
+   },
+   {
+    "i": 391,
+    "name": "GenericOp",
+    "start_us": 6904.66,
+    "dur_us": 3.13
+   },
+   {
+    "i": 392,
+    "name": "Matmul",
+    "start_us": 6908.09,
+    "dur_us": 31.61
+   },
+   {
+    "i": 393,
+    "name": "GenericOp",
+    "start_us": 6945.55,
+    "dur_us": 8.84
+   },
+   {
+    "i": 394,
+    "name": "GenericOp",
+    "start_us": 6955.37,
+    "dur_us": 2.9
+   },
+   {
+    "i": 395,
+    "name": "Matmul",
+    "start_us": 6958.5,
+    "dur_us": 11.0
+   },
+   {
+    "i": 396,
+    "name": "GenericOp",
+    "start_us": 6970.42,
+    "dur_us": 5.62
+   },
+   {
+    "i": 397,
+    "name": "Matmul",
+    "start_us": 6976.96,
+    "dur_us": 7.53
+   },
+   {
+    "i": 398,
+    "name": "GenericOp",
+    "start_us": 6984.83,
+    "dur_us": 59.01
+   },
+   {
+    "i": 399,
+    "name": "Matmul",
+    "start_us": 7044.25,
+    "dur_us": 12.1
+   },
+   {
+    "i": 400,
+    "name": "GenericOp",
+    "start_us": 7066.47,
+    "dur_us": 26.43
+   },
+   {
+    "i": 401,
+    "name": "SparseMatmul",
+    "start_us": 7093.06,
+    "dur_us": 3.98
+   },
+   {
+    "i": 402,
+    "name": "Unary",
+    "start_us": 7097.26,
+    "dur_us": 24.25
+   },
+   {
+    "i": 403,
+    "name": "GenericOp",
+    "start_us": 7121.87,
+    "dur_us": 8.03
+   },
+   {
+    "i": 404,
+    "name": "SparseMatmul",
+    "start_us": 7130.58,
+    "dur_us": 8.07
+   },
+   {
+    "i": 405,
+    "name": "Unary",
+    "start_us": 7149.46,
+    "dur_us": 2.11
+   },
+   {
+    "i": 406,
+    "name": "Matmul",
+    "start_us": 7152.45,
+    "dur_us": 45.15
+   },
+   {
+    "i": 407,
+    "name": "Matmul",
+    "start_us": 7197.81,
+    "dur_us": 5.29
+   },
+   {
+    "i": 408,
+    "name": "GenericOp",
+    "start_us": 7203.26,
+    "dur_us": 3.19
+   },
+   {
+    "i": 409,
+    "name": "Matmul",
+    "start_us": 7206.66,
+    "dur_us": 31.49
+   },
+   {
+    "i": 410,
+    "name": "GenericOp",
+    "start_us": 7246.22,
+    "dur_us": 8.79
+   },
+   {
+    "i": 411,
+    "name": "GenericOp",
+    "start_us": 7255.92,
+    "dur_us": 2.91
+   },
+   {
+    "i": 412,
+    "name": "Matmul",
+    "start_us": 7259.05,
+    "dur_us": 10.97
+   },
+   {
+    "i": 413,
+    "name": "GenericOp",
+    "start_us": 7270.96,
+    "dur_us": 5.68
+   },
+   {
+    "i": 414,
+    "name": "PagedUpdateCache",
+    "start_us": 7277.51,
+    "dur_us": 7.63
+   },
+   {
+    "i": 415,
+    "name": "PagedUpdateCache",
+    "start_us": 7285.38,
+    "dur_us": 73.12
+   },
+   {
+    "i": 416,
+    "name": "SdpaDecode",
+    "start_us": 7362.1,
+    "dur_us": 36.72
+   },
+   {
+    "i": 417,
+    "name": "GenericOp",
+    "start_us": 7398.99,
+    "dur_us": 24.18
+   },
+   {
+    "i": 418,
+    "name": "Matmul",
+    "start_us": 7423.73,
+    "dur_us": 7.95
+   },
+   {
+    "i": 419,
+    "name": "GenericOp",
+    "start_us": 7432.45,
+    "dur_us": 7.74
+   },
+   {
+    "i": 420,
+    "name": "Matmul",
+    "start_us": 7450.8,
+    "dur_us": 2.1
+   },
+   {
+    "i": 421,
+    "name": "GenericOp",
+    "start_us": 7453.68,
+    "dur_us": 44.82
+   },
+   {
+    "i": 422,
+    "name": "SparseMatmul",
+    "start_us": 7498.68,
+    "dur_us": 5.31
+   },
+   {
+    "i": 423,
+    "name": "Unary",
+    "start_us": 7504.18,
+    "dur_us": 3.34
+   },
+   {
+    "i": 424,
+    "name": "GenericOp",
+    "start_us": 7507.73,
+    "dur_us": 31.54
+   },
+   {
+    "i": 425,
+    "name": "SparseMatmul",
+    "start_us": 7545.19,
+    "dur_us": 8.83
+   },
+   {
+    "i": 426,
+    "name": "Unary",
+    "start_us": 7554.99,
+    "dur_us": 2.9
+   },
+   {
+    "i": 427,
+    "name": "Matmul",
+    "start_us": 7558.16,
+    "dur_us": 11.02
+   },
+   {
+    "i": 428,
+    "name": "Matmul",
+    "start_us": 7570.05,
+    "dur_us": 5.7
+   },
+   {
+    "i": 429,
+    "name": "GenericOp",
+    "start_us": 7576.6,
+    "dur_us": 7.65
+   },
+   {
+    "i": 430,
+    "name": "Matmul",
+    "start_us": 7584.61,
+    "dur_us": 71.39
+   },
+   {
+    "i": 431,
+    "name": "GenericOp",
+    "start_us": 7672.2,
+    "dur_us": 36.69
+   },
+   {
+    "i": 432,
+    "name": "GenericOp",
+    "start_us": 7709.06,
+    "dur_us": 24.44
+   },
+   {
+    "i": 433,
+    "name": "Matmul",
+    "start_us": 7733.96,
+    "dur_us": 8.27
+   },
+   {
+    "i": 434,
+    "name": "GenericOp",
+    "start_us": 7742.82,
+    "dur_us": 7.77
+   },
+   {
+    "i": 435,
+    "name": "Matmul",
+    "start_us": 7760.86,
+    "dur_us": 2.12
+   },
+   {
+    "i": 436,
+    "name": "GenericOp",
+    "start_us": 7763.73,
+    "dur_us": 45.46
+   },
+   {
+    "i": 437,
+    "name": "Matmul",
+    "start_us": 7809.45,
+    "dur_us": 5.25
+   },
+   {
+    "i": 438,
+    "name": "GenericOp",
+    "start_us": 7814.86,
+    "dur_us": 3.22
+   },
+   {
+    "i": 439,
+    "name": "SparseMatmul",
+    "start_us": 7818.28,
+    "dur_us": 32.22
+   },
+   {
+    "i": 440,
+    "name": "Unary",
+    "start_us": 7856.58,
+    "dur_us": 8.79
+   },
+   {
+    "i": 441,
+    "name": "GenericOp",
+    "start_us": 7866.44,
+    "dur_us": 2.91
+   },
+   {
+    "i": 442,
+    "name": "SparseMatmul",
+    "start_us": 7869.58,
+    "dur_us": 10.94
+   },
+   {
+    "i": 443,
+    "name": "Unary",
+    "start_us": 7881.45,
+    "dur_us": 5.61
+   },
+   {
+    "i": 444,
+    "name": "Matmul",
+    "start_us": 7887.99,
+    "dur_us": 7.02
+   },
+   {
+    "i": 445,
+    "name": "Matmul",
+    "start_us": 7895.62,
+    "dur_us": 71.11
+   },
+   {
+    "i": 446,
+    "name": "GenericOp",
+    "start_us": 7970.42,
+    "dur_us": 37.04
+   },
+   {
+    "i": 447,
+    "name": "Matmul",
+    "start_us": 8007.75,
+    "dur_us": 24.97
+   },
+   {
+    "i": 448,
+    "name": "GenericOp",
+    "start_us": 8032.9,
+    "dur_us": 8.0
+   },
+   {
+    "i": 449,
+    "name": "GenericOp",
+    "start_us": 8041.7,
+    "dur_us": 7.4
+   },
+   {
+    "i": 450,
+    "name": "Matmul",
+    "start_us": 8061.06,
+    "dur_us": 2.11
+   },
+   {
+    "i": 451,
+    "name": "GenericOp",
+    "start_us": 8063.99,
+    "dur_us": 43.63
+   },
+   {
+    "i": 452,
+    "name": "Matmul",
+    "start_us": 8108.18,
+    "dur_us": 5.04
+   },
+   {
+    "i": 453,
+    "name": "GenericOp",
+    "start_us": 8113.44,
+    "dur_us": 3.37
+   },
+   {
+    "i": 454,
+    "name": "Matmul",
+    "start_us": 8117.1,
+    "dur_us": 31.72
+   },
+   {
+    "i": 455,
+    "name": "GenericOp",
+    "start_us": 8154.93,
+    "dur_us": 8.65
+   },
+   {
+    "i": 456,
+    "name": "SparseMatmul",
+    "start_us": 8164.82,
+    "dur_us": 2.72
+   },
+   {
+    "i": 457,
+    "name": "Unary",
+    "start_us": 8167.82,
+    "dur_us": 10.98
+   },
+   {
+    "i": 458,
+    "name": "GenericOp",
+    "start_us": 8179.79,
+    "dur_us": 5.65
+   },
+   {
+    "i": 459,
+    "name": "SparseMatmul",
+    "start_us": 8193.81,
+    "dur_us": 55.76
+   },
+   {
+    "i": 460,
+    "name": "Unary",
+    "start_us": 8272.33,
+    "dur_us": 26.4
+   },
+   {
+    "i": 461,
+    "name": "Matmul",
+    "start_us": 8298.9,
+    "dur_us": 3.98
+   },
+   {
+    "i": 462,
+    "name": "Matmul",
+    "start_us": 8303.17,
+    "dur_us": 24.05
+   },
+   {
+    "i": 463,
+    "name": "GenericOp",
+    "start_us": 8354.89,
+    "dur_us": 2.15
+   },
+   {
+    "i": 464,
+    "name": "Matmul",
+    "start_us": 8357.86,
+    "dur_us": 44.54
+   },
+   {
+    "i": 465,
+    "name": "GenericOp",
+    "start_us": 8402.58,
+    "dur_us": 5.3
+   },
+   {
+    "i": 466,
+    "name": "GenericOp",
+    "start_us": 8408.06,
+    "dur_us": 3.18
+   },
+   {
+    "i": 467,
+    "name": "Matmul",
+    "start_us": 8411.44,
+    "dur_us": 31.54
+   },
+   {
+    "i": 468,
+    "name": "GenericOp",
+    "start_us": 8449.11,
+    "dur_us": 8.67
+   },
+   {
+    "i": 469,
+    "name": "Matmul",
+    "start_us": 8458.92,
+    "dur_us": 2.75
+   },
+   {
+    "i": 470,
+    "name": "GenericOp",
+    "start_us": 8461.91,
+    "dur_us": 11.01
+   },
+   {
+    "i": 471,
+    "name": "Matmul",
+    "start_us": 8473.95,
+    "dur_us": 5.54
+   },
+   {
+    "i": 472,
+    "name": "GenericOp",
+    "start_us": 8487.92,
+    "dur_us": 71.16
+   },
+   {
+    "i": 473,
+    "name": "SparseMatmul",
+    "start_us": 8562.68,
+    "dur_us": 38.47
+   },
+   {
+    "i": 474,
+    "name": "Unary",
+    "start_us": 8601.45,
+    "dur_us": 23.64
+   },
+   {
+    "i": 475,
+    "name": "GenericOp",
+    "start_us": 8654.65,
+    "dur_us": 2.11
+   },
+   {
+    "i": 476,
+    "name": "SparseMatmul",
+    "start_us": 8657.57,
+    "dur_us": 46.19
+   },
+   {
+    "i": 477,
+    "name": "Unary",
+    "start_us": 8703.93,
+    "dur_us": 5.35
+   },
+   {
+    "i": 478,
+    "name": "Matmul",
+    "start_us": 8709.45,
+    "dur_us": 3.18
+   },
+   {
+    "i": 479,
+    "name": "Matmul",
+    "start_us": 8712.83,
+    "dur_us": 31.64
+   },
+   {
+    "i": 480,
+    "name": "GenericOp",
+    "start_us": 8750.61,
+    "dur_us": 8.64
+   },
+   {
+    "i": 481,
+    "name": "Matmul",
+    "start_us": 8760.43,
+    "dur_us": 2.79
+   },
+   {
+    "i": 482,
+    "name": "GenericOp",
+    "start_us": 8763.42,
+    "dur_us": 11.0
+   },
+   {
+    "i": 483,
+    "name": "GenericOp",
+    "start_us": 8775.45,
+    "dur_us": 5.57
+   },
+   {
+    "i": 484,
+    "name": "Matmul",
+    "start_us": 8789.42,
+    "dur_us": 71.07
+   },
+   {
+    "i": 485,
+    "name": "GenericOp",
+    "start_us": 8876.85,
+    "dur_us": 36.55
+   },
+   {
+    "i": 486,
+    "name": "PagedUpdateCache",
+    "start_us": 8913.62,
+    "dur_us": 23.97
+   },
+   {
+    "i": 487,
+    "name": "PagedUpdateCache",
+    "start_us": 8965.21,
+    "dur_us": 2.11
+   },
+   {
+    "i": 488,
+    "name": "SdpaDecode",
+    "start_us": 8968.03,
+    "dur_us": 44.63
+   },
+   {
+    "i": 489,
+    "name": "GenericOp",
+    "start_us": 9012.93,
+    "dur_us": 5.26
+   },
+   {
+    "i": 490,
+    "name": "Matmul",
+    "start_us": 9018.38,
+    "dur_us": 3.18
+   },
+   {
+    "i": 491,
+    "name": "GenericOp",
+    "start_us": 9021.76,
+    "dur_us": 31.87
+   },
+   {
+    "i": 492,
+    "name": "Matmul",
+    "start_us": 9059.74,
+    "dur_us": 8.66
+   },
+   {
+    "i": 493,
+    "name": "GenericOp",
+    "start_us": 9069.54,
+    "dur_us": 2.86
+   },
+   {
+    "i": 494,
+    "name": "SparseMatmul",
+    "start_us": 9072.57,
+    "dur_us": 11.0
+   },
+   {
+    "i": 495,
+    "name": "Unary",
+    "start_us": 9084.59,
+    "dur_us": 5.53
+   },
+   {
+    "i": 496,
+    "name": "GenericOp",
+    "start_us": 9098.46,
+    "dur_us": 71.69
+   },
+   {
+    "i": 497,
+    "name": "SparseMatmul",
+    "start_us": 9173.74,
+    "dur_us": 36.83
+   },
+   {
+    "i": 498,
+    "name": "Unary",
+    "start_us": 9210.9,
+    "dur_us": 26.17
+   },
+   {
+    "i": 499,
+    "name": "Matmul",
+    "start_us": 9264.55,
+    "dur_us": 2.12
+   },
+   {
+    "i": 500,
+    "name": "Matmul",
+    "start_us": 9267.48,
+    "dur_us": 44.08
+   },
+   {
+    "i": 501,
+    "name": "GenericOp",
+    "start_us": 9312.0,
+    "dur_us": 4.95
+   },
+   {
+    "i": 502,
+    "name": "Matmul",
+    "start_us": 9317.24,
+    "dur_us": 3.23
+   },
+   {
+    "i": 503,
+    "name": "GenericOp",
+    "start_us": 9320.68,
+    "dur_us": 32.06
+   },
+   {
+    "i": 504,
+    "name": "GenericOp",
+    "start_us": 9358.79,
+    "dur_us": 8.73
+   },
+   {
+    "i": 505,
+    "name": "Matmul",
+    "start_us": 9368.62,
+    "dur_us": 2.67
+   },
+   {
+    "i": 506,
+    "name": "GenericOp",
+    "start_us": 9371.64,
+    "dur_us": 10.88
+   },
+   {
+    "i": 507,
+    "name": "Matmul",
+    "start_us": 9383.54,
+    "dur_us": 5.43
+   },
+   {
+    "i": 508,
+    "name": "GenericOp",
+    "start_us": 9397.51,
+    "dur_us": 58.71
+   },
+   {
+    "i": 509,
+    "name": "Matmul",
+    "start_us": 9478.87,
+    "dur_us": 26.15
+   },
+   {
+    "i": 510,
+    "name": "GenericOp",
+    "start_us": 9505.5,
+    "dur_us": 4.01
+   },
+   {
+    "i": 511,
+    "name": "SparseMatmul",
+    "start_us": 9509.89,
+    "dur_us": 23.96
+   },
+   {
+    "i": 512,
+    "name": "Unary",
+    "start_us": 9562.35,
+    "dur_us": 2.11
+   },
+   {
+    "i": 513,
+    "name": "GenericOp",
+    "start_us": 9565.34,
+    "dur_us": 43.92
+   },
+   {
+    "i": 514,
+    "name": "SparseMatmul",
+    "start_us": 9609.71,
+    "dur_us": 4.89
+   },
+   {
+    "i": 515,
+    "name": "Unary",
+    "start_us": 9614.92,
+    "dur_us": 3.24
+   },
+   {
+    "i": 516,
+    "name": "Matmul",
+    "start_us": 9618.41,
+    "dur_us": 31.74
+   },
+   {
+    "i": 517,
+    "name": "Matmul",
+    "start_us": 9656.2,
+    "dur_us": 8.68
+   },
+   {
+    "i": 518,
+    "name": "GenericOp",
+    "start_us": 9665.9,
+    "dur_us": 2.76
+   },
+   {
+    "i": 519,
+    "name": "Matmul",
+    "start_us": 9668.93,
+    "dur_us": 10.94
+   },
+   {
+    "i": 520,
+    "name": "GenericOp",
+    "start_us": 9680.91,
+    "dur_us": 5.4
+   },
+   {
+    "i": 521,
+    "name": "GenericOp",
+    "start_us": 9694.82,
+    "dur_us": 71.52
+   },
+   {
+    "i": 522,
+    "name": "Matmul",
+    "start_us": 9769.94,
+    "dur_us": 36.65
+   },
+   {
+    "i": 523,
+    "name": "GenericOp",
+    "start_us": 9806.84,
+    "dur_us": 24.17
+   },
+   {
+    "i": 524,
+    "name": "Matmul",
+    "start_us": 9858.73,
+    "dur_us": 2.14
+   },
+   {
+    "i": 525,
+    "name": "GenericOp",
+    "start_us": 9861.67,
+    "dur_us": 46.56
+   },
+   {
+    "i": 526,
+    "name": "Matmul",
+    "start_us": 9908.53,
+    "dur_us": 5.03
+   },
+   {
+    "i": 527,
+    "name": "GenericOp",
+    "start_us": 9913.75,
+    "dur_us": 3.23
+   },
+   {
+    "i": 528,
+    "name": "SparseMatmul",
+    "start_us": 9917.19,
+    "dur_us": 32.03
+   },
+   {
+    "i": 529,
+    "name": "Unary",
+    "start_us": 9955.19,
+    "dur_us": 8.68
+   },
+   {
+    "i": 530,
+    "name": "GenericOp",
+    "start_us": 9964.98,
+    "dur_us": 2.69
+   },
+   {
+    "i": 531,
+    "name": "SparseMatmul",
+    "start_us": 9968.03,
+    "dur_us": 10.96
+   },
+   {
+    "i": 532,
+    "name": "Unary",
+    "start_us": 9980.01,
+    "dur_us": 5.47
+   },
+   {
+    "i": 533,
+    "name": "Matmul",
+    "start_us": 9994.06,
+    "dur_us": 70.85
+   },
+   {
+    "i": 534,
+    "name": "Matmul",
+    "start_us": 10081.13,
+    "dur_us": 36.33
+   },
+   {
+    "i": 535,
+    "name": "GenericOp",
+    "start_us": 10117.73,
+    "dur_us": 24.0
+   },
+   {
+    "i": 536,
+    "name": "Matmul",
+    "start_us": 10169.9,
+    "dur_us": 2.1
+   },
+   {
+    "i": 537,
+    "name": "GenericOp",
+    "start_us": 10172.75,
+    "dur_us": 45.08
+   },
+   {
+    "i": 538,
+    "name": "GenericOp",
+    "start_us": 10218.01,
+    "dur_us": 5.15
+   },
+   {
+    "i": 539,
+    "name": "Matmul",
+    "start_us": 10223.34,
+    "dur_us": 3.13
+   },
+   {
+    "i": 540,
+    "name": "GenericOp",
+    "start_us": 10226.74,
+    "dur_us": 31.62
+   },
+   {
+    "i": 541,
+    "name": "Matmul",
+    "start_us": 10264.55,
+    "dur_us": 8.68
+   },
+   {
+    "i": 542,
+    "name": "GenericOp",
+    "start_us": 10274.38,
+    "dur_us": 2.71
+   },
+   {
+    "i": 543,
+    "name": "Matmul",
+    "start_us": 10277.45,
+    "dur_us": 10.88
+   },
+   {
+    "i": 544,
+    "name": "GenericOp",
+    "start_us": 10289.37,
+    "dur_us": 5.45
+   },
+   {
+    "i": 545,
+    "name": "SparseMatmul",
+    "start_us": 10303.25,
+    "dur_us": 70.81
+   },
+   {
+    "i": 546,
+    "name": "Unary",
+    "start_us": 10377.84,
+    "dur_us": 36.95
+   },
+   {
+    "i": 547,
+    "name": "GenericOp",
+    "start_us": 10415.09,
+    "dur_us": 24.29
+   },
+   {
+    "i": 548,
+    "name": "SparseMatmul",
+    "start_us": 10466.44,
+    "dur_us": 2.11
+   },
+   {
+    "i": 549,
+    "name": "Unary",
+    "start_us": 10469.33,
+    "dur_us": 43.83
+   },
+   {
+    "i": 550,
+    "name": "Matmul",
+    "start_us": 10513.79,
+    "dur_us": 4.94
+   },
+   {
+    "i": 551,
+    "name": "Matmul",
+    "start_us": 10519.02,
+    "dur_us": 3.24
+   },
+   {
+    "i": 552,
+    "name": "GenericOp",
+    "start_us": 10522.68,
+    "dur_us": 31.44
+   },
+   {
+    "i": 553,
+    "name": "Matmul",
+    "start_us": 10560.19,
+    "dur_us": 8.6
+   },
+   {
+    "i": 554,
+    "name": "GenericOp",
+    "start_us": 10569.98,
+    "dur_us": 2.7
+   },
+   {
+    "i": 555,
+    "name": "GenericOp",
+    "start_us": 10573.04,
+    "dur_us": 10.93
+   },
+   {
+    "i": 556,
+    "name": "Matmul",
+    "start_us": 10584.98,
+    "dur_us": 5.43
+   },
+   {
+    "i": 557,
+    "name": "GenericOp",
+    "start_us": 10598.94,
+    "dur_us": 57.07
+   },
+   {
+    "i": 558,
+    "name": "PagedUpdateCache",
+    "start_us": 10678.64,
+    "dur_us": 26.5
+   },
+   {
+    "i": 559,
+    "name": "PagedUpdateCache",
+    "start_us": 10705.31,
+    "dur_us": 4.0
+   },
+   {
+    "i": 560,
+    "name": "SdpaDecode",
+    "start_us": 10709.59,
+    "dur_us": 24.04
+   },
+   {
+    "i": 561,
+    "name": "GenericOp",
+    "start_us": 10761.36,
+    "dur_us": 2.12
+   },
+   {
+    "i": 562,
+    "name": "Matmul",
+    "start_us": 10764.32,
+    "dur_us": 44.57
+   },
+   {
+    "i": 563,
+    "name": "GenericOp",
+    "start_us": 10809.1,
+    "dur_us": 5.11
+   },
+   {
+    "i": 564,
+    "name": "Matmul",
+    "start_us": 10814.39,
+    "dur_us": 3.2
+   },
+   {
+    "i": 565,
+    "name": "GenericOp",
+    "start_us": 10817.84,
+    "dur_us": 31.35
+   },
+   {
+    "i": 566,
+    "name": "SparseMatmul",
+    "start_us": 10855.15,
+    "dur_us": 8.62
+   },
+   {
+    "i": 567,
+    "name": "Unary",
+    "start_us": 10864.88,
+    "dur_us": 2.61
+   },
+   {
+    "i": 568,
+    "name": "GenericOp",
+    "start_us": 10867.88,
+    "dur_us": 10.91
+   },
+   {
+    "i": 569,
+    "name": "SparseMatmul",
+    "start_us": 10879.83,
+    "dur_us": 5.43
+   },
+   {
+    "i": 570,
+    "name": "Unary",
+    "start_us": 10893.79,
+    "dur_us": 71.62
+   },
+   {
+    "i": 571,
+    "name": "Matmul",
+    "start_us": 10968.99,
+    "dur_us": 36.73
+   },
+   {
+    "i": 572,
+    "name": "Matmul",
+    "start_us": 11006.01,
+    "dur_us": 23.97
+   },
+   {
+    "i": 573,
+    "name": "GenericOp",
+    "start_us": 11057.77,
+    "dur_us": 2.11
+   },
+   {
+    "i": 574,
+    "name": "Matmul",
+    "start_us": 11060.67,
+    "dur_us": 44.88
+   },
+   {
+    "i": 575,
+    "name": "GenericOp",
+    "start_us": 11105.77,
+    "dur_us": 5.1
+   },
+   {
+    "i": 576,
+    "name": "GenericOp",
+    "start_us": 11111.05,
+    "dur_us": 3.15
+   },
+   {
+    "i": 577,
+    "name": "Matmul",
+    "start_us": 11114.43,
+    "dur_us": 31.8
+   },
+   {
+    "i": 578,
+    "name": "GenericOp",
+    "start_us": 11152.18,
+    "dur_us": 8.65
+   },
+   {
+    "i": 579,
+    "name": "Matmul",
+    "start_us": 11161.97,
+    "dur_us": 2.68
+   },
+   {
+    "i": 580,
+    "name": "GenericOp",
+    "start_us": 11165.04,
+    "dur_us": 10.92
+   },
+   {
+    "i": 581,
+    "name": "Matmul",
+    "start_us": 11177.02,
+    "dur_us": 5.45
+   },
+   {
+    "i": 582,
+    "name": "GenericOp",
+    "start_us": 11190.92,
+    "dur_us": 71.39
+   },
+   {
+    "i": 583,
+    "name": "SparseMatmul",
+    "start_us": 11278.57,
+    "dur_us": 36.89
+   },
+   {
+    "i": 584,
+    "name": "Unary",
+    "start_us": 11315.94,
+    "dur_us": 24.87
+   },
+   {
+    "i": 585,
+    "name": "GenericOp",
+    "start_us": 11367.95,
+    "dur_us": 2.11
+   },
+   {
+    "i": 586,
+    "name": "SparseMatmul",
+    "start_us": 11370.84,
+    "dur_us": 45.05
+   },
+   {
+    "i": 587,
+    "name": "Unary",
+    "start_us": 11416.06,
+    "dur_us": 5.18
+   },
+   {
+    "i": 588,
+    "name": "Matmul",
+    "start_us": 11421.42,
+    "dur_us": 3.13
+   },
+   {
+    "i": 589,
+    "name": "Matmul",
+    "start_us": 11424.79,
+    "dur_us": 31.48
+   },
+   {
+    "i": 590,
+    "name": "GenericOp",
+    "start_us": 11462.3,
+    "dur_us": 8.64
+   },
+   {
+    "i": 591,
+    "name": "Matmul",
+    "start_us": 11472.07,
+    "dur_us": 2.68
+   },
+   {
+    "i": 592,
+    "name": "GenericOp",
+    "start_us": 11475.14,
+    "dur_us": 10.9
+   },
+   {
+    "i": 593,
+    "name": "GenericOp",
+    "start_us": 11487.11,
+    "dur_us": 5.43
+   },
+   {
+    "i": 594,
+    "name": "Matmul",
+    "start_us": 11501.0,
+    "dur_us": 71.56
+   },
+   {
+    "i": 595,
+    "name": "GenericOp",
+    "start_us": 11576.16,
+    "dur_us": 36.95
+   },
+   {
+    "i": 596,
+    "name": "Matmul",
+    "start_us": 11613.47,
+    "dur_us": 24.21
+   },
+   {
+    "i": 597,
+    "name": "GenericOp",
+    "start_us": 11666.12,
+    "dur_us": 2.15
+   },
+   {
+    "i": 598,
+    "name": "Matmul",
+    "start_us": 11669.04,
+    "dur_us": 45.8
+   },
+   {
+    "i": 599,
+    "name": "GenericOp",
+    "start_us": 11715.05,
+    "dur_us": 5.15
+   },
+   {
+    "i": 600,
+    "name": "SparseMatmul",
+    "start_us": 11720.38,
+    "dur_us": 3.19
+   },
+   {
+    "i": 601,
+    "name": "Unary",
+    "start_us": 11723.86,
+    "dur_us": 32.15
+   },
+   {
+    "i": 602,
+    "name": "GenericOp",
+    "start_us": 11761.95,
+    "dur_us": 8.68
+   },
+   {
+    "i": 603,
+    "name": "SparseMatmul",
+    "start_us": 11771.78,
+    "dur_us": 2.65
+   },
+   {
+    "i": 604,
+    "name": "Unary",
+    "start_us": 11774.79,
+    "dur_us": 10.93
+   },
+   {
+    "i": 605,
+    "name": "Matmul",
+    "start_us": 11786.79,
+    "dur_us": 5.35
+   },
+   {
+    "i": 606,
+    "name": "Matmul",
+    "start_us": 11800.73,
+    "dur_us": 58.06
+   },
+   {
+    "i": 607,
+    "name": "GenericOp",
+    "start_us": 11883.49,
+    "dur_us": 26.67
+   },
+   {
+    "i": 608,
+    "name": "Matmul",
+    "start_us": 11911.67,
+    "dur_us": 4.0
+   },
+   {
+    "i": 609,
+    "name": "GenericOp",
+    "start_us": 11915.94,
+    "dur_us": 24.12
+   },
+   {
+    "i": 610,
+    "name": "GenericOp",
+    "start_us": 11967.91,
+    "dur_us": 2.08
+   },
+   {
+    "i": 611,
+    "name": "Matmul",
+    "start_us": 11970.83,
+    "dur_us": 44.2
+   },
+   {
+    "i": 612,
+    "name": "GenericOp",
+    "start_us": 12015.27,
+    "dur_us": 5.08
+   },
+   {
+    "i": 613,
+    "name": "Matmul",
+    "start_us": 12020.52,
+    "dur_us": 3.23
+   },
+   {
+    "i": 614,
+    "name": "GenericOp",
+    "start_us": 12024.21,
+    "dur_us": 32.27
+   },
+   {
+    "i": 615,
+    "name": "Matmul",
+    "start_us": 12062.52,
+    "dur_us": 8.69
+   },
+   {
+    "i": 616,
+    "name": "GenericOp",
+    "start_us": 12072.34,
+    "dur_us": 2.66
+   },
+   {
+    "i": 617,
+    "name": "SparseMatmul",
+    "start_us": 12075.37,
+    "dur_us": 10.95
+   },
+   {
+    "i": 618,
+    "name": "Unary",
+    "start_us": 12087.28,
+    "dur_us": 5.48
+   },
+   {
+    "i": 619,
+    "name": "GenericOp",
+    "start_us": 12100.81,
+    "dur_us": 45.34
+   }
+  ]
+ },
+ "tower": {
+  "n_programs": 527,
+  "n_names": 530,
+  "span_ms": 7.55,
+  "sum_kernel_ms": 7.165,
+  "gaps_ms": 0.386,
+  "by_op": {
+   "?": {
+    "n": 527,
+    "ms": 7.165
+   }
+  },
+  "ops": [
+   {
+    "i": 0,
+    "name": "Slice",
+    "start_us": 0.0,
+    "dur_us": 1.55
+   },
+   {
+    "i": 1,
+    "name": "Copy",
+    "start_us": 5.21,
+    "dur_us": 1.49
+   },
+   {
+    "i": 2,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 10.69,
+    "dur_us": 2.8
+   },
+   {
+    "i": 3,
+    "name": "Slice",
+    "start_us": 14.9,
+    "dur_us": 0.93
+   },
+   {
+    "i": 4,
+    "name": "TilizeWithValPadding",
+    "start_us": 17.94,
+    "dur_us": 3.19
+   },
+   {
+    "i": 5,
+    "name": "Copy",
+    "start_us": 22.28,
+    "dur_us": 1.49
+   },
+   {
+    "i": 6,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 26.61,
+    "dur_us": 2.75
+   },
+   {
+    "i": 7,
+    "name": "Slice",
+    "start_us": 30.78,
+    "dur_us": 1.02
+   },
+   {
+    "i": 8,
+    "name": "TilizeWithValPadding",
+    "start_us": 32.71,
+    "dur_us": 3.15
+   },
+   {
+    "i": 9,
+    "name": "Copy",
+    "start_us": 37.05,
+    "dur_us": 1.5
+   },
+   {
+    "i": 10,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 41.39,
+    "dur_us": 2.78
+   },
+   {
+    "i": 11,
+    "name": "Slice",
+    "start_us": 45.64,
+    "dur_us": 1.05
+   },
+   {
+    "i": 12,
+    "name": "TilizeWithValPadding",
+    "start_us": 47.46,
+    "dur_us": 3.15
+   },
+   {
+    "i": 13,
+    "name": "Copy",
+    "start_us": 51.9,
+    "dur_us": 1.47
+   },
+   {
+    "i": 14,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 56.3,
+    "dur_us": 2.79
+   },
+   {
+    "i": 15,
+    "name": "Slice",
+    "start_us": 60.51,
+    "dur_us": 1.03
+   },
+   {
+    "i": 16,
+    "name": "TilizeWithValPadding",
+    "start_us": 62.4,
+    "dur_us": 3.16
+   },
+   {
+    "i": 17,
+    "name": "Copy",
+    "start_us": 66.73,
+    "dur_us": 1.57
+   },
+   {
+    "i": 18,
+    "name": "InterleavedToSharded",
+    "start_us": 69.02,
+    "dur_us": 1.29
+   },
+   {
+    "i": 19,
+    "name": "LayerNorm",
+    "start_us": 73.28,
+    "dur_us": 5.79
+   },
+   {
+    "i": 20,
+    "name": "ShardedToInterleaved",
+    "start_us": 80.28,
+    "dur_us": 1.06
+   },
+   {
+    "i": 21,
+    "name": "Matmul",
+    "start_us": 81.78,
+    "dur_us": 22.87
+   },
+   {
+    "i": 22,
+    "name": "GenericOp",
+    "start_us": 105.6,
+    "dur_us": 6.17
+   },
+   {
+    "i": 23,
+    "name": "Matmul",
+    "start_us": 112.2,
+    "dur_us": 22.96
+   },
+   {
+    "i": 24,
+    "name": "GenericOp",
+    "start_us": 136.12,
+    "dur_us": 5.97
+   },
+   {
+    "i": 25,
+    "name": "Matmul",
+    "start_us": 142.61,
+    "dur_us": 22.65
+   },
+   {
+    "i": 26,
+    "name": "GenericOp",
+    "start_us": 166.27,
+    "dur_us": 7.87
+   },
+   {
+    "i": 27,
+    "name": "Matmul",
+    "start_us": 174.44,
+    "dur_us": 55.47
+   },
+   {
+    "i": 28,
+    "name": "GenericOp",
+    "start_us": 230.41,
+    "dur_us": 11.93
+   },
+   {
+    "i": 29,
+    "name": "PagedUpdateCache",
+    "start_us": 242.96,
+    "dur_us": 4.06
+   },
+   {
+    "i": 30,
+    "name": "PagedUpdateCache",
+    "start_us": 248.46,
+    "dur_us": 4.05
+   },
+   {
+    "i": 31,
+    "name": "SdpaDecode",
+    "start_us": 254.83,
+    "dur_us": 27.86
+   },
+   {
+    "i": 32,
+    "name": "GenericOp",
+    "start_us": 282.91,
+    "dur_us": 4.1
+   },
+   {
+    "i": 33,
+    "name": "Matmul",
+    "start_us": 287.21,
+    "dur_us": 24.39
+   },
+   {
+    "i": 34,
+    "name": "GenericOp",
+    "start_us": 312.0,
+    "dur_us": 8.34
+   },
+   {
+    "i": 35,
+    "name": "Matmul",
+    "start_us": 320.83,
+    "dur_us": 64.68
+   },
+   {
+    "i": 36,
+    "name": "Unary",
+    "start_us": 385.79,
+    "dur_us": 4.15
+   },
+   {
+    "i": 37,
+    "name": "Matmul",
+    "start_us": 390.39,
+    "dur_us": 64.51
+   },
+   {
+    "i": 38,
+    "name": "BinaryNg",
+    "start_us": 455.17,
+    "dur_us": 5.23
+   },
+   {
+    "i": 39,
+    "name": "Matmul",
+    "start_us": 460.8,
+    "dur_us": 61.78
+   },
+   {
+    "i": 40,
+    "name": "GenericOp",
+    "start_us": 523.38,
+    "dur_us": 7.41
+   },
+   {
+    "i": 41,
+    "name": "GenericOp",
+    "start_us": 532.07,
+    "dur_us": 5.94
+   },
+   {
+    "i": 42,
+    "name": "Matmul",
+    "start_us": 538.53,
+    "dur_us": 22.66
+   },
+   {
+    "i": 43,
+    "name": "GenericOp",
+    "start_us": 562.29,
+    "dur_us": 7.71
+   },
+   {
+    "i": 44,
+    "name": "Matmul",
+    "start_us": 570.31,
+    "dur_us": 60.33
+   },
+   {
+    "i": 45,
+    "name": "GenericOp",
+    "start_us": 631.05,
+    "dur_us": 12.0
+   },
+   {
+    "i": 46,
+    "name": "PagedUpdateCache",
+    "start_us": 643.68,
+    "dur_us": 4.1
+   },
+   {
+    "i": 47,
+    "name": "PagedUpdateCache",
+    "start_us": 649.22,
+    "dur_us": 4.05
+   },
+   {
+    "i": 48,
+    "name": "SdpaDecode",
+    "start_us": 655.58,
+    "dur_us": 27.89
+   },
+   {
+    "i": 49,
+    "name": "GenericOp",
+    "start_us": 683.7,
+    "dur_us": 4.04
+   },
+   {
+    "i": 50,
+    "name": "Matmul",
+    "start_us": 687.94,
+    "dur_us": 24.45
+   },
+   {
+    "i": 51,
+    "name": "GenericOp",
+    "start_us": 712.76,
+    "dur_us": 8.46
+   },
+   {
+    "i": 52,
+    "name": "Matmul",
+    "start_us": 721.66,
+    "dur_us": 64.19
+   },
+   {
+    "i": 53,
+    "name": "Unary",
+    "start_us": 786.11,
+    "dur_us": 4.23
+   },
+   {
+    "i": 54,
+    "name": "Matmul",
+    "start_us": 790.72,
+    "dur_us": 63.76
+   },
+   {
+    "i": 55,
+    "name": "BinaryNg",
+    "start_us": 854.76,
+    "dur_us": 5.39
+   },
+   {
+    "i": 56,
+    "name": "Matmul",
+    "start_us": 860.44,
+    "dur_us": 62.17
+   },
+   {
+    "i": 57,
+    "name": "GenericOp",
+    "start_us": 923.29,
+    "dur_us": 7.48
+   },
+   {
+    "i": 58,
+    "name": "GenericOp",
+    "start_us": 932.04,
+    "dur_us": 5.99
+   },
+   {
+    "i": 59,
+    "name": "Matmul",
+    "start_us": 938.57,
+    "dur_us": 22.77
+   },
+   {
+    "i": 60,
+    "name": "GenericOp",
+    "start_us": 962.44,
+    "dur_us": 7.87
+   },
+   {
+    "i": 61,
+    "name": "Matmul",
+    "start_us": 970.81,
+    "dur_us": 56.91
+   },
+   {
+    "i": 62,
+    "name": "GenericOp",
+    "start_us": 1028.43,
+    "dur_us": 11.95
+   },
+   {
+    "i": 63,
+    "name": "PagedUpdateCache",
+    "start_us": 1041.0,
+    "dur_us": 4.04
+   },
+   {
+    "i": 64,
+    "name": "PagedUpdateCache",
+    "start_us": 1046.48,
+    "dur_us": 4.07
+   },
+   {
+    "i": 65,
+    "name": "SdpaDecode",
+    "start_us": 1052.85,
+    "dur_us": 27.73
+   },
+   {
+    "i": 66,
+    "name": "GenericOp",
+    "start_us": 1080.81,
+    "dur_us": 4.01
+   },
+   {
+    "i": 67,
+    "name": "Matmul",
+    "start_us": 1084.99,
+    "dur_us": 24.56
+   },
+   {
+    "i": 68,
+    "name": "GenericOp",
+    "start_us": 1109.99,
+    "dur_us": 8.35
+   },
+   {
+    "i": 69,
+    "name": "Matmul",
+    "start_us": 1118.78,
+    "dur_us": 64.79
+   },
+   {
+    "i": 70,
+    "name": "Unary",
+    "start_us": 1183.85,
+    "dur_us": 4.3
+   },
+   {
+    "i": 71,
+    "name": "Matmul",
+    "start_us": 1188.54,
+    "dur_us": 64.27
+   },
+   {
+    "i": 72,
+    "name": "BinaryNg",
+    "start_us": 1253.06,
+    "dur_us": 4.98
+   },
+   {
+    "i": 73,
+    "name": "Matmul",
+    "start_us": 1258.39,
+    "dur_us": 63.21
+   },
+   {
+    "i": 74,
+    "name": "GenericOp",
+    "start_us": 1322.42,
+    "dur_us": 7.3
+   },
+   {
+    "i": 75,
+    "name": "GenericOp",
+    "start_us": 1331.02,
+    "dur_us": 5.93
+   },
+   {
+    "i": 76,
+    "name": "Matmul",
+    "start_us": 1337.48,
+    "dur_us": 22.75
+   },
+   {
+    "i": 77,
+    "name": "GenericOp",
+    "start_us": 1361.22,
+    "dur_us": 7.87
+   },
+   {
+    "i": 78,
+    "name": "Matmul",
+    "start_us": 1369.41,
+    "dur_us": 58.75
+   },
+   {
+    "i": 79,
+    "name": "GenericOp",
+    "start_us": 1428.55,
+    "dur_us": 12.07
+   },
+   {
+    "i": 80,
+    "name": "PagedUpdateCache",
+    "start_us": 1441.25,
+    "dur_us": 4.11
+   },
+   {
+    "i": 81,
+    "name": "PagedUpdateCache",
+    "start_us": 1446.78,
+    "dur_us": 4.17
+   },
+   {
+    "i": 82,
+    "name": "SdpaDecode",
+    "start_us": 1453.4,
+    "dur_us": 27.83
+   },
+   {
+    "i": 83,
+    "name": "GenericOp",
+    "start_us": 1481.45,
+    "dur_us": 4.05
+   },
+   {
+    "i": 84,
+    "name": "Matmul",
+    "start_us": 1485.7,
+    "dur_us": 24.61
+   },
+   {
+    "i": 85,
+    "name": "GenericOp",
+    "start_us": 1510.58,
+    "dur_us": 8.59
+   },
+   {
+    "i": 86,
+    "name": "Matmul",
+    "start_us": 1519.46,
+    "dur_us": 64.84
+   },
+   {
+    "i": 87,
+    "name": "Unary",
+    "start_us": 1584.58,
+    "dur_us": 4.3
+   },
+   {
+    "i": 88,
+    "name": "Matmul",
+    "start_us": 1589.3,
+    "dur_us": 64.34
+   },
+   {
+    "i": 89,
+    "name": "BinaryNg",
+    "start_us": 1653.92,
+    "dur_us": 5.49
+   },
+   {
+    "i": 90,
+    "name": "Matmul",
+    "start_us": 1659.66,
+    "dur_us": 62.27
+   },
+   {
+    "i": 91,
+    "name": "GenericOp",
+    "start_us": 1723.06,
+    "dur_us": 7.08
+   },
+   {
+    "i": 92,
+    "name": "GenericOp",
+    "start_us": 1731.44,
+    "dur_us": 5.92
+   },
+   {
+    "i": 93,
+    "name": "Matmul",
+    "start_us": 1737.88,
+    "dur_us": 24.05
+   },
+   {
+    "i": 94,
+    "name": "GenericOp",
+    "start_us": 1762.98,
+    "dur_us": 7.76
+   },
+   {
+    "i": 95,
+    "name": "Matmul",
+    "start_us": 1771.02,
+    "dur_us": 58.0
+   },
+   {
+    "i": 96,
+    "name": "GenericOp",
+    "start_us": 1829.41,
+    "dur_us": 12.03
+   },
+   {
+    "i": 97,
+    "name": "PagedUpdateCache",
+    "start_us": 1842.07,
+    "dur_us": 4.07
+   },
+   {
+    "i": 98,
+    "name": "PagedUpdateCache",
+    "start_us": 1847.59,
+    "dur_us": 4.1
+   },
+   {
+    "i": 99,
+    "name": "SdpaDecode",
+    "start_us": 1854.0,
+    "dur_us": 27.85
+   },
+   {
+    "i": 100,
+    "name": "GenericOp",
+    "start_us": 1882.08,
+    "dur_us": 4.07
+   },
+   {
+    "i": 101,
+    "name": "Matmul",
+    "start_us": 1886.4,
+    "dur_us": 24.42
+   },
+   {
+    "i": 102,
+    "name": "GenericOp",
+    "start_us": 1911.27,
+    "dur_us": 8.36
+   },
+   {
+    "i": 103,
+    "name": "Matmul",
+    "start_us": 1920.08,
+    "dur_us": 64.41
+   },
+   {
+    "i": 104,
+    "name": "Unary",
+    "start_us": 1984.77,
+    "dur_us": 4.26
+   },
+   {
+    "i": 105,
+    "name": "Matmul",
+    "start_us": 1989.52,
+    "dur_us": 64.02
+   },
+   {
+    "i": 106,
+    "name": "BinaryNg",
+    "start_us": 2053.8,
+    "dur_us": 5.42
+   },
+   {
+    "i": 107,
+    "name": "Matmul",
+    "start_us": 2059.58,
+    "dur_us": 61.93
+   },
+   {
+    "i": 108,
+    "name": "GenericOp",
+    "start_us": 2122.64,
+    "dur_us": 7.11
+   },
+   {
+    "i": 109,
+    "name": "Matmul",
+    "start_us": 2130.3,
+    "dur_us": 13.48
+   },
+   {
+    "i": 110,
+    "name": "Slice",
+    "start_us": 2145.23,
+    "dur_us": 0.89
+   },
+   {
+    "i": 111,
+    "name": "FillPad",
+    "start_us": 2146.61,
+    "dur_us": 5.16
+   },
+   {
+    "i": 112,
+    "name": "TopK",
+    "start_us": 2152.01,
+    "dur_us": 45.14
+   },
+   {
+    "i": 113,
+    "name": "Slice",
+    "start_us": 2197.71,
+    "dur_us": 0.88
+   },
+   {
+    "i": 114,
+    "name": "BinaryNg",
+    "start_us": 2198.83,
+    "dur_us": 7.15
+   },
+   {
+    "i": 115,
+    "name": "Unary",
+    "start_us": 2206.21,
+    "dur_us": 3.41
+   },
+   {
+    "i": 116,
+    "name": "FillPad",
+    "start_us": 2210.06,
+    "dur_us": 5.2
+   },
+   {
+    "i": 117,
+    "name": "Reduce",
+    "start_us": 2216.63,
+    "dur_us": 8.61
+   },
+   {
+    "i": 118,
+    "name": "BinaryNg",
+    "start_us": 2225.47,
+    "dur_us": 5.49
+   },
+   {
+    "i": 119,
+    "name": "Unary",
+    "start_us": 2231.19,
+    "dur_us": 3.32
+   },
+   {
+    "i": 120,
+    "name": "BinaryNg",
+    "start_us": 2234.73,
+    "dur_us": 6.24
+   },
+   {
+    "i": 121,
+    "name": "Permute",
+    "start_us": 2241.45,
+    "dur_us": 8.56
+   },
+   {
+    "i": 122,
+    "name": "Accumulation",
+    "start_us": 2251.45,
+    "dur_us": 37.59
+   },
+   {
+    "i": 123,
+    "name": "Permute",
+    "start_us": 2290.46,
+    "dur_us": 4.02
+   },
+   {
+    "i": 124,
+    "name": "BinaryNg",
+    "start_us": 2294.71,
+    "dur_us": 2.99
+   },
+   {
+    "i": 125,
+    "name": "BinaryNg",
+    "start_us": 2297.93,
+    "dur_us": 4.85
+   },
+   {
+    "i": 126,
+    "name": "BinaryNg",
+    "start_us": 2303.01,
+    "dur_us": 2.95
+   },
+   {
+    "i": 127,
+    "name": "BinaryNg",
+    "start_us": 2306.18,
+    "dur_us": 3.64
+   },
+   {
+    "i": 128,
+    "name": "FillPad",
+    "start_us": 2311.25,
+    "dur_us": 4.21
+   },
+   {
+    "i": 129,
+    "name": "Reduce",
+    "start_us": 2316.89,
+    "dur_us": 1.63
+   },
+   {
+    "i": 130,
+    "name": "BinaryNg",
+    "start_us": 2318.75,
+    "dur_us": 5.76
+   },
+   {
+    "i": 131,
+    "name": "Typecast",
+    "start_us": 2325.94,
+    "dur_us": 1.22
+   },
+   {
+    "i": 132,
+    "name": "BinaryNg",
+    "start_us": 2327.39,
+    "dur_us": 2.88
+   },
+   {
+    "i": 133,
+    "name": "FillPad",
+    "start_us": 2331.69,
+    "dur_us": 4.18
+   },
+   {
+    "i": 134,
+    "name": "Reduce",
+    "start_us": 2337.28,
+    "dur_us": 1.59
+   },
+   {
+    "i": 135,
+    "name": "BinaryNg",
+    "start_us": 2339.1,
+    "dur_us": 7.29
+   },
+   {
+    "i": 136,
+    "name": "Typecast",
+    "start_us": 2346.87,
+    "dur_us": 2.21
+   },
+   {
+    "i": 137,
+    "name": "Matmul",
+    "start_us": 2349.3,
+    "dur_us": 21.02
+   },
+   {
+    "i": 138,
+    "name": "Copy",
+    "start_us": 2370.63,
+    "dur_us": 1.94
+   },
+   {
+    "i": 139,
+    "name": "GenericOp",
+    "start_us": 2372.89,
+    "dur_us": 6.64
+   },
+   {
+    "i": 140,
+    "name": "Matmul",
+    "start_us": 2380.06,
+    "dur_us": 22.72
+   },
+   {
+    "i": 141,
+    "name": "GenericOp",
+    "start_us": 2403.79,
+    "dur_us": 7.82
+   },
+   {
+    "i": 142,
+    "name": "Matmul",
+    "start_us": 2412.09,
+    "dur_us": 57.35
+   },
+   {
+    "i": 143,
+    "name": "GenericOp",
+    "start_us": 2469.83,
+    "dur_us": 12.03
+   },
+   {
+    "i": 144,
+    "name": "PagedUpdateCache",
+    "start_us": 2482.49,
+    "dur_us": 4.1
+   },
+   {
+    "i": 145,
+    "name": "PagedUpdateCache",
+    "start_us": 2488.01,
+    "dur_us": 4.05
+   },
+   {
+    "i": 146,
+    "name": "SdpaDecode",
+    "start_us": 2494.48,
+    "dur_us": 27.79
+   },
+   {
+    "i": 147,
+    "name": "GenericOp",
+    "start_us": 2522.51,
+    "dur_us": 4.03
+   },
+   {
+    "i": 148,
+    "name": "Matmul",
+    "start_us": 2526.74,
+    "dur_us": 24.71
+   },
+   {
+    "i": 149,
+    "name": "GenericOp",
+    "start_us": 2551.84,
+    "dur_us": 8.35
+   },
+   {
+    "i": 150,
+    "name": "Matmul",
+    "start_us": 2560.67,
+    "dur_us": 63.55
+   },
+   {
+    "i": 151,
+    "name": "Unary",
+    "start_us": 2624.48,
+    "dur_us": 4.16
+   },
+   {
+    "i": 152,
+    "name": "Matmul",
+    "start_us": 2629.1,
+    "dur_us": 64.0
+   },
+   {
+    "i": 153,
+    "name": "BinaryNg",
+    "start_us": 2693.35,
+    "dur_us": 5.39
+   },
+   {
+    "i": 154,
+    "name": "Matmul",
+    "start_us": 2699.04,
+    "dur_us": 62.38
+   },
+   {
+    "i": 155,
+    "name": "GenericOp",
+    "start_us": 2762.12,
+    "dur_us": 7.54
+   },
+   {
+    "i": 156,
+    "name": "Matmul",
+    "start_us": 2770.18,
+    "dur_us": 13.21
+   },
+   {
+    "i": 157,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 2784.85,
+    "dur_us": 3.27
+   },
+   {
+    "i": 158,
+    "name": "Slice",
+    "start_us": 2789.57,
+    "dur_us": 0.84
+   },
+   {
+    "i": 159,
+    "name": "TilizeWithValPadding",
+    "start_us": 2791.86,
+    "dur_us": 3.01
+   },
+   {
+    "i": 160,
+    "name": "FillPad",
+    "start_us": 2795.36,
+    "dur_us": 5.14
+   },
+   {
+    "i": 161,
+    "name": "TopK",
+    "start_us": 2800.73,
+    "dur_us": 45.83
+   },
+   {
+    "i": 162,
+    "name": "Slice",
+    "start_us": 2847.12,
+    "dur_us": 0.9
+   },
+   {
+    "i": 163,
+    "name": "BinaryNg",
+    "start_us": 2848.25,
+    "dur_us": 7.14
+   },
+   {
+    "i": 164,
+    "name": "Unary",
+    "start_us": 2855.63,
+    "dur_us": 3.34
+   },
+   {
+    "i": 165,
+    "name": "FillPad",
+    "start_us": 2859.47,
+    "dur_us": 5.09
+   },
+   {
+    "i": 166,
+    "name": "Reduce",
+    "start_us": 2865.99,
+    "dur_us": 8.6
+   },
+   {
+    "i": 167,
+    "name": "BinaryNg",
+    "start_us": 2874.82,
+    "dur_us": 5.58
+   },
+   {
+    "i": 168,
+    "name": "Unary",
+    "start_us": 2880.62,
+    "dur_us": 3.23
+   },
+   {
+    "i": 169,
+    "name": "BinaryNg",
+    "start_us": 2884.07,
+    "dur_us": 6.21
+   },
+   {
+    "i": 170,
+    "name": "Permute",
+    "start_us": 2890.76,
+    "dur_us": 8.55
+   },
+   {
+    "i": 171,
+    "name": "Accumulation",
+    "start_us": 2900.76,
+    "dur_us": 37.54
+   },
+   {
+    "i": 172,
+    "name": "Permute",
+    "start_us": 2939.73,
+    "dur_us": 4.04
+   },
+   {
+    "i": 173,
+    "name": "BinaryNg",
+    "start_us": 2944.03,
+    "dur_us": 3.05
+   },
+   {
+    "i": 174,
+    "name": "BinaryNg",
+    "start_us": 2947.31,
+    "dur_us": 4.76
+   },
+   {
+    "i": 175,
+    "name": "BinaryNg",
+    "start_us": 2952.29,
+    "dur_us": 2.93
+   },
+   {
+    "i": 176,
+    "name": "BinaryNg",
+    "start_us": 2955.45,
+    "dur_us": 3.63
+   },
+   {
+    "i": 177,
+    "name": "FillPad",
+    "start_us": 2960.51,
+    "dur_us": 4.16
+   },
+   {
+    "i": 178,
+    "name": "Reduce",
+    "start_us": 2966.11,
+    "dur_us": 1.65
+   },
+   {
+    "i": 179,
+    "name": "BinaryNg",
+    "start_us": 2967.99,
+    "dur_us": 5.9
+   },
+   {
+    "i": 180,
+    "name": "Typecast",
+    "start_us": 2975.34,
+    "dur_us": 1.16
+   },
+   {
+    "i": 181,
+    "name": "BinaryNg",
+    "start_us": 2976.73,
+    "dur_us": 2.79
+   },
+   {
+    "i": 182,
+    "name": "FillPad",
+    "start_us": 2980.94,
+    "dur_us": 4.2
+   },
+   {
+    "i": 183,
+    "name": "Reduce",
+    "start_us": 2986.57,
+    "dur_us": 1.59
+   },
+   {
+    "i": 184,
+    "name": "BinaryNg",
+    "start_us": 2988.4,
+    "dur_us": 7.31
+   },
+   {
+    "i": 185,
+    "name": "Typecast",
+    "start_us": 2996.18,
+    "dur_us": 2.29
+   },
+   {
+    "i": 186,
+    "name": "Matmul",
+    "start_us": 2998.68,
+    "dur_us": 21.0
+   },
+   {
+    "i": 187,
+    "name": "Copy",
+    "start_us": 3019.98,
+    "dur_us": 1.9
+   },
+   {
+    "i": 188,
+    "name": "GenericOp",
+    "start_us": 3022.16,
+    "dur_us": 6.63
+   },
+   {
+    "i": 189,
+    "name": "Matmul",
+    "start_us": 3029.32,
+    "dur_us": 22.88
+   },
+   {
+    "i": 190,
+    "name": "GenericOp",
+    "start_us": 3053.03,
+    "dur_us": 7.91
+   },
+   {
+    "i": 191,
+    "name": "Matmul",
+    "start_us": 3061.24,
+    "dur_us": 56.21
+   },
+   {
+    "i": 192,
+    "name": "GenericOp",
+    "start_us": 3117.84,
+    "dur_us": 12.06
+   },
+   {
+    "i": 193,
+    "name": "PagedUpdateCache",
+    "start_us": 3130.52,
+    "dur_us": 4.05
+   },
+   {
+    "i": 194,
+    "name": "PagedUpdateCache",
+    "start_us": 3136.0,
+    "dur_us": 4.05
+   },
+   {
+    "i": 195,
+    "name": "SdpaDecode",
+    "start_us": 3142.36,
+    "dur_us": 27.8
+   },
+   {
+    "i": 196,
+    "name": "GenericOp",
+    "start_us": 3170.38,
+    "dur_us": 4.04
+   },
+   {
+    "i": 197,
+    "name": "Matmul",
+    "start_us": 3174.63,
+    "dur_us": 24.47
+   },
+   {
+    "i": 198,
+    "name": "GenericOp",
+    "start_us": 3199.57,
+    "dur_us": 8.43
+   },
+   {
+    "i": 199,
+    "name": "Matmul",
+    "start_us": 3208.48,
+    "dur_us": 65.47
+   },
+   {
+    "i": 200,
+    "name": "Unary",
+    "start_us": 3274.22,
+    "dur_us": 4.18
+   },
+   {
+    "i": 201,
+    "name": "Matmul",
+    "start_us": 3278.9,
+    "dur_us": 64.21
+   },
+   {
+    "i": 202,
+    "name": "BinaryNg",
+    "start_us": 3343.39,
+    "dur_us": 5.23
+   },
+   {
+    "i": 203,
+    "name": "Matmul",
+    "start_us": 3348.85,
+    "dur_us": 62.56
+   },
+   {
+    "i": 204,
+    "name": "GenericOp",
+    "start_us": 3412.24,
+    "dur_us": 7.44
+   },
+   {
+    "i": 205,
+    "name": "Matmul",
+    "start_us": 3420.2,
+    "dur_us": 13.11
+   },
+   {
+    "i": 206,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 3434.77,
+    "dur_us": 3.27
+   },
+   {
+    "i": 207,
+    "name": "Slice",
+    "start_us": 3439.48,
+    "dur_us": 0.91
+   },
+   {
+    "i": 208,
+    "name": "TilizeWithValPadding",
+    "start_us": 3441.81,
+    "dur_us": 3.02
+   },
+   {
+    "i": 209,
+    "name": "FillPad",
+    "start_us": 3445.31,
+    "dur_us": 5.17
+   },
+   {
+    "i": 210,
+    "name": "TopK",
+    "start_us": 3450.72,
+    "dur_us": 45.14
+   },
+   {
+    "i": 211,
+    "name": "Slice",
+    "start_us": 3496.4,
+    "dur_us": 0.89
+   },
+   {
+    "i": 212,
+    "name": "BinaryNg",
+    "start_us": 3497.53,
+    "dur_us": 7.05
+   },
+   {
+    "i": 213,
+    "name": "Unary",
+    "start_us": 3504.81,
+    "dur_us": 3.37
+   },
+   {
+    "i": 214,
+    "name": "FillPad",
+    "start_us": 3508.66,
+    "dur_us": 5.11
+   },
+   {
+    "i": 215,
+    "name": "Reduce",
+    "start_us": 3515.2,
+    "dur_us": 8.59
+   },
+   {
+    "i": 216,
+    "name": "BinaryNg",
+    "start_us": 3524.02,
+    "dur_us": 5.55
+   },
+   {
+    "i": 217,
+    "name": "Unary",
+    "start_us": 3529.8,
+    "dur_us": 3.3
+   },
+   {
+    "i": 218,
+    "name": "BinaryNg",
+    "start_us": 3533.33,
+    "dur_us": 6.25
+   },
+   {
+    "i": 219,
+    "name": "Permute",
+    "start_us": 3540.05,
+    "dur_us": 8.55
+   },
+   {
+    "i": 220,
+    "name": "Accumulation",
+    "start_us": 3550.05,
+    "dur_us": 37.55
+   },
+   {
+    "i": 221,
+    "name": "Permute",
+    "start_us": 3589.04,
+    "dur_us": 4.02
+   },
+   {
+    "i": 222,
+    "name": "BinaryNg",
+    "start_us": 3593.29,
+    "dur_us": 2.97
+   },
+   {
+    "i": 223,
+    "name": "BinaryNg",
+    "start_us": 3596.53,
+    "dur_us": 4.79
+   },
+   {
+    "i": 224,
+    "name": "BinaryNg",
+    "start_us": 3601.55,
+    "dur_us": 2.94
+   },
+   {
+    "i": 225,
+    "name": "BinaryNg",
+    "start_us": 3604.72,
+    "dur_us": 3.61
+   },
+   {
+    "i": 226,
+    "name": "FillPad",
+    "start_us": 3609.75,
+    "dur_us": 4.18
+   },
+   {
+    "i": 227,
+    "name": "Reduce",
+    "start_us": 3615.35,
+    "dur_us": 1.69
+   },
+   {
+    "i": 228,
+    "name": "BinaryNg",
+    "start_us": 3617.28,
+    "dur_us": 5.76
+   },
+   {
+    "i": 229,
+    "name": "Typecast",
+    "start_us": 3624.47,
+    "dur_us": 1.17
+   },
+   {
+    "i": 230,
+    "name": "BinaryNg",
+    "start_us": 3625.88,
+    "dur_us": 2.82
+   },
+   {
+    "i": 231,
+    "name": "FillPad",
+    "start_us": 3630.11,
+    "dur_us": 4.17
+   },
+   {
+    "i": 232,
+    "name": "Reduce",
+    "start_us": 3635.71,
+    "dur_us": 1.63
+   },
+   {
+    "i": 233,
+    "name": "BinaryNg",
+    "start_us": 3637.57,
+    "dur_us": 7.15
+   },
+   {
+    "i": 234,
+    "name": "Typecast",
+    "start_us": 3645.19,
+    "dur_us": 2.28
+   },
+   {
+    "i": 235,
+    "name": "Matmul",
+    "start_us": 3647.68,
+    "dur_us": 21.02
+   },
+   {
+    "i": 236,
+    "name": "Copy",
+    "start_us": 3669.03,
+    "dur_us": 1.89
+   },
+   {
+    "i": 237,
+    "name": "GenericOp",
+    "start_us": 3671.22,
+    "dur_us": 6.68
+   },
+   {
+    "i": 238,
+    "name": "Matmul",
+    "start_us": 3678.43,
+    "dur_us": 22.79
+   },
+   {
+    "i": 239,
+    "name": "GenericOp",
+    "start_us": 3702.18,
+    "dur_us": 7.83
+   },
+   {
+    "i": 240,
+    "name": "Matmul",
+    "start_us": 3710.41,
+    "dur_us": 58.08
+   },
+   {
+    "i": 241,
+    "name": "GenericOp",
+    "start_us": 3769.0,
+    "dur_us": 12.13
+   },
+   {
+    "i": 242,
+    "name": "PagedUpdateCache",
+    "start_us": 3781.76,
+    "dur_us": 4.09
+   },
+   {
+    "i": 243,
+    "name": "PagedUpdateCache",
+    "start_us": 3787.26,
+    "dur_us": 4.04
+   },
+   {
+    "i": 244,
+    "name": "SdpaDecode",
+    "start_us": 3793.6,
+    "dur_us": 27.77
+   },
+   {
+    "i": 245,
+    "name": "GenericOp",
+    "start_us": 3821.6,
+    "dur_us": 4.0
+   },
+   {
+    "i": 246,
+    "name": "Matmul",
+    "start_us": 3825.81,
+    "dur_us": 24.57
+   },
+   {
+    "i": 247,
+    "name": "GenericOp",
+    "start_us": 3850.8,
+    "dur_us": 8.43
+   },
+   {
+    "i": 248,
+    "name": "Matmul",
+    "start_us": 3859.67,
+    "dur_us": 64.56
+   },
+   {
+    "i": 249,
+    "name": "Unary",
+    "start_us": 3924.51,
+    "dur_us": 4.09
+   },
+   {
+    "i": 250,
+    "name": "Matmul",
+    "start_us": 3929.09,
+    "dur_us": 64.64
+   },
+   {
+    "i": 251,
+    "name": "BinaryNg",
+    "start_us": 3994.01,
+    "dur_us": 5.22
+   },
+   {
+    "i": 252,
+    "name": "Matmul",
+    "start_us": 3999.55,
+    "dur_us": 62.46
+   },
+   {
+    "i": 253,
+    "name": "GenericOp",
+    "start_us": 4062.79,
+    "dur_us": 7.46
+   },
+   {
+    "i": 254,
+    "name": "Matmul",
+    "start_us": 4070.76,
+    "dur_us": 13.16
+   },
+   {
+    "i": 255,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 4085.39,
+    "dur_us": 3.28
+   },
+   {
+    "i": 256,
+    "name": "Slice",
+    "start_us": 4090.09,
+    "dur_us": 0.91
+   },
+   {
+    "i": 257,
+    "name": "TilizeWithValPadding",
+    "start_us": 4092.42,
+    "dur_us": 3.0
+   },
+   {
+    "i": 258,
+    "name": "FillPad",
+    "start_us": 4095.9,
+    "dur_us": 5.13
+   },
+   {
+    "i": 259,
+    "name": "TopK",
+    "start_us": 4101.27,
+    "dur_us": 45.01
+   },
+   {
+    "i": 260,
+    "name": "Slice",
+    "start_us": 4146.83,
+    "dur_us": 0.88
+   },
+   {
+    "i": 261,
+    "name": "BinaryNg",
+    "start_us": 4147.95,
+    "dur_us": 7.14
+   },
+   {
+    "i": 262,
+    "name": "Unary",
+    "start_us": 4155.32,
+    "dur_us": 3.36
+   },
+   {
+    "i": 263,
+    "name": "FillPad",
+    "start_us": 4159.16,
+    "dur_us": 5.11
+   },
+   {
+    "i": 264,
+    "name": "Reduce",
+    "start_us": 4165.7,
+    "dur_us": 8.57
+   },
+   {
+    "i": 265,
+    "name": "BinaryNg",
+    "start_us": 4174.51,
+    "dur_us": 5.49
+   },
+   {
+    "i": 266,
+    "name": "Unary",
+    "start_us": 4180.23,
+    "dur_us": 3.27
+   },
+   {
+    "i": 267,
+    "name": "BinaryNg",
+    "start_us": 4183.72,
+    "dur_us": 6.24
+   },
+   {
+    "i": 268,
+    "name": "Permute",
+    "start_us": 4190.44,
+    "dur_us": 8.56
+   },
+   {
+    "i": 269,
+    "name": "Accumulation",
+    "start_us": 4200.44,
+    "dur_us": 37.55
+   },
+   {
+    "i": 270,
+    "name": "Permute",
+    "start_us": 4239.41,
+    "dur_us": 4.03
+   },
+   {
+    "i": 271,
+    "name": "BinaryNg",
+    "start_us": 4243.69,
+    "dur_us": 2.95
+   },
+   {
+    "i": 272,
+    "name": "BinaryNg",
+    "start_us": 4246.89,
+    "dur_us": 4.78
+   },
+   {
+    "i": 273,
+    "name": "BinaryNg",
+    "start_us": 4251.91,
+    "dur_us": 2.92
+   },
+   {
+    "i": 274,
+    "name": "BinaryNg",
+    "start_us": 4255.05,
+    "dur_us": 3.63
+   },
+   {
+    "i": 275,
+    "name": "FillPad",
+    "start_us": 4260.11,
+    "dur_us": 4.16
+   },
+   {
+    "i": 276,
+    "name": "Reduce",
+    "start_us": 4265.74,
+    "dur_us": 1.64
+   },
+   {
+    "i": 277,
+    "name": "BinaryNg",
+    "start_us": 4267.61,
+    "dur_us": 5.74
+   },
+   {
+    "i": 278,
+    "name": "Typecast",
+    "start_us": 4274.77,
+    "dur_us": 1.21
+   },
+   {
+    "i": 279,
+    "name": "BinaryNg",
+    "start_us": 4276.21,
+    "dur_us": 2.82
+   },
+   {
+    "i": 280,
+    "name": "FillPad",
+    "start_us": 4280.47,
+    "dur_us": 4.18
+   },
+   {
+    "i": 281,
+    "name": "Reduce",
+    "start_us": 4286.06,
+    "dur_us": 1.6
+   },
+   {
+    "i": 282,
+    "name": "BinaryNg",
+    "start_us": 4287.89,
+    "dur_us": 7.35
+   },
+   {
+    "i": 283,
+    "name": "Typecast",
+    "start_us": 4295.71,
+    "dur_us": 2.22
+   },
+   {
+    "i": 284,
+    "name": "Matmul",
+    "start_us": 4298.16,
+    "dur_us": 21.04
+   },
+   {
+    "i": 285,
+    "name": "Copy",
+    "start_us": 4319.52,
+    "dur_us": 1.91
+   },
+   {
+    "i": 286,
+    "name": "GenericOp",
+    "start_us": 4321.73,
+    "dur_us": 6.62
+   },
+   {
+    "i": 287,
+    "name": "Matmul",
+    "start_us": 4328.87,
+    "dur_us": 22.66
+   },
+   {
+    "i": 288,
+    "name": "GenericOp",
+    "start_us": 4352.54,
+    "dur_us": 7.78
+   },
+   {
+    "i": 289,
+    "name": "Matmul",
+    "start_us": 4360.73,
+    "dur_us": 58.6
+   },
+   {
+    "i": 290,
+    "name": "GenericOp",
+    "start_us": 4419.72,
+    "dur_us": 12.11
+   },
+   {
+    "i": 291,
+    "name": "PagedUpdateCache",
+    "start_us": 4432.45,
+    "dur_us": 4.08
+   },
+   {
+    "i": 292,
+    "name": "PagedUpdateCache",
+    "start_us": 4437.96,
+    "dur_us": 4.03
+   },
+   {
+    "i": 293,
+    "name": "SdpaDecode",
+    "start_us": 4444.29,
+    "dur_us": 27.65
+   },
+   {
+    "i": 294,
+    "name": "GenericOp",
+    "start_us": 4472.17,
+    "dur_us": 4.03
+   },
+   {
+    "i": 295,
+    "name": "Matmul",
+    "start_us": 4476.42,
+    "dur_us": 24.39
+   },
+   {
+    "i": 296,
+    "name": "GenericOp",
+    "start_us": 4501.19,
+    "dur_us": 8.47
+   },
+   {
+    "i": 297,
+    "name": "Matmul",
+    "start_us": 4510.04,
+    "dur_us": 65.14
+   },
+   {
+    "i": 298,
+    "name": "Unary",
+    "start_us": 4575.46,
+    "dur_us": 4.23
+   },
+   {
+    "i": 299,
+    "name": "Matmul",
+    "start_us": 4580.17,
+    "dur_us": 63.88
+   },
+   {
+    "i": 300,
+    "name": "BinaryNg",
+    "start_us": 4644.3,
+    "dur_us": 5.04
+   },
+   {
+    "i": 301,
+    "name": "Matmul",
+    "start_us": 4649.63,
+    "dur_us": 62.5
+   },
+   {
+    "i": 302,
+    "name": "GenericOp",
+    "start_us": 4712.92,
+    "dur_us": 7.42
+   },
+   {
+    "i": 303,
+    "name": "Matmul",
+    "start_us": 4720.88,
+    "dur_us": 13.18
+   },
+   {
+    "i": 304,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 4735.5,
+    "dur_us": 3.27
+   },
+   {
+    "i": 305,
+    "name": "Slice",
+    "start_us": 4740.21,
+    "dur_us": 0.93
+   },
+   {
+    "i": 306,
+    "name": "TilizeWithValPadding",
+    "start_us": 4742.54,
+    "dur_us": 3.01
+   },
+   {
+    "i": 307,
+    "name": "FillPad",
+    "start_us": 4746.03,
+    "dur_us": 5.11
+   },
+   {
+    "i": 308,
+    "name": "TopK",
+    "start_us": 4751.37,
+    "dur_us": 45.64
+   },
+   {
+    "i": 309,
+    "name": "Slice",
+    "start_us": 4797.56,
+    "dur_us": 0.89
+   },
+   {
+    "i": 310,
+    "name": "BinaryNg",
+    "start_us": 4798.68,
+    "dur_us": 7.21
+   },
+   {
+    "i": 311,
+    "name": "Unary",
+    "start_us": 4806.12,
+    "dur_us": 3.37
+   },
+   {
+    "i": 312,
+    "name": "FillPad",
+    "start_us": 4809.97,
+    "dur_us": 5.14
+   },
+   {
+    "i": 313,
+    "name": "Reduce",
+    "start_us": 4816.53,
+    "dur_us": 8.56
+   },
+   {
+    "i": 314,
+    "name": "BinaryNg",
+    "start_us": 4825.32,
+    "dur_us": 5.51
+   },
+   {
+    "i": 315,
+    "name": "Unary",
+    "start_us": 4831.05,
+    "dur_us": 3.3
+   },
+   {
+    "i": 316,
+    "name": "BinaryNg",
+    "start_us": 4834.58,
+    "dur_us": 6.23
+   },
+   {
+    "i": 317,
+    "name": "Permute",
+    "start_us": 4841.3,
+    "dur_us": 8.57
+   },
+   {
+    "i": 318,
+    "name": "Accumulation",
+    "start_us": 4851.3,
+    "dur_us": 37.53
+   },
+   {
+    "i": 319,
+    "name": "Permute",
+    "start_us": 4890.26,
+    "dur_us": 4.1
+   },
+   {
+    "i": 320,
+    "name": "BinaryNg",
+    "start_us": 4894.6,
+    "dur_us": 2.96
+   },
+   {
+    "i": 321,
+    "name": "BinaryNg",
+    "start_us": 4897.82,
+    "dur_us": 4.79
+   },
+   {
+    "i": 322,
+    "name": "BinaryNg",
+    "start_us": 4902.84,
+    "dur_us": 2.93
+   },
+   {
+    "i": 323,
+    "name": "BinaryNg",
+    "start_us": 4906.0,
+    "dur_us": 3.62
+   },
+   {
+    "i": 324,
+    "name": "FillPad",
+    "start_us": 4911.05,
+    "dur_us": 4.16
+   },
+   {
+    "i": 325,
+    "name": "Reduce",
+    "start_us": 4916.64,
+    "dur_us": 1.65
+   },
+   {
+    "i": 326,
+    "name": "BinaryNg",
+    "start_us": 4918.53,
+    "dur_us": 5.72
+   },
+   {
+    "i": 327,
+    "name": "Typecast",
+    "start_us": 4925.69,
+    "dur_us": 1.16
+   },
+   {
+    "i": 328,
+    "name": "BinaryNg",
+    "start_us": 4927.07,
+    "dur_us": 2.8
+   },
+   {
+    "i": 329,
+    "name": "FillPad",
+    "start_us": 4931.28,
+    "dur_us": 4.19
+   },
+   {
+    "i": 330,
+    "name": "Reduce",
+    "start_us": 4936.91,
+    "dur_us": 1.61
+   },
+   {
+    "i": 331,
+    "name": "BinaryNg",
+    "start_us": 4938.75,
+    "dur_us": 7.37
+   },
+   {
+    "i": 332,
+    "name": "Typecast",
+    "start_us": 4946.6,
+    "dur_us": 2.22
+   },
+   {
+    "i": 333,
+    "name": "Matmul",
+    "start_us": 4949.05,
+    "dur_us": 20.99
+   },
+   {
+    "i": 334,
+    "name": "Copy",
+    "start_us": 4970.37,
+    "dur_us": 1.91
+   },
+   {
+    "i": 335,
+    "name": "GenericOp",
+    "start_us": 4972.55,
+    "dur_us": 6.66
+   },
+   {
+    "i": 336,
+    "name": "Matmul",
+    "start_us": 4979.74,
+    "dur_us": 22.75
+   },
+   {
+    "i": 337,
+    "name": "GenericOp",
+    "start_us": 5003.44,
+    "dur_us": 7.8
+   },
+   {
+    "i": 338,
+    "name": "Matmul",
+    "start_us": 5011.55,
+    "dur_us": 57.48
+   },
+   {
+    "i": 339,
+    "name": "GenericOp",
+    "start_us": 5069.44,
+    "dur_us": 12.14
+   },
+   {
+    "i": 340,
+    "name": "PagedUpdateCache",
+    "start_us": 5082.2,
+    "dur_us": 4.08
+   },
+   {
+    "i": 341,
+    "name": "PagedUpdateCache",
+    "start_us": 5087.69,
+    "dur_us": 4.06
+   },
+   {
+    "i": 342,
+    "name": "SdpaDecode",
+    "start_us": 5094.05,
+    "dur_us": 27.78
+   },
+   {
+    "i": 343,
+    "name": "GenericOp",
+    "start_us": 5122.06,
+    "dur_us": 4.02
+   },
+   {
+    "i": 344,
+    "name": "Matmul",
+    "start_us": 5126.26,
+    "dur_us": 24.32
+   },
+   {
+    "i": 345,
+    "name": "GenericOp",
+    "start_us": 5151.06,
+    "dur_us": 8.25
+   },
+   {
+    "i": 346,
+    "name": "Matmul",
+    "start_us": 5159.73,
+    "dur_us": 65.42
+   },
+   {
+    "i": 347,
+    "name": "Unary",
+    "start_us": 5225.4,
+    "dur_us": 4.29
+   },
+   {
+    "i": 348,
+    "name": "Matmul",
+    "start_us": 5230.09,
+    "dur_us": 63.93
+   },
+   {
+    "i": 349,
+    "name": "BinaryNg",
+    "start_us": 5294.28,
+    "dur_us": 5.52
+   },
+   {
+    "i": 350,
+    "name": "Matmul",
+    "start_us": 5300.08,
+    "dur_us": 62.18
+   },
+   {
+    "i": 351,
+    "name": "GenericOp",
+    "start_us": 5362.99,
+    "dur_us": 7.5
+   },
+   {
+    "i": 352,
+    "name": "Matmul",
+    "start_us": 5371.02,
+    "dur_us": 13.35
+   },
+   {
+    "i": 353,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 5385.81,
+    "dur_us": 3.28
+   },
+   {
+    "i": 354,
+    "name": "Slice",
+    "start_us": 5390.52,
+    "dur_us": 0.91
+   },
+   {
+    "i": 355,
+    "name": "TilizeWithValPadding",
+    "start_us": 5392.86,
+    "dur_us": 3.02
+   },
+   {
+    "i": 356,
+    "name": "FillPad",
+    "start_us": 5396.36,
+    "dur_us": 5.11
+   },
+   {
+    "i": 357,
+    "name": "TopK",
+    "start_us": 5401.71,
+    "dur_us": 45.11
+   },
+   {
+    "i": 358,
+    "name": "Slice",
+    "start_us": 5447.38,
+    "dur_us": 0.88
+   },
+   {
+    "i": 359,
+    "name": "BinaryNg",
+    "start_us": 5448.49,
+    "dur_us": 7.14
+   },
+   {
+    "i": 360,
+    "name": "Unary",
+    "start_us": 5455.82,
+    "dur_us": 3.38
+   },
+   {
+    "i": 361,
+    "name": "FillPad",
+    "start_us": 5459.66,
+    "dur_us": 5.15
+   },
+   {
+    "i": 362,
+    "name": "Reduce",
+    "start_us": 5466.18,
+    "dur_us": 8.58
+   },
+   {
+    "i": 363,
+    "name": "BinaryNg",
+    "start_us": 5474.99,
+    "dur_us": 5.5
+   },
+   {
+    "i": 364,
+    "name": "Unary",
+    "start_us": 5480.72,
+    "dur_us": 3.32
+   },
+   {
+    "i": 365,
+    "name": "BinaryNg",
+    "start_us": 5484.27,
+    "dur_us": 6.23
+   },
+   {
+    "i": 366,
+    "name": "Permute",
+    "start_us": 5490.98,
+    "dur_us": 8.56
+   },
+   {
+    "i": 367,
+    "name": "Accumulation",
+    "start_us": 5500.96,
+    "dur_us": 37.57
+   },
+   {
+    "i": 368,
+    "name": "Permute",
+    "start_us": 5539.94,
+    "dur_us": 4.01
+   },
+   {
+    "i": 369,
+    "name": "BinaryNg",
+    "start_us": 5544.2,
+    "dur_us": 2.93
+   },
+   {
+    "i": 370,
+    "name": "BinaryNg",
+    "start_us": 5547.39,
+    "dur_us": 4.79
+   },
+   {
+    "i": 371,
+    "name": "BinaryNg",
+    "start_us": 5552.41,
+    "dur_us": 2.94
+   },
+   {
+    "i": 372,
+    "name": "BinaryNg",
+    "start_us": 5555.58,
+    "dur_us": 3.63
+   },
+   {
+    "i": 373,
+    "name": "FillPad",
+    "start_us": 5560.64,
+    "dur_us": 4.19
+   },
+   {
+    "i": 374,
+    "name": "Reduce",
+    "start_us": 5566.27,
+    "dur_us": 1.65
+   },
+   {
+    "i": 375,
+    "name": "BinaryNg",
+    "start_us": 5568.15,
+    "dur_us": 5.76
+   },
+   {
+    "i": 376,
+    "name": "Typecast",
+    "start_us": 5575.32,
+    "dur_us": 1.18
+   },
+   {
+    "i": 377,
+    "name": "BinaryNg",
+    "start_us": 5576.73,
+    "dur_us": 2.83
+   },
+   {
+    "i": 378,
+    "name": "FillPad",
+    "start_us": 5580.97,
+    "dur_us": 4.18
+   },
+   {
+    "i": 379,
+    "name": "Reduce",
+    "start_us": 5586.57,
+    "dur_us": 1.63
+   },
+   {
+    "i": 380,
+    "name": "BinaryNg",
+    "start_us": 5588.43,
+    "dur_us": 7.34
+   },
+   {
+    "i": 381,
+    "name": "Typecast",
+    "start_us": 5596.24,
+    "dur_us": 2.21
+   },
+   {
+    "i": 382,
+    "name": "Matmul",
+    "start_us": 5598.69,
+    "dur_us": 20.95
+   },
+   {
+    "i": 383,
+    "name": "Copy",
+    "start_us": 5619.96,
+    "dur_us": 1.9
+   },
+   {
+    "i": 384,
+    "name": "GenericOp",
+    "start_us": 5622.16,
+    "dur_us": 6.6
+   },
+   {
+    "i": 385,
+    "name": "Matmul",
+    "start_us": 5629.29,
+    "dur_us": 22.75
+   },
+   {
+    "i": 386,
+    "name": "GenericOp",
+    "start_us": 5653.06,
+    "dur_us": 7.77
+   },
+   {
+    "i": 387,
+    "name": "Matmul",
+    "start_us": 5661.21,
+    "dur_us": 57.72
+   },
+   {
+    "i": 388,
+    "name": "GenericOp",
+    "start_us": 5719.45,
+    "dur_us": 11.99
+   },
+   {
+    "i": 389,
+    "name": "PagedUpdateCache",
+    "start_us": 5732.06,
+    "dur_us": 4.07
+   },
+   {
+    "i": 390,
+    "name": "PagedUpdateCache",
+    "start_us": 5737.58,
+    "dur_us": 4.04
+   },
+   {
+    "i": 391,
+    "name": "SdpaDecode",
+    "start_us": 5743.88,
+    "dur_us": 27.93
+   },
+   {
+    "i": 392,
+    "name": "GenericOp",
+    "start_us": 5772.05,
+    "dur_us": 4.08
+   },
+   {
+    "i": 393,
+    "name": "Matmul",
+    "start_us": 5776.31,
+    "dur_us": 24.31
+   },
+   {
+    "i": 394,
+    "name": "GenericOp",
+    "start_us": 5801.05,
+    "dur_us": 8.35
+   },
+   {
+    "i": 395,
+    "name": "Matmul",
+    "start_us": 5809.83,
+    "dur_us": 65.01
+   },
+   {
+    "i": 396,
+    "name": "Unary",
+    "start_us": 5875.11,
+    "dur_us": 4.25
+   },
+   {
+    "i": 397,
+    "name": "Matmul",
+    "start_us": 5879.82,
+    "dur_us": 63.91
+   },
+   {
+    "i": 398,
+    "name": "BinaryNg",
+    "start_us": 5944.01,
+    "dur_us": 5.09
+   },
+   {
+    "i": 399,
+    "name": "Matmul",
+    "start_us": 5949.39,
+    "dur_us": 62.6
+   },
+   {
+    "i": 400,
+    "name": "GenericOp",
+    "start_us": 6012.65,
+    "dur_us": 7.58
+   },
+   {
+    "i": 401,
+    "name": "Matmul",
+    "start_us": 6020.74,
+    "dur_us": 13.21
+   },
+   {
+    "i": 402,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 6035.4,
+    "dur_us": 3.29
+   },
+   {
+    "i": 403,
+    "name": "Slice",
+    "start_us": 6040.11,
+    "dur_us": 0.91
+   },
+   {
+    "i": 404,
+    "name": "TilizeWithValPadding",
+    "start_us": 6042.43,
+    "dur_us": 3.03
+   },
+   {
+    "i": 405,
+    "name": "FillPad",
+    "start_us": 6045.94,
+    "dur_us": 5.12
+   },
+   {
+    "i": 406,
+    "name": "TopK",
+    "start_us": 6051.29,
+    "dur_us": 45.04
+   },
+   {
+    "i": 407,
+    "name": "Slice",
+    "start_us": 6096.89,
+    "dur_us": 0.88
+   },
+   {
+    "i": 408,
+    "name": "BinaryNg",
+    "start_us": 6098.0,
+    "dur_us": 7.12
+   },
+   {
+    "i": 409,
+    "name": "Unary",
+    "start_us": 6105.35,
+    "dur_us": 3.35
+   },
+   {
+    "i": 410,
+    "name": "FillPad",
+    "start_us": 6109.21,
+    "dur_us": 5.09
+   },
+   {
+    "i": 411,
+    "name": "Reduce",
+    "start_us": 6115.73,
+    "dur_us": 8.67
+   },
+   {
+    "i": 412,
+    "name": "BinaryNg",
+    "start_us": 6124.64,
+    "dur_us": 5.52
+   },
+   {
+    "i": 413,
+    "name": "Unary",
+    "start_us": 6130.39,
+    "dur_us": 3.34
+   },
+   {
+    "i": 414,
+    "name": "BinaryNg",
+    "start_us": 6133.96,
+    "dur_us": 6.23
+   },
+   {
+    "i": 415,
+    "name": "Permute",
+    "start_us": 6140.67,
+    "dur_us": 8.57
+   },
+   {
+    "i": 416,
+    "name": "Accumulation",
+    "start_us": 6150.69,
+    "dur_us": 37.55
+   },
+   {
+    "i": 417,
+    "name": "Permute",
+    "start_us": 6189.67,
+    "dur_us": 4.02
+   },
+   {
+    "i": 418,
+    "name": "BinaryNg",
+    "start_us": 6193.94,
+    "dur_us": 2.91
+   },
+   {
+    "i": 419,
+    "name": "BinaryNg",
+    "start_us": 6197.12,
+    "dur_us": 4.78
+   },
+   {
+    "i": 420,
+    "name": "BinaryNg",
+    "start_us": 6202.13,
+    "dur_us": 2.92
+   },
+   {
+    "i": 421,
+    "name": "BinaryNg",
+    "start_us": 6205.28,
+    "dur_us": 3.67
+   },
+   {
+    "i": 422,
+    "name": "FillPad",
+    "start_us": 6210.38,
+    "dur_us": 4.18
+   },
+   {
+    "i": 423,
+    "name": "Reduce",
+    "start_us": 6215.98,
+    "dur_us": 1.67
+   },
+   {
+    "i": 424,
+    "name": "BinaryNg",
+    "start_us": 6217.88,
+    "dur_us": 5.76
+   },
+   {
+    "i": 425,
+    "name": "Typecast",
+    "start_us": 6225.07,
+    "dur_us": 1.2
+   },
+   {
+    "i": 426,
+    "name": "BinaryNg",
+    "start_us": 6226.5,
+    "dur_us": 2.82
+   },
+   {
+    "i": 427,
+    "name": "FillPad",
+    "start_us": 6230.73,
+    "dur_us": 4.18
+   },
+   {
+    "i": 428,
+    "name": "Reduce",
+    "start_us": 6236.33,
+    "dur_us": 1.6
+   },
+   {
+    "i": 429,
+    "name": "BinaryNg",
+    "start_us": 6238.16,
+    "dur_us": 7.24
+   },
+   {
+    "i": 430,
+    "name": "Typecast",
+    "start_us": 6245.88,
+    "dur_us": 2.23
+   },
+   {
+    "i": 431,
+    "name": "Matmul",
+    "start_us": 6248.34,
+    "dur_us": 20.97
+   },
+   {
+    "i": 432,
+    "name": "Copy",
+    "start_us": 6269.63,
+    "dur_us": 1.94
+   },
+   {
+    "i": 433,
+    "name": "GenericOp",
+    "start_us": 6271.83,
+    "dur_us": 6.81
+   },
+   {
+    "i": 434,
+    "name": "Matmul",
+    "start_us": 6279.05,
+    "dur_us": 22.63
+   },
+   {
+    "i": 435,
+    "name": "GenericOp",
+    "start_us": 6302.66,
+    "dur_us": 7.8
+   },
+   {
+    "i": 436,
+    "name": "Matmul",
+    "start_us": 6310.98,
+    "dur_us": 57.2
+   },
+   {
+    "i": 437,
+    "name": "GenericOp",
+    "start_us": 6368.58,
+    "dur_us": 12.12
+   },
+   {
+    "i": 438,
+    "name": "PagedUpdateCache",
+    "start_us": 6381.32,
+    "dur_us": 4.1
+   },
+   {
+    "i": 439,
+    "name": "PagedUpdateCache",
+    "start_us": 6386.85,
+    "dur_us": 4.05
+   },
+   {
+    "i": 440,
+    "name": "SdpaDecode",
+    "start_us": 6393.21,
+    "dur_us": 27.85
+   },
+   {
+    "i": 441,
+    "name": "GenericOp",
+    "start_us": 6421.3,
+    "dur_us": 3.97
+   },
+   {
+    "i": 442,
+    "name": "Matmul",
+    "start_us": 6425.47,
+    "dur_us": 24.38
+   },
+   {
+    "i": 443,
+    "name": "GenericOp",
+    "start_us": 6450.17,
+    "dur_us": 8.51
+   },
+   {
+    "i": 444,
+    "name": "Matmul",
+    "start_us": 6459.0,
+    "dur_us": 63.99
+   },
+   {
+    "i": 445,
+    "name": "Unary",
+    "start_us": 6523.27,
+    "dur_us": 4.12
+   },
+   {
+    "i": 446,
+    "name": "Matmul",
+    "start_us": 6527.83,
+    "dur_us": 64.19
+   },
+   {
+    "i": 447,
+    "name": "BinaryNg",
+    "start_us": 6592.26,
+    "dur_us": 5.49
+   },
+   {
+    "i": 448,
+    "name": "Matmul",
+    "start_us": 6598.11,
+    "dur_us": 62.08
+   },
+   {
+    "i": 449,
+    "name": "GenericOp",
+    "start_us": 6661.04,
+    "dur_us": 7.33
+   },
+   {
+    "i": 450,
+    "name": "Matmul",
+    "start_us": 6668.9,
+    "dur_us": 13.15
+   },
+   {
+    "i": 451,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 6683.51,
+    "dur_us": 3.29
+   },
+   {
+    "i": 452,
+    "name": "Slice",
+    "start_us": 6688.25,
+    "dur_us": 0.91
+   },
+   {
+    "i": 453,
+    "name": "TilizeWithValPadding",
+    "start_us": 6690.58,
+    "dur_us": 3.02
+   },
+   {
+    "i": 454,
+    "name": "FillPad",
+    "start_us": 6694.08,
+    "dur_us": 5.11
+   },
+   {
+    "i": 455,
+    "name": "TopK",
+    "start_us": 6699.42,
+    "dur_us": 45.52
+   },
+   {
+    "i": 456,
+    "name": "Slice",
+    "start_us": 6745.49,
+    "dur_us": 0.87
+   },
+   {
+    "i": 457,
+    "name": "BinaryNg",
+    "start_us": 6746.59,
+    "dur_us": 6.97
+   },
+   {
+    "i": 458,
+    "name": "Unary",
+    "start_us": 6753.79,
+    "dur_us": 3.34
+   },
+   {
+    "i": 459,
+    "name": "FillPad",
+    "start_us": 6757.62,
+    "dur_us": 5.09
+   },
+   {
+    "i": 460,
+    "name": "Reduce",
+    "start_us": 6764.14,
+    "dur_us": 8.57
+   },
+   {
+    "i": 461,
+    "name": "BinaryNg",
+    "start_us": 6772.94,
+    "dur_us": 5.52
+   },
+   {
+    "i": 462,
+    "name": "Unary",
+    "start_us": 6778.68,
+    "dur_us": 3.32
+   },
+   {
+    "i": 463,
+    "name": "BinaryNg",
+    "start_us": 6782.23,
+    "dur_us": 6.27
+   },
+   {
+    "i": 464,
+    "name": "Permute",
+    "start_us": 6788.98,
+    "dur_us": 8.59
+   },
+   {
+    "i": 465,
+    "name": "Accumulation",
+    "start_us": 6798.99,
+    "dur_us": 37.58
+   },
+   {
+    "i": 466,
+    "name": "Permute",
+    "start_us": 6838.0,
+    "dur_us": 4.06
+   },
+   {
+    "i": 467,
+    "name": "BinaryNg",
+    "start_us": 6842.3,
+    "dur_us": 2.95
+   },
+   {
+    "i": 468,
+    "name": "BinaryNg",
+    "start_us": 6845.51,
+    "dur_us": 4.78
+   },
+   {
+    "i": 469,
+    "name": "BinaryNg",
+    "start_us": 6850.53,
+    "dur_us": 2.91
+   },
+   {
+    "i": 470,
+    "name": "BinaryNg",
+    "start_us": 6853.66,
+    "dur_us": 3.65
+   },
+   {
+    "i": 471,
+    "name": "FillPad",
+    "start_us": 6858.72,
+    "dur_us": 4.17
+   },
+   {
+    "i": 472,
+    "name": "Reduce",
+    "start_us": 6864.35,
+    "dur_us": 1.62
+   },
+   {
+    "i": 473,
+    "name": "BinaryNg",
+    "start_us": 6866.2,
+    "dur_us": 5.75
+   },
+   {
+    "i": 474,
+    "name": "Typecast",
+    "start_us": 6873.4,
+    "dur_us": 1.16
+   },
+   {
+    "i": 475,
+    "name": "BinaryNg",
+    "start_us": 6874.79,
+    "dur_us": 2.82
+   },
+   {
+    "i": 476,
+    "name": "FillPad",
+    "start_us": 6879.04,
+    "dur_us": 4.18
+   },
+   {
+    "i": 477,
+    "name": "Reduce",
+    "start_us": 6884.65,
+    "dur_us": 1.62
+   },
+   {
+    "i": 478,
+    "name": "BinaryNg",
+    "start_us": 6886.5,
+    "dur_us": 7.39
+   },
+   {
+    "i": 479,
+    "name": "Typecast",
+    "start_us": 6894.37,
+    "dur_us": 2.2
+   },
+   {
+    "i": 480,
+    "name": "Matmul",
+    "start_us": 6896.81,
+    "dur_us": 21.13
+   },
+   {
+    "i": 481,
+    "name": "Copy",
+    "start_us": 6918.27,
+    "dur_us": 1.97
+   },
+   {
+    "i": 482,
+    "name": "GenericOp",
+    "start_us": 6920.54,
+    "dur_us": 6.63
+   },
+   {
+    "i": 483,
+    "name": "Matmul",
+    "start_us": 6927.7,
+    "dur_us": 22.66
+   },
+   {
+    "i": 484,
+    "name": "GenericOp",
+    "start_us": 6951.36,
+    "dur_us": 7.78
+   },
+   {
+    "i": 485,
+    "name": "Matmul",
+    "start_us": 6959.45,
+    "dur_us": 58.5
+   },
+   {
+    "i": 486,
+    "name": "GenericOp",
+    "start_us": 7018.34,
+    "dur_us": 12.07
+   },
+   {
+    "i": 487,
+    "name": "PagedUpdateCache",
+    "start_us": 7031.03,
+    "dur_us": 4.06
+   },
+   {
+    "i": 488,
+    "name": "PagedUpdateCache",
+    "start_us": 7036.53,
+    "dur_us": 4.09
+   },
+   {
+    "i": 489,
+    "name": "SdpaDecode",
+    "start_us": 7045.67,
+    "dur_us": 28.18
+   },
+   {
+    "i": 490,
+    "name": "GenericOp",
+    "start_us": 7074.08,
+    "dur_us": 4.01
+   },
+   {
+    "i": 491,
+    "name": "Matmul",
+    "start_us": 7078.28,
+    "dur_us": 24.56
+   },
+   {
+    "i": 492,
+    "name": "GenericOp",
+    "start_us": 7103.22,
+    "dur_us": 8.45
+   },
+   {
+    "i": 493,
+    "name": "Matmul",
+    "start_us": 7111.99,
+    "dur_us": 65.52
+   },
+   {
+    "i": 494,
+    "name": "Unary",
+    "start_us": 7177.78,
+    "dur_us": 4.14
+   },
+   {
+    "i": 495,
+    "name": "Matmul",
+    "start_us": 7182.37,
+    "dur_us": 64.26
+   },
+   {
+    "i": 496,
+    "name": "BinaryNg",
+    "start_us": 7246.91,
+    "dur_us": 5.38
+   },
+   {
+    "i": 497,
+    "name": "Matmul",
+    "start_us": 7252.59,
+    "dur_us": 62.74
+   },
+   {
+    "i": 498,
+    "name": "GenericOp",
+    "start_us": 7316.07,
+    "dur_us": 7.41
+   },
+   {
+    "i": 499,
+    "name": "Matmul",
+    "start_us": 7324.01,
+    "dur_us": 13.04
+   },
+   {
+    "i": 500,
+    "name": "UntilizeWithUnpadding",
+    "start_us": 7338.5,
+    "dur_us": 3.28
+   },
+   {
+    "i": 501,
+    "name": "Slice",
+    "start_us": 7343.22,
+    "dur_us": 0.93
+   },
+   {
+    "i": 502,
+    "name": "TilizeWithValPadding",
+    "start_us": 7345.57,
+    "dur_us": 3.06
+   },
+   {
+    "i": 503,
+    "name": "FillPad",
+    "start_us": 7349.11,
+    "dur_us": 5.15
+   },
+   {
+    "i": 504,
+    "name": "TopK",
+    "start_us": 7354.49,
+    "dur_us": 45.06
+   },
+   {
+    "i": 505,
+    "name": "Slice",
+    "start_us": 7400.11,
+    "dur_us": 0.9
+   },
+   {
+    "i": 506,
+    "name": "BinaryNg",
+    "start_us": 7401.24,
+    "dur_us": 7.17
+   },
+   {
+    "i": 507,
+    "name": "Unary",
+    "start_us": 7408.64,
+    "dur_us": 3.3
+   },
+   {
+    "i": 508,
+    "name": "FillPad",
+    "start_us": 7412.45,
+    "dur_us": 5.11
+   },
+   {
+    "i": 509,
+    "name": "Reduce",
+    "start_us": 7419.0,
+    "dur_us": 8.61
+   },
+   {
+    "i": 510,
+    "name": "BinaryNg",
+    "start_us": 7427.84,
+    "dur_us": 5.48
+   },
+   {
+    "i": 511,
+    "name": "Unary",
+    "start_us": 7433.54,
+    "dur_us": 3.24
+   },
+   {
+    "i": 512,
+    "name": "BinaryNg",
+    "start_us": 7437.01,
+    "dur_us": 6.21
+   },
+   {
+    "i": 513,
+    "name": "Permute",
+    "start_us": 7443.71,
+    "dur_us": 8.59
+   },
+   {
+    "i": 514,
+    "name": "Accumulation",
+    "start_us": 7453.73,
+    "dur_us": 37.62
+   },
+   {
+    "i": 515,
+    "name": "Permute",
+    "start_us": 7492.78,
+    "dur_us": 4.06
+   },
+   {
+    "i": 516,
+    "name": "BinaryNg",
+    "start_us": 7497.08,
+    "dur_us": 2.98
+   },
+   {
+    "i": 517,
+    "name": "BinaryNg",
+    "start_us": 7500.29,
+    "dur_us": 4.76
+   },
+   {
+    "i": 518,
+    "name": "BinaryNg",
+    "start_us": 7505.28,
+    "dur_us": 2.91
+   },
+   {
+    "i": 519,
+    "name": "BinaryNg",
+    "start_us": 7508.42,
+    "dur_us": 3.65
+   },
+   {
+    "i": 520,
+    "name": "FillPad",
+    "start_us": 7513.49,
+    "dur_us": 4.21
+   },
+   {
+    "i": 521,
+    "name": "Reduce",
+    "start_us": 7519.15,
+    "dur_us": 1.65
+   },
+   {
+    "i": 522,
+    "name": "BinaryNg",
+    "start_us": 7521.03,
+    "dur_us": 5.32
+   },
+   {
+    "i": 523,
+    "name": "Typecast",
+    "start_us": 7528.15,
+    "dur_us": 0.74
+   },
+   {
+    "i": 524,
+    "name": "BinaryNg",
+    "start_us": 7529.54,
+    "dur_us": 0.65
+   },
+   {
+    "i": 525,
+    "name": "FillPad",
+    "start_us": 7540.6,
+    "dur_us": 7.1
+   },
+   {
+    "i": 526,
+    "name": "Reduce",
+    "start_us": 7548.26,
+    "dur_us": 2.14
+   }
+  ]
+ }
+}

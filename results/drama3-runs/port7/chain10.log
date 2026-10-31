@@ -1,0 +1,9 @@
+=== chain10 start 01:57:54 io=0
+tower_ds EXIT 0
+tower_dsb EXIT 0
+c_ds EXIT 0 02:07:08
+c_dsb EXIT 0 02:09:16
+c_ds lines 8 RTF 0.514 gen ms/frame 23.59 rtf/line 0.504-0.552 TTFA 0.447-0.525 worst_late 0.000 frames 2120 audio 98.5
+c_dsb lines 8 RTF 0.512 gen ms/frame 23.45 rtf/line 0.505-0.546 TTFA 0.446-0.489 worst_late 0.000 frames 2061 audio 95.7
+=== chain10 end 02:09:16 io=0
+CHAIN10_DONE

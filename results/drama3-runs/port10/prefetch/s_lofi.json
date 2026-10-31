@@ -1,0 +1,111 @@
+{
+ "args": {
+  "layers": 1,
+  "n": 50,
+  "gcb_kb": 512,
+  "rpb": 4,
+  "ibw": 4,
+  "variants": "a2,b",
+  "fid": "LoFi",
+  "out": "/opt/ep0/port10/prefetch/s_lofi.json"
+ },
+ "grid": [
+  11,
+  10
+ ],
+ "dram_banks": 8,
+ "prefetcher_supported": true,
+ "weight_MB_per_layer": 112.85,
+ "timing": {
+  "a2_mm_only": {
+   "us_frame": 336.9,
+   "us_layer": 336.9,
+   "GBps": 335.0
+  },
+  "a2_with_small_ops": {
+   "us_frame": 508.0,
+   "us_layer": 508.0,
+   "GBps": 222.2
+  },
+  "b_mm_only": {
+   "us_frame": 291.6,
+   "us_layer": 291.6,
+   "GBps": 387.0
+  },
+  "b_with_small_ops": {
+   "us_frame": 463.3,
+   "us_layer": 463.3,
+   "GBps": 243.6
+  }
+ },
+ "b_setup": {
+  "ring": 32,
+  "receiver_grid": [
+   8,
+   4
+  ],
+  "gcb_bytes_per_core": 524288,
+  "block_counts": {
+   "eh_h": 16,
+   "qkvg": 16,
+   "o_proj": 32,
+   "w1": 16,
+   "w3": 16,
+   "w2": 48
+  },
+  "page_bytes": {
+   "eh_h": 16384,
+   "qkvg": 39168,
+   "o_proj": 8704,
+   "w1": 49152,
+   "w3": 49152,
+   "w2": 16384
+  },
+  "per_core_N": {
+   "eh_h": 2,
+   "qkvg": 9,
+   "o_proj": 2,
+   "w1": 6,
+   "w3": 6,
+   "w2": 2
+  }
+ },
+ "check": {
+  "L0_eh_h": {
+   "a2_pcc_torch": 0.999899,
+   "b_pcc_torch": 0.999899,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0
+  },
+  "L0_qkvg": {
+   "a2_pcc_torch": 0.999889,
+   "b_pcc_torch": 0.999889,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0
+  },
+  "L0_o_proj": {
+   "a2_pcc_torch": 0.999889,
+   "b_pcc_torch": 0.999889,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0
+  },
+  "L0_w1": {
+   "a2_pcc_torch": 0.999898,
+   "b_pcc_torch": 0.999898,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0
+  },
+  "L0_w3": {
+   "a2_pcc_torch": 0.999902,
+   "b_pcc_torch": 0.999902,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0
+  },
+  "L0_w2": {
+   "a2_pcc_torch": 0.999898,
+   "b_pcc_torch": 0.999898,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0
+  }
+ }
+}

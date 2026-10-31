@@ -1,0 +1,74 @@
+2026-10-30 22:53:09.816 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-30 22:53:09.816 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-30 22:53:09.816 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-30 22:53:09.816 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-30 22:53:09.820 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-30 22:53:09.820 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-30 22:53:09.833 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-30 22:53:09.833 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-30 22:53:09.833 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-30 22:53:09.833 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-30 22:53:09.833 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-30 22:53:09.901 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-30 22:53:09.915 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-30 22:53:09.915 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-30 22:53:09.915 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-30 22:53:09.915 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-30 22:53:09.916 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-30 22:53:09.916 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-30 22:53:09.916 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-30 22:53:09.916 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-30 22:53:09.916 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+topk_fp32_w32_k32 32.29
+sort_fp32_w32 53.51
+topk_fp32_w64_k32 23.88
+topk_fp32_w64_k64 24.54
+sort_fp32_w64 21.44
+topk_fp32_w128_k32 32.29
+topk_fp32_w128_k64 41.36
+sort_fp32_w128 40.61
+topk_fp32_w256_k32 51.93
+topk_fp32_w256_k64 77.87
+sort_fp32_w256 93.05
+topk_fp32_w1024_k32 54.62
+topk_fp32_w1024_k64 75.82
+sort_fp32_w1024 589.94
+gather_u32 509.07
+gather_u16 393.52
+topk index dtype DataType.UINT16 Layout.TILE
+gather_topk_idx 426.7
+cumsum_fp32_64 93.51
+cumsum_matmul_64 7.01
+{
+ "topk_fp32_w32_k32": 32.29,
+ "sort_fp32_w32": 53.51,
+ "topk_fp32_w64_k32": 23.88,
+ "topk_fp32_w64_k64": 24.54,
+ "sort_fp32_w64": 21.44,
+ "topk_fp32_w128_k32": 32.29,
+ "topk_fp32_w128_k64": 41.36,
+ "sort_fp32_w128": 40.61,
+ "topk_fp32_w256_k32": 51.93,
+ "topk_fp32_w256_k64": 77.87,
+ "sort_fp32_w256": 93.05,
+ "topk_fp32_w1024_k32": 54.62,
+ "topk_fp32_w1024_k64": 75.82,
+ "sort_fp32_w1024": 589.94,
+ "gather_u32": 509.07,
+ "gather_u32_err": 0.0,
+ "gather_u16": 393.52,
+ "gather_u16_err": 0.0,
+ "gather_topk_idx": 426.7,
+ "gather_topk_idx_err": 0.0,
+ "cumsum_fp32_64": 93.51,
+ "cumsum_matmul_64": 7.01,
+ "cumsum_matmul_err": 0.009725570678710938
+}
+DONE
+2026-10-30 22:53:40.935 | info     |    BuildKernels | JIT cache stats: 0/153 hits (0.0%) [0 cached, 11 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-30 22:53:40.936 | info     |    BuildKernels | JIT telemetry: 42 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-30 22:53:40.938 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-30 22:53:40.938 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-30 22:53:41.008 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-30 22:53:41.008 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-30 22:53:41.008 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)

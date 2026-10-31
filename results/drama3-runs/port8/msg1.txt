@@ -1,0 +1,16 @@
+drama3 port8: fused residual add + norm, top-k + softmax, ExpertMM v2, bfp4 tower candidates (all opt-in)
+
+- DRAMA3_ADDNORM_FUSED=1 (tt/addnorm_fused.py, kernels/addnorm2_*): one program per one-token add + RMSNorm,
+  8 cores, partial sums exchanged by semaphore. Bench 12.2 -> 7.75 us per boundary; backbone trace
+  12.02 -> 11.81 ms, tower 7.41 -> 7.28 ms. Residual bit-equal to ttnn.add; golden logits 0.99746 (0.99749).
+- DRAMA3_MOE_TOPK_SOFTMAX=1 (kernels/router_topk_sm.cpp + router_softmax_compute.cpp): backbone 11.81 -> 11.61 ms;
+  golden logits 0.99761, top-1 19/24.
+- DRAMA3_MOE_EXPERT_MM_V=2 (+ DRAMA3_MOE_EXPERT_MM=1, _D=8): port5 ExpertMM with 8 weight blocks in flight per RISC
+  (NOC transaction ids), outputs at the end: backbone 11.61 -> 11.38 ms, logits identical to sparse_matmul;
+  gate_up 44.6 -> 41.2 us (229 GB/s), down 31.9 us (279 GB/s), read-bound (no-math profile 40.2 / 31.0 us).
+- --tower-mlp bfp4, DRAMA3_TOWER_ATTN_BFP4=1 (precision candidates; qwen36 attention weights.PROJ_DTYPE switch).
+8 lines x 3 (port7 flags + the three levers): RTF 0.506 / 0.499 / 0.502, frames identical across repeats.
+Defaults unchanged: --fast 8/8 identical to day4b/out_v2, --interactive 8/8 identical to port6/i_qdt (/opt/ep0/port8).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JA5v8QiubPz82RUkMyCToU

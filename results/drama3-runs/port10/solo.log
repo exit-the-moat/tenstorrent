@@ -1,0 +1,40 @@
+Traceback (most recent call last):
+  File "/opt/ep0/port10/power_log.py", line 52, in <module>
+    {"log": log, "merge": merge}[sys.argv[1]](*sys.argv[2:4])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/ep0/port10/power_log.py", line 26, in log
+    with open(out, "a") as f:
+         ~~~~^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/solo_base_1/power.jsonl'
+solo_base_1 EXIT 0
+Traceback (most recent call last):
+  File "/opt/ep0/port10/power_log.py", line 52, in <module>
+    {"log": log, "merge": merge}[sys.argv[1]](*sys.argv[2:4])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/ep0/port10/power_log.py", line 26, in log
+    with open(out, "a") as f:
+         ~~~~^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/solo_cx_1/power.jsonl'
+solo_cx_1 EXIT 0
+Traceback (most recent call last):
+  File "/opt/ep0/port10/power_log.py", line 52, in <module>
+    {"log": log, "merge": merge}[sys.argv[1]](*sys.argv[2:4])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/ep0/port10/power_log.py", line 26, in log
+    with open(out, "a") as f:
+         ~~~~^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/solo_base_2/power.jsonl'
+solo_base_2 EXIT 0
+Traceback (most recent call last):
+  File "/opt/ep0/port10/power_log.py", line 52, in <module>
+    {"log": log, "merge": merge}[sys.argv[1]](*sys.argv[2:4])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/ep0/port10/power_log.py", line 26, in log
+    with open(out, "a") as f:
+         ~~~~^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/solo_cx_2/power.jsonl'
+solo_cx_2 EXIT 0
+identical lines r1: 8
+identical lines r2: 8
+io=0 disk=70%
+SOLO_DONE

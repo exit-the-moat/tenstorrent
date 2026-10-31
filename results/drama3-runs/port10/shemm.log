@@ -1,0 +1,13 @@
+start 12:19:42 io=0 disk=70%
+ft_s8 EXIT 0
+ft_s8sh EXIT 1
+TypeError: __getitem__(): incompatible function arguments. The following argument types are supported:
+TypeError: __getitem__(): incompatible function arguments. The following argument types are supported:
+golden_s8 EXIT 0
+golden_s8sh EXIT 0
+r_s8_1 EXIT 0
+r_s8sh_1 EXIT 0
+r_s8_2 EXIT 0
+r_s8sh_2 EXIT 0
+end 12:33:00 io=0 disk=70%
+SHEMM_DONE

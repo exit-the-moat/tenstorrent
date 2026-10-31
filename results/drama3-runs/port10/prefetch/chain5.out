@@ -1,0 +1,12 @@
+b_both2 EXIT 0
+b_off2 EXIT 0 8/8 vs i_bf8
+b_all2 EXIT 0
+b_all2 vs b_all identical lines 8
+f_def2 identical to day4b/out_v2: 8
+b_both2 lines 8 RTF 0.386 gen ms/frame 17.78 rtf/line 0.379-0.418 TTFA 0.424-0.458 worst_late 0.000 frames 2109 audio 97.9
+b_off2 lines 8 RTF 0.415 gen ms/frame 19.12 rtf/line 0.408-0.440 TTFA 0.422-0.452 worst_late 0.000 frames 2110 audio 98.0
+b_all2 lines 8 RTF 0.386 gen ms/frame 17.78 rtf/line 0.380-0.416 TTFA 0.415-0.475 worst_late 0.000 frames 2109 audio 97.9
+wcheck pf_b_all pf_b_all n 8 mean match 0.908 min 0.744 clipped 0
+wcheck pf_b_both pf_b_both n 8 mean match 0.908 min 0.744 clipped 0
+io=0 disk=70%
+CHAIN5_DONE

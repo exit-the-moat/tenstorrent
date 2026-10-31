@@ -1,0 +1,77 @@
+date,system,line,audio_s,wer,similarity,compute_s,rtf,ttfa_s,power_w,transcript
+2026-10-29,test-real,price,10.79,0.2727,0.8647,,,,,The RTX Pro 6000 costs about 15 and a half thousand euros. Two 10th Torrance P150 cards costs about a fifths of that.
+2026-10-29,test-real,model,12.16,0.1429,0.8395,,,,,"The model is CREN 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the Ten Storn cards."
+2026-10-29,test-real,specs,16.06,0.2857,0.8532,,,,,Each card has 120 10.6 scores and 4 QSFP-DD ports. Speculative decoding with DFLESH2 gives us 87 tones per second.
+2026-10-29,test-real,close,6.72,0.125,0.8226,,,,,"Did we exit the mode? Not yet, but the climb is shorter than I thought."
+2026-10-29,test-chatterbox,price,9.56,0.4091,0.8605,,,,,"One RTX Pro 6000 costs about 15,500 euros. Two 10-strand 0.50 cards cost about a fifth of that."
+2026-10-29,test-chatterbox,model,10.96,0.1429,0.8235,,,,,"The model is QUIN 3.8 27 billion parameters at 4-bit NVFP4 on the RTX, BF4 on the 10-storend cards."
+2026-10-29,test-chatterbox,specs,11.68,0.2381,0.8763,,,,,Each card has 120 10.6 cores and 4 QSFP DD ports. Speculative decoding with DFlash 2 gives us 87 tokens per second.
+2026-10-29,test-chatterbox,close,5.12,0.0625,0.7979,,,,,"So, did we exit the mode? Not yet. But the climb is shorter than I thought."
+2026-10-29,test-fish-ethan,price,8.36,0.3182,0.1209,,,,,"One RTX Pro 6000 costs about 15,500 euros. Two 10-storent P150 cards cost about a fifth of that."
+2026-10-29,test-fish-ethan,model,9.75,0.2381,0.0519,,,,,"The model is QUEN 3.8, 27 billion parameters at 4-bit, NVFP 4 on the RTX, BF4 on the 10-storrent cards."
+2026-10-29,test-fish-ethan,specs,10.4,0.2857,0.1162,,,,,Each card has 120 10-6 cores and four QSFPDD ports. Speculative decoding with DFlash 2 gives us 87 tokens per second.
+2026-10-29,test-fish-ethan,close,5.2,0.0,0.0638,,,,,"So, did we exit the moat? Not yet, but the climb is shorter than I thought."
+2026-10-29,day3-p150-hifi2-refv1,price,11.19,0.3636,0.8377,304.901,27.243,33.702,45.0,One RTX Pro 6000 costs about 15.5 €. Two 10-store and P150 cards cost about a fifth of that.
+2026-10-29,day3-p150-hifi2-refv1,model,12.54,0.1429,0.8293,174.946,13.952,20.93,45.7,"The model is QEM 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the Tenstar"
+2026-10-29,day3-p150-hifi2-refv1,specs,13.51,0.3333,0.8018,177.595,13.141,20.799,45.5,Each card has 120 10.6 cores and 4 QSFPDD ports. Speculative decoding with DFlash 2 gives us 87 tokens per second.
+2026-10-29,day3-p150-hifi2-refv1,close,5.94,0.0,0.724,81.209,13.662,17.357,46.2,"So, did we exit the moat? Not yet, but the climb is shorter than I thought."
+2026-10-29,day3-p150-hifi2-refv1,cold_open,11.42,0.0,0.7803,143.356,12.548,19.66,45.4,"This is the sound of a $1,400 AI card not working. I spent a whole day sure it was broken. Both of them. They weren't."
+2026-10-29,day3-p150-hifi2-refv1,server,11.89,0.0,0.8244,148.683,12.506,19.751,45.9,"Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+2026-10-29,day3-p150-hifi2-refv1,second_opinion,14.54,0.037,0.8161,190.726,13.121,20.131,45.3,"Second opinion. My desktop. It boots, the card's fans spin, and Windows never sees it. Card 2. Identical. Two dead cards. I wrote the return ticket."
+2026-10-29,day3-p150-hifi2-refv1,fix,11.8,0.0,0.7787,147.276,12.486,19.753,45.8,"One last try with the power supply's own cable instead of the adapter. It boots, the card shows up, healthy. The adapter was the problem the whole time."
+2026-10-29,day4-p150-refv1,price,11.61,0.1818,0.8048,21.819,1.879,3.017,54.1,One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-store and P150 cards cost about a fifth of that.
+2026-10-29,day4-p150-refv1,model,13.24,0.1429,0.8416,24.087,1.82,2.992,48.7,"The model is QUEN 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the 10-storrent cards."
+2026-10-29,day4-p150-refv1,specs,13.19,0.2857,0.7971,24.286,1.841,3.014,54.3,Each card has 120 10.6 cores and four QSFPDD ports. Speculative decoding with DFlash 2 gives us 87 tokens per second.
+2026-10-29,day4-p150-refv1,close,6.22,0.0625,0.7555,14.497,2.33,3.014,56.3,"So, did we exit the mode? Not yet, but the climb is shorter than I thought."
+2026-10-29,day4-p150-refv1,cold_open,11.19,0.0,0.7867,20.626,1.843,3.021,52.1,"This is the sound of a $1,400 AI card not working. I spent a whole day sure it was broken. Both of them. They weren't."
+2026-10-29,day4-p150-refv1,server,11.98,0.0,0.8076,22.918,1.913,3.001,49.3,"Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot everything works."
+2026-10-29,day4-p150-refv1,second_opinion,13.51,0.037,0.7632,24.175,1.789,3.003,51.9,"Second opinion, my desktop. It boots, the card's fans spin, and Windows never sees it. Card 2. Identical. Two dead cards. I wrote the return ticket."
+2026-10-29,day4-p150-refv1,fix,12.31,0.0,0.8306,23.157,1.882,2.984,62.1,One last try with the power supply's own cable instead of the adapter. It boots. The card shows up. Healthy. The adapter was the problem the whole time.
+2026-10-29,day4-p150-refv2,price,12.63,0.1364,0.8837,24.784,1.962,3.051,51.9,One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storend P150 cards cost about a fifth of that.
+2026-10-29,day4-p150-refv2,model,13.51,0.1429,0.8463,25.334,1.875,3.07,53.3,"The model is QUEN 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the 10-storrent cards."
+2026-10-29,day4-p150-refv2,specs,14.72,0.2857,0.8296,27.119,1.842,3.694,54.2,Each card has 120 10.6 cores and 4 QSFP DD ports. Speculative decoding with D flash 2 gives us 87 tokens per second.
+2026-10-29,day4-p150-refv2,close,6.18,0.0625,0.789,15.491,2.508,3.799,48.7,"So, did we exit the mode? Not yet, but the climb is shorter than I thought."
+2026-10-29,day4-p150-refv2,cold_open,11.56,0.0,0.8234,21.566,1.865,3.077,52.4,"This is the sound of a $1,400 AI card not working. I spent a whole day sure it was broken. Both of them, they weren't."
+2026-10-29,day4-p150-refv2,server,12.72,0.0,0.8585,23.859,1.875,3.083,52.5,"power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+2026-10-29,day4-p150-refv2,second_opinion,14.21,0.1111,0.8116,25.468,1.792,3.064,52.4,"Second opinion. My desktop. It boots, the cards fans spin, and Windows never sees it. Card 2. Identical. Two dead cards. I wrote the return ticket."
+2026-10-29,day4-p150-refv2,fix,12.21,0.0,0.8395,23.215,1.901,3.046,54.1,"One last try with the power supply's own cable instead of the adapter. It boots. The card shows up, healthy. The adapter was the problem the whole time."
+2026-10-29,day4b-p150-refv2,price,12.82,0.1818,0.8605,23.623,1.843,3.595,54.6,1 RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storined P150 cards cost about a fifth of that.
+2026-10-29,day4b-p150-refv2,model,13.75,0.2381,0.8157,23.01,1.674,1.629,53.3,"The model is QUEN 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the Ten Store and Carts."
+2026-10-29,day4b-p150-refv2,specs,14.26,0.2857,0.8332,22.944,1.609,1.662,51.7,Each card has 120 TenZix cores and 4 QSFPDD ports. Speculative decoding with DFlash 2 gives us 87 tokens per second.
+2026-10-29,day4b-p150-refv2,close,6.41,0.0625,0.7796,12.849,2.005,1.557,54.2,"So, did we exit the mode? Not yet, but the climb is shorter than I thought."
+2026-10-29,day4b-p150-refv2,cold_open,11.52,0.0741,0.84,19.315,1.677,1.611,48.7,"This is the sound of a $1400 AI card not working. I spent a whole day sure it was broken. Both of them, they weren't."
+2026-10-29,day4b-p150-refv2,server,12.21,0.0,0.8343,20.971,1.717,1.605,51.6,"Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+2026-10-29,day4b-p150-refv2,second_opinion,14.81,0.1111,0.8244,24.026,1.622,1.652,49.3,"Second opinion, my desktop. It boots, the cards fans spin, and Windows never sees it. Card 2. Identical. Two dead cards. I wrote the return ticket."
+2026-10-29,day4b-p150-refv2,fix,12.21,0.0,0.8383,20.968,1.717,1.611,50.0,One last try with the power supply's own cable instead of the adapter. It boots. The card shows up. Healthy. The adapter was the problem the whole time.
+2026-10-30,day4b-cp2-realtime-refv2,price,12.35,0.1818,0.8513,13.215,1.07,3.18,57.7,One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-store and P150 cards cost about a fifth of that.
+2026-10-30,day4b-cp2-realtime-refv2,model,13.42,0.1429,0.7958,12.034,0.897,1.306,57.4,The model is QUEN 3.8 27 billion parameters at 4-bit NVFP4 on the RTX BF4 on the 10-storrent cards.
+2026-10-30,day4b-cp2-realtime-refv2,specs,14.3,0.2857,0.8144,12.772,0.893,1.383,52.2,Each card has 120 TenZix cores and 4 QSF PDD ports. Speculative decoding with DFlash 2 gives us 87 tokens per second.
+2026-10-30,day4b-cp2-realtime-refv2,close,6.59,0.0625,0.8039,6.534,0.991,1.256,63.0,"So, did we exit the mode? Not yet, but the climb is shorter than I thought."
+2026-10-30,day4b-cp2-realtime-refv2,cold_open,11.01,0.0741,0.8015,10.011,0.91,1.295,53.5,This is the sound of a $1400 AI card not working. I spent a whole day sure it was broken. Both of them. They weren't.
+2026-10-30,day4b-cp2-realtime-refv2,server,12.59,0.0,0.866,11.268,0.895,1.282,56.2,"Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+2026-10-30,day4b-cp2-realtime-refv2,second_opinion,14.16,0.1111,0.8493,14.355,1.013,1.299,52.8,"Second opinion, my desktop. It boots, the cards fans spin, and Windows never sees it. Card 2, identical. Two dead cards. I wrote the return ticket."
+2026-10-30,day4b-cp2-realtime-refv2,fix,12.82,0.0,0.8428,11.553,0.901,1.274,61.6,"One last try with the power supply's own cable instead of the adapter. It boots. The card shows up, healthy. The adapter was the problem the whole time."
+2026-10-30,day4b-cp3-refv2,price,11.98,0.1364,0.8579,12.331,1.029,3.172,56.9,One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storend P150 cards cost about a fifth of that.
+2026-10-30,day4b-cp3-refv2,model,13.61,0.1429,0.8565,11.697,0.86,1.299,58.4,"The model is QUEN 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the Ten Store & Cards."
+2026-10-30,day4b-cp3-refv2,specs,14.4,0.2857,0.8527,12.316,0.855,1.274,57.8,Each card has 120 10.6 cores and four QSFPDD ports. Speculative decoding with DFlash 2 gives us 87 tokens per second.
+2026-10-30,day4b-cp3-refv2,close,6.55,0.0625,0.807,6.244,0.954,1.254,56.0,"So, did we exit the mode? Not yet, but the climb is shorter than I thought."
+2026-10-30,day4b-cp3-refv2,cold_open,11.56,0.0741,0.8393,10.061,0.87,1.254,57.0,"This is the sound of a $1400 AI card not working. I spent a whole day sure it was broken. Both of them, they weren't."
+2026-10-30,day4b-cp3-refv2,server,11.47,0.0,0.878,10.028,0.874,1.244,57.2,"power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+2026-10-30,day4b-cp3-refv2,second_opinion,14.12,0.1111,0.8602,12.073,0.855,1.312,51.0,"Second opinion, my desktop. It boots, the cards fans spin, and Windows never sees it. Card 2. Identical. Two dead cards. I wrote the return ticket."
+2026-10-30,day4b-cp3-refv2,fix,12.4,0.0,0.8535,10.784,0.87,1.284,50.4,One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time.
+2026-10-30,day4b-final-refv2,price,12.63,0.1364,0.8475,12.149,0.962,2.86,54.5,One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storend P150 cards cost about a fifth of that.
+2026-10-30,day4b-final-refv2,model,13.42,0.1429,0.8775,11.189,0.834,1.224,53.6,"The model is QUEN 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the 10-storrent cards."
+2026-10-30,day4b-final-refv2,specs,14.58,0.2857,0.8645,11.956,0.82,1.216,55.8,Each card has 120 10.6 cores and 4 QSFP DD ports. Speculative decoding with D flash 2 gives us 87 tokens per second.
+2026-10-30,day4b-final-refv2,close,6.41,0.0625,0.8061,5.82,0.908,1.207,51.3,"So, did we exit the mode? Not yet, but the climb is shorter than I thought."
+2026-10-30,day4b-final-refv2,cold_open,11.42,0.0741,0.7748,9.599,0.84,1.198,52.0,"This is the sound of a $1400 AI card not working. I spent a whole day sure it was broken. Both of them, they weren't."
+2026-10-30,day4b-final-refv2,server,12.26,0.0,0.8786,10.233,0.835,1.233,49.4,"power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+2026-10-30,day4b-final-refv2,second_opinion,13.79,0.1111,0.7943,11.37,0.824,1.206,59.4,"Second opinion. My desktop. It boots, the cards fans spin, and Windows never sees it. Card 2. Identical. Two dead cards. I wrote the return ticket."
+2026-10-30,day4b-final-refv2,fix,12.35,0.0345,0.829,10.314,0.835,1.192,49.2,One last try with the power supply's own cable instead of the adapter. It boots. The car shows up healthy. The adapter was the problem the whole time.
+2026-10-30,day5-bfp8x8-refv2,price,13.75,0.1818,0.8545,13.052,0.949,2.889,56.0,1 RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storend P150 cards cost about a fifth of that.
+2026-10-30,day5-bfp8x8-refv2,model,13.51,0.1905,0.8254,11.244,0.832,1.253,60.8,"The model is QUEN 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the Ten Store and Cards."
+2026-10-30,day5-bfp8x8-refv2,specs,14.35,0.2381,0.832,11.86,0.826,1.25,60.4,Each card has 120 10.6 cores and 4 QSFP DD ports. Speculative decoding with DFlash 2 gives us 87 tokens per second.
+2026-10-30,day5-bfp8x8-refv2,close,6.08,0.0625,0.7862,5.495,0.903,1.142,53.8,"So, did we exit the mode? Not yet. But the climb is shorter than I thought."
+2026-10-30,day5-bfp8x8-refv2,cold_open,11.38,0.0741,0.8085,9.581,0.842,1.187,52.5,This is the sound of a $1400 AI card not working. I spent a whole day sure it was broken. Both of them. They weren't.
+2026-10-30,day5-bfp8x8-refv2,server,11.61,0.0,0.8605,9.809,0.845,1.245,54.8,"Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+2026-10-30,day5-bfp8x8-refv2,second_opinion,13.93,0.1111,0.8371,11.524,0.827,1.262,54.8,"Second Opinion. My desktop. It boots, the cards fans spin, and Windows never sees it. Card 2. Identical. Two dead cards. I wrote the return ticket."
+2026-10-30,day5-bfp8x8-refv2,fix,12.82,0.0,0.8494,10.633,0.83,1.219,54.6,One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time.

@@ -1,0 +1,7 @@
+prefetch/pr_b_with_small_ops EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/pr_b_mm_only EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/pr_a2_with_small_ops EXIT 0 io=0 disk=70%
+T1_DONE
+SWEEP_DONE

@@ -1,0 +1,3 @@
+wcheck i_et2 n 8 mean match 0.915 min 0.830 clipped 0
+seeds {"dir": "/opt/ep0/port7/s_i_et2", "line": "close", "n": 5, "mean_match": 0.938, "frames": [136, 151, 137, 149, 133], "clipped": 0} {"dir": "/opt/ep0/port7/s_i_et2", "line": "fix", "n": 5, "mean_match": 1.0, "frames": [271, 276, 260, 272, 264], "clipped": 0} 
+GATE_DONE

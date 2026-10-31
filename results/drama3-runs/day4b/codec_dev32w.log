@@ -1,0 +1,49 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+2026-10-29 23:28:36.581 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-29 23:28:36.581 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-29 23:28:36.581 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-29 23:28:36.581 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-29 23:28:36.585 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-29 23:28:36.585 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-29 23:28:36.598 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-29 23:28:36.598 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-29 23:28:36.598 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-29 23:28:36.598 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-29 23:28:36.599 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-29 23:28:36.635 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-29 23:28:36.648 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-29 23:28:36.648 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-29 23:28:36.648 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-29 23:28:36.649 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-29 23:28:36.649 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-29 23:28:36.650 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-29 23:28:36.650 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-29 23:28:36.650 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-29 23:28:36.650 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-29 23:28:55.361 | warning  |              Op | Failed to find valid config with width-slicing. Attempting fallback to height-slicing. (op_slicing.cpp:233)
+2026-10-29 23:28:55.361 | critical |          Always | TT_FATAL: DRAM Auto slice could not find valid slice configuration. Tried up to 1 slices for height-slicing on output dimension 1. Available L1: 1428480 bytes. Operation requires more memory than available even with maximum slicing. (assert.hpp:104)
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/check_codec_device.py", line 64, in <module>
+    main()
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/check_codec_device.py", line 35, in main
+    audio, outs = dd(zt, collect=True)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/codec_device.py", line 164, in __call__
+    y = self._conv(y, L, c7)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/codec_device.py", line 101, in _conv
+    raise RuntimeError(f"conv1d L={L} cin={c.cin} cout={c.cout} k={c.k} d={c.d} layout={c.layout}: {str(e)[:200]}") from None
+RuntimeError: conv1d L=98304 cin=192 cout=192 k=7 d=1 layout=TensorMemoryLayout.HEIGHT_SHARDED: TT_FATAL @ /work/ttnn/cpp/ttnn/operations/sliding_window/op_slicing/op_slicing.cpp:266: found_valid_config
+info:
+DRAM Auto slice could not find valid slice configuration. Tried up to 1 slices for heig
+2026-10-29 23:28:55.966 | info     |    BuildKernels | JIT cache stats: 113/194 hits (58.2%) [113 cached, 249 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-29 23:28:55.966 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-29 23:28:55.969 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-29 23:28:55.969 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-29 23:28:56.039 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-29 23:28:56.039 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-29 23:28:56.039 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 1

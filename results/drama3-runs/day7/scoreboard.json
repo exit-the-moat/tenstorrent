@@ -1,0 +1,477 @@
+{
+ "rows": [
+  {
+   "stage": "Day 3",
+   "run": "8 test lines (first end to end)",
+   "voice": "ref_long",
+   "note": "host tower + host codec (whole clip after generation); card DRAM = backbone only",
+   "source": "/opt/ep0/day3/out/timing.json, /opt/ep0/day3/out/sanity.json",
+   "lines": 8,
+   "audio_s": 92.8,
+   "compute_s": 1368.7,
+   "frames": 1999,
+   "overall_rtf": 14.743,
+   "rtf_lines": [
+    12.485,
+    27.243
+   ],
+   "ttfa_first_s": 33.702,
+   "ttfa_later_s": [
+    17.357,
+    20.93
+   ],
+   "backbone_ms_per_frame": 273.3,
+   "tower_ms_per_frame": 270.6,
+   "codec_ms_per_frame": 55.6,
+   "codec_kind": "codec_s",
+   "chip_power_w": [
+    45.0,
+    46.2
+   ],
+   "board_power_w": [
+    163.9,
+    168.7
+   ],
+   "whisper_mean": 0.947,
+   "whisper_min": 0.837,
+   "card_dram_gb": 25.96,
+   "card_dram_source": "/opt/ep0/day3/gen_all.log (backbone resident only)",
+   "card_dram_scope": "backbone only"
+  },
+  {
+   "stage": "Day 4",
+   "run": "8 test lines",
+   "voice": "ref_long",
+   "note": "CPU streaming codec",
+   "source": "/opt/ep0/day4/out/timing.json, /opt/ep0/day4/out/sanity.json",
+   "lines": 8,
+   "audio_s": 93.3,
+   "compute_s": 175.6,
+   "frames": 2008,
+   "overall_rtf": 1.883,
+   "rtf_lines": [
+    1.789,
+    2.33
+   ],
+   "ttfa_first_s": 3.017,
+   "ttfa_later_s": [
+    2.984,
+    3.021
+   ],
+   "backbone_ms_per_frame": 45.6,
+   "tower_ms_per_frame": 20.5,
+   "codec_ms_per_frame": 52.3,
+   "codec_kind": "codec_decode_s",
+   "chip_power_w": [
+    48.7,
+    62.1
+   ],
+   "board_power_w": [
+    176.3,
+    190.1
+   ],
+   "whisper_mean": 0.919,
+   "whisper_min": 0.818,
+   "card_dram_gb": 26.05,
+   "card_dram_source": "/opt/ep0/day4/out/gen.log (backbone resident only)",
+   "card_dram_scope": "backbone only"
+  },
+  {
+   "stage": "Day 4",
+   "run": "8 test lines",
+   "voice": "ref_v2",
+   "note": "CPU streaming codec",
+   "source": "/opt/ep0/day4/out_v2/timing.json, /opt/ep0/day4/out_v2/sanity.json",
+   "lines": 8,
+   "audio_s": 97.8,
+   "compute_s": 186.8,
+   "frames": 2105,
+   "overall_rtf": 1.911,
+   "rtf_lines": [
+    1.792,
+    2.508
+   ],
+   "ttfa_first_s": 3.051,
+   "ttfa_later_s": [
+    3.046,
+    3.799
+   ],
+   "backbone_ms_per_frame": 45.6,
+   "tower_ms_per_frame": 20.5,
+   "codec_ms_per_frame": 51.7,
+   "codec_kind": "codec_decode_s",
+   "chip_power_w": [
+    48.7,
+    54.2
+   ],
+   "board_power_w": [
+    173.6,
+    191.7
+   ],
+   "whisper_mean": 0.932,
+   "whisper_min": 0.837,
+   "card_dram_gb": 26.05,
+   "card_dram_source": "/opt/ep0/day4/out_v2/gen.log (backbone resident only)",
+   "card_dram_scope": "backbone only"
+  },
+  {
+   "stage": "Day 4b",
+   "run": "8 test lines (final)",
+   "voice": "ref_v2",
+   "note": "prefix cache, device sampling, card codec; the default pipeline since",
+   "source": "/opt/ep0/day4b/out_v2/timing.json, /opt/ep0/day4b/out_v2/sanity.json",
+   "lines": 8,
+   "audio_s": 96.9,
+   "compute_s": 82.6,
+   "frames": 2086,
+   "overall_rtf": 0.853,
+   "rtf_lines": [
+    0.82,
+    0.962
+   ],
+   "ttfa_first_s": 2.86,
+   "ttfa_later_s": [
+    1.192,
+    1.233
+   ],
+   "backbone_ms_per_frame": 23.0,
+   "tower_ms_per_frame": 10.5,
+   "codec_ms_per_frame": 1.6,
+   "codec_kind": "card_codec_s",
+   "chip_power_w": [
+    49.2,
+    59.4
+   ],
+   "board_power_w": [
+    169.3,
+    201.2
+   ],
+   "whisper_mean": 0.929,
+   "whisper_min": 0.818,
+   "card_dram_gb": 28.29,
+   "card_dram_source": "/opt/ep0/day4b/out_v2/gen.log ('card DRAM')",
+   "card_dram_scope": "card"
+  },
+  {
+   "stage": "Day 5",
+   "run": "8 test lines, BFP8 gate/up on 8 layers (rejected)",
+   "voice": "ref_v2",
+   "note": "decision keep BFP4: the default stays bit-identical to Day 4b (/opt/ep0/day5/gate_base)",
+   "source": "/opt/ep0/day5/out_bfp8_8/timing.json, /opt/ep0/day5/out_bfp8_8/sanity.json",
+   "lines": 8,
+   "audio_s": 97.4,
+   "compute_s": 83.2,
+   "frames": 2098,
+   "overall_rtf": 0.854,
+   "rtf_lines": [
+    0.826,
+    0.95
+   ],
+   "ttfa_first_s": 2.889,
+   "ttfa_later_s": [
+    1.142,
+    1.262
+   ],
+   "backbone_ms_per_frame": 23.1,
+   "tower_ms_per_frame": 10.5,
+   "codec_ms_per_frame": 1.6,
+   "codec_kind": "card_codec_s",
+   "chip_power_w": [
+    52.5,
+    60.8
+   ],
+   "board_power_w": [
+    166.0,
+    197.6
+   ],
+   "whisper_mean": 0.921,
+   "whisper_min": 0.837,
+   "card_dram_gb": 30.43,
+   "card_dram_source": "/opt/ep0/day5/out_bfp8_8/gen.log ('card DRAM')",
+   "card_dram_scope": "card"
+  },
+  {
+   "stage": "Day 5b",
+   "run": "8 test lines, batch 2",
+   "voice": "ref_v2",
+   "note": "opt-in --batch; ms per step (B frames), TTFA / RTF per stream from the batch start",
+   "source": "/opt/ep0/day5b/m2/batch_summary.json, timing.json, sanity.json",
+   "lines": 8,
+   "audio_s": 98.1,
+   "compute_s": 108.9,
+   "frames": 2112,
+   "overall_rtf": null,
+   "rtf_lines": null,
+   "ttfa_first_s": null,
+   "ttfa_later_s": null,
+   "backbone_ms_per_frame": null,
+   "tower_ms_per_frame": null,
+   "codec_ms_per_frame": null,
+   "codec_kind": null,
+   "chip_power_w": [
+    44.0,
+    79.0
+   ],
+   "board_power_w": [
+    156.0,
+    245.0
+   ],
+   "whisper_mean": 0.927,
+   "whisper_min": 0.837,
+   "card_dram_gb": 28.53,
+   "card_dram_source": "/opt/ep0/day5b/m2/batch_summary.json",
+   "card_dram_scope": "card",
+   "streams": 2,
+   "audio_per_wall_s": 1.682,
+   "wall_s": 58.32,
+   "rtf_per_stream": [
+    1.053,
+    1.215
+   ],
+   "ttfa_streams_s": [
+    2.07,
+    3.91
+   ],
+   "backbone_ms_per_step": 27.2,
+   "tower_ms_per_step": 10.0,
+   "host_ms_per_step": 5.6
+  },
+  {
+   "stage": "Day 5b",
+   "run": "8 test lines, batch 4",
+   "voice": "ref_v2",
+   "note": "opt-in --batch; ms per step (B frames), TTFA / RTF per stream from the batch start",
+   "source": "/opt/ep0/day5b/m4/batch_summary.json, timing.json, sanity.json",
+   "lines": 8,
+   "audio_s": 96.3,
+   "compute_s": 152.6,
+   "frames": 2074,
+   "overall_rtf": null,
+   "rtf_lines": null,
+   "ttfa_first_s": null,
+   "ttfa_later_s": null,
+   "backbone_ms_per_frame": null,
+   "tower_ms_per_frame": null,
+   "codec_ms_per_frame": null,
+   "codec_kind": null,
+   "chip_power_w": [
+    44.0,
+    94.0
+   ],
+   "board_power_w": [
+    152.0,
+    222.0
+   ],
+   "whisper_mean": 0.913,
+   "whisper_min": 0.818,
+   "card_dram_gb": 28.81,
+   "card_dram_source": "/opt/ep0/day5b/m4/batch_summary.json",
+   "card_dram_scope": "card",
+   "streams": 4,
+   "audio_per_wall_s": 2.309,
+   "wall_s": 41.71,
+   "rtf_per_stream": [
+    1.487,
+    1.772
+   ],
+   "ttfa_streams_s": [
+    3.8,
+    5.75
+   ],
+   "backbone_ms_per_step": 36.1,
+   "tower_ms_per_step": 10.7,
+   "host_ms_per_step": 9.9
+  },
+  {
+   "stage": "Day 5b",
+   "run": "8 test lines, batch 8",
+   "voice": "ref_v2",
+   "note": "opt-in --batch; ms per step (B frames), TTFA / RTF per stream from the batch start",
+   "source": "/opt/ep0/day5b/m8/batch_summary.json, timing.json, sanity.json",
+   "lines": 8,
+   "audio_s": 96.7,
+   "compute_s": 252.8,
+   "frames": 2083,
+   "overall_rtf": null,
+   "rtf_lines": null,
+   "ttfa_first_s": null,
+   "ttfa_later_s": null,
+   "backbone_ms_per_frame": null,
+   "tower_ms_per_frame": null,
+   "codec_ms_per_frame": null,
+   "codec_kind": null,
+   "chip_power_w": [
+    46.0,
+    121.0
+   ],
+   "board_power_w": [
+    176.0,
+    242.0
+   ],
+   "whisper_mean": 0.906,
+   "whisper_min": 0.762,
+   "card_dram_gb": 29.39,
+   "card_dram_source": "/opt/ep0/day5b/m8/batch_summary.json",
+   "card_dram_scope": "card",
+   "streams": 8,
+   "audio_per_wall_s": 2.697,
+   "wall_s": 35.87,
+   "rtf_per_stream": [
+    2.453,
+    3.372
+   ],
+   "ttfa_streams_s": [
+    9.4,
+    9.82
+   ],
+   "backbone_ms_per_step": 54.3,
+   "tower_ms_per_step": 12.1,
+   "host_ms_per_step": 19.6
+  },
+  {
+   "stage": "Day 6",
+   "run": "38 narration lines, sequential (canonical)",
+   "voice": "ref_v2",
+   "note": "seed 0 except s03-01 = seed 2 (picks.json)",
+   "source": "/opt/ep0/day6/narration/timing.json, /opt/ep0/day6/narration/sanity.json",
+   "lines": 38,
+   "audio_s": 202.2,
+   "compute_s": 194.3,
+   "frames": 4353,
+   "overall_rtf": 0.961,
+   "rtf_lines": [
+    0.85,
+    1.736
+   ],
+   "ttfa_first_s": 3.719,
+   "ttfa_later_s": [
+    1.125,
+    1.563
+   ],
+   "backbone_ms_per_frame": 23.0,
+   "tower_ms_per_frame": 10.8,
+   "codec_ms_per_frame": 2.0,
+   "codec_kind": "card_codec_s",
+   "chip_power_w": [
+    43.0,
+    79.0
+   ],
+   "board_power_w": [
+    159.5,
+    213.7
+   ],
+   "whisper_mean": 0.941,
+   "whisper_min": 0.778,
+   "card_dram_gb": 28.29,
+   "card_dram_source": "/opt/ep0/day6/narration/gen.log ('card DRAM')",
+   "card_dram_scope": "card"
+  },
+  {
+   "stage": "Day 6",
+   "run": "38 narration lines, batch 8",
+   "voice": "ref_v2",
+   "note": "opt-in, 5 static batches",
+   "source": "/opt/ep0/day6/narration_b8/batch_summary.json, timing.json, sanity.json",
+   "lines": 38,
+   "audio_s": 199.7,
+   "compute_s": 702.8,
+   "frames": 4300,
+   "overall_rtf": null,
+   "rtf_lines": null,
+   "ttfa_first_s": null,
+   "ttfa_later_s": null,
+   "backbone_ms_per_frame": null,
+   "tower_ms_per_frame": null,
+   "codec_ms_per_frame": null,
+   "codec_kind": null,
+   "chip_power_w": [
+    43.0,
+    75.0
+   ],
+   "board_power_w": [
+    160.0,
+    341.0
+   ],
+   "whisper_mean": 0.932,
+   "whisper_min": 0.778,
+   "card_dram_gb": 29.39,
+   "card_dram_source": "/opt/ep0/day6/narration_b8/batch_summary.json",
+   "card_dram_scope": "card",
+   "streams": 8,
+   "audio_per_wall_s": 1.958,
+   "wall_s": 102.0,
+   "rtf_per_stream": [
+    2.712,
+    5.922
+   ],
+   "ttfa_streams_s": [
+    5.45,
+    13.0
+   ],
+   "backbone_ms_per_step": 54.1,
+   "tower_ms_per_step": 12.1,
+   "host_ms_per_step": 23.6
+  }
+ ],
+ "batch_throughput": [
+  {
+   "streams": 1,
+   "audio_per_wall_s": 1.17,
+   "source": "/opt/ep0/day4b/out_v2/timing.json (sum audio / sum compute)"
+  },
+  {
+   "streams": 2,
+   "audio_per_wall_s": 1.682,
+   "source": "/opt/ep0/day5b/m2/batch_summary.json"
+  },
+  {
+   "streams": 4,
+   "audio_per_wall_s": 2.309,
+   "source": "/opt/ep0/day5b/m4/batch_summary.json"
+  },
+  {
+   "streams": 8,
+   "audio_per_wall_s": 2.697,
+   "source": "/opt/ep0/day5b/m8/batch_summary.json"
+  }
+ ],
+ "handoff_only": {
+  "source": "models/demos/blackhole/drama3/HANDOFF.md",
+  "note": "numbers that exist only in HANDOFF.md (profiles / runs without a run dir)",
+  "day4_card_dram_gb_incl_tower": 27.72,
+  "day4b_device_only_ms_per_frame": {
+   "backbone_trace": 22.5,
+   "tower_trace": 9.2,
+   "host": 1.8
+  },
+  "day5b_device_ms_per_step": {
+   "B1": [
+    22.2,
+    9.3
+   ],
+   "B2": [
+    26.5,
+    9.8
+   ],
+   "B4": [
+    35.3,
+    10.5
+   ],
+   "B8": [
+    53.5,
+    11.8
+   ],
+   "source": "/opt/ep0/day5b/profile_batch2.json, profile_batch3.json"
+  },
+  "idle_power_w": {
+   "chip": 19,
+   "board": 81
+  },
+  "missing": [
+   "Day 3 card DRAM beyond the backbone (the tower ran on the host)",
+   "Day 4 card DRAM from a run file (gen.log logs the backbone only; 27.72 GB incl. the tower is in HANDOFF.md)",
+   "a Day 3 ref_v2 8-line set (only ref_long was rendered end to end)",
+   "Windows scorer (WER + speaker similarity) for the Day 6 batch-8 set"
+  ]
+ }
+}

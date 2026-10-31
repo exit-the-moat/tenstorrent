@@ -1,0 +1,254 @@
+[
+ {
+  "id": "s03-01",
+  "scene": 3,
+  "written": "Two Tenstorrent p150 cards, no NVIDIA anywhere.",
+  "spoken": "Two Tenstorrent P one-fifty cards, no En-vidia anywhere."
+ },
+ {
+  "id": "s03-02",
+  "scene": 3,
+  "written": "The plan: replace the GPUs in my home AI server, and see how far these cards get with a real coding model.",
+  "spoken": "The plan: replace the G P Us in my home A I server, and see how far these cards get with a real coding model."
+ },
+ {
+  "id": "s03-03",
+  "scene": 3,
+  "written": "That's episode one. First, install them.",
+  "spoken": "That's episode one. First, install them."
+ },
+ {
+  "id": "s04-01",
+  "scene": 4,
+  "written": "Power on, the PSU shuts off.",
+  "spoken": "[sighs] Power on, the P S U shuts off."
+ },
+ {
+  "id": "s04-10",
+  "scene": 4,
+  "written": "The card was powered through an adapter, from two PCIe cables.",
+  "spoken": "The card was powered through an adapter, from two P C I express cables."
+ },
+ {
+  "id": "s04-02",
+  "scene": 4,
+  "written": "Without a power cable on the card, it still shuts off.",
+  "spoken": "Without a power cable on the card, it still shuts off."
+ },
+ {
+  "id": "s04-03",
+  "scene": 4,
+  "written": "With an old Radeon in the same slot, everything works.",
+  "spoken": "With an old Radeon in the same slot, everything works."
+ },
+ {
+  "id": "s04-04",
+  "scene": 4,
+  "written": "So the card must be shorting.",
+  "spoken": "[frustrated] So the card must be shorting."
+ },
+ {
+  "id": "s04-05",
+  "scene": 4,
+  "written": "That logic felt airtight.",
+  "spoken": "That logic felt airtight."
+ },
+ {
+  "id": "s05-01",
+  "scene": 5,
+  "written": "Second opinion: my desktop. It boots, the card's fans spin, and Windows never sees it.",
+  "spoken": "Second opinion: my desktop. It boots, the card's fans spin, and Windows never sees it."
+ },
+ {
+  "id": "s05-02",
+  "scene": 5,
+  "written": "Card two: identical. Two dead cards!",
+  "spoken": "[angry, frustrated] Card two: identical. Two dead cards!"
+ },
+ {
+  "id": "s05-03",
+  "scene": 5,
+  "written": "I wrote the return ticket.",
+  "spoken": "[sighs] I wrote the return ticket."
+ },
+ {
+  "id": "s06-01",
+  "scene": 6,
+  "written": "One last try, with the power supply's own cable instead of the adapter.",
+  "spoken": "One last try, with the power supply's own cable instead of the adapter."
+ },
+ {
+  "id": "s06-02",
+  "scene": 6,
+  "written": "It boots! The card shows up, healthy!",
+  "spoken": "[laughs] It boots! The card shows up, healthy!"
+ },
+ {
+  "id": "s06-03",
+  "scene": 6,
+  "written": "The adapter was the problem the whole time. Of course, my power supply's maker said so. But who believes them?",
+  "spoken": "The adapter was the problem the whole time. Of course, my power supply's maker said so. But who believes them?"
+ },
+ {
+  "id": "s06-04",
+  "scene": 6,
+  "written": "My own research had said an approved adapter was fine.",
+  "spoken": "My own research had said an approved adapter was fine."
+ },
+ {
+  "id": "s06-05",
+  "scene": 6,
+  "written": "Lesson one of this channel: read the manual. Not the one for the shiny new card. The one for the boring power supply you already own.",
+  "spoken": "Lesson one of this channel: read the manual. Not the one for the shiny new card. The one for the boring power supply you already own."
+ },
+ {
+  "id": "s06-20",
+  "scene": 6,
+  "written": "While I was at it, I updated the card's firmware and power-cycled the server.",
+  "spoken": "While I was at it, I updated the card's firmware and power-cycled the server."
+ },
+ {
+  "id": "s06-06",
+  "scene": 6,
+  "written": "And one thing I couldn't find anywhere online: the card runs fine on PCIe Gen 3.",
+  "spoken": "And one thing I couldn't find anywhere online: the card runs fine on P C I express Gen three."
+ },
+ {
+  "id": "s06-07",
+  "scene": 6,
+  "written": "My CPU can't do more.",
+  "spoken": "My C P U can't do more."
+ },
+ {
+  "id": "s06-08",
+  "scene": 6,
+  "written": "When the model is already in memory, loading it onto the card takes eleven seconds.",
+  "spoken": "When the model is already in memory, loading it onto the card takes eleven seconds."
+ },
+ {
+  "id": "s06-09",
+  "scene": 6,
+  "written": "On Gen 5 it would barely change: only about three of those seconds are the link itself.",
+  "spoken": "On Gen five it would barely change: only about three of those seconds are the link itself."
+ },
+ {
+  "id": "s06-10",
+  "scene": 6,
+  "written": "From my SSD it takes about three minutes, because the SSD is the slow part, not the slot.",
+  "spoken": "From my S S D it takes about three minutes, because the S S D is the slow part, not the slot."
+ },
+ {
+  "id": "s08-01",
+  "scene": 8,
+  "written": "The model is Fish Audio Drama 3: thirty-six billion parameters, but only about three billion work for each slice of sound.",
+  "spoken": "The model is Fish Audio Drama three: thirty-six billion parameters, but only about three billion work for each slice of sound."
+ },
+ {
+  "id": "s08-02",
+  "scene": 8,
+  "written": "Squeezed to four bits, it fits on one card.",
+  "spoken": "Squeezed to four bits, it fits on one card."
+ },
+ {
+  "id": "s08-03",
+  "scene": 8,
+  "written": "Nobody had published a run of it on Tenstorrent, so Claude Code and I ported it in seven days.",
+  "spoken": "Nobody had published a run of it on Tenstorrent, so Claude Code and I ported it in seven days."
+ },
+ {
+  "id": "s08-04",
+  "scene": 8,
+  "written": "What broke: the server's disk corrupted a weight file, a stale library path crashed the compiler, and a faster setting for the expert math filled a layer with garbage, so it stayed off.",
+  "spoken": "What broke: the server's disk corrupted a weight file, a stale library path crashed the compiler, and a faster setting for the expert math filled a layer with garbage, so it stayed off."
+ },
+ {
+  "id": "s08-09",
+  "scene": 8,
+  "written": "Day one: the original model on the CPU, one layer at a time, as a reference. Day two: every weight mapped and checked against it.",
+  "spoken": "Day one: the original model on the C P U, one layer at a time, as a reference. Day two: every weight mapped and checked against it."
+ },
+ {
+  "id": "s08-05",
+  "scene": 8,
+  "written": "On day three, the first eight test lines took fourteen point seven seconds for every second of speech.",
+  "spoken": "On day three, the first eight test lines took fourteen point seven seconds for every second of speech."
+ },
+ {
+  "id": "s08-06",
+  "scene": 8,
+  "written": "What worked: one traced pass through the network for every frame, the audio decoder in a single trace, sampling on the card, a cached voice prompt, and the codec on the card as well.",
+  "spoken": "What worked: one traced pass through the network for every frame, the audio decoder in a single trace, sampling on the card, a cached voice prompt, and the codec on the card as well."
+ },
+ {
+  "id": "s08-07",
+  "scene": 8,
+  "written": "I kept the four-bit weights, and by the end of day four the card needed zero point eight five seconds for every second of speech.",
+  "spoken": "I kept the four-bit weights, and by the end of day four the card needed zero point eight five seconds for every second of speech."
+ },
+ {
+  "id": "s08-08",
+  "scene": 8,
+  "written": "On day six the card spoke this whole narration, and weak lines got another take. On day seven I froze the code.",
+  "spoken": "On day six the card spoke this whole narration, and weak lines got another take. On day seven I froze the code."
+ },
+ {
+  "id": "s08-10",
+  "scene": 8,
+  "written": "Seven days on one card: this is what broke, and this is what worked.",
+  "spoken": "Seven days on one card: this is what broke, and this is what worked."
+ },
+ {
+  "id": "s09-01",
+  "scene": 9,
+  "written": "On my test lines the card needs zero point eight five seconds for every second of speech, and zero point nine six over the whole narration, at about fifty-seven watts for the chip and one hundred and eighty for the whole board.",
+  "spoken": "On my test lines the card needs zero point eight five seconds for every second of speech, and zero point nine six over the whole narration, at about fifty-seven watts for the chip and one hundred and eighty for the whole board."
+ },
+ {
+  "id": "s09-02",
+  "scene": 9,
+  "written": "Whisper's transcript matches the script at ninety-four percent. With today's live settings, including some custom kernels, my card needs about zero point five four.",
+  "spoken": "Whisper's transcript matches the script at ninety-four percent. With today's live settings, including some custom kernels, my card needs about zero point five four."
+ },
+ {
+  "id": "s09-05",
+  "scene": 9,
+  "written": "The original model on a rented RTX Pro 6000 is about three times faster. Its memory is three and a half times faster, but that's not the whole story: my card isn't at its own memory limit yet.",
+  "spoken": "The original model on a rented RTX Pro 6000 is about three times faster. Its memory is three and a half times faster, but that's not the whole story: my card isn't at its own memory limit yet."
+ },
+ {
+  "id": "s09-03",
+  "scene": 9,
+  "written": "And whether it sounds like me: you decide. Except for my intro and that one part, every word you heard was spoken by the card.",
+  "spoken": "And whether it sounds like me: you decide. Except for my intro and that one part, every word you heard was spoken by the card."
+ },
+ {
+  "id": "s10-04",
+  "scene": 10,
+  "written": "And one card is already fast enough to speak in real time.",
+  "spoken": "And one card is already fast enough to speak in real time."
+ },
+ {
+  "id": "s10-01",
+  "scene": 10,
+  "written": "Next episode: both cards, one coding model, and a fifteen-thousand-euro GPU to beat.",
+  "spoken": "Next episode: both cards, one coding model, and a fifteen-thousand-euro G P U to beat."
+ },
+ {
+  "id": "s10-07",
+  "scene": 10,
+  "written": "So, did we exit the moat?",
+  "spoken": "So, did we exit the moat?"
+ },
+ {
+  "id": "s10-08",
+  "scene": 10,
+  "written": "We found the door, and it was a power cable.",
+  "spoken": "We found the door, and it was a power cable."
+ },
+ {
+  "id": "s10-09",
+  "scene": 10,
+  "written": "For the voice of a YouTube video: yes. For an audiobook: probably. For a service helpdesk: not yet. Important parts are still missing.",
+  "spoken": "For the voice of a YouTube video: yes. For an audiobook: probably. For a service helpdesk: not yet. Important parts are still missing."
+ }
+]

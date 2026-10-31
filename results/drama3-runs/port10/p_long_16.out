@@ -1,0 +1,2 @@
+p_long_16 EXIT 0 16:40:05 io=0 disk=70%
+{"run": "p_long_16", "B": 16, "jobs": 32, "audio_s": 1378.662, "wall_s": 149.468, "audio_per_wall": 9.224, "mean_active": 14.8, "ms_step": "37.76 + 9.85 + 12.21", "rtf_decode": "1.23 / 1.51 / 1.72", "rtf": "1.68 / 2.38 / 4.07", "ttfa_admit": "1.22 / 3.40 / 17.21", "ttfa_t0": "17.21 / 37.86 / 88.60", "worst_late": "9.19 / 19.38 / 29.53", "eos": 32, "dram_gb": 30.78, "board_W": "205.6 (291.0)"}

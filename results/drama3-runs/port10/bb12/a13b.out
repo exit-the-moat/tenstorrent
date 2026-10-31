@@ -1,0 +1,7 @@
+k_off2 rc=0 EXIT 0 io=0 disk=70%
+k_smp4b rc=0 EXIT 0 io=0 disk=70%
+k_both2 rc=0 EXIT 0 io=0 disk=70%
+k_off3 rc=0 EXIT 0 io=0 disk=70%
+k_smp8 rc=0 EXIT 0 io=0 disk=70%
+k_both3 rc=0 EXIT 0 io=0 disk=70%
+A13_DONE

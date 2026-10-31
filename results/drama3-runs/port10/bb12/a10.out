@@ -1,0 +1,7 @@
+ft10_bb128 rc=0 EXIT 0 io=0 disk=70%
+bb128 {'backbone_trace_ms': 9.903, 'tower_trace_ms': 6.289, 'bb_plus_tower_trace_ms': 16.169, 'gen_ms_per_frame': 21.92}
+ft10_off3 rc=0 EXIT 0 io=0 disk=70%
+off3 {'backbone_trace_ms': 10.552, 'tower_trace_ms': 6.289, 'bb_plus_tower_trace_ms': 16.841, 'gen_ms_per_frame': 21.856}
+ft10_bb128b rc=0 EXIT 137 io=0 disk=70%
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/bb12/ft10_bb128b.json'
+A10_DONE

@@ -1,0 +1,6 @@
+start 03:22:36 io=0
+SMOKE_OK
+emm2_d4 trace: {"prefill_s": 1.51, "ms_per_step_median": 12.3, "ms_per_step_min": 12.3, "final_norm_pcc_min": 0.98531, "final_norm_pcc_mean": 0.993388, "logits_pcc_mean": 0.997462, "top1": "19/24"} EXIT 0 03:23:27
+emm2_d4_c96  EXIT 1 03:24:01
+ABORT after emm2_d4_c96
+CHAIN2_DONE

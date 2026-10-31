@@ -1,0 +1,15 @@
+start 11:40:34 io=0
+f_short_32 EXIT 1 11:41:45 io=0 disk=70%
+2026-10-31 10:41:36.939 | critical |          Always | TT_FATAL: Persistent L1 core 0-10 is outside the worker grid 12x10 (assert.hpp:104)
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/persistent_l1_arena.cpp:49: core.x < grid_width_ && core.y < grid_height_
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/persistent_l1_arena.cpp:49: core.x < grid_width_ && core.y < grid_height_
+f_long_27 EXIT 1 11:43:02 io=0 disk=70%
+2026-10-31 10:42:54.341 | critical |          Always | TT_FATAL: Out of Memory: Not enough space to allocate 671219712 B DRAM buffer across 8 banks, where each bank needs to store 83902464 B, but bank size is 4238786944 B (allocated: 4093904384 B, free: 144882560 B, largest free block: 83886080 B) (
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/bank_manager.cpp:495: false
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/bank_manager.cpp:495: false
+f_short_27 EXIT 1 11:44:01 io=0 disk=70%
+2026-10-31 10:43:55.424 | critical |          Always | TT_FATAL: Out of Memory: Not enough space to allocate 671219712 B DRAM buffer across 8 banks, where each bank needs to store 83902464 B, but bank size is 4238786944 B (allocated: 4098744320 B, free: 140042624 B, largest free block: 83886080 B) (
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/bank_manager.cpp:495: false
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/bank_manager.cpp:495: false
+SMOKE_OK
+LIM_DONE

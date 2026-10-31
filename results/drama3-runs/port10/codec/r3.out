@@ -1,0 +1,5 @@
+codec/r3_snk EXIT 0 io=0 disk=70%
+T1_DONE
+codec/r3_opts EXIT 0 io=0 disk=70%
+T1_DONE
+R3_DONE

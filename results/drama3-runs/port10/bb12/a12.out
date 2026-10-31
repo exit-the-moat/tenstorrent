@@ -1,0 +1,7 @@
+j_off rc=0 EXIT 0 io=0 disk=70%
+j_bb rc=0 EXIT 0 io=0 disk=70%
+j_off2 rc=0 EXIT 0 io=0 disk=70%
+j_bb2 rc=0 EXIT 0 io=0 disk=70%
+j_off3 rc=0 EXIT 0 io=0 disk=70%
+j_bb3 rc=0 EXIT 0 io=0 disk=70%
+A12_DONE

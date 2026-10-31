@@ -1,0 +1,121 @@
+2026-10-29 21:31:48.689 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-29 21:31:48.689 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-29 21:31:48.689 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-29 21:31:48.689 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-29 21:31:48.692 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-29 21:31:48.692 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-29 21:31:48.706 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-29 21:31:48.706 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-29 21:31:48.706 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-29 21:31:48.706 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-29 21:31:48.707 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-29 21:31:48.757 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-29 21:31:48.771 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-29 21:31:48.771 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-29 21:31:48.771 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-29 21:31:48.771 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-29 21:31:48.772 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-29 21:31:48.772 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-29 21:31:48.772 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-29 21:31:48.772 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-29 21:31:48.772 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-29 21:31:48.880 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-29 21:31:48.880 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-29 21:31:48.880 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-29 21:31:48.880 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-29 21:31:48.880 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-29 21:31:50.748 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-29 21:31:50.753 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-29 21:31:50.754 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-29 21:31:50.754 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-29 21:31:52.504 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-29 21:31:52.688 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-29 21:31:52.689 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-29 21:31:52.689 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-29 21:31:52.689 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 21:31:52.689 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 21:31:52.689 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+weights Shape([1, 256, 2048, 1024]) DataType.BFLOAT4_B Shape([1, 256, 512, 2048]) DataType.BFLOAT8_B
+grid 11 10
+{"M": 64, "mm": "gate_up", "default_ms": 8.37}
+{"M": 64, "mm": "gate_up", "per_core_M": 1, "per_core_N": 32, "in0_block_w": 2, "sub_w": 4, "ms": 2.72, "max_diff": 0.0625}
+{"M": 64, "mm": "gate_up", "per_core_M": 1, "per_core_N": 32, "in0_block_w": 4, "sub_w": 4, "ms": 2.74, "max_diff": 0.0625}
+{"M": 64, "mm": "gate_up", "per_core_M": 1, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 2.76, "max_diff": 0.03125}
+{"M": 64, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 2, "sub_w": 4, "ms": 1.45, "max_diff": 0.0625}
+{"M": 64, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 4, "sub_w": 4, "ms": 1.44, "max_diff": 0.0625}
+{"M": 64, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 1.45, "max_diff": 0.03125}
+BEST {"M": 64, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 4, "sub_w": 4, "ms": 1.44, "max_diff": 0.0625}
+{"M": 64, "mm": "down", "default_ms": 2.6}
+{"M": 64, "mm": "down", "per_core_M": 1, "per_core_N": 64, "in0_block_w": 2, "sub_w": 4, "ms": 2.48, "max_diff": 0.03125}
+{"M": 64, "mm": "down", "per_core_M": 1, "per_core_N": 64, "in0_block_w": 4, "sub_w": 4, "ms": 2.49, "max_diff": 0.015625}
+2026-10-29 21:32:07.414 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 1651712 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 64, "ibw": 8, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+{"M": 64, "mm": "down", "per_core_M": 2, "per_core_N": 64, "in0_block_w": 2, "sub_w": 4, "ms": 1.37, "max_diff": 0.03125}
+{"M": 64, "mm": "down", "per_core_M": 2, "per_core_N": 64, "in0_block_w": 4, "sub_w": 4, "ms": 1.31, "max_diff": 0.015625}
+2026-10-29 21:32:11.069 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 2077696 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 64, "mm": "down", "pcn": 64, "ibw": 8, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+BEST {"M": 64, "mm": "down", "per_core_M": 2, "per_core_N": 64, "in0_block_w": 4, "sub_w": 4, "ms": 1.31, "max_diff": 0.015625}
+{"M": 128, "mm": "gate_up", "default_ms": 11.6}
+{"M": 128, "mm": "gate_up", "per_core_M": 1, "per_core_N": 32, "in0_block_w": 2, "sub_w": 4, "ms": 5.41, "max_diff": 0.0625}
+{"M": 128, "mm": "gate_up", "per_core_M": 1, "per_core_N": 32, "in0_block_w": 4, "sub_w": 4, "ms": 5.47, "max_diff": 0.0625}
+{"M": 128, "mm": "gate_up", "per_core_M": 1, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 5.51, "max_diff": 0.0625}
+{"M": 128, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 2, "sub_w": 4, "ms": 2.93, "max_diff": 0.0625}
+{"M": 128, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 4, "sub_w": 4, "ms": 2.87, "max_diff": 0.0625}
+{"M": 128, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 2.87, "max_diff": 0.0625}
+{"M": 128, "mm": "gate_up", "per_core_M": 4, "per_core_N": 32, "in0_block_w": 2, "sub_w": 4, "ms": 1.75, "max_diff": 0.0625}
+{"M": 128, "mm": "gate_up", "per_core_M": 4, "per_core_N": 32, "in0_block_w": 4, "sub_w": 4, "ms": 1.68, "max_diff": 0.0625}
+{"M": 128, "mm": "gate_up", "per_core_M": 4, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 1.66, "max_diff": 0.0625}
+BEST {"M": 128, "mm": "gate_up", "per_core_M": 4, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 1.66, "max_diff": 0.0625}
+{"M": 128, "mm": "down", "default_ms": 3.54}
+{"M": 128, "mm": "down", "per_core_M": 1, "per_core_N": 64, "in0_block_w": 2, "sub_w": 4, "ms": 4.94, "max_diff": 0.03125}
+{"M": 128, "mm": "down", "per_core_M": 1, "per_core_N": 64, "in0_block_w": 4, "sub_w": 4, "ms": 4.97, "max_diff": 0.015625}
+2026-10-29 21:32:23.053 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 1651712 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 64, "ibw": 8, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+{"M": 128, "mm": "down", "per_core_M": 2, "per_core_N": 64, "in0_block_w": 2, "sub_w": 4, "ms": 2.57, "max_diff": 0.03125}
+{"M": 128, "mm": "down", "per_core_M": 2, "per_core_N": 64, "in0_block_w": 4, "sub_w": 4, "ms": 2.59, "max_diff": 0.015625}
+2026-10-29 21:32:33.654 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 2077696 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 64, "ibw": 8, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+2026-10-29 21:32:33.662 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 1995776 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 64, "ibw": 2, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+2026-10-29 21:32:33.673 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 2307072 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 64, "ibw": 4, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+2026-10-29 21:32:33.730 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 2929664 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 128, "mm": "down", "pcn": 64, "ibw": 8, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+BEST {"M": 128, "mm": "down", "per_core_M": 2, "per_core_N": 64, "in0_block_w": 2, "sub_w": 4, "ms": 2.57, "max_diff": 0.03125}
+{"M": 640, "mm": "gate_up", "default_ms": 16.85}
+{"M": 640, "mm": "gate_up", "per_core_M": 1, "per_core_N": 32, "in0_block_w": 2, "sub_w": 4, "ms": 27.05, "max_diff": 0.0625}
+{"M": 640, "mm": "gate_up", "per_core_M": 1, "per_core_N": 32, "in0_block_w": 4, "sub_w": 4, "ms": 27.24, "max_diff": 0.0625}
+{"M": 640, "mm": "gate_up", "per_core_M": 1, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 27.4, "max_diff": 0.0625}
+{"M": 640, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 2, "sub_w": 4, "ms": 14.55, "max_diff": 0.0625}
+{"M": 640, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 4, "sub_w": 4, "ms": 14.29, "max_diff": 0.0625}
+{"M": 640, "mm": "gate_up", "per_core_M": 2, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 14.22, "max_diff": 0.0625}
+{"M": 640, "mm": "gate_up", "per_core_M": 4, "per_core_N": 32, "in0_block_w": 2, "sub_w": 4, "ms": 8.82, "max_diff": 0.0625}
+{"M": 640, "mm": "gate_up", "per_core_M": 4, "per_core_N": 32, "in0_block_w": 4, "sub_w": 4, "ms": 8.34, "max_diff": 0.0625}
+{"M": 640, "mm": "gate_up", "per_core_M": 4, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 8.11, "max_diff": 0.0625}
+BEST {"M": 640, "mm": "gate_up", "per_core_M": 4, "per_core_N": 32, "in0_block_w": 8, "sub_w": 4, "ms": 8.11, "max_diff": 0.0625}
+{"M": 640, "mm": "down", "default_ms": 9.98}
+{"M": 640, "mm": "down", "per_core_M": 1, "per_core_N": 64, "in0_block_w": 2, "sub_w": 4, "ms": 24.67, "max_diff": 0.03125}
+{"M": 640, "mm": "down", "per_core_M": 1, "per_core_N": 64, "in0_block_w": 4, "sub_w": 4, "ms": 24.84, "max_diff": 0.03125}
+2026-10-29 21:33:08.116 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 1651712 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 640, "mm": "down", "pcn": 64, "ibw": 8, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+{"M": 640, "mm": "down", "per_core_M": 2, "per_core_N": 64, "in0_block_w": 2, "sub_w": 4, "ms": 12.88, "max_diff": 0.03125}
+{"M": 640, "mm": "down", "per_core_M": 2, "per_core_N": 64, "in0_block_w": 4, "sub_w": 4, "ms": 12.83, "max_diff": 0.03125}
+2026-10-29 21:33:14.807 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 2077696 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 640, "mm": "down", "pcn": 64, "ibw": 8, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+2026-10-29 21:33:15.769 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 1995776 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 640, "mm": "down", "pcn": 64, "ibw": 2, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+2026-10-29 21:33:17.845 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 2307072 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 640, "mm": "down", "pcn": 64, "ibw": 4, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+2026-10-29 21:33:19.974 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 10-9] grow to 2929664 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+{"M": 640, "mm": "down", "pcn": 64, "ibw": 8, "err": "TT_THROW @ /work/tt_metal/impl/dataflow_buffer/dataflow_buffer.cpp:2682: tt::exception\ninfo:\nStatically allocated datafl"}
+BEST {"M": 640, "mm": "down", "per_core_M": 2, "per_core_N": 64, "in0_block_w": 4, "sub_w": 4, "ms": 12.83, "max_diff": 0.03125}
+DONE
+2026-10-29 21:33:20.961 | info     |    BuildKernels | JIT cache stats: 109/445 hits (24.5%) [109 cached, 2 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-29 21:33:20.961 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-29 21:33:20.965 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-29 21:33:20.965 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-29 21:33:20.974 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-29 21:33:20.974 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-29 21:33:20.974 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

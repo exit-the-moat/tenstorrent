@@ -1,0 +1,53 @@
+# SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+"""Fish's codebook-head sampler on the card (Day 4b), so the tower's 9 segments chain without host round trips.
+
+Host version (host/tower.py ``sample_top_k_top_p``, codebook heads: keep_crossing=False, top-k 30, top-p 0.9):
+sort the logits, drop ranks whose cumulative softmax (over ALL logits) exceeds top_p and ranks >= top_k (rank 0
+always kept), softmax over the kept ones, draw argmax(probs / noise) with exponential noise indexed by rank.
+Here: fp32 top-32 (ttnn.topk, sorted), the full softmax normaliser from all 1024 logits, cumsum over the 32,
+the same masks, then argmax(probs / noise[:32]) through a max + one-hot. The host draws the noise from the same
+generator in the same order (4096 values per head, of which ranks 0..31 can matter), so for equal logits the
+draw only differs where fp32 rounding on the card flips a comparison (cum vs top_p, near-equal scores).
+"""
+
+import torch
+
+import ttnn
+
+K = 32  # top-k width on the card (>= Fish's codebook top-k of 30)
+
+
+class DeviceSampler:
+    def __init__(self, mesh, n_codes=1024, top_k=30, top_p=0.9, temperature=1.0):
+        self.mesh, self.top_k, self.top_p, self.temperature = mesh, top_k, top_p, temperature
+
+        def const(t, dtype=ttnn.float32):
+            return ttnn.from_torch(t, dtype=dtype, layout=ttnn.TILE_LAYOUT, device=mesh)
+
+        self.rank = const(torch.arange(K, dtype=torch.float32).reshape(1, 1, 1, K))
+        self.rank_ok = const((torch.arange(K) < top_k).float().reshape(1, 1, 1, K))  # rank < top_k
+        self.first = const((torch.arange(K) == 0).float().reshape(1, 1, 1, K))
+        self.code_ids = const(torch.arange(n_codes, dtype=torch.float32).reshape(1, 1, 1, n_codes))
+
+    def __call__(self, logits, noise):
+        """logits [1,1,1,n] fp32 (device), noise [1,1,1,K] fp32 (device) -> (code [1,1,1,1] fp32, one-hot [1,1,1,n] bf16).
+        Batch mode: B rows on dim 2 ([1,1,B,n], [1,1,B,K] -> [1,1,B,1], [1,1,B,n])."""
+        x = logits if self.temperature == 1.0 else ttnn.multiply(logits, 1.0 / self.temperature)
+        vals, idx = ttnn.topk(x, K, dim=-1, largest=True, sorted=True)
+        m = ttnn.slice(vals, [0, 0, 0, 0], [1, 1, vals.shape[2], 1])  # the max (per row: batch mode has B rows)
+        z = ttnn.sum(ttnn.exp(ttnn.subtract(x, m)), dim=-1, keepdim=True)  # softmax normaliser over all logits
+        e = ttnn.exp(ttnn.subtract(vals, m))
+        cum = ttnn.cumsum(ttnn.divide(e, z), dim=-1)
+        keep = ttnn.multiply(ttnn.le(cum, self.top_p), self.rank_ok)  # drop = cum > top_p | rank >= top_k
+        keep = ttnn.maximum(keep, self.first)  # rank 0 always kept
+        # probs = softmax(kept); argmax(probs / noise) = argmax(e * keep / noise) (the common 1/sum cancels)
+        score = ttnn.divide(ttnn.multiply(e, keep), noise)
+        best = ttnn.max(score, dim=-1, keepdim=True)
+        hit = ttnn.eq(score, best)
+        rank = ttnn.min(ttnn.add(ttnn.multiply(self.rank, hit), ttnn.multiply(ttnn.rsub(hit, 1.0), 1e4)), dim=-1, keepdim=True)
+        onehot_rank = ttnn.eq(self.rank, rank)  # first winning rank (ties: lowest rank, as torch.argmax)
+        code = ttnn.sum(ttnn.multiply(ttnn.typecast(idx, ttnn.float32), onehot_rank), dim=-1, keepdim=True)
+        onehot = ttnn.typecast(ttnn.eq(self.code_ids, code), ttnn.bfloat16)
+        return code, onehot

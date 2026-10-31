@@ -1,0 +1,3 @@
+csf2 rc=0 EXIT 0 io=0 disk=70%
+{"n": 2000, "fused_vs_lean": 0, "fused_vs_host": 0, "lean_vs_host": 0, "onehot_bad": 0, "examples": [], "check_s": 5.9, "trace_ms_9_draws": {"lean": 1.753, "lean_codes": [143.0, 253.0, 770.0, 509.0, 200.0, 593.0, 724.0, 353.0, 913.0], "fused": 0.819, "fused_codes": [143.0, 253.0, 770.0, 509.0, 200.0, 593.0, 724.0, 353.0, 913.0]}, "traced_codes_equal": true}
+B1_DONE

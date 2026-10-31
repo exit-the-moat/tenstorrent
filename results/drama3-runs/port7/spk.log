@@ -1,0 +1,8 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/librosa/core/intervals.py:8: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Loaded the voice encoder model on cpu in 0.02 seconds.
+{"run": "/opt/ep0/port6/i_qdt", "n": 8, "vs_ref_mean": 0.9477, "vs_ref_min": 0.938, "vs_base_mean": 1.0, "vs_base_min": 1.0}
+{"run": "/opt/ep0/port5/final8c", "n": 8, "vs_ref_mean": 0.9511, "vs_ref_min": 0.9365, "vs_base_mean": 0.966, "vs_base_min": 0.9299}
+{"run": "/opt/ep0/day4b/out_v2", "n": 8, "vs_ref_mean": 0.9534, "vs_ref_min": 0.943, "vs_base_mean": 0.9698, "vs_base_min": 0.9451}
+{"run": "/opt/ep0/port7/i_et2", "n": 8, "vs_ref_mean": 0.9509, "vs_ref_min": 0.9404, "vs_base_mean": 0.968, "vs_base_min": 0.929}
+{"run": "/opt/ep0/port7/i_bf8", "n": 8, "vs_ref_mean": 0.9547, "vs_ref_min": 0.9362, "vs_base_mean": 0.9688, "vs_base_min": 0.9337}

@@ -1,0 +1,12 @@
+17:23:38 BOOT
+17:23:40 driver NVIDIA RTX PRO 6000 Blackwell Server Edition, 595.91.07 cuda_ok 13.0 NVIDIA RTX PRO 6000 Blackwell Server Edition
+17:23:40 clone sglang-omni
+17:24:06 installed rc=0 commit=1b1f897df32c0a9f5d7e5d9d66d02e5ec00d83cd
+17:24:08 versions logged
+17:24:08 download done 27 s: codec done 19.5 DL_DONE
+17:24:08 server start
+17:25:37 server healthy after 88.8 s
+17:25:37 waiting for /root/in/ref.wav + lines.json + bench.py
+17:25:37 bench start
+17:26:20 bench rc=0
+17:26:21 DONE

@@ -1,0 +1,6 @@
+start 03:38:45 io=0
+an_sm_emm12 {'backbone_trace_ms': 11.387, 'tower_trace_ms': 7.283, 'bb_plus_tower_trace_ms': 18.674, 'gen_ms_per_frame': 24.46} EXIT 0 03:41:16
+an_sm_emm8kb32 {'backbone_trace_ms': 11.38, 'tower_trace_ms': 7.28, 'bb_plus_tower_trace_ms': 18.664, 'gen_ms_per_frame': 24.636} EXIT 0 03:43:52
+an_sm_emm8c80 FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port8/ft_an_sm_emm8c80.json' EXIT 1 03:44:47
+ABORT after an_sm_emm8c80
+CHAIN4_DONE

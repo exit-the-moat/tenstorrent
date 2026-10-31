@@ -1,0 +1,3 @@
+prefix 1     frames 138 vs 138  /opt/ep0/day5b/b2_close/close_s0.frames.pt  /opt/ep0/day4b/out_v2/close.frames.pt
+prefix 1     frames 144 vs 131  /opt/ep0/day5b/b2_close/close_s1.frames.pt  /opt/ep0/day4b/seeds_final/close_s1.frames.pt
+T1_DONE

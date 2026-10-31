@@ -1,0 +1,5 @@
+g_attn_qkv rc=0 EXIT 0 io=0 disk=70%
+g_attn_o rc=0 EXIT 0 io=0 disk=70%
+g_gdn_in rc=0 EXIT 0 io=0 disk=70%
+g_gdn_o rc=0 EXIT 0 io=0 disk=70%
+A5_DONE

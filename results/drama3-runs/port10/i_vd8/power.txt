@@ -1,0 +1,1 @@
+{"samples": 38, "power": {"mean": 62.9, "min": 43.0, "max": 113.0}, "board_power": {"mean": 206.4, "min": 163.0, "max": 302.0}}

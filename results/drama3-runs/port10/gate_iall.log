@@ -1,0 +1,4 @@
+wcheck i_all i_all n 8 mean match 0.908 min 0.744 clipped 0
+WC_DONE
+{"run": "/opt/ep0/port10/i_all", "base": "/opt/ep0/port6/i_qdt", "lines": 8, "mean_diff": {"0-500": -0.338, "500-2000": -0.031, "2000-4000": 0.164, "4000-8000": 0.276, "8000-12000": 0.137, "12000-16000": 0.089, "16000-22050": 0.157, "flatness": -0.0, "rms_dbfs": -0.115}, "clipped": 0, "flags": []}
+GATE_DONE

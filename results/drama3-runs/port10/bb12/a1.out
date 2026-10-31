@@ -1,0 +1,5 @@
+golden_on rc=0 EXIT 1 io=0 disk=70%
+2026-10-31 12:33:59.728 | critical |          Always | TT_THROW: Statically allocated circular buffers in program 378 clash with L1 buffers on core range [0-0 - 0-0]. L1 buffer allocated at 997120 and static circular buffer region ends at 1346688 (assert.hpp:104)
+RuntimeError: TT_THROW @ /work/tt_metal/impl/program/program.cpp:2527: tt::exception
+RuntimeError: TT_THROW @ /work/tt_metal/impl/program/program.cpp:2527: tt::exception
+A1_DONE

@@ -1,0 +1,5 @@
+start 09:34:58 io=0 disk=70% card=0
+b_short_8 EXIT 0 {"samples": 41, "power": {"mean": 57.2, "min": 43.0, "max": 75.0}, "board_power": {"mean": 199.7, "min": 157.0, "max": 241.0}}  09:43:08
+b_long_8 EXIT 0 {"samples": 118, "power": {"mean": 58.3, "min": 41.0, "max": 124.0}, "board_power": {"mean": 199.1, "min": 158.0, "max": 278.0}}  09:49:04
+io=0 disk=70%
+BASE_DONE

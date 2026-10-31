@@ -1,0 +1,41 @@
+=== chain8 start 00:47:42 io=0 disk= 69%
+=== /opt/ep0/port7/r1 start 00:47:42 io_errors=0
+{'price': (51.3, 181.7), 'model': (60.0, 199.7), 'specs': (57.7, 210.3), 'close': (60.0, 197.0), 'cold_open': (49.5, 187.5), 'server': (57.3, 202.0), 'second_opinion': (54.0, 187.2), 'fix': (50.0, 190.3)}
+SUMS_OK /opt/ep0/port7/r1
+=== /opt/ep0/port7/r1 end 00:49:49 io_errors=0 EXIT 0
+=== /opt/ep0/port7/b1 start 00:49:49 io_errors=0
+{'price': (53.8, 184.0), 'model': (51.0, 190.7), 'specs': (57.3, 175.7), 'close': (53.3, 192.3), 'cold_open': (52.0, 174.3), 'server': (49.7, 196.7), 'second_opinion': (52.7, 185.0), 'fix': (53.3, 159.3)}
+SUMS_OK /opt/ep0/port7/b1
+=== /opt/ep0/port7/b1 end 00:57:19 io_errors=0 EXIT 0
+=== /opt/ep0/port7/r2 start 00:57:19 io_errors=0
+{'price': (50.0, 180.3), 'model': (54.5, 185.2), 'specs': (57.7, 205.3), 'close': (57.5, 195.0), 'cold_open': (57.0, 207.7), 'server': (54.0, 216.0), 'second_opinion': (46.0, 175.8), 'fix': (56.0, 174.0)}
+SUMS_OK /opt/ep0/port7/r2
+=== /opt/ep0/port7/r2 end 01:06:29 io_errors=0 EXIT 0
+=== /opt/ep0/port7/b2 start 01:06:30 io_errors=0
+{'price': (57.7, 175.7), 'model': (46.6, 170.8), 'specs': (58.3, 181.0), 'close': (57.0, 194.0), 'cold_open': (56.3, 192.0), 'server': (62.7, 197.3), 'second_opinion': (57.2, 203.2), 'fix': (55.0, 179.0)}
+SUMS_OK /opt/ep0/port7/b2
+=== /opt/ep0/port7/b2 end 01:14:43 io_errors=0 EXIT 0
+=== /opt/ep0/port7/r3 start 01:14:43 io_errors=0
+{'price': (59.3, 186.7), 'model': (50.8, 186.8), 'specs': (55.0, 181.7), 'close': (57.0, 208.0), 'cold_open': (58.0, 246.0), 'server': (56.3, 211.7), 'second_opinion': (57.3, 208.0), 'fix': (60.0, 212.0)}
+SUMS_OK /opt/ep0/port7/r3
+=== /opt/ep0/port7/r3 end 01:22:09 io_errors=0 EXIT 0
+=== /opt/ep0/port7/b3 start 01:22:09 io_errors=0
+{'price': (57.5, 178.0), 'model': (53.0, 214.7), 'specs': (50.3, 204.3), 'close': (57.5, 189.5), 'cold_open': (54.0, 204.3), 'server': (55.3, 207.0), 'second_opinion': (53.0, 183.0), 'fix': (51.3, 183.3)}
+SUMS_OK /opt/ep0/port7/b3
+=== /opt/ep0/port7/b3 end 01:29:56 io_errors=0 EXIT 0
+r_def EXIT 0
+r_def 8 of 8 identical to day4b/out_v2
+r1 8 of 8 identical to i_et2
+r2 8 of 8 identical to i_et2
+r3 8 of 8 identical to i_et2
+b1 8 of 8 identical to i_bf8
+b2 8 of 8 identical to i_bf8
+b3 8 of 8 identical to i_bf8
+r1 lines 8 RTF 0.513 gen ms/frame 23.54 rtf/line 0.507-0.556 TTFA 0.462-0.491 worst_late 0.000 frames 2087 audio 96.9
+r2 lines 8 RTF 0.551 gen ms/frame 25.25 rtf/line 0.510-0.699 TTFA 0.461-1.784 worst_late 0.632 frames 2087 audio 96.9
+r3 lines 8 RTF 0.535 gen ms/frame 24.49 rtf/line 0.509-0.624 TTFA 0.452-0.528 worst_late 1.013 frames 2087 audio 96.9
+b1 lines 8 RTF 0.536 gen ms/frame 24.59 rtf/line 0.492-0.716 TTFA 0.472-1.498 worst_late 1.144 frames 2117 audio 98.3
+b2 lines 8 RTF 0.560 gen ms/frame 25.67 rtf/line 0.493-0.756 TTFA 0.449-0.497 worst_late 2.596 frames 2117 audio 98.3
+b3 lines 8 RTF 0.517 gen ms/frame 23.67 rtf/line 0.490-0.606 TTFA 0.470-0.800 worst_late 0.407 frames 2117 audio 98.3
+=== chain8 end 01:37:56 io=0 disk= 70%
+CHAIN8_DONE

@@ -1,0 +1,206 @@
+{
+ "args": {
+  "layers": 13,
+  "n": 20,
+  "gcb_kb": 512,
+  "rpb": 8,
+  "ibw": 0,
+  "page_kb": 64,
+  "req": "capture",
+  "variants": "c,a,a2,b",
+  "fid": "HiFi4",
+  "gap": "addnorm=aa,attn=naaaaaaaa,silumul=aa",
+  "gap_rep": 1,
+  "prof": "",
+  "out": "/opt/ep0/port10/prefetch/L13_cap.json"
+ },
+ "grid": [
+  11,
+  10
+ ],
+ "dram_banks": 8,
+ "prefetcher_supported": true,
+ "weight_MB_per_layer": 112.85,
+ "timing": {
+  "c_small_ops": {
+   "us_frame": 1123.9,
+   "us_layer": 86.5,
+   "GBps": 1305.4
+  },
+  "a_mm_only": {
+   "us_frame": 4062.4,
+   "us_layer": 312.5,
+   "GBps": 361.1
+  },
+  "a_with_small_ops": {
+   "us_frame": 4780.3,
+   "us_layer": 367.7,
+   "GBps": 306.9
+  },
+  "a2_mm_only": {
+   "us_frame": 4906.0,
+   "us_layer": 377.4,
+   "GBps": 299.0
+  },
+  "a2_with_small_ops": {
+   "us_frame": 5633.9,
+   "us_layer": 433.4,
+   "GBps": 260.4
+  },
+  "b_mm_only": {
+   "us_frame": 3618.8,
+   "us_layer": 278.4,
+   "GBps": 405.4
+  },
+  "b_with_small_ops": {
+   "us_frame": 3786.2,
+   "us_layer": 291.2,
+   "GBps": 387.5
+  }
+ },
+ "N_padded": {
+  "qkvg": 10240
+ },
+ "b_setup": {
+  "ring": 64,
+  "receiver_grid": [
+   8,
+   8
+  ],
+  "gcb_bytes_per_core": 524288,
+  "block_counts": {
+   "eh_h": 2,
+   "qkvg": 8,
+   "o_proj": 4,
+   "w1": 8,
+   "w3": 8,
+   "w2": 6
+  },
+  "page_bytes": {
+   "eh_h": 65536,
+   "qkvg": 43520,
+   "o_proj": 34816,
+   "w1": 49152,
+   "w3": 49152,
+   "w2": 65536
+  },
+  "per_core_N": {
+   "eh_h": 1,
+   "qkvg": 5,
+   "o_proj": 1,
+   "w1": 3,
+   "w3": 3,
+   "w2": 1
+  }
+ },
+ "check": {
+  "L0_eh_h": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_qkvg": {
+   "a_pcc_torch": 0.99997,
+   "a2_pcc_torch": 0.99997,
+   "b_pcc_torch": 0.99997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_o_proj": {
+   "a_pcc_torch": 0.999971,
+   "a2_pcc_torch": 0.999971,
+   "b_pcc_torch": 0.999971,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_w1": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_w3": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_w2": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L12_eh_h": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L12_qkvg": {
+   "a_pcc_torch": 0.99997,
+   "a2_pcc_torch": 0.99997,
+   "b_pcc_torch": 0.99997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L12_o_proj": {
+   "a_pcc_torch": 0.99997,
+   "a2_pcc_torch": 0.99997,
+   "b_pcc_torch": 0.99997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L12_w1": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L12_w3": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L12_w2": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  }
+ }
+}

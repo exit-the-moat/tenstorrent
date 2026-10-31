@@ -1,0 +1,3 @@
+wcheck b_short_8_d0 b_short_8_d0 n 32 mean match 0.920 min 0.818 clipped 0
+wcheck b_long_8_d0 b_long_8_d0 n 32 mean match 0.927 min 0.830 clipped 0
+WC_DONE

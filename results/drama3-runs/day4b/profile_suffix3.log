@@ -1,0 +1,92 @@
+2026-10-29 21:34:23.477 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-29 21:34:23.477 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-29 21:34:23.477 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-29 21:34:23.477 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-29 21:34:23.481 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-29 21:34:23.481 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-29 21:34:23.494 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-29 21:34:23.494 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-29 21:34:23.494 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-29 21:34:23.494 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-29 21:34:23.495 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-29 21:34:23.584 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-29 21:34:23.597 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-29 21:34:23.597 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-29 21:34:23.597 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-29 21:34:23.598 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-29 21:34:23.598 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-29 21:34:23.598 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-29 21:34:23.598 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-29 21:34:23.598 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-29 21:34:23.599 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-29 21:34:26.231 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-29 21:34:26.232 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-29 21:34:26.232 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-29 21:34:26.232 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-29 21:34:26.232 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-29 21:34:28.093 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-29 21:34:28.098 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-29 21:34:28.098 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-29 21:34:28.098 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-29 21:34:29.885 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-29 21:34:30.073 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-29 21:34:30.074 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-29 21:34:30.074 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-29 21:34:30.074 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 21:34:30.074 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 21:34:30.074 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+[21:34:41] paged backbone resident: DRAM 26.05 GB, built in 11s
+[21:34:45] prefix cache: 677 shared prompt rows of [684, 684, 717], split at 640
+suffix prefill (backbone + tower) 1.03
+suffix prefill (backbone + tower) 0.598
+{"layer": 0, "attn": false, "mixer_ms": 12.1, "router_ms": 0.7, "routed_ms": 5.4, "shared_ms": 0.6, "max_expert_rows": 17}
+{"layer": 1, "attn": false, "mixer_ms": 12.1, "router_ms": 0.7, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 38}
+{"layer": 2, "attn": false, "mixer_ms": 11.7, "router_ms": 0.6, "routed_ms": 5.2, "shared_ms": 0.6, "max_expert_rows": 11}
+{"layer": 3, "attn": true, "mixer_ms": 2.6, "router_ms": 0.6, "routed_ms": 6.7, "shared_ms": 0.6, "max_expert_rows": 33}
+{"layer": 4, "attn": false, "mixer_ms": 12.0, "router_ms": 0.6, "routed_ms": 5.2, "shared_ms": 0.5, "max_expert_rows": 24}
+{"layer": 5, "attn": false, "mixer_ms": 11.5, "router_ms": 0.6, "routed_ms": 5.2, "shared_ms": 0.6, "max_expert_rows": 20}
+{"layer": 6, "attn": false, "mixer_ms": 11.9, "router_ms": 0.6, "routed_ms": 5.2, "shared_ms": 0.5, "max_expert_rows": 27}
+{"layer": 7, "attn": true, "mixer_ms": 2.5, "router_ms": 0.6, "routed_ms": 5.1, "shared_ms": 0.5, "max_expert_rows": 22}
+{"layer": 8, "attn": false, "mixer_ms": 11.6, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 41}
+{"layer": 9, "attn": false, "mixer_ms": 12.5, "router_ms": 0.7, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 34}
+{"layer": 10, "attn": false, "mixer_ms": 12.3, "router_ms": 0.6, "routed_ms": 5.2, "shared_ms": 0.6, "max_expert_rows": 18}
+{"layer": 11, "attn": true, "mixer_ms": 2.6, "router_ms": 0.6, "routed_ms": 5.1, "shared_ms": 0.5, "max_expert_rows": 29}
+{"layer": 12, "attn": false, "mixer_ms": 11.7, "router_ms": 0.6, "routed_ms": 6.7, "shared_ms": 0.7, "max_expert_rows": 36}
+{"layer": 13, "attn": false, "mixer_ms": 12.2, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 34}
+{"layer": 14, "attn": false, "mixer_ms": 12.0, "router_ms": 0.6, "routed_ms": 5.2, "shared_ms": 0.5, "max_expert_rows": 28}
+{"layer": 15, "attn": true, "mixer_ms": 2.4, "router_ms": 0.6, "routed_ms": 6.7, "shared_ms": 0.5, "max_expert_rows": 43}
+{"layer": 16, "attn": false, "mixer_ms": 12.0, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 62}
+{"layer": 17, "attn": false, "mixer_ms": 11.9, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 36}
+{"layer": 18, "attn": false, "mixer_ms": 11.9, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.7, "max_expert_rows": 40}
+{"layer": 19, "attn": true, "mixer_ms": 2.4, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 34}
+{"layer": 20, "attn": false, "mixer_ms": 11.9, "router_ms": 0.6, "routed_ms": 10.1, "shared_ms": 0.5, "max_expert_rows": 72}
+{"layer": 21, "attn": false, "mixer_ms": 11.9, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.7, "max_expert_rows": 35}
+{"layer": 22, "attn": false, "mixer_ms": 12.0, "router_ms": 0.6, "routed_ms": 6.9, "shared_ms": 0.7, "max_expert_rows": 35}
+{"layer": 23, "attn": true, "mixer_ms": 2.3, "router_ms": 0.6, "routed_ms": 6.7, "shared_ms": 0.6, "max_expert_rows": 35}
+{"layer": 24, "attn": false, "mixer_ms": 12.0, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 42}
+{"layer": 25, "attn": false, "mixer_ms": 11.9, "router_ms": 0.7, "routed_ms": 6.7, "shared_ms": 0.6, "max_expert_rows": 35}
+{"layer": 26, "attn": false, "mixer_ms": 12.1, "router_ms": 0.7, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 34}
+{"layer": 27, "attn": true, "mixer_ms": 2.3, "router_ms": 0.7, "routed_ms": 5.2, "shared_ms": 0.5, "max_expert_rows": 23}
+{"layer": 28, "attn": false, "mixer_ms": 11.9, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.5, "max_expert_rows": 36}
+{"layer": 29, "attn": false, "mixer_ms": 12.2, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 40}
+{"layer": 30, "attn": false, "mixer_ms": 12.0, "router_ms": 0.6, "routed_ms": 6.8, "shared_ms": 0.7, "max_expert_rows": 38}
+{"layer": 31, "attn": true, "mixer_ms": 2.3, "router_ms": 0.7, "routed_ms": 5.2, "shared_ms": 0.6, "max_expert_rows": 24}
+{"layer": 32, "attn": false, "mixer_ms": 11.9, "router_ms": 0.7, "routed_ms": 5.1, "shared_ms": 0.5, "max_expert_rows": 22}
+{"layer": 33, "attn": false, "mixer_ms": 11.5, "router_ms": 0.6, "routed_ms": 5.2, "shared_ms": 0.6, "max_expert_rows": 23}
+{"layer": 34, "attn": false, "mixer_ms": 12.1, "router_ms": 0.7, "routed_ms": 6.8, "shared_ms": 0.6, "max_expert_rows": 40}
+{"layer": 35, "attn": true, "mixer_ms": 2.3, "router_ms": 0.7, "routed_ms": 5.1, "shared_ms": 0.5, "max_expert_rows": 22}
+{"layer": 36, "attn": false, "mixer_ms": 12.0, "router_ms": 0.6, "routed_ms": 5.2, "shared_ms": 0.6, "max_expert_rows": 23}
+{"layer": 37, "attn": false, "mixer_ms": 12.3, "router_ms": 0.7, "routed_ms": 5.2, "shared_ms": 0.5, "max_expert_rows": 26}
+{"layer": 38, "attn": false, "mixer_ms": 11.7, "router_ms": 0.6, "routed_ms": 5.2, "shared_ms": 0.5, "max_expert_rows": 30}
+{"layer": 39, "attn": true, "mixer_ms": 2.7, "router_ms": 0.6, "routed_ms": 5.1, "shared_ms": 0.5, "max_expert_rows": 26}
+TOTAL {"mixer_ms": 383.2, "router_ms": 25.1, "routed_ms": 245.8, "shared_ms": 23.1}
+DONE
+2026-10-29 21:34:55.994 | info     |    BuildKernels | JIT cache stats: 955/987 hits (96.8%) [955 cached, 498 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-29 21:34:55.994 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-29 21:34:56.057 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-29 21:34:56.057 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-29 21:34:56.091 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-29 21:34:56.091 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-29 21:34:56.091 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

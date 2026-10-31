@@ -1,0 +1,16 @@
+start 08:10:00 io=0 disk= 70%
+burst_5 EXIT 0 {"samples": 7, "power": {"mean": 61.0, "min": 44.0, "max": 82.0}, "board_power": {"mean": 199.0, "min": 163.0, "max": 246.0}} 08:11:22
+lad_5 EXIT 0 {"samples": 22, "power": {"mean": 61.0, "min": 44.0, "max": 134.0}, "board_power": {"mean": 201.0, "min": 162.0, "max": 293.0}} 08:13:10
+burst_6 EXIT 0 {"samples": 8, "power": {"mean": 62.2, "min": 44.0, "max": 101.0}, "board_power": {"mean": 202.5, "min": 163.0, "max": 217.0}} 08:14:45
+lad_6 EXIT 0 {"samples": 22, "power": {"mean": 59.1, "min": 43.0, "max": 67.0}, "board_power": {"mean": 196.5, "min": 161.0, "max": 223.0}} 08:16:35
+burst_7 EXIT 0 {"samples": 9, "power": {"mean": 58.2, "min": 45.0, "max": 71.0}, "board_power": {"mean": 206.0, "min": 159.0, "max": 270.0}} 08:18:08
+lad_7 EXIT 0 {"samples": 21, "power": {"mean": 57.6, "min": 43.0, "max": 71.0}, "board_power": {"mean": 197.0, "min": 144.0, "max": 245.0}} 08:19:57
+burst_8 EXIT 0 {"samples": 11, "power": {"mean": 59.3, "min": 44.0, "max": 65.0}, "board_power": {"mean": 205.1, "min": 163.0, "max": 231.0}} 08:21:28
+lad_8 EXIT 0 {"samples": 21, "power": {"mean": 61.0, "min": 44.0, "max": 80.0}, "board_power": {"mean": 195.6, "min": 160.0, "max": 227.0}} 08:23:21
+SMOKE_OK
+wcheck burst_5 burst_5 n 5 mean match 0.904 min 0.837 clipped 0
+wcheck burst_6 burst_6 n 6 mean match 0.925 min 0.837 clipped 0
+wcheck burst_7 burst_7 n 7 mean match 0.909 min 0.818 clipped 0
+wcheck burst_8 burst_8 n 8 mean match 0.920 min 0.818 clipped 0
+io=0 disk= 70%
+CHAIN_ST_DONE

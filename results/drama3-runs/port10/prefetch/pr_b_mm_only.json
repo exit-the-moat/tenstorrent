@@ -1,0 +1,97 @@
+{
+ "args": {
+  "layers": 1,
+  "n": 50,
+  "gcb_kb": 512,
+  "rpb": 4,
+  "ibw": 8,
+  "variants": "a2,b",
+  "fid": "HiFi4",
+  "prof": "b_mm_only",
+  "out": "/opt/ep0/port10/prefetch/pr_b_mm_only.json"
+ },
+ "grid": [
+  11,
+  10
+ ],
+ "dram_banks": 8,
+ "prefetcher_supported": true,
+ "weight_MB_per_layer": 112.85,
+ "b_setup": {
+  "ring": 32,
+  "receiver_grid": [
+   8,
+   4
+  ],
+  "gcb_bytes_per_core": 524288,
+  "block_counts": {
+   "eh_h": 8,
+   "qkvg": 8,
+   "o_proj": 16,
+   "w1": 8,
+   "w3": 8,
+   "w2": 24
+  },
+  "page_bytes": {
+   "eh_h": 32768,
+   "qkvg": 78336,
+   "o_proj": 17408,
+   "w1": 98304,
+   "w3": 98304,
+   "w2": 32768
+  },
+  "per_core_N": {
+   "eh_h": 2,
+   "qkvg": 9,
+   "o_proj": 2,
+   "w1": 6,
+   "w3": 6,
+   "w2": 2
+  }
+ },
+ "check": {
+  "L0_eh_h": {},
+  "L0_qkvg": {},
+  "L0_o_proj": {},
+  "L0_w1": {},
+  "L0_w3": {},
+  "L0_w2": {}
+ },
+ "prof": {
+  "name": "b_mm_only",
+  "span_us": 308.7,
+  "sum_kernel_us": 306.2,
+  "ops": [
+   {
+    "i": 0,
+    "start_us": 0.0,
+    "dur_us": 47.81
+   },
+   {
+    "i": 1,
+    "start_us": 48.32,
+    "dur_us": 64.89
+   },
+   {
+    "i": 2,
+    "start_us": 113.69,
+    "dur_us": 39.94
+   },
+   {
+    "i": 3,
+    "start_us": 153.97,
+    "dur_us": 41.99
+   },
+   {
+    "i": 4,
+    "start_us": 196.53,
+    "dur_us": 56.79
+   },
+   {
+    "i": 5,
+    "start_us": 253.9,
+    "dur_us": 54.76
+   }
+  ]
+ }
+}

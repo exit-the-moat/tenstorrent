@@ -1,0 +1,65 @@
+{
+ "in_proj_ibw1": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 7.4
+ },
+ "in_proj_ibw8": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 59.5
+ },
+ "in_proj_ibw16": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 119.0
+ },
+ "qkvg_ibw4": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 21.2
+ },
+ "qkvg_ibw8": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 42.5
+ },
+ "qkvg_ibw16": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 85.0
+ },
+ "o_proj_ibw16": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 17.0
+ },
+ "o_proj_ibw32": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 34.0
+ },
+ "o_proj_ibw64": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 68.0
+ }
+}

@@ -1,0 +1,8 @@
+start 03:24:36 io=0
+an_sm {'backbone_trace_ms': 11.612, 'tower_trace_ms': 7.281, 'bb_plus_tower_trace_ms': 18.891, 'gen_ms_per_frame': 24.789} EXIT 0 03:28:05
+an_sm_emm4 {'backbone_trace_ms': 11.505, 'tower_trace_ms': 7.281, 'bb_plus_tower_trace_ms': 18.788, 'gen_ms_per_frame': 24.554} EXIT 0 03:30:43
+an_sm_emm8 {'backbone_trace_ms': 11.379, 'tower_trace_ms': 7.28, 'bb_plus_tower_trace_ms': 18.661, 'gen_ms_per_frame': 24.474} EXIT 0 03:33:20
+an_sm_emm4kb32 {'backbone_trace_ms': 11.451, 'tower_trace_ms': 7.281, 'bb_plus_tower_trace_ms': 18.732, 'gen_ms_per_frame': 24.382} EXIT 0 03:35:55
+anl1_sm {'backbone_trace_ms': 11.641, 'tower_trace_ms': 7.287, 'bb_plus_tower_trace_ms': 18.929, 'gen_ms_per_frame': 24.699} EXIT 0 03:38:27
+io=0
+CHAIN3_DONE

@@ -1,0 +1,4 @@
+k_off rc=0 EXIT 0 io=0 disk=70%
+k_smp4 rc=0 EXIT 0 io=0 disk=70%
+k_both rc=0 EXIT 0 io=0 disk=70%
+k_off2 rc=0 EXIT 137 io=0 disk=70%

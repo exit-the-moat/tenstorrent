@@ -1,0 +1,5 @@
+prefetch/pr4_b_mm_only EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/pr4_a2_mm_only EXIT 0 io=0 disk=70%
+T1_DONE
+SWEEP_DONE

@@ -1,0 +1,68 @@
+[
+ {
+  "f": "/opt/ep0/v20/out_c/s09-01_s0.wav",
+  "id": "s09-01",
+  "take": "s09-01_s0",
+  "ratio": 1.0,
+  "dur": 13.188934240362812,
+  "loud": 27.245338281642024,
+  "pitch": 8.426197907294265,
+  "f0": 115.14360313315927,
+  "text": "At the end of Day 2, the card needed 0.85 seconds for every second of speech on my test lines and 0.96 over the whole narration."
+ },
+ {
+  "f": "/opt/ep0/v20/out_c/s09-01_s1.wav",
+  "id": "s09-01",
+  "take": "s09-01_s1",
+  "ratio": 1.0,
+  "dur": 14.02485260770975,
+  "loud": 28.507214704253826,
+  "pitch": 8.115219223780631,
+  "f0": 116.20573531453965,
+  "text": "At the end of Day 2, the card needed 0.85 seconds for every second of speech on my test lines and 0.96 over the whole narration."
+ },
+ {
+  "f": "/opt/ep0/v20/out_c/s09-01_s2.wav",
+  "id": "s09-01",
+  "take": "s09-01_s2",
+  "ratio": 1.0,
+  "dur": 13.606893424036281,
+  "loud": 28.403351413347384,
+  "pitch": 8.272816226809356,
+  "f0": 117.9144385026738,
+  "text": "At the end of Day 2, the card needed 0.85 seconds for every second of speech on my test lines and 0.96 over the whole narration."
+ },
+ {
+  "f": "/opt/ep0/v20/out_c/s09-02_s0.wav",
+  "id": "s09-02",
+  "take": "s09-02_s0",
+  "ratio": 1.0,
+  "dur": 13.003174603174603,
+  "loud": 30.035683246293527,
+  "pitch": 7.746083161809126,
+  "f0": 118.23056300268097,
+  "text": "Four more days of optimization later, it's 0.38 on the test lines and 0.4 over this narration, more than two times faster."
+ },
+ {
+  "f": "/opt/ep0/v20/out_c/s09-02_s1.wav",
+  "id": "s09-02",
+  "take": "s09-02_s1",
+  "ratio": 1.0,
+  "dur": 13.049614512471654,
+  "loud": 28.58836099842115,
+  "pitch": 8.284498890166141,
+  "f0": 119.67457582184517,
+  "text": "Four more days of optimization later, it's 0.38 on the test lines and 0.4 over this narration, more than two times faster."
+ },
+ {
+  "f": "/opt/ep0/v20/out_c/s09-02_s2.wav",
+  "id": "s09-02",
+  "take": "s09-02_s2",
+  "ratio": 1.0,
+  "dur": 12.399455782312925,
+  "loud": 30.458628121520636,
+  "pitch": 9.618981688658959,
+  "f0": 116.35964912280701,
+  "text": "Four more days of optimization later, it's 0.38 on the test lines and 0.4 over this narration, more than two times faster."
+ }
+]

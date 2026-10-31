@@ -1,0 +1,5 @@
+prefetch/t_cal EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/pr_long EXIT 0 io=0 disk=70%
+T1_DONE
+SWEEP_DONE

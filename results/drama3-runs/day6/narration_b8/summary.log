@@ -1,0 +1,41 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/librosa/core/intervals.py:8: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+narration_b8 s01-01           5.48s fr 118 rtf 3.07 ttfa  7.56 b1 pw 59.9 clip 0 match 0.800 | This is the sound of a $1,400 AI card not working.
+narration_b8 s01-02           4.97s fr 107 rtf 3.57 ttfa  8.85 b2 pw 59.0 clip 0 match 1.000 | I spent a whole day sure it was broken, both of them.
+narration_b8 s01-03           1.25s fr  27 rtf 5.92 ttfa  5.78 b4 pw 52.4 clip 0 match 1.000 | They weren't.
+narration_b8 s02-01           3.53s fr  76 rtf 4.58 ttfa  9.67 b3 pw 53.0 clip 0 match 0.857 | This channel is called exit the mode.
+narration_b8 s02-02           5.62s fr 121 rtf 3.05 ttfa  7.53 b1 pw 59.9 clip 0 match 0.857 | In AI, the mode is CUDA and the cloud builds that keep you inside.
+narration_b8 s02-03           6.50s fr 140 rtf 3.83 ttfa 13.00 b0 pw 60.3 clip 0 match 1.000 | I test whether you can climb out what it costs and whether the other side is actually better.
+narration_b8 s02-04           5.62s fr 121 rtf 3.38 ttfa  8.73 b2 pw 59.0 clip 0 match 0.923 | Episode 0 is about the first step, getting the card to turn on.
+narration_b8 s03-01           5.43s fr 117 rtf 3.42 ttfa  8.46 b2 pw 59.0 clip 0 match 0.800 | two 10-storen P150 cards, no Nvidia anywhere.
+narration_b8 s03-02           9.89s fr 213 rtf 3.10 ttfa 12.54 b0 pw 60.3 clip 0 match 1.000 | the plan, replace the GPUs in my home AI server and see how far these cards get with a real coding model.
+narration_b8 s03-03           3.67s fr  79 rtf 4.50 ttfa  9.46 b3 pw 53.0 clip 0 match 0.857 | That's Episode 1. First, install them.
+narration_b8 s04-01           3.11s fr  67 rtf 4.92 ttfa  9.53 b3 pw 53.0 clip 0 match 1.000 | Power on, the PSU shuts off.
+narration_b8 s04-02           4.09s fr  88 rtf 3.99 ttfa  8.95 b2 pw 59.0 clip 0 match 1.000 | Without a power cable on the card, it still shuts off.
+narration_b8 s04-03           4.13s fr  89 rtf 4.21 ttfa  9.16 b3 pw 53.0 clip 0 match 0.900 | With an old radion in the same slot, everything works.
+narration_b8 s04-04           2.51s fr  54 rtf 3.89 ttfa  5.66 b4 pw 52.4 clip 0 match 1.000 | so the card must be shorting.
+narration_b8 s04-05           2.60s fr  56 rtf 3.81 ttfa  5.72 b4 pw 52.4 clip 0 match 1.000 | That logic felt airtight.
+narration_b8 s05-01           7.85s fr 169 rtf 2.72 ttfa  7.06 b1 pw 59.9 clip 0 match 0.839 | Second Opinion, my desktop. It boots, the cards fan spin, and Windows never sees it.
+narration_b8 s05-02           4.18s fr  90 rtf 2.98 ttfa  5.45 b4 pw 52.4 clip 0 match 0.833 | Card 2 identical, two dead cards.
+narration_b8 s05-03           2.32s fr  50 rtf 4.04 ttfa  5.75 b4 pw 52.4 clip 0 match 1.000 | I wrote the return ticket.
+narration_b8 s06-01           5.34s fr 115 rtf 3.45 ttfa  8.61 b2 pw 59.0 clip 0 match 1.000 | One last try with the power supply's own cable instead of the adapter.
+narration_b8 s06-02           3.44s fr  74 rtf 4.66 ttfa  9.63 b3 pw 53.0 clip 0 match 1.000 | It boots. The card shows up healthy.
+narration_b8 s06-03           6.97s fr 150 rtf 2.86 ttfa  7.20 b1 pw 59.9 clip 0 match 0.919 | The adapter was the problem the whole time and my power supplies maker says not to use one.
+narration_b8 s06-04           4.32s fr  93 rtf 4.10 ttfa  9.41 b3 pw 53.0 clip 0 match 1.000 | My own research had said an approved adapter was fine.
+narration_b8 s06-05           5.71s fr 123 rtf 3.35 ttfa  8.67 b2 pw 59.0 clip 0 match 0.929 | Lesson 1 of this channel, read the manual of the thing you already own.
+narration_b8 s06-06           8.08s fr 174 rtf 3.40 ttfa 12.84 b0 pw 60.3 clip 0 match 0.914 | And one thing I couldn't find anywhere online, the card runs fine on PCI Express Gen 3.
+narration_b8 s06-07           2.65s fr  57 rtf 3.80 ttfa  5.59 b4 pw 52.4 clip 0 match 1.000 | My CPU can't do more.
+narration_b8 s06-08           6.32s fr 136 rtf 2.99 ttfa  7.31 b1 pw 59.9 clip 0 match 1.000 | when the model is already in memory, loading it onto the card takes x seconds.
+narration_b8 s06-09           6.73s fr 145 rtf 3.76 ttfa 12.96 b0 pw 60.3 clip 0 match 0.968 | On Gen 5, the most this card can do, it would be about x hours 4.
+narration_b8 s06-10           8.87s fr 191 rtf 3.28 ttfa 12.61 b0 pw 60.3 clip 0 match 1.000 | From my SSD it takes z seconds either way, because the SSD is the slow part, not the slot.
+narration_b8 s06-11           2.93s fr  63 rtf 4.86 ttfa  8.78 b2 pw 59.0 clip 0 match 0.778 | and once it's loaded, the difference.
+narration_b8 s08-01          10.22s fr 220 rtf 3.05 ttfa 12.66 b0 pw 60.3 clip 0 match 0.857 | The model is Fish Audio Drama, 336 billion parameters, but only about 3 billion work for each slice of sound.
+narration_b8 s08-02           3.67s fr  79 rtf 4.25 ttfa  8.91 b2 pw 59.0 clip 0 match 0.889 | Squeezed to 4 bits, it fits on one card.
+narration_b8 s08-03           5.94s fr 128 rtf 4.05 ttfa 12.72 b0 pw 60.3 clip 0 match 0.812 | Nobody had run it on 10-storrent, so clawed code and I ported it in days.
+narration_b8 s09-01           6.08s fr 131 rtf 3.04 ttfa  7.36 b1 pw 59.9 clip 0 match 1.000 | The card needs x seconds for every second of speech at y watts.
+narration_b8 s09-02           5.85s fr 126 rtf 3.00 ttfa  7.41 b1 pw 59.9 clip 0 match 0.960 | It gets Z% of words wrong against W for the original model.
+narration_b8 s09-03           7.89s fr 170 rtf 2.71 ttfa  7.26 b1 pw 59.9 clip 0 match 1.000 | And whether it sounds like me. You decide. Four clips in the description. One is really me.
+narration_b8 s10-01           8.17s fr 176 rtf 3.38 ttfa 12.78 b0 pw 60.3 clip 0 match 0.867 | Next episode both cards, one coding model and a 15,000 euro GPU to beat.
+narration_b8 s10-02           3.81s fr  82 rtf 4.41 ttfa  9.30 b3 pw 53.0 clip 0 match 0.875 | So, did we exit the mode? Not yet.
+narration_b8 s10-03           3.95s fr  85 rtf 4.32 ttfa  9.36 b3 pw 53.0 clip 0 match 1.000 | But we found the door. It was a power cable.
+{"batch_size": 8, "card_dram_gb": 29.39, "lines": 38, "batches": 5, "audio_s": 199.69, "wall_s": 102.0, "audio_per_wall": 1.958, "rtf_per_stream": [2.712, 5.922], "ttfa_s": [5.45, 13.0], "backbone_ms_per_step": 54.1, "tower_ms_per_step": 12.1, "host_ms_per_step": 23.6, "chip_power_w": [43.0, 75.0], "board_power_w": [160.0, 341.0], "whisper_match_min": 0.778, "clipped": 0}

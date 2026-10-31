@@ -1,0 +1,11 @@
+prefetch/s_lofi EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/s_ibw8 EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/s_ibw2 EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/s_g1024 EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/s_g160 EXIT 0 io=0 disk=70%
+T1_DONE
+SWEEP_DONE

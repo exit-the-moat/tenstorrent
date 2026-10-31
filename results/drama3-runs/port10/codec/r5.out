@@ -1,0 +1,5 @@
+codec/r5_prof EXIT 0 io=0 disk=70%
+T1_DONE
+codec/r5_win 2026-10-31 09:23:01.683 | warning  |           Metal | Allocating device buffers is potentially unsafe due to the existence of an active trace. These buffers may be corrupted once a trace is executed if they are not released before then. Use the trace allocation tracker to verify. (allocator.cpp:140) io=0 disk=70%
+T1_DONE
+R5_DONE

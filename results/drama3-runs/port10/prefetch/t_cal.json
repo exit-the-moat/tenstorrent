@@ -1,0 +1,147 @@
+{
+ "args": {
+  "layers": 1,
+  "n": 50,
+  "gcb_kb": 512,
+  "rpb": 4,
+  "ibw": 8,
+  "variants": "c,a,a2,b",
+  "fid": "HiFi4",
+  "gap": "addnorm=aa,attn=naaaaaaaa,silumul=aa",
+  "gap_rep": 1,
+  "prof": "",
+  "out": "/opt/ep0/port10/prefetch/t_cal.json"
+ },
+ "grid": [
+  11,
+  10
+ ],
+ "dram_banks": 8,
+ "prefetcher_supported": true,
+ "weight_MB_per_layer": 112.85,
+ "timing": {
+  "c_small_ops": {
+   "us_frame": 88.9,
+   "us_layer": 88.9,
+   "GBps": 1269.6
+  },
+  "a_mm_only": {
+   "us_frame": 318.0,
+   "us_layer": 318.0,
+   "GBps": 354.9
+  },
+  "a_with_small_ops": {
+   "us_frame": 374.9,
+   "us_layer": 374.9,
+   "GBps": 301.0
+  },
+  "a2_mm_only": {
+   "us_frame": 333.6,
+   "us_layer": 333.6,
+   "GBps": 338.3
+  },
+  "a2_with_small_ops": {
+   "us_frame": 390.3,
+   "us_layer": 390.3,
+   "GBps": 289.1
+  },
+  "b_mm_only": {
+   "us_frame": 274.4,
+   "us_layer": 274.4,
+   "GBps": 411.2
+  },
+  "b_with_small_ops": {
+   "us_frame": 328.8,
+   "us_layer": 328.8,
+   "GBps": 343.2
+  }
+ },
+ "b_setup": {
+  "ring": 32,
+  "receiver_grid": [
+   8,
+   4
+  ],
+  "gcb_bytes_per_core": 524288,
+  "block_counts": {
+   "eh_h": 8,
+   "qkvg": 8,
+   "o_proj": 16,
+   "w1": 8,
+   "w3": 8,
+   "w2": 24
+  },
+  "page_bytes": {
+   "eh_h": 32768,
+   "qkvg": 78336,
+   "o_proj": 17408,
+   "w1": 98304,
+   "w3": 98304,
+   "w2": 32768
+  },
+  "per_core_N": {
+   "eh_h": 2,
+   "qkvg": 9,
+   "o_proj": 2,
+   "w1": 6,
+   "w3": 6,
+   "w2": 2
+  }
+ },
+ "check": {
+  "L0_eh_h": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_qkvg": {
+   "a_pcc_torch": 0.99997,
+   "a2_pcc_torch": 0.99997,
+   "b_pcc_torch": 0.99997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_o_proj": {
+   "a_pcc_torch": 0.999971,
+   "a2_pcc_torch": 0.999971,
+   "b_pcc_torch": 0.999971,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_w1": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_w3": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  },
+  "L0_w2": {
+   "a_pcc_torch": 0.999997,
+   "a2_pcc_torch": 0.999997,
+   "b_pcc_torch": 0.999997,
+   "b_vs_a2_bitexact": true,
+   "b_vs_a2_maxabs": 0.0,
+   "b_vs_a_pcc": 1.0,
+   "b_vs_a_maxabs": 0.0
+  }
+ }
+}

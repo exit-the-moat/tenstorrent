@@ -1,0 +1,8 @@
+=== chain5 start 00:10:34 io=0
+tower_base EXIT 0
+tower_et EXIT 0
+i_lean EXIT 0 00:14:30
+i_et EXIT 0 00:16:39
+i_lean 0 of 8 identical to i_qdt
+=== chain5 end 00:16:42 io=0
+CHAIN5_DONE

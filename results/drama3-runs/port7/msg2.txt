@@ -1,0 +1,16 @@
+drama3 port7: lean device sampler (DRAMA3_SAMPLER_LEAN), tower e-path tables (DRAMA3_TOWER_ETABLE), frame pipe fixes
+
+- DRAMA3_SAMPLER_LEAN=1: the codebook draw in fewer programs (one keep compare, no tie-break min); with the frame
+  pipe 8/8 lines frames + wavs identical to port6/i_qdt (port7/i_lean2), RTF 0.530 -> 0.524.
+- DRAMA3_TOWER_ETABLE=1: norm_e(emb[c]) @ W_e as fp32 host tables (bf16) for every tower layer but shared 0;
+  tower check: step layer PCC min 0.99893 (base 0.99908), head PCC min 0.99427 (0.99334), head top-1 161/180
+  (155/180); 8 lines (port7/i_et2, with pipe + lean) RTF 0.516, Whisper 0.915 (i_qdt 0.908), seeds 1-5
+  close / fix 0.938 / 1.000 (same as port6 s_qd).
+- Frame pipe: the host reads the tower codes from a buffer the embed replay copies them into (the fused tower
+  trace's output is allocated after the backbone capture, so the backbone replay can overwrite it); the frame
+  that completes the first stream window is read and decoded before the backbone step is queued (TTFA).
+- tests: check_sampler_lean (eager + traced vs host draws, 200 / 50 rows, 0 mismatches), bench_tower_mlp
+  ([w3 | w1] + SwiGLU kernel: 151.8 -> 143.7 us per layer, not installed).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JA5v8QiubPz82RUkMyCToU

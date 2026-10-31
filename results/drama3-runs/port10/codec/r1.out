@@ -1,0 +1,9 @@
+codec/r1_def EXIT 0 io=0 disk=70%
+T1_DONE
+codec/r1_ch0 EXIT 0 io=0 disk=70%
+T1_DONE
+codec/r1_cpad EXIT 0 io=0 disk=70%
+T1_DONE
+codec/r1_both EXIT 0 io=0 disk=70%
+T1_DONE
+R1_DONE

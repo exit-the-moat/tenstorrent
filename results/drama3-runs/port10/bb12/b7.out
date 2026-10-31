@@ -1,0 +1,7 @@
+csm4 rc=0 EXIT 0 io=0 disk=70%
+{"n": 2000, "fused_vs_lean": 0, "fused_vs_host": 0, "lean_vs_host": 0, "onehot_bad": 0, "examples": [], "check_s": 6.5, "trace_ms_9_draws": {"lean": 1.753, "lean_codes": [530.0, 596.0, 305.0, 812.0, 493.0, 809.0, 276.0, 775.0, 684.0], "fused": 0.482, "fused_codes": [530.0, 596.0, 305.0, 812.0, 493.0, 809.0, 276.0, 775.0, 684.0], "null": 0.12, "null_codes": [-2.1149420738220215, -2.0530176162719727, 1.3261480331420898
+csm8 rc=0 EXIT 0 io=0 disk=70%
+{"n": 2000, "fused_vs_lean": 0, "fused_vs_host": 0, "lean_vs_host": 0, "onehot_bad": 0, "examples": [], "check_s": 4.2, "trace_ms_9_draws": {"lean": 1.754, "lean_codes": [266.0, 993.0, 450.0, 596.0, 331.0, 369.0, 156.0, 782.0, 260.0], "fused": 0.465, "fused_codes": [266.0, 993.0, 450.0, 596.0, 331.0, 369.0, 156.0, 782.0, 260.0], "null": 0.12, "null_codes": [1.5692143440246582, -3.1918249130249023, 4.42861795425415, 3
+csm2 rc=0 EXIT 0 io=0 disk=70%
+{"n": 2000, "fused_vs_lean": 0, "fused_vs_host": 0, "lean_vs_host": 0, "onehot_bad": 0, "examples": [], "check_s": 4.2, "trace_ms_9_draws": {"lean": 1.755, "lean_codes": [146.0, 662.0, 62.0, 877.0, 54.0, 273.0, 370.0, 731.0, 911.0], "fused": 0.517, "fused_codes": [146.0, 662.0, 62.0, 877.0, 54.0, 273.0, 370.0, 731.0, 911.0], "null": 0.12, "null_codes": [-4.015890121459961, 0.0758320689201355, 4.108616352081299, 4.510
+B7_DONE

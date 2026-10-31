@@ -1,0 +1,17 @@
+s04-01d_s0       0.714  4.3s loud 27.6dB pitch  3.7st f0  113Hz | Power on. The PSU shuts off.
+s04-01d_s1       0.714  3.8s loud 25.7dB pitch  5.1st f0  122Hz | Power on, the PSU shuts off.
+s04-04d_s0       1.000  2.5s loud 23.3dB pitch  5.4st f0  118Hz | so the card must be shorting.
+s04-04d_s1       1.000  2.8s loud 27.8dB pitch  4.8st f0  109Hz | so the card must be shorting.
+s05-02d_s0       0.667  6.4s loud 30.7dB pitch 13.9st f0  167Hz | Ha-ha-ha! Card 2. Identical. Two dead cards.
+s05-02d_s1       0.667  6.5s loud 36.7dB pitch 11.9st f0  148Hz | Ha-ha-ha! Card 2. Identical. Two dead cards.
+s05-03d_s0       0.909  2.9s loud 24.6dB pitch  3.4st f0   99Hz | I-I wrote the return ticket.
+s05-03d_s1       1.000  2.2s loud 27.6dB pitch  3.0st f0  107Hz | I wrote the return ticket.
+s06-01d_s0       1.000  6.1s loud 32.3dB pitch  7.7st f0  127Hz | One last try with the power supply's own cable instead of the adapter.
+s06-01d_s1       1.000  6.0s loud 30.9dB pitch  5.6st f0  115Hz | One last try with the power supply's own cable instead of the adapter.
+s06-02d_s0       0.778  6.0s loud 36.3dB pitch 12.2st f0  200Hz | Ha ha ha ha! It boots! The card shows up! Healthy!
+s06-02d_s1       0.824  4.8s loud 36.3dB pitch  9.1st f0  179Hz | Ha ha ha! It boots! The card shows up healthy!
+s06-03d_s0       1.000  9.8s loud 26.8dB pitch  7.8st f0  109Hz | The adapter was the problem the whole time. Of course, my power supply's maker said so, but who believes them?
+s06-03d_s1       0.950 10.0s loud 31.6dB pitch  8.6st f0  126Hz | the adapter was the problem the whole time of course my power supplies maker said so but who believes them
+s10-04d_s0       1.000  5.2s loud 26.0dB pitch  5.8st f0  111Hz | and one card is already fast enough to speak in real time.
+s10-04d_s1       1.000  5.2s loud 30.0dB pitch  7.3st f0  114Hz | and one card is already fast enough to speak in real time.
+ANA_DONE

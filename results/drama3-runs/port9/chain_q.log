@@ -1,0 +1,35 @@
+start 08:34:50 io=0 disk= 70%
+q_short_16 EXIT 1 Traceback (most recent call last):
+  File "/opt/ep0/port6/power_sum.py", line 6, in <module>
+    t = json.load(open(tp))
+                  ~~~~^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port9/q_short_16/timing.json' 08:35:51
+  q_short_16 fail: Traceback (most recent call last):
+  q_short_16 fail:     assert self.ver == 3 and B <= 8
+  q_short_16 fail: AssertionError
+q_short_12 EXIT 1 Traceback (most recent call last):
+  File "/opt/ep0/port6/power_sum.py", line 6, in <module>
+    t = json.load(open(tp))
+                  ~~~~^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port9/q_short_12/timing.json' 08:36:54
+  q_short_12 fail: Traceback (most recent call last):
+  q_short_12 fail:     assert self.ver == 3 and B <= 8
+  q_short_12 fail: AssertionError
+q_short_8 EXIT 0 {"samples": 38, "power": {"mean": 58.1, "min": 41.0, "max": 70.0}, "board_power": {"mean": 193.0, "min": 148.0, "max": 255.0}} 08:39:29
+q_long_16 EXIT 1 Traceback (most recent call last):
+  File "/opt/ep0/port6/power_sum.py", line 6, in <module>
+    t = json.load(open(tp))
+                  ~~~~^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port9/q_long_16/timing.json' 08:40:49
+  q_long_16 fail: Traceback (most recent call last):
+  q_long_16 fail:     assert self.ver == 3 and B <= 8
+  q_long_16 fail: AssertionError
+q_long_12 EXIT 1 Traceback (most recent call last):
+  File "/opt/ep0/port6/power_sum.py", line 6, in <module>
+    t = json.load(open(tp))
+                  ~~~~^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port9/q_long_12/timing.json' 08:41:48
+  q_long_12 fail: Traceback (most recent call last):
+  q_long_12 fail:     assert self.ver == 3 and B <= 8
+  q_long_12 fail: AssertionError
+aborted for card-2 install 08:42:57

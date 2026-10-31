@@ -1,0 +1,5 @@
+=== ref_v2 start 00:38:42 io_errors=0
+{'price': (66.8, 170.3), 'model': (57.2, 209.6), 'specs': (60.0, 189.0), 'close': (51.7, 184.3), 'cold_open': (57.4, 183.4), 'server': (63.0, 183.8), 'second_opinion': (55.0, 192.0), 'fix': (48.8, 191.4)}
+SUMS_OK ref_v2
+=== ref_v2 end 00:41:25 io_errors=0 EXIT 0
+ALL_RENDERS_DONE

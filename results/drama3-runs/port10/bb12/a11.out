@@ -1,0 +1,13 @@
+i_off rc=0 EXIT 0 io=0 disk=70%
+"rtf": 0.637 "rtf": 0.582 "rtf": 0.433 "rtf": 0.476 "rtf": 0.453 "rtf": 0.505 "rtf": 0.434 "rtf": 0.433 
+i_bb rc=0 EXIT 0 io=0 disk=70%
+"rtf": 0.427 "rtf": 0.421 "rtf": 0.42 "rtf": 0.457 "rtf": 0.427 "rtf": 0.425 "rtf": 0.419 "rtf": 0.424 
+i_smp rc=0 EXIT 0 io=0 disk=70%
+"rtf": 0.414 "rtf": 0.411 "rtf": 0.408 "rtf": 0.437 "rtf": 0.413 "rtf": 0.416 "rtf": 0.407 "rtf": 0.411 
+i_off2 rc=0 EXIT 0 io=0 disk=70%
+"rtf": 0.436 "rtf": 0.434 "rtf": 0.43 "rtf": 0.464 "rtf": 0.442 "rtf": 0.44 "rtf": 0.432 "rtf": 0.436 
+i_bb2 rc=0 EXIT 0 io=0 disk=70%
+"rtf": 0.441 "rtf": 0.432 "rtf": 0.471 "rtf": 0.507 "rtf": 0.427 "rtf": 0.423 "rtf": 0.417 "rtf": 0.425 
+i_smp2 rc=0 EXIT 0 io=0 disk=70%
+"rtf": 0.413 "rtf": 0.412 "rtf": 0.407 "rtf": 0.439 "rtf": 0.419 "rtf": 0.438 "rtf": 0.408 "rtf": 0.412 
+A11_DONE

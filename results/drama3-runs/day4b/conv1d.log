@@ -1,0 +1,39 @@
+2026-10-29 23:19:34.790 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-29 23:19:34.790 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-29 23:19:34.790 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-29 23:19:34.790 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-29 23:19:34.794 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-29 23:19:34.794 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-29 23:19:34.807 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-29 23:19:34.807 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-29 23:19:34.807 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-29 23:19:34.807 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-29 23:19:34.808 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-29 23:19:34.861 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-29 23:19:34.875 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-29 23:19:34.875 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-29 23:19:34.875 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-29 23:19:34.875 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-29 23:19:34.876 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-29 23:19:34.876 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-29 23:19:34.876 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-29 23:19:34.876 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-29 23:19:34.877 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-29 23:19:36.196 | warning  |              Op | Failed to find valid config with width-slicing. Attempting fallback to height-slicing. (op_slicing.cpp:233)
+2026-10-29 23:19:36.196 | critical |          Always | TT_FATAL: DRAM Auto slice could not find valid slice configuration. Tried up to 1 slices for height-slicing on output dimension 1. Available L1: 1428480 bytes. Operation requires more memory than available even with maximum slicing. (assert.hpp:104)
+{"L": 3072, "C": 768, "d": 9, "error": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/sliding_window/op_slicing/op_slicing.cpp:266: found_valid_config\ninfo:\nDRAM Auto slice could not find valid slice configuration. Tried up to 1 slices for height-slicing on output dimension 1. Available L1: 1428480 bytes. Operation requires more memory than a"}
+2026-10-29 23:19:36.766 | warning  |              Op | Failed to find valid config with width-slicing. Attempting fallback to height-slicing. (op_slicing.cpp:233)
+2026-10-29 23:19:36.766 | critical |          Always | TT_FATAL: DRAM Auto slice could not find valid slice configuration. Tried up to 1 slices for height-slicing on output dimension 1. Available L1: 1428480 bytes. Operation requires more memory than available even with maximum slicing. (assert.hpp:104)
+{"L": 24576, "C": 384, "d": 9, "error": "TT_FATAL @ /work/ttnn/cpp/ttnn/operations/sliding_window/op_slicing/op_slicing.cpp:266: found_valid_config\ninfo:\nDRAM Auto slice could not find valid slice configuration. Tried up to 1 slices for height-slicing on output dimension 1. Available L1: 1428480 bytes. Operation requires more memory than a"}
+{"L": 98304, "C": 192, "d": 9, "ms_0": 4843.1, "ms_1": 2.71, "ms_2": 2.68, "pcc": 0.99999, "gflop": 50.73}
+{"L": 196608, "C": 96, "d": 9, "ms_0": 1547.02, "ms_1": 2.23, "ms_2": 2.2, "pcc": 0.99999, "gflop": 25.37}
+{"L": 196608, "C": 96, "d": 1, "ms_0": 779.85, "ms_1": 2.2, "ms_2": 2.26, "pcc": 0.99999, "gflop": 25.37}
+DONE
+2026-10-29 23:19:46.825 | info     |    BuildKernels | JIT cache stats: 6/42 hits (14.3%) [6 cached, 65 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-29 23:19:46.825 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-29 23:19:46.828 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-29 23:19:46.828 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-29 23:19:46.864 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-29 23:19:46.864 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-29 23:19:46.864 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

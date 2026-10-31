@@ -1,0 +1,13 @@
+drama3 port7 (amendment): compact expert suffix prefill (QWEN36_GROUPED_COMPACT), HiFi2 DRAM-sharded tower candidate (DRAMA3_TOWER_DS), speaker similarity
+
+- QWEN36_GROUPED_COMPACT=1: M = 32 grouped-MoE suffix prefill over the active experts only (sparse_matmul gather
+  mode, A bucketed); prefill backbone mean 0.326 -> 0.317 s, TTFA mean 0.474 -> 0.464 s (port7/c_cmp, c_cmp2,
+  c_cmp3 vs r4-r6); prefix self-check cand PCC 0.9969 / 0.9985, top-1 same; Whisper 0.913, seeds 0.938 / 1.000.
+- DRAMA3_TOWER_DS=1 (precision candidate, HiFi2): RTF 0.515 -> 0.514, no gain; with bfp8 MLP 0.512 (worse than
+  bfp8 alone, 0.493-0.498). Not proposed.
+- Speaker similarity (resemblyzer): every candidate 0.951-0.960 vs ref_v2 (i_qdt 0.948, other base takes 0.951-0.953).
+- Defaults re-checked: --fast 8/8 identical to day4b/out_v2 (port7/r_def2), --interactive 8/8 identical to
+  port6/i_qdt (port7/i_base8). smoke OK, dmesg I/O errors 0.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JA5v8QiubPz82RUkMyCToU

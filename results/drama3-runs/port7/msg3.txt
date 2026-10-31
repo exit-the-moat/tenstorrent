@@ -1,0 +1,7 @@
+drama3 port7: HANDOFF (target not reachable at this precision: weight floor RTF 0.164; best same precision RTF 0.515-0.518, bfp8 tower MLP 0.493-0.498, TTFA 0.45-0.50 s), prefill matmul bench
+
+Repeats (port7/r4-r6, b4-b6, warm, frames identical to i_et2 / i_bf8, sha256 after sync + drop caches OK).
+--fast still bit-identical to day4b/out_v2 (port7/r_def), smoke.py OK, dmesg I/O errors 0.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JA5v8QiubPz82RUkMyCToU

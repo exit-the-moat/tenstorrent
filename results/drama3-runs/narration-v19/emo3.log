@@ -1,0 +1,9 @@
+s04-04e_s0       1.000  3.0s loud 29.4dB pitch  3.2st f0  109Hz | so the card must be shorting.
+s04-04e_s1       0.833  2.7s loud 24.9dB pitch  4.7st f0  114Hz | so the cart must be shorting.
+s05-02e_s0       0.667  6.1s loud 31.5dB pitch 15.1st f0  139Hz | Ha-ha-ha! Card 2. Identical. Two dead cards.
+s05-02e_s1       0.833  5.2s loud 34.5dB pitch 15.2st f0  139Hz | Card 2 identical two dead cards
+s06-03e_s0       0.950 10.8s loud 29.1dB pitch  7.2st f0  122Hz | The adapter was the problem the whole time. Of course, my power supplies maker said so, but who believes them?
+s06-03e_s1       0.950 10.2s loud 31.3dB pitch  6.3st f0  107Hz | The adapter was the problem the whole time. Of course, my power supplies maker said so. But who believes them?
+s06-05e_s0       0.962 11.2s loud 28.0dB pitch  6.8st f0  112Hz | Lesson 1 of this channel, read the manual, not the one for the shiny new card, the one for the boring power supply you already own.
+s06-05e_s1       0.962 11.4s loud 29.8dB pitch  8.4st f0  112Hz | Lesson 1 of this channel, read the manual, not the one for the shiny new card, the one for the boring power supply you already own.
+ANA_DONE

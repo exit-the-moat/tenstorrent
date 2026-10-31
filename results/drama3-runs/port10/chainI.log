@@ -1,0 +1,5 @@
+h24w EXIT 0 10:31:39 io=0 disk=70%
+{"run": "h24w", "B": 24, "jobs": 32, "audio_s": 385.916, "wall_s": 48.786, "audio_per_wall": 7.91, "mean_active": 14.69, "ms_step": "40.98 + 10.4 + 12.97", "rtf_decode": "1.31 / 1.97 / 2.61", "rtf": "2.40 / 2.52 / 6.16", "ttfa_admit": "1.14 / 4.02 / 9.63", "ttfa_t0": "9.63 / 9.87 / 30.80", "worst_late": "4.74 / 10.21 / 12.64", "eos": 32, "dram_gb": 31.77, "board_W": "207.4 (244.0)"}
+h16w EXIT 0 10:33:29 io=0 disk=70%
+{"run": "h16w", "B": 16, "jobs": 32, "audio_s": 392.278, "wall_s": 48.71, "audio_per_wall": 8.053, "mean_active": 13.46, "ms_step": "36.28 + 9.29 + 12.53", "rtf_decode": "1.25 / 1.65 / 2.08", "rtf": "1.84 / 2.53 / 5.93", "ttfa_admit": "0.84 / 2.09 / 6.54", "ttfa_t0": "6.54 / 11.16 / 31.83", "worst_late": "3.62 / 7.42 / 11.63", "eos": 32, "dram_gb": 30.81, "board_W": "194.6 (227.0)"}
+CHAIN_I_DONE

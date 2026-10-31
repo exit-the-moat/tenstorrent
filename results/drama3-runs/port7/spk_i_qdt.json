@@ -1,0 +1,44 @@
+{
+ "summary": {
+  "run": "/opt/ep0/port6/i_qdt",
+  "n": 8,
+  "vs_ref_mean": 0.9477,
+  "vs_ref_min": 0.938,
+  "vs_base_mean": 1.0,
+  "vs_base_min": 1.0
+ },
+ "lines": {
+  "close": {
+   "vs_ref": 0.9384103417396545,
+   "vs_base": 1.0
+  },
+  "cold_open": {
+   "vs_ref": 0.9442712068557739,
+   "vs_base": 0.9999998807907104
+  },
+  "fix": {
+   "vs_ref": 0.9569250345230103,
+   "vs_base": 1.0
+  },
+  "model": {
+   "vs_ref": 0.9380478262901306,
+   "vs_base": 1.0
+  },
+  "price": {
+   "vs_ref": 0.9509392976760864,
+   "vs_base": 1.0000001192092896
+  },
+  "second_opinion": {
+   "vs_ref": 0.9465975761413574,
+   "vs_base": 1.0
+  },
+  "server": {
+   "vs_ref": 0.9461274743080139,
+   "vs_base": 1.0
+  },
+  "specs": {
+   "vs_ref": 0.9599447846412659,
+   "vs_base": 1.0
+  }
+ }
+}

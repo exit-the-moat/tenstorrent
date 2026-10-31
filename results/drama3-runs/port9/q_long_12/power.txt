@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/opt/ep0/port6/power_sum.py", line 6, in <module>
+    t = json.load(open(tp))
+                  ~~~~^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port9/q_long_12/timing.json'

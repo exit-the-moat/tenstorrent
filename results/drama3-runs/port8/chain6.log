@@ -1,0 +1,30 @@
+start 04:06:13 io=0
+gate s8_1: wcheck s8_1 n 8 mean match 0.908 min 0.744 clipped 0
+gate s8_1: seeds {"dir": "/opt/ep0/port8/s_s8_1", "line": "close", "n": 5, "mean_match": 0.938, "frames": [144, 147, 141, 138, 144], "clipped": 0} {"dir": "/opt/ep0/port8/s_s8_1", "line": "fix", "n": 5, "mean_match": 1.0, "frames": [281, 282, 269, 275, 271], "clipped": 0} 
+gate s8_1: GATE_DONE
+gate s8b4: wcheck s8b4 n 8 mean match 0.932 min 0.837 clipped 0
+gate s8b4: seeds {"dir": "/opt/ep0/port8/s_s8b4", "line": "close", "n": 5, "mean_match": 0.938, "frames": [145, 147, 133, 138, 130], "clipped": 0} {"dir": "/opt/ep0/port8/s_s8b4", "line": "fix", "n": 5, "mean_match": 1.0, "frames": [291, 276, 290, 279, 281], "clipped": 0} 
+gate s8b4: GATE_DONE
+gate s8b4a: wcheck s8b4a n 8 mean match 0.913 min 0.727 clipped 0
+gate s8b4a: seeds {"dir": "/opt/ep0/port8/s_s8b4a", "line": "close", "n": 5, "mean_match": 0.938, "frames": [155, 143, 133, 142, 141], "clipped": 0} {"dir": "/opt/ep0/port8/s_s8b4a", "line": "fix", "n": 5, "mean_match": 1.0, "frames": [278, 276, 290, 291, 274], "clipped": 0} 
+gate s8b4a: GATE_DONE
+wcheck s8b8 s8b8 n 8 mean match 0.908 min 0.744 clipped 0
+s8_2 8 of 8 identical to s8_1
+s8_3 8 of 8 identical to s8_1
+{"run": "/opt/ep0/port6/i_qdt", "n": 8, "vs_ref_mean": 0.9477, "vs_ref_min": 0.938, "vs_base_mean": 1.0, "vs_base_min": 1.0}
+{"run": "/opt/ep0/port8/s8_1", "n": 8, "vs_ref_mean": 0.9529, "vs_ref_min": 0.9313, "vs_base_mean": 0.9658, "vs_base_min": 0.9373}
+{"run": "/opt/ep0/port8/s8b8", "n": 8, "vs_ref_mean": 0.9554, "vs_ref_min": 0.9462, "vs_base_mean": 0.9648, "vs_base_min": 0.9191}
+{"run": "/opt/ep0/port8/s8b4", "n": 8, "vs_ref_mean": 0.9552, "vs_ref_min": 0.9417, "vs_base_mean": 0.9638, "vs_base_min": 0.9351}
+{"run": "/opt/ep0/port8/s8b4a", "n": 8, "vs_ref_mean": 0.9459, "vs_ref_min": 0.9231, "vs_base_mean": 0.9632, "vs_base_min": 0.9439}
+{"run": "/opt/ep0/port8/s8_1", "base": "/opt/ep0/port6/i_qdt", "lines": 8, "mean_diff": {"0-500": -0.338, "500-2000": -0.031, "2000-4000": 0.164, "4000-8000": 0.276, "8000-12000": 0.137, "12000-16000": 0.089, "16000-22050": 0.157, "flatness": -0.0, "rms_dbfs": -0.115}, "clipped": 0, "flags": []}
+{"run": "/opt/ep0/port8/s8b8", "base": "/opt/ep0/port6/i_qdt", "lines": 8, "mean_diff": {"0-500": -0.205, "500-2000": -0.038, "2000-4000": 0.163, "4000-8000": -0.538, "8000-12000": -0.24, "12000-16000": 0.028, "16000-22050": 0.192, "flatness": -0.0, "rms_dbfs": -0.234}, "clipped": 0, "flags": []}
+{"run": "/opt/ep0/port8/s8b4", "base": "/opt/ep0/port6/i_qdt", "lines": 8, "mean_diff": {"0-500": -0.087, "500-2000": 0.071, "2000-4000": 0.285, "4000-8000": 0.133, "8000-12000": -0.211, "12000-16000": 0.039, "16000-22050": 0.038, "flatness": -0.0, "rms_dbfs": -0.187}, "clipped": 0, "flags": []}
+{"run": "/opt/ep0/port8/s8b4a", "base": "/opt/ep0/port6/i_qdt", "lines": 8, "mean_diff": {"0-500": -0.442, "500-2000": 0.269, "2000-4000": -0.433, "4000-8000": 0.348, "8000-12000": -0.544, "12000-16000": 0.392, "16000-22050": 0.504, "flatness": -0.0, "rms_dbfs": -0.578}, "clipped": 0, "flags": []}
+prof_nomath EXIT 0
+r_def 8 of 8 identical to day4b/out_v2
+i_base 8 of 8 identical to i_qdt
+st_c2 EXIT 0 {"samples": 31, "power": {"mean": 57.5, "min": 43.0, "max": 95.0}, "board_power": {"mean": 197.8, "min": 156.0, "max": 238.0}} 04:25:28
+st_c4 EXIT 0 {"samples": 41, "power": {"mean": 56.2, "min": 43.0, "max": 76.0}, "board_power": {"mean": 196.5, "min": 155.0, "max": 233.0}} 04:28:04
+SMOKE_OK
+io=0 disk= 70%
+CHAIN6_DONE

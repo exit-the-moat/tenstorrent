@@ -1,0 +1,8 @@
+2026-10-31 17:44:59.467 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-31 17:44:59.467 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+=== v20 start 18:45:00 io=0 disk=70%
+bucket 128: EXIT 0 wavs=3 18:51:38
+bucket 256: EXIT 0 wavs=6 18:53:54
+SUMS_OK
+=== v20 end 18:54:25 io=0 disk=70%
+V20_DONE

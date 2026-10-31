@@ -1,0 +1,7 @@
+io 0 20:51:21
+gen EXIT 0
+[19:52:05] paged backbone resident: DRAM 26.36 GB, built in 14s
+[19:52:33] warm-up + trace capture 10.4s, card DRAM 29.12 GB
+{"samples": 25, "power": {"mean": 54.8, "min": 44.0, "max": 65.0}, "board_power": {"mean": 197.0, "min": 157.0, "max": 255.0}}
+io 0 20:53:37
+DONE

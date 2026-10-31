@@ -1,0 +1,62 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[03:09:14] codec (multi-stream latents) ready in 5s
+2026-10-30 03:09:14.187 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-30 03:09:14.187 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-30 03:09:14.188 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-30 03:09:14.188 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-30 03:09:14.191 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-30 03:09:14.191 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-30 03:09:14.204 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-30 03:09:14.204 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-30 03:09:14.204 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-30 03:09:14.204 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-30 03:09:14.205 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-30 03:09:14.289 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-30 03:09:14.303 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-30 03:09:14.303 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-30 03:09:14.303 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-30 03:09:14.303 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-30 03:09:14.304 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-30 03:09:14.304 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-30 03:09:14.304 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-30 03:09:14.304 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-30 03:09:14.304 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-30 03:09:15.640 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-30 03:09:15.640 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-30 03:09:15.640 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-30 03:09:15.640 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-30 03:09:15.640 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-30 03:09:17.525 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-30 03:09:17.530 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-30 03:09:17.530 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-30 03:09:17.530 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-30 03:09:19.333 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-30 03:09:19.526 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-30 03:09:19.526 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-30 03:09:19.526 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-30 03:09:19.526 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-30 03:09:19.527 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-30 03:09:19.527 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+[03:09:30] paged backbone resident: DRAM 26.14 GB, built in 11s
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[03:09:44] card codec ready in 9s
+[03:09:44] prefix cache: 677 shared prompt rows of [684, 684, 704], split at 640
+2026-10-30 03:09:51.336 | warning  |           Metal | Allocating device buffers is potentially unsafe due to the existence of an active trace. These buffers may be corrupted once a trace is executed if they are not released before then. Use the trace allocation tracker to verify. (allocator.cpp:140)
+[03:09:51] batch 2: traces captured in 1.6s, card DRAM 28.53 GB
+[03:09:56]   step 50: backbone 27.3 ms, tower 10.0 ms, host 8.0 ms per step (2 streams)
+[03:09:59]   step 100: backbone 27.3 ms, tower 10.0 ms, host 7.6 ms per step (2 streams)
+[03:10:01] close_s0: {"prompt_rows": 704, "prefix_rows": 640, "batch": 2, "batch_jobs": 2, "voice_prefill_s": 1.698, "prefill_s": 2.443, "gen_s": 9.576, "frames": 140, "steps": 141, "gdn_load_s": 0.027, "decode_backbone_s": 3.832, "tower_steps_s": 1.411, "host_s": 1.11, "backbone_ms_per_step": 27.175, "tower_ms_per_step": 10.01, "host_ms_per_step": 7.873, "overlap_host_ms_per_step": 2.011, "ras_redraws": 2, "first_frame_s": 3.234, "stopped_by_eos": true, "ttfa_s": 3.73, "audio_done_s": 9.728, "card_codec_s": 0.449, "codec_tail_s": 0.154, "batch_wall_s": 9.73, "save_s": 0.125, "audio_s": 6.502, "compute_s": 9.728, "rtf": 1.496, "batch_index": 0, "start_epoch": 1793329791.413, "end_epoch": 1793329801.143}
+[03:10:01] close_s1: {"prompt_rows": 704, "prefix_rows": 640, "batch": 2, "batch_jobs": 2, "prefill_s": 0.75, "gen_s": 9.353, "frames": 136, "steps": 141, "gdn_load_s": 0.027, "decode_backbone_s": 3.832, "tower_steps_s": 1.411, "host_s": 1.11, "backbone_ms_per_step": 27.175, "tower_ms_per_step": 10.01, "host_ms_per_step": 7.873, "overlap_host_ms_per_step": 2.011, "ras_redraws": 2, "first_frame_s": 3.234, "stopped_by_eos": true, "ttfa_s": 3.804, "audio_done_s": 9.537, "card_codec_s": 0.317, "codec_tail_s": 0.154, "batch_wall_s": 9.731, "save_s": 0.013, "audio_s": 6.316, "compute_s": 9.537, "rtf": 1.51, "batch_index": 0, "start_epoch": 1793329791.413, "end_epoch": 1793329801.144}
+[03:10:01] batch 0: 2 streams, 12.8 s audio in 9.7 s wall = 1.32 audio s per s
+DONE
+2026-10-30 03:10:03.488 | info     |    BuildKernels | JIT cache stats: 2042/2042 hits (100.0%) [2042 cached, 2725 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-30 03:10:03.488 | info     |    BuildKernels | JIT telemetry: 33 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-30 03:10:03.508 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-30 03:10:03.508 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-30 03:10:03.600 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-30 03:10:03.600 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-30 03:10:03.600 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

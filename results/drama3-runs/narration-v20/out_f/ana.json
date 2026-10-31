@@ -1,0 +1,35 @@
+[
+ {
+  "f": "/opt/ep0/v20/out_f/s10-01_s0.wav",
+  "id": "s10-01",
+  "take": "s10-01_s0",
+  "ratio": 1.0,
+  "dur": 7.987664399092971,
+  "loud": 27.832554020475456,
+  "pitch": 9.877466854991049,
+  "f0": 121.15384615384616,
+  "text": "Next episode both cards one coding model and a 21,000 euro GPU to beat."
+ },
+ {
+  "f": "/opt/ep0/v20/out_f/s10-01_s1.wav",
+  "id": "s10-01",
+  "take": "s10-01_s1",
+  "ratio": 1.0,
+  "dur": 8.080544217687075,
+  "loud": 28.117290634989132,
+  "pitch": 9.573127135959938,
+  "f0": 127.8271609087243,
+  "text": "Next episode both cards, one coding model and a 21,000 euro GPU to beat."
+ },
+ {
+  "f": "/opt/ep0/v20/out_f/s10-01_s2.wav",
+  "id": "s10-01",
+  "take": "s10-01_s2",
+  "ratio": 1.0,
+  "dur": 8.126984126984127,
+  "loud": 27.362584468776564,
+  "pitch": 8.769630512054473,
+  "f0": 116.05263157894737,
+  "text": "Next episode both cards one coding model and a 21,000 euro GPU to beat"
+ }
+]

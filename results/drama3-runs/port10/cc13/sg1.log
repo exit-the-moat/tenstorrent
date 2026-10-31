@@ -1,0 +1,51 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+2026-10-31 13:14:39.614 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-31 13:14:39.614 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-31 13:14:39.614 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-31 13:14:39.614 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-31 13:14:39.618 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-31 13:14:39.619 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-31 13:14:39.632 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[1] and remote chip ids {} (cluster.cpp:172)
+2026-10-31 13:14:39.632 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-31 13:14:39.632 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-31 13:14:39.632 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-31 13:14:39.633 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-31 13:14:39.706 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-31 13:14:39.725 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-31 13:14:39.725 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-31 13:14:39.725 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x4) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-31 13:14:39.725 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-31 13:14:39.726 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-31 13:14:39.726 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-31 13:14:39.726 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-31 13:14:39.726 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-31 13:14:39.726 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+default 32 {"trace_ms": 12.19, "trace_dev_ms": 11.99, "trace_equal_eager": true}
+default 64 {"trace_ms": 23.71, "trace_dev_ms": 23.13, "trace_equal_eager": true}
+default 96 {"trace_ms": 34.14, "trace_dev_ms": 33.42, "trace_equal_eager": true}
+full 32 {"first_call_s": 13.9, "equal": true, "max_abs": 0.0, "snr_db": 326.56, "trace_equal": true, "trace_ms": 12.65, "trace_dev_ms": 12.46, "vs_default": 1.04}
+full 64 {"first_call_s": 11.5, "equal": true, "max_abs": 0.0, "snr_db": 330.73, "trace_equal": true, "trace_ms": 24.01, "trace_dev_ms": 23.62, "vs_default": 1.02}
+full 96 {"first_call_s": 8.1, "equal": true, "max_abs": 0.0, "snr_db": 332.36, "trace_equal": true, "trace_ms": 34.98, "trace_dev_ms": 34.34, "vs_default": 1.03}
+2026-10-31 13:15:21.018 | critical |          Always | TT_FATAL: Programs must be executed on a single sub-device (assert.hpp:104)
+8 32 FAILS: conv1d L=128 cin=1024 cout=1536 k=7 d=1 layout=TensorMemoryLayout.BLOCK_SHARDED: TT_FATAL @ /work/tt_metal/distributed/fd_mesh_command_queue.cpp:414: sub_device_ids.size() == 1
+info:
+Programs must be executed on a single sub-device
+backtrace:
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../..
+2026-10-31 13:15:21.859 | critical |          Always | TT_FATAL: Programs must be executed on a single sub-device (assert.hpp:104)
+8 64 FAILS: conv1d L=256 cin=1024 cout=1536 k=7 d=1 layout=TensorMemoryLayout.BLOCK_SHARDED: TT_FATAL @ /work/tt_metal/distributed/fd_mesh_command_queue.cpp:414: sub_device_ids.size() == 1
+info:
+Programs must be executed on a single sub-device
+backtrace:
+ --- /opt/ep0/tt-metal/ttnn/ttnn/../..
+2026-10-31 13:15:22.969 | critical |          Always | TT_THROW: Statically allocated circular buffers on core range [0-0 - 9-1] grow to 1627200 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+8 96 FAILS: conv1d L=384 cin=1024 cout=1536 k=7 d=1 layout=TensorMemoryLayout.BLOCK_SHARDED: TT_THROW @ /work/tt_metal/impl/program/program.cpp:2470: tt::exception
+info:
+Statically allocated circular buffers on core range [0-0 - 9-1] grow to 1627200 B which is beyond max L1 size of 1572864 B
+
+2026-10-31 13:15:25.810 | critical |          Always | TT_THROW: Statically allocated circular buffers on core range [0-0 - 7-1] grow to 3687488 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+est8 32 FAILS: conv1d L=1024 cin=768 cout=768 k=7 d=1 layout=TensorMemoryLayout.BLOCK_SHARDED: TT_THROW @ /work/tt_metal/impl/program/program.cpp:2470: tt::exception
+info:
+Statically allocated circular buffers on core range [0-0 - 7-1] grow to 3687488 B which is beyond max L1 size of 1572864 B
+

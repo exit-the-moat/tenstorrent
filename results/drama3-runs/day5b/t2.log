@@ -1,0 +1,29 @@
+=== t2 start 04:07:53 io=0
+EXIT 0
+IDENTICAL    frames 138 vs 138  /opt/ep0/day5b/b1/close.frames.pt  /opt/ep0/day4b/out_v2/close.frames.pt
+IDENTICAL    frames 266 vs 266  /opt/ep0/day5b/b1/fix.frames.pt  /opt/ep0/day4b/out_v2/fix.frames.pt
+EXIT 0
+prefix 1     frames 140 vs 138  /opt/ep0/day5b/b2/close_s0.frames.pt  /opt/ep0/day4b/out_v2/close.frames.pt
+prefix 1     frames 136 vs 131  /opt/ep0/day5b/b2/close_s1.frames.pt  /opt/ep0/day4b/seeds_final/close_s1.frames.pt
+EXIT 0
+prefix 0     frames 138 vs 131  /opt/ep0/day5b/b4/close_s1.frames.pt  /opt/ep0/day4b/seeds_final/close_s1.frames.pt
+prefix 0     frames 141 vs 138  /opt/ep0/day5b/b4/close_s2.frames.pt  /opt/ep0/day4b/seeds_final/close_s2.frames.pt
+prefix 0     frames 145 vs 137  /opt/ep0/day5b/b4/close_s3.frames.pt  /opt/ep0/day4b/seeds_final/close_s3.frames.pt
+prefix 0     frames 140 vs 137  /opt/ep0/day5b/b4/close_s4.frames.pt  /opt/ep0/day4b/seeds_final/close_s4.frames.pt
+{"id": "close_s0", "frames": 140, "word_match_ratio": 0.938, "rms_dbfs": -21.0, "clipped_samples": 0, "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"id": "close_s1", "frames": 136, "word_match_ratio": 0.938, "rms_dbfs": -20.7, "clipped_samples": 0, "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"dir": "/opt/ep0/day5b/b2", "line": "close", "n": 2, "mean_match": 0.938, "frames": [140, 136], "clipped": 0}
+{"id": "close_s1", "frames": 138, "word_match_ratio": 0.938, "rms_dbfs": -22.8, "clipped_samples": 0, "transcript": "So did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"id": "close_s2", "frames": 141, "word_match_ratio": 0.938, "rms_dbfs": -20.2, "clipped_samples": 0, "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"id": "close_s3", "frames": 145, "word_match_ratio": 0.938, "rms_dbfs": -21.4, "clipped_samples": 0, "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"id": "close_s4", "frames": 140, "word_match_ratio": 0.938, "rms_dbfs": -20.6, "clipped_samples": 0, "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."}
+{"dir": "/opt/ep0/day5b/b4", "line": "close", "n": 4, "mean_match": 0.938, "frames": [138, 141, 145, 140], "clipped": 0}
+b1.log:[03:08:38] batch 1: traces captured in 1.3s, card DRAM 28.38 GB
+b1.log:[03:08:51] batch 0: 1 streams, 12.4 s audio in 12.1 s wall = 1.02 audio s per s
+b1.log:[03:08:57] batch 1: 1 streams, 6.4 s audio in 5.9 s wall = 1.09 audio s per s
+b2.log:[03:09:51] batch 2: traces captured in 1.6s, card DRAM 28.53 GB
+b2.log:[03:10:01] batch 0: 2 streams, 12.8 s audio in 9.7 s wall = 1.32 audio s per s
+b4.log:[03:10:56] batch 4: traces captured in 2.9s, card DRAM 28.81 GB
+b4.log:[03:11:10] batch 0: 4 streams, 26.2 s audio in 13.8 s wall = 1.89 audio s per s
+=== t2 end 04:12:23 io=0
+T2_DONE

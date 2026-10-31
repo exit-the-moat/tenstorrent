@@ -1,0 +1,29 @@
+{
+ "close": {
+  "prompt_rows": 704,
+  "prefix_rows": 640,
+  "prefill_bucket": 128,
+  "voice_prefill_s": 1.955,
+  "prefill_s": 0.703,
+  "codec_decode_s": 7.364,
+  "codec_tail_s": 3.276,
+  "ttfa_s": 3.503,
+  "frames": 138,
+  "decode_backbone_s": 6.238,
+  "tower_steps_s": 2.312,
+  "embed_s": 0.146,
+  "backbone_ms_per_frame": 45.203,
+  "tower_ms_per_frame": 16.633,
+  "ras_redraws": 2,
+  "device_sampling": true,
+  "sampler_mismatch": null,
+  "first_frame_s": 2.674,
+  "stopped_by_eos": true,
+  "gen_s": 11.367,
+  "compute_s": 14.718,
+  "audio_s": 6.409,
+  "rtf": 2.296,
+  "start_epoch": 1793312797.691,
+  "end_epoch": 1793312812.41
+ }
+}

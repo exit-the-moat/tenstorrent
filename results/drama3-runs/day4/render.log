@@ -1,0 +1,9 @@
+=== ref_long start 21:51:29 io_errors=0
+{'price': (54.1, 178.9), 'model': (48.7, 178.5), 'specs': (54.3, 177.2), 'close': (56.3, 187.3), 'cold_open': (52.1, 190.1), 'server': (49.3, 176.3), 'second_opinion': (51.9, 189.0), 'fix': (62.1, 181.8)}
+SUMS_OK ref_long
+=== ref_long end 21:55:25 io_errors=0 EXIT 0
+=== ref_v2 start 21:55:25 io_errors=0
+{'price': (51.9, 182.9), 'model': (53.3, 173.6), 'specs': (54.2, 191.7), 'close': (48.7, 181.0), 'cold_open': (52.4, 177.2), 'server': (52.5, 176.1), 'second_opinion': (52.4, 183.3), 'fix': (54.1, 180.6)}
+SUMS_OK ref_v2
+=== ref_v2 end 22:03:40 io_errors=0 EXIT 0
+ALL_RENDERS_DONE

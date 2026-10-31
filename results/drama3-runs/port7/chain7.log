@@ -1,0 +1,9 @@
+=== chain7 start 00:34:36 io=0
+prefill_mm EXIT 0 00:41:28
+tower_et_bf8 EXIT 0
+i_bf8 EXIT 0 00:44:31
+gate: wcheck i_bf8 n 8 mean match 0.920 min 0.837 clipped 0
+gate: seeds {"dir": "/opt/ep0/port7/s_i_bf8", "line": "close", "n": 5, "mean_match": 0.938, "frames": [139, 143, 139, 138, 139], "clipped": 0} {"dir": "/opt/ep0/port7/s_i_bf8", "line": "fix", "n": 5, "mean_match": 1.0, "frames": [273, 265, 275, 279, 276], "clipped": 0} 
+gate: GATE_DONE
+=== chain7 end 00:47:35 io=0
+CHAIN7_DONE

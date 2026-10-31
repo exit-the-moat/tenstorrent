@@ -1,0 +1,90 @@
+[
+ {
+  "file": "/opt/ep0/day3/out/price.wav",
+  "seconds": 11.19,
+  "sample_rate": 44100,
+  "peak": 0.9142,
+  "rms_dbfs": -17.7,
+  "clipped_samples": 0,
+  "transcript": "One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storned P150 cards cost about a fifth of that.",
+  "word_match_ratio": 0.75,
+  "id": "price"
+ },
+ {
+  "file": "/opt/ep0/day3/out/model.wav",
+  "seconds": 12.54,
+  "sample_rate": 44100,
+  "peak": 0.8053,
+  "rms_dbfs": -17.9,
+  "clipped_samples": 0,
+  "transcript": "The model is Quen 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the 10-storned cards.",
+  "word_match_ratio": 0.51,
+  "id": "model"
+ },
+ {
+  "file": "/opt/ep0/day3/out/specs.wav",
+  "seconds": 13.51,
+  "sample_rate": 44100,
+  "peak": 0.7714,
+  "rms_dbfs": -18.3,
+  "clipped_samples": 0,
+  "transcript": "Each card has 120 106 cores and 4 QSFP DD ports. Speculative decoding with Dflash 2 gives us 87 tokens per second.",
+  "word_match_ratio": 0.528,
+  "id": "specs"
+ },
+ {
+  "file": "/opt/ep0/day3/out/close.wav",
+  "seconds": 5.94,
+  "sample_rate": 44100,
+  "peak": 0.8302,
+  "rms_dbfs": -17.1,
+  "clipped_samples": 0,
+  "transcript": "So, did we exit the moat? Not yet. But the climb is shorter than I thought.",
+  "word_match_ratio": 1.0,
+  "id": "close"
+ },
+ {
+  "file": "/opt/ep0/day3/out/cold_open.wav",
+  "seconds": 11.42,
+  "sample_rate": 44100,
+  "peak": 0.8815,
+  "rms_dbfs": -16.6,
+  "clipped_samples": 0,
+  "transcript": "This is the sound of a $1,400 AI card not working. I spent a whole day sure it was broken. Both of them. They weren't.",
+  "word_match_ratio": 0.906,
+  "id": "cold_open"
+ },
+ {
+  "file": "/opt/ep0/day3/out/server.wav",
+  "seconds": 11.89,
+  "sample_rate": 44100,
+  "peak": 0.894,
+  "rms_dbfs": -16.6,
+  "clipped_samples": 0,
+  "transcript": "Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works.",
+  "word_match_ratio": 1.0,
+  "id": "server"
+ },
+ {
+  "file": "/opt/ep0/day3/out/second_opinion.wav",
+  "seconds": 14.54,
+  "sample_rate": 44100,
+  "peak": 0.8531,
+  "rms_dbfs": -17.2,
+  "clipped_samples": 0,
+  "transcript": "Second opinion. My desktop. It boots, the card's fans spin, and Windows never sees it. Card 2. Identical. Two dead cards. I wrote the return ticket.",
+  "word_match_ratio": 0.962,
+  "id": "second_opinion"
+ },
+ {
+  "file": "/opt/ep0/day3/out/fix.wav",
+  "seconds": 11.8,
+  "sample_rate": 44100,
+  "peak": 0.842,
+  "rms_dbfs": -16.6,
+  "clipped_samples": 0,
+  "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up. Healthy. The adapter was the problem the whole time.",
+  "word_match_ratio": 1.0,
+  "id": "fix"
+ }
+]

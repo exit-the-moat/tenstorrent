@@ -1,0 +1,53 @@
+{
+ "layer": 0,
+ "8": {
+  "ms": {
+   "ttnn": 0.8634,
+   "fused": 0.7812,
+   "dedup": 0.4754
+  },
+  "ttnn": {
+   "pcc_vs_solo_min": 0.999952,
+   "maxdiff_vs_solo": 0.09375,
+   "finite": true
+  },
+  "fused": {
+   "pcc_vs_solo_min": 0.999968,
+   "maxdiff_vs_solo": 0.15625,
+   "finite": true
+  },
+  "dedup": {
+   "pcc_vs_solo_min": 0.999968,
+   "maxdiff_vs_solo": 0.15625,
+   "finite": true
+  },
+  "fused_vs_ttnn_pcc_min": 0.999952,
+  "dedup_vs_fused_pcc_min": 1.0,
+  "dedup_vs_fused_maxdiff": 0.0
+ },
+ "16": {
+  "ms": {
+   "ttnn": 1.5196,
+   "fused": 1.4516,
+   "dedup": 0.7512
+  },
+  "ttnn": {
+   "pcc_vs_solo_min": 0.99994,
+   "maxdiff_vs_solo": 0.28125,
+   "finite": true
+  },
+  "fused": {
+   "pcc_vs_solo_min": 0.999935,
+   "maxdiff_vs_solo": 0.21875,
+   "finite": true
+  },
+  "dedup": {
+   "pcc_vs_solo_min": 0.999935,
+   "maxdiff_vs_solo": 0.21875,
+   "finite": true
+  },
+  "fused_vs_ttnn_pcc_min": 0.999949,
+  "dedup_vs_fused_pcc_min": 1.0,
+  "dedup_vs_fused_maxdiff": 0.0
+ }
+}

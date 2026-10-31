@@ -1,0 +1,7 @@
+=== chain11 start 02:14:47 io=0
+prefix_compact EXIT 0
+prefix_base EXIT 0
+c_cmp EXIT 0 02:18:51
+r5 lines 8 RTF 0.515 gen ms/frame 23.59 rtf/line 0.508-0.560 TTFA 0.469-0.496 worst_late 0.000 frames 2087 audio 96.9
+c_cmp lines 8 RTF 0.512 gen ms/frame 23.47 rtf/line 0.505-0.544 TTFA 0.430-0.477 worst_late 0.000 frames 2083 audio 96.7
+CHAIN11_DONE

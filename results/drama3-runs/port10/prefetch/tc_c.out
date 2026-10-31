@@ -1,0 +1,5 @@
+prefetch/tc_c_off EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/tc_c_on EXIT 1 io=0 disk=70%
+T1_DONE
+TC_DONE

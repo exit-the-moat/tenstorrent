@@ -1,0 +1,75 @@
+2026-10-31 12:29:11.598 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-31 12:29:11.598 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-31 12:29:11.598 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-31 12:29:11.598 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-31 12:29:11.602 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-31 12:29:11.602 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-31 12:29:11.615 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[1] and remote chip ids {} (cluster.cpp:172)
+2026-10-31 12:29:11.615 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-31 12:29:11.615 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-31 12:29:11.615 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-31 12:29:11.616 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-31 12:29:11.667 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-31 12:29:11.680 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-31 12:29:11.680 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-31 12:29:11.680 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x4) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-31 12:29:11.680 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-31 12:29:11.681 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-31 12:29:11.681 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-31 12:29:11.681 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-31 12:29:11.681 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-31 12:29:11.681 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-31 12:29:11.835 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-31 12:29:11.835 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-31 12:29:11.835 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-31 12:29:11.835 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-31 12:29:11.835 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-31 12:29:13.704 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-31 12:29:13.709 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-31 12:29:13.709 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-31 12:29:13.709 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-31 12:29:15.427 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-31 12:29:15.609 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-31 12:29:15.610 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-31 12:29:15.610 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-31 12:29:15.610 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-31 12:29:15.610 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-31 12:29:15.610 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+[12:29:31] fused GDN decode on 30 layers
+[12:29:31] fused router top-k on 40 layers
+[12:29:33] fused attention pre-SDPA on 10 backbone layers
+[12:29:33] fused MoE combine on 40 layers
+[12:29:33] paged backbone resident: DRAM 26.36 GB, built in 18s
+2026-10-31 12:29:48.796 | info     |           Metal | ShmResourceTracker: removed orphaned shm '/tt_device_141176418608352_memory' (shm_resource_tracker.cpp:282)
+tower prefetch: {'matmuls': 78, 'gcb_kb': 512, 'configs': {'eh_h': {'K': 2048, 'N': 2048, 'ibw': 64, 'per_core_N': 1, 'page_kb': 128.0}, 'qkvg': {'K': 2048, 'N': 10240, 'ibw': 16, 'per_core_N': 5, 'page_kb': 85.0}, 'o_proj': {'K': 4096, 'N': 2048, 'ibw': 64, 'per_core_N': 1, 'page_kb': 68.0}, 'w1': {'K': 2048, 'N': 6144, 'ibw': 32, 'per_core_N': 3, 'page_kb': 102.0}, 'w3': {'K': 2048, 'N': 6144, 'ibw': 32, 'per_core_N': 3, 'page_kb': 102.0}, 'w2': {'K': 6144, 'N': 2048, 'ibw': 96, 'per_core_N': 1, 'page_kb': 102.0}}, 'dram_gb': 1.036}
+[12:29:48] device tower built in 15.2s, +2.548 GB DRAM (total 28.91)
+2026-10-31 12:29:49.185 | INFO     | models.demos.blackhole.qwen36.tt.gdn.fused_chunk:chunk_gated_delta_rule_fused_adapter:107 - [GDN] fused chunk_gated_delta_rule active: program_config=None (the op picks fused/phased by its cost model), chunk_size=32, flat_qkv=True, input q/k/v dtype=DataType.BFLOAT16/DataType.BFLOAT16/DataType.BFLOAT16
+Traceback (most recent call last):
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/tower_prefetch.py", line 138, in frame
+    yield
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/tower_device.py", line 654, in step
+    return self._step(*a, **k)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/tower_device.py", line 678, in _step
+    y = layer(h, e, self.cos_buf, self.sin_buf, pos=self.pos_buf, pre_a=ta)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/tower_device.py", line 203, in __call__
+    return self._call_addnorm(h, e, cos, sin, pos, pre_a)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/tower_device.py", line 269, in _call_addnorm
+    att = self.attn.forward(xi, cos, sin, position_tensor=pos, page_table=self.page_table)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/attn_fused_decode.py", line 329, in forward
+    return _o(x, cos, sin, position_tensor=position_tensor, page_table=page_table, chunk_page_table=chunk_page_table,
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/attention/gated_attention.py", line 69, in forward
+    return decode_forward(
+  File "/opt/ep0/tt-metal/models/demos/blackhole/qwen36/tt/attention/decode.py", line 26, in decode_forward
+    output, _, _ = gated_attention_forward_ttnn(
+  File "/opt/ep0/tt-metal/models/experimental/gated_attention_gated_deltanet/tt/ttnn_gated_attention.py", line 607, in gated_attention_forward_ttnn
+    attn_output = ttnn.linear(attn_output, o_proj_weight, compute_kernel_config=ckc, memory_config=memory_config)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/tower_prefetch.py", line 176, in linear
+    return pf._run(m, _fn, args[0], kw)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tt/tower_prefetch.py", line 156, in _run
+    raise RuntimeError(f"tower prefetch out of order at {self.pos}: {m.name}, expected {want}")
+RuntimeError: tower prefetch out of order at 1: o_proj, expected qkvg
+tower prefetch: frame failed, the stream is out of step
+tower prefetch: not stopping the prefetcher (stream out of step)
+2026-10-31 12:29:55.247 | warning  |           Metal | Tensor prefetcher was active at MeshDevice close; auto-stopping. Call tt::tt_metal::experimental::StopTensorPrefetcher before close to avoid this. (mesh_device.cpp:1092)
+EXIT 137

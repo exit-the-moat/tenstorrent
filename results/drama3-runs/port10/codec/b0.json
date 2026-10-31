@@ -1,0 +1,1455 @@
+{
+ "init_s": 12.1,
+ "32": {
+  "quant_ms": 10.05,
+  "decode_dev_total_ms": 54.53,
+  "decoder_body_ms": 38.45,
+  "ms_per_frame": 1.704,
+  "profile": [
+   [
+    "[res]",
+    49.32,
+    132
+   ],
+   [
+    "[conv]",
+    7.66,
+    7
+   ],
+   [
+    "[trans]",
+    7.61,
+    28
+   ],
+   [
+    "conv1d k=7 cin=1024 cout=1536 L=128 d=1",
+    5.33,
+    1
+   ],
+   [
+    "[readback to_torch]",
+    4.55,
+    1
+   ],
+   [
+    "addcmul [1, 65536, 96] DataType.FLOAT32",
+    3.27,
+    7
+   ],
+   [
+    "addcmul [1, 32768, 192] DataType.FLOAT32",
+    3.06,
+    7
+   ],
+   [
+    "multiply [1, 65536, 96] DataType.FLOAT32",
+    2.94,
+    7
+   ],
+   [
+    "[snake]",
+    2.92,
+    10
+   ],
+   [
+    "conv1d k=7 cin=192 cout=192 L=32768 d=9",
+    2.75,
+    1
+   ],
+   [
+    "multiply [1, 32768, 192] DataType.FLOAT32",
+    2.61,
+    7
+   ],
+   [
+    "conv1d k=7 cin=192 cout=192 L=32768 d=3",
+    2.56,
+    1
+   ],
+   [
+    "conv1d k=7 cin=192 cout=192 L=32768 d=1",
+    2.51,
+    1
+   ],
+   [
+    "addcmul [1, 8192, 384] DataType.FLOAT32",
+    2.04,
+    7
+   ],
+   [
+    "conv1d k=7 cin=384 cout=384 L=8192 d=3",
+    2.04,
+    1
+   ],
+   [
+    "conv1d k=7 cin=384 cout=384 L=8192 d=1",
+    2.04,
+    1
+   ],
+   [
+    "multiply [1, 8192, 384] DataType.FLOAT32",
+    1.96,
+    7
+   ],
+   [
+    "conv1d k=7 cin=384 cout=384 L=8192 d=9",
+    1.88,
+    1
+   ],
+   [
+    "multiply [1, 1024, 768] DataType.FLOAT32",
+    1.52,
+    7
+   ],
+   [
+    "typecast [1, 32768, 192] DataType.FLOAT32",
+    1.42,
+    7
+   ],
+   [
+    "conv1d k=7 cin=96 cout=96 L=65536 d=9",
+    1.38,
+    1
+   ],
+   [
+    "conv1d k=7 cin=96 cout=96 L=65536 d=1",
+    1.37,
+    1
+   ],
+   [
+    "conv1d k=7 cin=96 cout=96 L=65536 d=3",
+    1.34,
+    1
+   ],
+   [
+    "conv1d k=7 cin=96 cout=32 L=65536 d=1",
+    1.28,
+    1
+   ],
+   [
+    "conv1d k=2 cin=384 cout=768 L=8192 d=1",
+    1.26,
+    1
+   ],
+   [
+    "addcmul [1, 1024, 768] DataType.FLOAT32",
+    1.25,
+    7
+   ],
+   [
+    "typecast [1, 65536, 96] DataType.FLOAT32",
+    1.18,
+    7
+   ],
+   [
+    "add [1, 32768, 192] DataType.FLOAT32",
+    1.1,
+    3
+   ],
+   [
+    "add [1, 65536, 96] DataType.FLOAT32",
+    1.02,
+    3
+   ],
+   [
+    "linear [1, 32768, 192]x[192, 192]",
+    0.96,
+    3
+   ],
+   [
+    "linear [1, 65536, 96]x[96, 96]",
+    0.94,
+    3
+   ],
+   [
+    "typecast [1, 8192, 384] DataType.FLOAT32",
+    0.9,
+    7
+   ],
+   [
+    "conv1d k=2 cin=1536 cout=6144 L=128 d=1",
+    0.77,
+    1
+   ],
+   [
+    "add [1, 8192, 384] DataType.FLOAT32",
+    0.77,
+    3
+   ],
+   [
+    "conv1d k=2 cin=192 cout=192 L=32768 d=1",
+    0.75,
+    1
+   ],
+   [
+    "linear [1, 8192, 384]x[384, 384]",
+    0.74,
+    3
+   ],
+   [
+    "conv1d k=2 cin=768 cout=3072 L=1024 d=1",
+    0.73,
+    1
+   ],
+   [
+    "conv1d k=7 cin=768 cout=768 L=1024 d=1",
+    0.71,
+    1
+   ],
+   [
+    "typecast [1, 1024, 768] DataType.FLOAT32",
+    0.69,
+    7
+   ],
+   [
+    "conv1d k=7 cin=768 cout=768 L=1024 d=9",
+    0.67,
+    1
+   ],
+   [
+    "conv1d k=7 cin=768 cout=768 L=1024 d=3",
+    0.67,
+    1
+   ],
+   [
+    "add [1, 1024, 768] DataType.FLOAT32",
+    0.53,
+    3
+   ],
+   [
+    "reshape [1, 1, 134, 1536] DataType.FLOAT32",
+    0.52,
+    1
+   ],
+   [
+    "linear [1, 1024, 768]x[768, 768]",
+    0.5,
+    3
+   ],
+   [
+    "to_layout [1, 32768, 192] DataType.FLOAT32",
+    0.47,
+    2
+   ],
+   [
+    "slice [1, 32769, 192] DataType.FLOAT32",
+    0.35,
+    1
+   ],
+   [
+    "slice [1, 32774, 192] DataType.FLOAT32",
+    0.31,
+    1
+   ],
+   [
+    "multiply [1, 128, 1536] DataType.FLOAT32",
+    0.29,
+    1
+   ],
+   [
+    "to_layout [1, 65536, 96] DataType.FLOAT32",
+    0.27,
+    1
+   ],
+   [
+    "slice [1, 32786, 192] DataType.FLOAT32",
+    0.26,
+    1
+   ],
+   [
+    "slice [1, 8193, 768] DataType.FLOAT32",
+    0.26,
+    1
+   ],
+   [
+    "slice [1, 65590, 96] DataType.FLOAT32",
+    0.24,
+    1
+   ],
+   [
+    "slice [1, 65542, 96] DataType.FLOAT32",
+    0.24,
+    1
+   ],
+   [
+    "addcmul [1, 128, 1536] DataType.FLOAT32",
+    0.24,
+    1
+   ],
+   [
+    "slice [1, 65554, 96] DataType.FLOAT32",
+    0.23,
+    1
+   ],
+   [
+    "slice [1, 32822, 192] DataType.FLOAT32",
+    0.23,
+    1
+   ],
+   [
+    "slice [1, 8210, 384] DataType.FLOAT32",
+    0.22,
+    1
+   ],
+   [
+    "to_layout [1, 8192, 768] DataType.FLOAT32",
+    0.22,
+    1
+   ],
+   [
+    "slice [1, 1025, 3072] DataType.FLOAT32",
+    0.21,
+    1
+   ],
+   [
+    "reshape [1, 8192, 768] DataType.FLOAT32",
+    0.2,
+    1
+   ],
+   [
+    "reshape [1, 32768, 192] DataType.FLOAT32",
+    0.2,
+    1
+   ],
+   [
+    "slice [1, 8198, 384] DataType.FLOAT32",
+    0.2,
+    1
+   ],
+   [
+    "slice [1, 134, 1536] DataType.FLOAT32",
+    0.19,
+    1
+   ],
+   [
+    "slice [1, 8246, 384] DataType.FLOAT32",
+    0.18,
+    1
+   ],
+   [
+    "to_layout [1, 1024, 3072] DataType.FLOAT32",
+    0.18,
+    1
+   ],
+   [
+    "reshape [1, 1024, 3072] DataType.FLOAT32",
+    0.17,
+    1
+   ],
+   [
+    "to_layout [1, 8192, 384] DataType.FLOAT32",
+    0.16,
+    1
+   ],
+   [
+    "slice [1, 1042, 768] DataType.FLOAT32",
+    0.16,
+    1
+   ],
+   [
+    "tanh [1, 65536, 32] DataType.FLOAT32",
+    0.14,
+    1
+   ],
+   [
+    "[tanh]",
+    0.14,
+    1
+   ],
+   [
+    "slice [1, 65542, 32] DataType.FLOAT32",
+    0.14,
+    1
+   ],
+   [
+    "reshape [1, 1, 32769, 192] DataType.FLOAT32",
+    0.14,
+    1
+   ],
+   [
+    "slice [1, 1030, 768] DataType.FLOAT32",
+    0.14,
+    1
+   ],
+   [
+    "slice [1, 129, 6144] DataType.FLOAT32",
+    0.13,
+    1
+   ],
+   [
+    "slice [1, 1078, 768] DataType.FLOAT32",
+    0.12,
+    1
+   ],
+   [
+    "to_layout [1, 128, 6144] DataType.FLOAT32",
+    0.12,
+    1
+   ],
+   [
+    "reshape [1, 128, 6144] DataType.FLOAT32",
+    0.11,
+    1
+   ],
+   [
+    "to_layout [1, 1024, 768] DataType.FLOAT32",
+    0.1,
+    1
+   ],
+   [
+    "typecast [1, 128, 1536] DataType.FLOAT32",
+    0.09,
+    1
+   ],
+   [
+    "reshape [1, 1, 8198, 384] DataType.FLOAT32",
+    0.08,
+    1
+   ],
+   [
+    "reshape [1, 1, 129, 6144] DataType.FLOAT32",
+    0.07,
+    1
+   ],
+   [
+    "reshape [1, 1, 8210, 384] DataType.FLOAT32",
+    0.07,
+    1
+   ],
+   [
+    "reshape [1, 1, 32774, 192] DataType.FLOAT32",
+    0.06,
+    1
+   ],
+   [
+    "reshape [1, 1, 8193, 768] DataType.FLOAT32",
+    0.05,
+    1
+   ],
+   [
+    "reshape [1, 1, 32786, 192] DataType.FLOAT32",
+    0.05,
+    1
+   ],
+   [
+    "reshape [1, 1, 8246, 384] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 32822, 192] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 1025, 3072] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 1030, 768] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 1078, 768] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 65542, 96] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 65542, 32] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 1042, 768] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 65554, 96] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 65590, 96] DataType.FLOAT32",
+    0.04,
+    1
+   ]
+  ],
+  "profile_synced_total_ms": 67.7
+ },
+ "64": {
+  "quant_ms": 4.84,
+  "decode_dev_total_ms": 57.62,
+  "decoder_body_ms": 47.41,
+  "ms_per_frame": 0.9,
+  "profile": [
+   [
+    "[res]",
+    64.47,
+    132
+   ],
+   [
+    "[readback to_torch]",
+    9.37,
+    1
+   ],
+   [
+    "[trans]",
+    8.09,
+    28
+   ],
+   [
+    "addcmul [1, 131072, 96] DataType.FLOAT32",
+    5.47,
+    7
+   ],
+   [
+    "multiply [1, 131072, 96] DataType.FLOAT32",
+    4.62,
+    7
+   ],
+   [
+    "addcmul [1, 65536, 192] DataType.FLOAT32",
+    4.41,
+    7
+   ],
+   [
+    "[snake]",
+    3.86,
+    10
+   ],
+   [
+    "conv1d k=7 cin=192 cout=192 L=65536 d=1",
+    3.68,
+    1
+   ],
+   [
+    "multiply [1, 65536, 192] DataType.FLOAT32",
+    3.53,
+    7
+   ],
+   [
+    "conv1d k=7 cin=192 cout=192 L=65536 d=3",
+    3.48,
+    1
+   ],
+   [
+    "conv1d k=7 cin=192 cout=192 L=65536 d=9",
+    3.41,
+    1
+   ],
+   [
+    "[conv]",
+    3.26,
+    7
+   ],
+   [
+    "addcmul [1, 16384, 384] DataType.FLOAT32",
+    2.6,
+    7
+   ],
+   [
+    "conv1d k=7 cin=384 cout=384 L=16384 d=9",
+    2.42,
+    1
+   ],
+   [
+    "conv1d k=7 cin=384 cout=384 L=16384 d=3",
+    2.21,
+    1
+   ],
+   [
+    "multiply [1, 16384, 384] DataType.FLOAT32",
+    2.2,
+    7
+   ],
+   [
+    "conv1d k=7 cin=384 cout=384 L=16384 d=1",
+    2.16,
+    1
+   ],
+   [
+    "conv1d k=7 cin=96 cout=96 L=131072 d=9",
+    2.03,
+    1
+   ],
+   [
+    "conv1d k=7 cin=96 cout=96 L=131072 d=1",
+    1.95,
+    1
+   ],
+   [
+    "conv1d k=7 cin=96 cout=96 L=131072 d=3",
+    1.95,
+    1
+   ],
+   [
+    "conv1d k=7 cin=96 cout=32 L=131072 d=1",
+    1.9,
+    1
+   ],
+   [
+    "typecast [1, 65536, 192] DataType.FLOAT32",
+    1.75,
+    7
+   ],
+   [
+    "typecast [1, 131072, 96] DataType.FLOAT32",
+    1.74,
+    7
+   ],
+   [
+    "linear [1, 65536, 192]x[192, 192]",
+    1.51,
+    3
+   ],
+   [
+    "linear [1, 131072, 96]x[96, 96]",
+    1.49,
+    3
+   ],
+   [
+    "add [1, 131072, 96] DataType.FLOAT32",
+    1.47,
+    3
+   ],
+   [
+    "add [1, 65536, 192] DataType.FLOAT32",
+    1.46,
+    3
+   ],
+   [
+    "conv1d k=2 cin=384 cout=768 L=16384 d=1",
+    1.19,
+    1
+   ],
+   [
+    "typecast [1, 16384, 384] DataType.FLOAT32",
+    1.15,
+    7
+   ],
+   [
+    "addcmul [1, 2048, 768] DataType.FLOAT32",
+    1.14,
+    7
+   ],
+   [
+    "multiply [1, 2048, 768] DataType.FLOAT32",
+    1.11,
+    7
+   ],
+   [
+    "conv1d k=7 cin=768 cout=768 L=2048 d=1",
+    0.93,
+    1
+   ],
+   [
+    "conv1d k=7 cin=768 cout=768 L=2048 d=3",
+    0.93,
+    1
+   ],
+   [
+    "conv1d k=7 cin=768 cout=768 L=2048 d=9",
+    0.92,
+    1
+   ],
+   [
+    "conv1d k=2 cin=192 cout=192 L=65536 d=1",
+    0.9,
+    1
+   ],
+   [
+    "add [1, 16384, 384] DataType.FLOAT32",
+    0.89,
+    3
+   ],
+   [
+    "linear [1, 16384, 384]x[384, 384]",
+    0.89,
+    3
+   ],
+   [
+    "conv1d k=7 cin=1024 cout=1536 L=256 d=1",
+    0.75,
+    1
+   ],
+   [
+    "to_layout [1, 65536, 192] DataType.FLOAT32",
+    0.64,
+    2
+   ],
+   [
+    "conv1d k=2 cin=1536 cout=6144 L=256 d=1",
+    0.63,
+    1
+   ],
+   [
+    "conv1d k=2 cin=768 cout=3072 L=2048 d=1",
+    0.63,
+    1
+   ],
+   [
+    "typecast [1, 2048, 768] DataType.FLOAT32",
+    0.61,
+    7
+   ],
+   [
+    "add [1, 2048, 768] DataType.FLOAT32",
+    0.51,
+    3
+   ],
+   [
+    "linear [1, 2048, 768]x[768, 768]",
+    0.49,
+    3
+   ],
+   [
+    "to_layout [1, 131072, 96] DataType.FLOAT32",
+    0.43,
+    1
+   ],
+   [
+    "slice [1, 131126, 96] DataType.FLOAT32",
+    0.36,
+    1
+   ],
+   [
+    "slice [1, 65542, 192] DataType.FLOAT32",
+    0.35,
+    1
+   ],
+   [
+    "slice [1, 131078, 96] DataType.FLOAT32",
+    0.35,
+    1
+   ],
+   [
+    "slice [1, 65537, 192] DataType.FLOAT32",
+    0.35,
+    1
+   ],
+   [
+    "slice [1, 65590, 192] DataType.FLOAT32",
+    0.35,
+    1
+   ],
+   [
+    "slice [1, 65554, 192] DataType.FLOAT32",
+    0.35,
+    1
+   ],
+   [
+    "slice [1, 16385, 768] DataType.FLOAT32",
+    0.35,
+    1
+   ],
+   [
+    "slice [1, 131090, 96] DataType.FLOAT32",
+    0.34,
+    1
+   ],
+   [
+    "to_layout [1, 16384, 768] DataType.FLOAT32",
+    0.33,
+    1
+   ],
+   [
+    "reshape [1, 16384, 768] DataType.FLOAT32",
+    0.32,
+    1
+   ],
+   [
+    "reshape [1, 65536, 192] DataType.FLOAT32",
+    0.32,
+    1
+   ],
+   [
+    "slice [1, 16438, 384] DataType.FLOAT32",
+    0.23,
+    1
+   ],
+   [
+    "slice [1, 2049, 3072] DataType.FLOAT32",
+    0.22,
+    1
+   ],
+   [
+    "slice [1, 16390, 384] DataType.FLOAT32",
+    0.22,
+    1
+   ],
+   [
+    "slice [1, 16402, 384] DataType.FLOAT32",
+    0.22,
+    1
+   ],
+   [
+    "to_layout [1, 2048, 3072] DataType.FLOAT32",
+    0.2,
+    1
+   ],
+   [
+    "reshape [1, 2048, 3072] DataType.FLOAT32",
+    0.2,
+    1
+   ],
+   [
+    "to_layout [1, 16384, 384] DataType.FLOAT32",
+    0.19,
+    1
+   ],
+   [
+    "tanh [1, 131072, 32] DataType.FLOAT32",
+    0.18,
+    1
+   ],
+   [
+    "[tanh]",
+    0.18,
+    1
+   ],
+   [
+    "slice [1, 131078, 32] DataType.FLOAT32",
+    0.18,
+    1
+   ],
+   [
+    "multiply [1, 256, 1536] DataType.FLOAT32",
+    0.17,
+    1
+   ],
+   [
+    "addcmul [1, 256, 1536] DataType.FLOAT32",
+    0.15,
+    1
+   ],
+   [
+    "slice [1, 2054, 768] DataType.FLOAT32",
+    0.13,
+    1
+   ],
+   [
+    "to_layout [1, 256, 6144] DataType.FLOAT32",
+    0.13,
+    1
+   ],
+   [
+    "to_layout [1, 2048, 768] DataType.FLOAT32",
+    0.12,
+    1
+   ],
+   [
+    "slice [1, 2066, 768] DataType.FLOAT32",
+    0.12,
+    1
+   ],
+   [
+    "slice [1, 2102, 768] DataType.FLOAT32",
+    0.12,
+    1
+   ],
+   [
+    "slice [1, 257, 6144] DataType.FLOAT32",
+    0.12,
+    1
+   ],
+   [
+    "slice [1, 262, 1536] DataType.FLOAT32",
+    0.11,
+    1
+   ],
+   [
+    "reshape [1, 256, 6144] DataType.FLOAT32",
+    0.1,
+    1
+   ],
+   [
+    "typecast [1, 256, 1536] DataType.FLOAT32",
+    0.08,
+    1
+   ],
+   [
+    "reshape [1, 1, 131126, 96] DataType.FLOAT32",
+    0.07,
+    1
+   ],
+   [
+    "reshape [1, 1, 262, 1536] DataType.FLOAT32",
+    0.05,
+    1
+   ],
+   [
+    "reshape [1, 1, 131090, 96] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 16438, 384] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 16385, 768] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 65554, 192] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 131078, 96] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 65537, 192] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 65590, 192] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 131078, 32] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 2102, 768] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 16390, 384] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 65542, 192] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 2049, 3072] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 16402, 384] DataType.FLOAT32",
+    0.03,
+    1
+   ],
+   [
+    "reshape [1, 1, 2054, 768] DataType.FLOAT32",
+    0.03,
+    1
+   ],
+   [
+    "reshape [1, 1, 2066, 768] DataType.FLOAT32",
+    0.03,
+    1
+   ],
+   [
+    "reshape [1, 1, 257, 6144] DataType.FLOAT32",
+    0.03,
+    1
+   ]
+  ],
+  "profile_synced_total_ms": 79.9
+ },
+ "96": {
+  "quant_ms": 5.82,
+  "decode_dev_total_ms": 84.63,
+  "decoder_body_ms": 81.85,
+  "ms_per_frame": 0.882,
+  "profile": [
+   [
+    "[res]",
+    141.4,
+    132
+   ],
+   [
+    "[readback to_torch]",
+    18.45,
+    1
+   ],
+   [
+    "[trans]",
+    15.66,
+    28
+   ],
+   [
+    "[conv]",
+    12.75,
+    7
+   ],
+   [
+    "conv1d k=7 cin=192 cout=192 L=98304 d=1",
+    10.44,
+    1
+   ],
+   [
+    "addcmul [1, 196608, 96] DataType.FLOAT32",
+    9.34,
+    7
+   ],
+   [
+    "multiply [1, 196608, 96] DataType.FLOAT32",
+    8.75,
+    7
+   ],
+   [
+    "conv1d k=7 cin=96 cout=32 L=196608 d=1",
+    8.73,
+    1
+   ],
+   [
+    "conv1d k=7 cin=384 cout=384 L=24576 d=1",
+    8.66,
+    1
+   ],
+   [
+    "multiply [1, 98304, 192] DataType.FLOAT32",
+    8.65,
+    7
+   ],
+   [
+    "conv1d k=7 cin=384 cout=384 L=24576 d=3",
+    7.93,
+    1
+   ],
+   [
+    "conv1d k=7 cin=192 cout=192 L=98304 d=3",
+    7.54,
+    1
+   ],
+   [
+    "addcmul [1, 98304, 192] DataType.FLOAT32",
+    7.02,
+    7
+   ],
+   [
+    "conv1d k=7 cin=96 cout=96 L=196608 d=3",
+    6.94,
+    1
+   ],
+   [
+    "[snake]",
+    6.77,
+    10
+   ],
+   [
+    "conv1d k=7 cin=192 cout=192 L=98304 d=9",
+    5.92,
+    1
+   ],
+   [
+    "addcmul [1, 3072, 768] DataType.FLOAT32",
+    5.43,
+    7
+   ],
+   [
+    "addcmul [1, 24576, 384] DataType.FLOAT32",
+    5.32,
+    7
+   ],
+   [
+    "conv1d k=7 cin=96 cout=96 L=196608 d=1",
+    5.28,
+    1
+   ],
+   [
+    "conv1d k=7 cin=384 cout=384 L=24576 d=9",
+    5.06,
+    1
+   ],
+   [
+    "multiply [1, 24576, 384] DataType.FLOAT32",
+    4.95,
+    7
+   ],
+   [
+    "conv1d k=7 cin=96 cout=96 L=196608 d=9",
+    3.91,
+    1
+   ],
+   [
+    "typecast [1, 196608, 96] DataType.FLOAT32",
+    2.94,
+    7
+   ],
+   [
+    "conv1d k=7 cin=768 cout=768 L=3072 d=9",
+    2.83,
+    1
+   ],
+   [
+    "typecast [1, 98304, 192] DataType.FLOAT32",
+    2.66,
+    7
+   ],
+   [
+    "add [1, 196608, 96] DataType.FLOAT32",
+    2.33,
+    3
+   ],
+   [
+    "conv1d k=2 cin=384 cout=768 L=24576 d=1",
+    2.29,
+    1
+   ],
+   [
+    "linear [1, 98304, 192]x[192, 192]",
+    2.24,
+    3
+   ],
+   [
+    "add [1, 98304, 192] DataType.FLOAT32",
+    2.22,
+    3
+   ],
+   [
+    "linear [1, 196608, 96]x[96, 96]",
+    2.18,
+    3
+   ],
+   [
+    "conv1d k=2 cin=192 cout=192 L=98304 d=1",
+    1.87,
+    1
+   ],
+   [
+    "multiply [1, 3072, 768] DataType.FLOAT32",
+    1.82,
+    7
+   ],
+   [
+    "typecast [1, 24576, 384] DataType.FLOAT32",
+    1.66,
+    7
+   ],
+   [
+    "add [1, 24576, 384] DataType.FLOAT32",
+    1.45,
+    3
+   ],
+   [
+    "conv1d k=2 cin=768 cout=3072 L=3072 d=1",
+    1.42,
+    1
+   ],
+   [
+    "conv1d k=7 cin=1024 cout=1536 L=384 d=1",
+    1.3,
+    1
+   ],
+   [
+    "linear [1, 24576, 384]x[384, 384]",
+    1.28,
+    3
+   ],
+   [
+    "conv1d k=7 cin=768 cout=768 L=3072 d=1",
+    1.22,
+    1
+   ],
+   [
+    "conv1d k=2 cin=1536 cout=6144 L=384 d=1",
+    1.2,
+    1
+   ],
+   [
+    "conv1d k=7 cin=768 cout=768 L=3072 d=3",
+    1.19,
+    1
+   ],
+   [
+    "slice [1, 390, 1536] DataType.FLOAT32",
+    1.1,
+    1
+   ],
+   [
+    "to_layout [1, 98304, 192] DataType.FLOAT32",
+    1.05,
+    2
+   ],
+   [
+    "slice [1, 24577, 768] DataType.FLOAT32",
+    1.02,
+    1
+   ],
+   [
+    "slice [1, 196614, 96] DataType.FLOAT32",
+    1.01,
+    1
+   ],
+   [
+    "reshape [1, 1, 196626, 96] DataType.FLOAT32",
+    1.01,
+    1
+   ],
+   [
+    "reshape [1, 1, 196614, 96] DataType.FLOAT32",
+    0.99,
+    1
+   ],
+   [
+    "multiply [1, 384, 1536] DataType.FLOAT32",
+    0.99,
+    1
+   ],
+   [
+    "linear [1, 3072, 768]x[768, 768]",
+    0.9,
+    3
+   ],
+   [
+    "add [1, 3072, 768] DataType.FLOAT32",
+    0.89,
+    3
+   ],
+   [
+    "reshape [1, 24576, 768] DataType.FLOAT32",
+    0.87,
+    1
+   ],
+   [
+    "to_layout [1, 24576, 768] DataType.FLOAT32",
+    0.86,
+    1
+   ],
+   [
+    "typecast [1, 3072, 768] DataType.FLOAT32",
+    0.82,
+    7
+   ],
+   [
+    "slice [1, 196614, 32] DataType.FLOAT32",
+    0.8,
+    1
+   ],
+   [
+    "to_layout [1, 196608, 96] DataType.FLOAT32",
+    0.64,
+    1
+   ],
+   [
+    "slice [1, 196626, 96] DataType.FLOAT32",
+    0.58,
+    1
+   ],
+   [
+    "slice [1, 98358, 192] DataType.FLOAT32",
+    0.55,
+    1
+   ],
+   [
+    "slice [1, 98322, 192] DataType.FLOAT32",
+    0.54,
+    1
+   ],
+   [
+    "slice [1, 98305, 192] DataType.FLOAT32",
+    0.53,
+    1
+   ],
+   [
+    "slice [1, 98310, 192] DataType.FLOAT32",
+    0.51,
+    1
+   ],
+   [
+    "slice [1, 196662, 96] DataType.FLOAT32",
+    0.48,
+    1
+   ],
+   [
+    "slice [1, 24594, 384] DataType.FLOAT32",
+    0.47,
+    1
+   ],
+   [
+    "reshape [1, 98304, 192] DataType.FLOAT32",
+    0.45,
+    1
+   ],
+   [
+    "slice [1, 24582, 384] DataType.FLOAT32",
+    0.42,
+    1
+   ],
+   [
+    "reshape [1, 1, 196614, 32] DataType.FLOAT32",
+    0.4,
+    1
+   ],
+   [
+    "reshape [1, 1, 24577, 768] DataType.FLOAT32",
+    0.4,
+    1
+   ],
+   [
+    "tanh [1, 196608, 32] DataType.FLOAT32",
+    0.39,
+    1
+   ],
+   [
+    "[tanh]",
+    0.39,
+    1
+   ],
+   [
+    "slice [1, 3073, 3072] DataType.FLOAT32",
+    0.37,
+    1
+   ],
+   [
+    "to_layout [1, 3072, 3072] DataType.FLOAT32",
+    0.36,
+    1
+   ],
+   [
+    "slice [1, 24630, 384] DataType.FLOAT32",
+    0.32,
+    1
+   ],
+   [
+    "addcmul [1, 384, 1536] DataType.FLOAT32",
+    0.32,
+    1
+   ],
+   [
+    "reshape [1, 3072, 3072] DataType.FLOAT32",
+    0.31,
+    1
+   ],
+   [
+    "to_layout [1, 24576, 384] DataType.FLOAT32",
+    0.27,
+    1
+   ],
+   [
+    "reshape [1, 1, 24594, 384] DataType.FLOAT32",
+    0.24,
+    1
+   ],
+   [
+    "slice [1, 385, 6144] DataType.FLOAT32",
+    0.19,
+    1
+   ],
+   [
+    "reshape [1, 1, 24582, 384] DataType.FLOAT32",
+    0.19,
+    1
+   ],
+   [
+    "typecast [1, 384, 1536] DataType.FLOAT32",
+    0.18,
+    1
+   ],
+   [
+    "to_layout [1, 384, 6144] DataType.FLOAT32",
+    0.16,
+    1
+   ],
+   [
+    "slice [1, 3090, 768] DataType.FLOAT32",
+    0.15,
+    1
+   ],
+   [
+    "slice [1, 3078, 768] DataType.FLOAT32",
+    0.15,
+    1
+   ],
+   [
+    "reshape [1, 384, 6144] DataType.FLOAT32",
+    0.15,
+    1
+   ],
+   [
+    "slice [1, 3126, 768] DataType.FLOAT32",
+    0.15,
+    1
+   ],
+   [
+    "to_layout [1, 3072, 768] DataType.FLOAT32",
+    0.14,
+    1
+   ],
+   [
+    "reshape [1, 1, 390, 1536] DataType.FLOAT32",
+    0.09,
+    1
+   ],
+   [
+    "reshape [1, 1, 98310, 192] DataType.FLOAT32",
+    0.08,
+    1
+   ],
+   [
+    "reshape [1, 1, 98322, 192] DataType.FLOAT32",
+    0.08,
+    1
+   ],
+   [
+    "reshape [1, 1, 24630, 384] DataType.FLOAT32",
+    0.06,
+    1
+   ],
+   [
+    "reshape [1, 1, 3073, 3072] DataType.FLOAT32",
+    0.06,
+    1
+   ],
+   [
+    "reshape [1, 1, 98305, 192] DataType.FLOAT32",
+    0.06,
+    1
+   ],
+   [
+    "reshape [1, 1, 385, 6144] DataType.FLOAT32",
+    0.05,
+    1
+   ],
+   [
+    "reshape [1, 1, 98358, 192] DataType.FLOAT32",
+    0.05,
+    1
+   ],
+   [
+    "reshape [1, 1, 196662, 96] DataType.FLOAT32",
+    0.05,
+    1
+   ],
+   [
+    "reshape [1, 1, 3126, 768] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 3090, 768] DataType.FLOAT32",
+    0.04,
+    1
+   ],
+   [
+    "reshape [1, 1, 3078, 768] DataType.FLOAT32",
+    0.04,
+    1
+   ]
+  ],
+  "profile_synced_total_ms": 177.0
+ }
+}

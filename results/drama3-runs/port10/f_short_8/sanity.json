@@ -1,0 +1,194 @@
+[
+ {
+  "id": "close_r0",
+  "match": 0.938,
+  "clipped": 0,
+  "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought."
+ },
+ {
+  "id": "close_r1",
+  "match": 0.938,
+  "clipped": 0,
+  "transcript": "So did we exit the mode? Not yet, but the climb is shorter than I thought."
+ },
+ {
+  "id": "close_r2",
+  "match": 0.938,
+  "clipped": 0,
+  "transcript": "So did we exit the mode? Not yet, but the climb is shorter than I thought."
+ },
+ {
+  "id": "close_r3",
+  "match": 0.938,
+  "clipped": 0,
+  "transcript": "So did we exit the mode? Not yet, but the climb is shorter than I thought."
+ },
+ {
+  "id": "cold_open_r0",
+  "match": 0.943,
+  "clipped": 0,
+  "transcript": "This is the sound of a $1400 AI card not working. I spent a whole day sure it was broken. Both of them. They weren't."
+ },
+ {
+  "id": "cold_open_r1",
+  "match": 0.943,
+  "clipped": 0,
+  "transcript": "This is the sound of a $1400 AI card not working. I spent a whole day sure it was broken. Both of them. They weren't."
+ },
+ {
+  "id": "cold_open_r2",
+  "match": 0.943,
+  "clipped": 0,
+  "transcript": "This is the sound of a $1400 AI card not working. I spent a whole day sure it was broken. Both of them. They weren't."
+ },
+ {
+  "id": "cold_open_r3",
+  "match": 0.943,
+  "clipped": 0,
+  "transcript": "This is the sound of a $1400 AI card not working. I spent a whole day sure it was broken. Both of them. They weren't."
+ },
+ {
+  "id": "fix_r0",
+  "match": 1.0,
+  "clipped": 0,
+  "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time."
+ },
+ {
+  "id": "fix_r1",
+  "match": 1.0,
+  "clipped": 0,
+  "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time."
+ },
+ {
+  "id": "fix_r2",
+  "match": 1.0,
+  "clipped": 0,
+  "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time."
+ },
+ {
+  "id": "fix_r3",
+  "match": 1.0,
+  "clipped": 0,
+  "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time."
+ },
+ {
+  "id": "model_r0",
+  "match": 0.884,
+  "clipped": 0,
+  "transcript": "The model is Quen 3.8, 27 billion parameters, at 4-bit NVFP4 on the RTX, BF4 on the 10-storrent cards."
+ },
+ {
+  "id": "model_r1",
+  "match": 0.884,
+  "clipped": 0,
+  "transcript": "The model is Quen 3.8, 27 billion parameters at 4-bit NVFP4 on the RTX, BF4 on the 10-storant cards."
+ },
+ {
+  "id": "model_r2",
+  "match": 0.884,
+  "clipped": 0,
+  "transcript": "The model is Quen 3.8, 27 billion parameters at 4-bit NVFP4 on the RTX, BF4 on the 10-storant cards."
+ },
+ {
+  "id": "model_r3",
+  "match": 0.884,
+  "clipped": 0,
+  "transcript": "The model is Quen 3.8, 27 billion parameters at 4-bit NVFP4 on the RTX, BF4 on the 10-storant cards."
+ },
+ {
+  "id": "price_r0",
+  "match": 0.889,
+  "clipped": 0,
+  "transcript": "One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storrent P150 cards cost about a fifth of that."
+ },
+ {
+  "id": "price_r1",
+  "match": 0.889,
+  "clipped": 0,
+  "transcript": "One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storrent P150 cards cost about a fifth of that."
+ },
+ {
+  "id": "price_r2",
+  "match": 0.889,
+  "clipped": 0,
+  "transcript": "One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storrent P150 cards cost about a fifth of that."
+ },
+ {
+  "id": "price_r3",
+  "match": 0.889,
+  "clipped": 0,
+  "transcript": "One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storrent P150 cards cost about a fifth of that."
+ },
+ {
+  "id": "second_opinion_r0",
+  "match": 0.889,
+  "clipped": 0,
+  "transcript": "Second opinion, my desktop. It boots the cards fan's spin, and Windows never sees it. Card 2, identical. Two dead cards. I wrote the return ticket."
+ },
+ {
+  "id": "second_opinion_r1",
+  "match": 0.889,
+  "clipped": 0,
+  "transcript": "Second opinion, my desktop. It boots the cards fan's spin, and Windows never sees it. Card 2, identical. Two dead cards. I wrote the return ticket."
+ },
+ {
+  "id": "second_opinion_r2",
+  "match": 0.889,
+  "clipped": 0,
+  "transcript": "Second opinion, my desktop. It boots the cards fan's spin, and Windows never sees it. Card 2, identical. Two dead cards. I wrote the return ticket."
+ },
+ {
+  "id": "second_opinion_r3",
+  "match": 0.889,
+  "clipped": 0,
+  "transcript": "Second opinion, my desktop. It boots the cards fan's spin, and Windows never sees it. Card 2, identical. Two dead cards. I wrote the return ticket."
+ },
+ {
+  "id": "server_r0",
+  "match": 1.0,
+  "clipped": 0,
+  "transcript": "Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+ },
+ {
+  "id": "server_r1",
+  "match": 1.0,
+  "clipped": 0,
+  "transcript": "Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+ },
+ {
+  "id": "server_r2",
+  "match": 1.0,
+  "clipped": 0,
+  "transcript": "Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+ },
+ {
+  "id": "server_r3",
+  "match": 1.0,
+  "clipped": 0,
+  "transcript": "Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works."
+ },
+ {
+  "id": "specs_r0",
+  "match": 0.744,
+  "clipped": 0,
+  "transcript": "Each card has 120 106 cores and 4 QS FPDD ports. Speculative decoding with Dflash 2 gives us 87 tokens per second."
+ },
+ {
+  "id": "specs_r1",
+  "match": 0.837,
+  "clipped": 0,
+  "transcript": "Each card has 120 106 cores and 4 QSFP DD ports. Speculative decoding with Dflash 2 gives us 87 tokens per second."
+ },
+ {
+  "id": "specs_r2",
+  "match": 0.837,
+  "clipped": 0,
+  "transcript": "Each card has 120 106 cores and 4 QSFP DD ports. Speculative decoding with Dflash 2 gives us 87 tokens per second."
+ },
+ {
+  "id": "specs_r3",
+  "match": 0.744,
+  "clipped": 0,
+  "transcript": "Each card has 120 106 cores and 4 QS FPDD ports. Speculative decoding with Dflash 2 gives us 87 tokens per second."
+ }
+]

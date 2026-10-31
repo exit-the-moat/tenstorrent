@@ -1,0 +1,30 @@
+{
+ "batch_size": 8,
+ "card_dram_gb": 29.39,
+ "lines": 8,
+ "batches": 1,
+ "audio_s": 96.73,
+ "wall_s": 35.87,
+ "audio_per_wall": 2.697,
+ "rtf_per_stream": [
+  2.453,
+  3.372
+ ],
+ "ttfa_s": [
+  9.4,
+  9.82
+ ],
+ "backbone_ms_per_step": 54.3,
+ "tower_ms_per_step": 12.1,
+ "host_ms_per_step": 19.6,
+ "chip_power_w": [
+  46.0,
+  121.0
+ ],
+ "board_power_w": [
+  176.0,
+  242.0
+ ],
+ "whisper_match_min": 0.762,
+ "clipped": 0
+}

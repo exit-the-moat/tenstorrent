@@ -1,0 +1,28 @@
+{
+ "grid": [
+  11,
+  10
+ ],
+ "a_alone": {
+  "min_ms": 21.722,
+  "med_ms": 22.085
+ },
+ "b_alone": {
+  "min_ms": 4.152,
+  "med_ms": 4.501
+ },
+ "a_then_b": {
+  "min_ms": 25.757,
+  "med_ms": 26.129
+ },
+ "b_then_a": {
+  "min_ms": 25.758,
+  "med_ms": 26.107
+ },
+ "serial_synced": {
+  "min_ms": 25.848,
+  "med_ms": 26.242
+ },
+ "a_equal": true,
+ "b_equal": true
+}

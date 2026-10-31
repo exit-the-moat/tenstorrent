@@ -1,0 +1,9 @@
+=== chain6 start 00:22:01 io=0
+i_pipe2 EXIT 0 00:24:11
+i_pipe2 8 of 8 identical to i_qdt
+i_lean2 EXIT 0 00:26:27
+i_lean2 8 of 8 identical to i_qdt
+i_et2 EXIT 0 00:28:39
+i_et2 0 of 8 identical to i_qdt
+=== chain6 end 00:28:42 io=0
+CHAIN6_DONE

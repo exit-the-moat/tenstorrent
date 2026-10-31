@@ -1,0 +1,253 @@
+{
+ "backbone_ms_per_step": {
+  "1": 15.38,
+  "16": 27.15,
+  "24": 40.0
+ },
+ "16": {
+  "row0": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row1": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row2": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row3": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row4": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row5": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row6": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row7": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row8": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row9": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row10": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row11": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row12": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row13": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row14": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "row15": {
+   "pcc_min": 0.9995521,
+   "maxdiff": 0.88448,
+   "top1": "29/32",
+   "identical": false
+  },
+  "rows_equal_each_other": true
+ },
+ "24": {
+  "row0": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row1": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row2": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row3": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row4": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row5": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row6": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row7": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row8": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row9": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row10": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row11": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row12": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row13": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row14": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row15": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row16": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row17": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row18": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row19": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row20": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row21": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row22": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "row23": {
+   "pcc_min": 0.999655,
+   "maxdiff": 0.83089,
+   "top1": "28/32",
+   "identical": false
+  },
+  "rows_equal_each_other": true
+ }
+}

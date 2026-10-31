@@ -1,0 +1,6 @@
+=== chain1 start 23:07:14 io=0
+bench EXIT 0 23:12:35
+time EXIT 0 23:19:12
+prof EXIT 0 23:36:35
+=== chain1 end 23:36:35 io=0
+CHAIN1_DONE

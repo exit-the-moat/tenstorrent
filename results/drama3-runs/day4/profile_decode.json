@@ -1,0 +1,11 @@
+{
+ "gdn_layer_full": 0.948,
+ "attn_layer_full": 0.776,
+ "gdn_mixer": 0.556,
+ "attn_mixer": 0.388,
+ "moe_block": 0.385,
+ "moe_routed_only": 0.407,
+ "moe_shared_only": 0.101,
+ "final_norm_head": 0.083,
+ "estimate_full_decode_ms": 36.3
+}

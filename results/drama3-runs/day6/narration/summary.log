@@ -1,0 +1,41 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/librosa/core/intervals.py:8: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+narration s01-01           6.27s fr 135 rtf 1.74 ttfa 3.72 bb 23.0 tw 16.9 pw 59.5 clip 0 match 0.833 | This is the sound of a $1400 AI card not working.
+narration s01-02           5.06s fr 109 rtf 0.94 ttfa 1.15 bb 23.0 tw 10.5 pw 57.5 clip 0 match 1.000 | I spent a whole day sure it was broken, both of them.
+narration s01-03           1.39s fr  30 rtf 1.39 ttfa 1.16 bb 23.0 tw 10.5 pw 44.0 clip 0 match 1.000 | They weren't.
+narration s02-01           3.34s fr  72 rtf 1.06 ttfa 1.13 bb 23.1 tw 10.6 pw 44.0 clip 0 match 0.857 | This channel is called exit the mode.
+narration s02-02           5.48s fr 118 rtf 1.01 ttfa 1.56 bb 23.0 tw 10.5 pw 60.0 clip 0 match 0.857 | In AI, the mode is CUDA and the cloud builds that keep you inside.
+narration s02-03           6.73s fr 145 rtf 0.90 ttfa 1.16 bb 23.0 tw 10.5 pw 56.7 clip 0 match 1.000 | I test whether you can climb out what it costs and whether the other side is actually better.
+narration s02-04           5.62s fr 121 rtf 0.93 ttfa 1.13 bb 23.0 tw 10.5 pw 56.5 clip 0 match 0.923 | Episode 0 is about the first step, getting the card to turn on.
+narration s03-01           5.15s fr 111 rtf 0.94 ttfa 1.19 bb 23.0 tw 10.5 pw 48.7 clip 0 match 0.471 | True 10-Star and P-150 cards. No Nvidia anywhere.
+narration s03-02           9.33s fr 201 rtf 0.91 ttfa 1.19 bb 23.0 tw 10.5 pw 51.2 clip 0 match 1.000 | The plan. Replace the GPUs in my home AI server and see how far these cards get with a real coding model.
+narration s03-03           3.72s fr  80 rtf 1.00 ttfa 1.13 bb 22.9 tw 10.4 pw 49.0 clip 0 match 0.857 | That's Episode 1. First install them.
+narration s04-01           3.16s fr  68 rtf 1.04 ttfa 1.12 bb 23.0 tw 10.5 pw 53.0 clip 0 match 1.000 | Power on, the PSU shuts off.
+narration s04-02           4.18s fr  90 rtf 0.98 ttfa 1.17 bb 23.1 tw 10.5 pw 55.5 clip 0 match 1.000 | Without a power cable on the card, it still shuts off.
+narration s04-03           4.09s fr  88 rtf 0.99 ttfa 1.14 bb 23.0 tw 10.5 pw 57.0 clip 0 match 0.900 | With an old radion in the same slot, everything works.
+narration s04-04           2.69s fr  58 rtf 1.08 ttfa 1.13 bb 23.0 tw 10.4 pw 52.5 clip 0 match 1.000 | So the card must be shorting.
+narration s04-05           2.69s fr  58 rtf 1.09 ttfa 1.14 bb 23.0 tw 10.5 pw 44.0 clip 0 match 1.000 | That logic felt airtight.
+narration s05-01           8.03s fr 173 rtf 0.87 ttfa 1.16 bb 22.9 tw 10.5 pw 54.3 clip 0 match 0.938 | Second opinion. My desktop. It boots the card's fan spin and Windows never sees it.
+narration s05-02           4.46s fr  96 rtf 0.96 ttfa 1.14 bb 23.1 tw 10.6 pw 45.0 clip 0 match 0.833 | Card 2. Identical. Two Dead Cards.
+narration s05-03           2.14s fr  46 rtf 1.18 ttfa 1.13 bb 23.1 tw 10.5 pw 62.0 clip 0 match 1.000 | I wrote the return ticket.
+narration s06-01           5.34s fr 115 rtf 0.93 ttfa 1.14 bb 23.0 tw 10.5 pw 46.3 clip 0 match 1.000 | One last try with the power supply's own cable instead of the adapter.
+narration s06-02           3.72s fr  80 rtf 1.00 ttfa 1.13 bb 23.0 tw 10.5 pw 48.0 clip 0 match 1.000 | It boots. The card shows up healthy.
+narration s06-03           7.20s fr 155 rtf 0.88 ttfa 1.14 bb 23.0 tw 10.5 pw 54.5 clip 0 match 0.919 | The adapter was the problem the whole time and my power supplies maker says not to use one.
+narration s06-04           4.32s fr  93 rtf 0.97 ttfa 1.18 bb 23.0 tw 10.5 pw 46.0 clip 0 match 1.000 | My own research had said an approved adapter was fine.
+narration s06-05           5.94s fr 128 rtf 0.91 ttfa 1.16 bb 22.9 tw 10.4 pw 43.0 clip 0 match 0.929 | Lesson 1 of this channel. Read the manual of the thing you already own.
+narration s06-06           8.27s fr 178 rtf 0.87 ttfa 1.20 bb 23.0 tw 10.5 pw 52.5 clip 0 match 0.914 | And one thing I couldn't find anywhere online, the card runs fine on PCI Express Gen 3.
+narration s06-07           2.46s fr  53 rtf 1.12 ttfa 1.12 bb 23.0 tw 10.5 pw 79.0 clip 0 match 1.000 | My CPU can't do more.
+narration s06-08           7.15s fr 154 rtf 0.88 ttfa 1.15 bb 23.0 tw 10.5 pw 51.0 clip 0 match 1.000 | When the model is already in memory, loading it onto the card takes x seconds.
+narration s06-09           6.83s fr 147 rtf 0.89 ttfa 1.17 bb 23.1 tw 10.5 pw 61.3 clip 0 match 0.968 | On Gen 5, the most this card can do, it would be about X on 4.
+narration s06-10           8.45s fr 182 rtf 0.86 ttfa 1.15 bb 23.0 tw 10.4 pw 52.3 clip 0 match 1.000 | From my SSD it takes z seconds either way, because the SSD is the slow part, not the slot.
+narration s06-11           2.93s fr  63 rtf 1.07 ttfa 1.15 bb 23.0 tw 10.5 pw 57.0 clip 0 match 0.778 | And once it's loaded, the difference.
+narration s08-01           9.75s fr 210 rtf 0.85 ttfa 1.17 bb 22.9 tw 10.5 pw 49.0 clip 0 match 0.884 | The model is Fish Audio Drama 3.36 billion parameters, but only about 3 billion work for each slice of sound.
+narration s08-02           3.85s fr  83 rtf 1.00 ttfa 1.14 bb 23.1 tw 10.6 pw 44.0 clip 0 match 1.000 | Squeezed to four bits, it fits on one card.
+narration s08-03           6.41s fr 138 rtf 0.91 ttfa 1.14 bb 23.1 tw 10.6 pw 56.5 clip 0 match 0.848 | Nobody had run it on 10 store-end, so Claude Code and I ported it in days.
+narration s09-01           6.59s fr 142 rtf 0.90 ttfa 1.17 bb 23.0 tw 10.4 pw 65.0 clip 0 match 1.000 | The card needs x seconds for every second of speech at y watts.
+narration s09-02           6.73s fr 145 rtf 0.89 ttfa 1.14 bb 23.0 tw 10.5 pw 47.0 clip 0 match 0.960 | it gets z% of words wrong against w for the original model.
+narration s09-03           7.66s fr 165 rtf 0.88 ttfa 1.17 bb 22.9 tw 10.5 pw 51.7 clip 0 match 1.000 | And whether it sounds like me, you decide. Four clips in the description, one is really me.
+narration s10-01           7.94s fr 171 rtf 0.87 ttfa 1.15 bb 23.0 tw 10.5 pw 62.7 clip 0 match 0.867 | Next episode, both cards one coding model and a 15,000 euro GPU to beat.
+narration s10-02           3.44s fr  74 rtf 1.03 ttfa 1.17 bb 23.0 tw 10.5 pw 55.0 clip 0 match 0.875 | So, did we exit the mode? Not yet.
+narration s10-03           3.44s fr  74 rtf 1.03 ttfa 1.16 bb 23.0 tw 10.6 pw 46.5 clip 0 match 1.000 | But we found the door. It was a power cable.
+narration: audio 202.0s compute 194.1s overall RTF 0.96; backbone 23.0 ms/frame, tower 10.8 ms/frame

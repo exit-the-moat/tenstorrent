@@ -1,0 +1,6 @@
+f_def EXIT 0 8 of 8 identical to day4b/out_v2 io=0 disk=70%
+g_on3 0 identical; EXIT 0
+g_off2 8 of 8 identical; EXIT 0
+g_off2 lines 8 RTF 0.482 gen ms/frame 22.25 rtf/line 0.452-0.530 TTFA 0.482-0.657 worst_late 0.000 frames 2110 audio 98.0
+g_on3 lines 8 RTF 0.476 gen ms/frame 21.95 rtf/line 0.437-0.513 TTFA 0.466-0.831 worst_late 0.000 frames 2142 audio 99.5
+CHAIN3_DONE

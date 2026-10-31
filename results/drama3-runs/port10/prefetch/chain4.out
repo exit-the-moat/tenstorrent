@@ -1,0 +1,10 @@
+s_tw EXIT 0 0/8 vs i_bf8
+s_tw vs g_on3 (old tower path): identical lines 8
+b_both EXIT 0
+b_all EXIT 0
+b_off EXIT 0 8/8 vs i_bf8
+b_off lines 8 RTF 0.422 gen ms/frame 19.44 rtf/line 0.412-0.455 TTFA 0.444-0.490 worst_late 0.000 frames 2110 audio 98.0
+b_all lines 8 RTF 0.405 gen ms/frame 18.66 rtf/line 0.380-0.468 TTFA 0.420-0.745 worst_late 0.000 frames 2109 audio 97.9
+b_both lines 8 RTF 0.456 gen ms/frame 21.05 rtf/line 0.411-0.519 TTFA 0.438-0.649 worst_late 0.000 frames 2109 audio 97.9
+s_tw lines 8 RTF 0.466 gen ms/frame 21.46 rtf/line 0.434-0.579 TTFA 0.457-0.795 worst_late 0.000 frames 2142 audio 99.5
+CHAIN4_DONE

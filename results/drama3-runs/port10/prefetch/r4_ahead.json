@@ -1,0 +1,89 @@
+{
+ "args": {
+  "layers": 1,
+  "n": 50,
+  "gcb_kb": 512,
+  "rpb": 4,
+  "ibw": 0,
+  "page_kb": 64,
+  "req": "ahead",
+  "variants": "b",
+  "fid": "HiFi4",
+  "gap": "addnorm=aa,attn=naaaaaaaa,silumul=aa",
+  "gap_rep": 1,
+  "prof": "",
+  "out": "/opt/ep0/port10/prefetch/r4_ahead.json"
+ },
+ "grid": [
+  11,
+  10
+ ],
+ "dram_banks": 8,
+ "prefetcher_supported": true,
+ "weight_MB_per_layer": 112.85,
+ "N_padded": {},
+ "b_setup": {
+  "ring": 32,
+  "receiver_grid": [
+   8,
+   4
+  ],
+  "gcb_bytes_per_core": 524288,
+  "block_counts": {
+   "eh_h": 4,
+   "qkvg": 16,
+   "o_proj": 8,
+   "w1": 16,
+   "w3": 16,
+   "w2": 12
+  },
+  "page_bytes": {
+   "eh_h": 65536,
+   "qkvg": 39168,
+   "o_proj": 34816,
+   "w1": 49152,
+   "w3": 49152,
+   "w2": 65536
+  },
+  "per_core_N": {
+   "eh_h": 2,
+   "qkvg": 9,
+   "o_proj": 2,
+   "w1": 6,
+   "w3": 6,
+   "w2": 2
+  }
+ },
+ "timing": {
+  "b_mm_only": {
+   "us_frame": 276.6,
+   "us_layer": 276.6,
+   "GBps": 408.0
+  },
+  "b_with_small_ops": {
+   "us_frame": 321.4,
+   "us_layer": 321.4,
+   "GBps": 351.2
+  }
+ },
+ "check": {
+  "L0_eh_h": {
+   "b_pcc_torch": 0.999997
+  },
+  "L0_qkvg": {
+   "b_pcc_torch": 0.99997
+  },
+  "L0_o_proj": {
+   "b_pcc_torch": 0.999971
+  },
+  "L0_w1": {
+   "b_pcc_torch": 0.999997
+  },
+  "L0_w3": {
+   "b_pcc_torch": 0.999997
+  },
+  "L0_w2": {
+   "b_pcc_torch": 0.999997
+  }
+ }
+}

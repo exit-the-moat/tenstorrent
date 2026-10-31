@@ -1,0 +1,88 @@
+2026-10-29 20:02:04.296 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-29 20:02:04.297 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-29 20:02:04.297 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-29 20:02:04.297 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-29 20:02:04.300 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-29 20:02:04.300 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-29 20:02:04.312 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-29 20:02:04.312 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-29 20:02:04.312 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-29 20:02:04.312 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-29 20:02:04.313 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-29 20:02:04.315 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-29 20:02:04.326 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-29 20:02:04.326 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-29 20:02:04.326 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-29 20:02:04.326 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-29 20:02:04.327 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-29 20:02:04.327 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-29 20:02:04.327 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-29 20:02:04.327 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-29 20:02:04.327 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-29 20:02:04.434 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-29 20:02:04.434 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-29 20:02:04.434 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-29 20:02:04.434 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-29 20:02:04.434 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-29 20:02:06.310 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-29 20:02:06.315 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-29 20:02:06.316 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-29 20:02:06.316 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-29 20:02:08.055 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-29 20:02:08.222 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-29 20:02:08.222 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-29 20:02:08.222 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-29 20:02:08.222 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 20:02:08.222 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 20:02:08.223 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+paged backbone resident: DRAM 26.05 GB, built in 12s
+{"layer": 0, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.315, "routed_s": 0.315, "shared_s": 0.0}
+{"layer": 1, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.314, "routed_s": 0.314, "shared_s": 0.001}
+{"layer": 2, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.323, "routed_s": 0.322, "shared_s": 0.001}
+{"layer": 3, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.307, "routed_s": 0.307, "shared_s": 0.001}
+{"layer": 4, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.307, "routed_s": 0.307, "shared_s": 0.0}
+{"layer": 5, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.3, "routed_s": 0.3, "shared_s": 0.0}
+{"layer": 6, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.287, "routed_s": 0.287, "shared_s": 0.001}
+{"layer": 7, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.289, "routed_s": 0.289, "shared_s": 0.001}
+{"layer": 8, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.277, "routed_s": 0.276, "shared_s": 0.001}
+{"layer": 9, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.283, "routed_s": 0.282, "shared_s": 0.001}
+{"layer": 10, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.274, "routed_s": 0.274, "shared_s": 0.001}
+{"layer": 11, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.272, "routed_s": 0.272, "shared_s": 0.001}
+{"layer": 12, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.017, "moe_s": 0.262, "routed_s": 0.262, "shared_s": 0.001}
+{"layer": 13, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.254, "routed_s": 0.255, "shared_s": 0.001}
+{"layer": 14, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.258, "routed_s": 0.257, "shared_s": 0.001}
+{"layer": 15, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.264, "routed_s": 0.264, "shared_s": 0.0}
+{"layer": 16, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.244, "routed_s": 0.244, "shared_s": 0.001}
+{"layer": 17, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.252, "routed_s": 0.252, "shared_s": 0.0}
+{"layer": 18, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.239, "routed_s": 0.24, "shared_s": 0.001}
+{"layer": 19, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.248, "routed_s": 0.248, "shared_s": 0.0}
+{"layer": 20, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.238, "routed_s": 0.237, "shared_s": 0.001}
+{"layer": 21, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.247, "routed_s": 0.247, "shared_s": 0.001}
+{"layer": 22, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.26, "routed_s": 0.259, "shared_s": 0.001}
+{"layer": 23, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.256, "routed_s": 0.255, "shared_s": 0.0}
+{"layer": 24, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.243, "routed_s": 0.243, "shared_s": 0.001}
+{"layer": 25, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.258, "routed_s": 0.257, "shared_s": 0.0}
+{"layer": 26, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.239, "routed_s": 0.239, "shared_s": 0.0}
+{"layer": 27, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.237, "routed_s": 0.236, "shared_s": 0.0}
+{"layer": 28, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.242, "routed_s": 0.242, "shared_s": 0.001}
+{"layer": 29, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.235, "routed_s": 0.235, "shared_s": 0.001}
+{"layer": 30, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.223, "routed_s": 0.223, "shared_s": 0.0}
+{"layer": 31, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.22, "routed_s": 0.219, "shared_s": 0.0}
+{"layer": 32, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.23, "routed_s": 0.229, "shared_s": 0.0}
+{"layer": 33, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.231, "routed_s": 0.23, "shared_s": 0.001}
+{"layer": 34, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.228, "routed_s": 0.228, "shared_s": 0.0}
+{"layer": 35, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.231, "routed_s": 0.231, "shared_s": 0.001}
+{"layer": 36, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.224, "routed_s": 0.224, "shared_s": 0.001}
+{"layer": 37, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.237, "routed_s": 0.236, "shared_s": 0.0}
+{"layer": 38, "type": "Qwen36GatedDeltaNet", "mixer_s": 0.016, "moe_s": 0.227, "routed_s": 0.227, "shared_s": 0.001}
+{"layer": 39, "type": "Qwen36GatedAttention", "mixer_s": 0.005, "moe_s": 0.237, "routed_s": 0.237, "shared_s": 0.001}
+TOTAL {"mixer_s": 0.53, "moe_s": 10.31, "routed_s": 10.3, "shared_s": 0.03}
+DONE
+2026-10-29 20:02:53.767 | info     |    BuildKernels | JIT cache stats: 612/612 hits (100.0%) [612 cached, 184 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-29 20:02:53.767 | info     |    BuildKernels | JIT telemetry: 33 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-29 20:02:53.774 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-29 20:02:53.774 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-29 20:02:53.826 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-29 20:02:53.826 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-29 20:02:53.826 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)

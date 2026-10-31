@@ -1,0 +1,10 @@
+drama3 port7: frame profile + DRAM bandwidth benches, frame pipe (DRAMA3_FRAME_PIPE)
+
+Profile (port7/frame_time.json, frame_prof.json): backbone trace 12.02 ms, tower trace 8.05 ms device per
+frame; weight bytes per frame 3.90 GB = 7.6 ms at 512 GB/s (RTF 0.164 floor at the current precision).
+DRAMA3_FRAME_PIPE=1: the backbone input row is embedded on the card from the tower's code 1 and the backbone
+step is enqueued behind the tower replay; 8/8 lines frames + wavs identical to port6/i_qdt; RTF 0.535 -> 0.530
+(port7/i_base7 vs i_pipe). --interactive default unchanged (i_base7 identical to i_qdt).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JA5v8QiubPz82RUkMyCToU

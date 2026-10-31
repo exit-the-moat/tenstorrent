@@ -1,0 +1,115 @@
+{
+ "checks": [
+  {
+   "trial": 0,
+   "x_l1": true,
+   "d_l1": false,
+   "h_bit_equal_ttnn_add": true,
+   "h_maxabs_vs_add": 0.0,
+   "h_bit_equal_torch_bf16": false,
+   "y_pcc_vs_ref": 0.9999908,
+   "y_maxabs_vs_ref": 0.03125,
+   "y_pcc_ref_vs_torch": 0.9999919,
+   "y_pcc_fused_vs_torch": 0.9999954,
+   "norm_only_pcc_vs_torch": 0.9999954
+  },
+  {
+   "trial": 1,
+   "x_l1": false,
+   "d_l1": true,
+   "h_bit_equal_ttnn_add": true,
+   "h_maxabs_vs_add": 0.0,
+   "h_bit_equal_torch_bf16": false,
+   "y_pcc_vs_ref": 1.0,
+   "y_maxabs_vs_ref": 0.25,
+   "y_pcc_ref_vs_torch": 1.0,
+   "y_pcc_fused_vs_torch": 1.0,
+   "norm_only_pcc_vs_torch": 1.0
+  },
+  {
+   "trial": 2,
+   "x_l1": false,
+   "d_l1": false,
+   "h_bit_equal_ttnn_add": true,
+   "h_maxabs_vs_add": 0.0,
+   "h_bit_equal_torch_bf16": false,
+   "y_pcc_vs_ref": 0.9999916,
+   "y_maxabs_vs_ref": 0.03125,
+   "y_pcc_ref_vs_torch": 0.9999916,
+   "y_pcc_fused_vs_torch": 0.9999955,
+   "norm_only_pcc_vs_torch": 0.9999955
+  },
+  {
+   "trial": 3,
+   "x_l1": true,
+   "d_l1": false,
+   "h_bit_equal_ttnn_add": true,
+   "h_maxabs_vs_add": 0.0,
+   "h_bit_equal_torch_bf16": false,
+   "y_pcc_vs_ref": 0.9999999,
+   "y_maxabs_vs_ref": 0.25,
+   "y_pcc_ref_vs_torch": 0.9999999,
+   "y_pcc_fused_vs_torch": 1.0,
+   "norm_only_pcc_vs_torch": 1.0
+  },
+  {
+   "trial": 4,
+   "x_l1": false,
+   "d_l1": false,
+   "h_bit_equal_ttnn_add": true,
+   "h_maxabs_vs_add": 0.0,
+   "h_bit_equal_torch_bf16": false,
+   "y_pcc_vs_ref": 0.9999911,
+   "y_maxabs_vs_ref": 0.03125,
+   "y_pcc_ref_vs_torch": 0.9999918,
+   "y_pcc_fused_vs_torch": 0.9999952,
+   "norm_only_pcc_vs_torch": 0.9999952
+  },
+  {
+   "trial": 5,
+   "x_l1": false,
+   "d_l1": true,
+   "h_bit_equal_ttnn_add": true,
+   "h_maxabs_vs_add": 0.0,
+   "h_bit_equal_torch_bf16": false,
+   "y_pcc_vs_ref": 0.9999999,
+   "y_maxabs_vs_ref": 0.00195,
+   "y_pcc_ref_vs_torch": 0.9999999,
+   "y_pcc_fused_vs_torch": 1.0,
+   "norm_only_pcc_vs_torch": 1.0
+  },
+  {
+   "trial": 6,
+   "x_l1": true,
+   "d_l1": false,
+   "h_bit_equal_ttnn_add": true,
+   "h_maxabs_vs_add": 0.0,
+   "h_bit_equal_torch_bf16": false,
+   "y_pcc_vs_ref": 0.9999906,
+   "y_maxabs_vs_ref": 0.04688,
+   "y_pcc_ref_vs_torch": 0.9999924,
+   "y_pcc_fused_vs_torch": 0.9999952,
+   "norm_only_pcc_vs_torch": 0.9999952
+  },
+  {
+   "trial": 7,
+   "x_l1": false,
+   "d_l1": false,
+   "h_bit_equal_ttnn_add": true,
+   "h_maxabs_vs_add": 0.0,
+   "h_bit_equal_torch_bf16": false,
+   "y_pcc_vs_ref": 0.9999998,
+   "y_maxabs_vs_ref": 0.5,
+   "y_pcc_ref_vs_torch": 0.9999998,
+   "y_pcc_fused_vs_torch": 0.9999999,
+   "norm_only_pcc_vs_torch": 0.9999999
+  }
+ ],
+ "timing_us_per_boundary": {
+  "add+sharded_norm": 12.07,
+  "fused": 15.65,
+  "sharded_norm_only": 7.82,
+  "fused_norm_only": 10.76
+ },
+ "chain_out_bit_equal": true
+}

@@ -1,0 +1,35 @@
+[
+ {
+  "f": "/opt/ep0/v20/out_e/s08-10_s0.wav",
+  "id": "s08-10",
+  "take": "s08-10_s0",
+  "ratio": 1.0,
+  "dur": 6.0836281179138325,
+  "loud": 32.55631160915719,
+  "pitch": 10.332206925597513,
+  "f0": 116.97695035460993,
+  "text": "Six days on one card. This is what broke and this is what worked."
+ },
+ {
+  "f": "/opt/ep0/v20/out_e/s08-10_s1.wav",
+  "id": "s08-10",
+  "take": "s08-10_s1",
+  "ratio": 1.0,
+  "dur": 5.944308390022676,
+  "loud": 32.16358048615173,
+  "pitch": 8.705685611540785,
+  "f0": 111.92893401015229,
+  "text": "six days on one card. This is what broke and this is what worked."
+ },
+ {
+  "f": "/opt/ep0/v20/out_e/s08-10_s2.wav",
+  "id": "s08-10",
+  "take": "s08-10_s2",
+  "ratio": 1.0,
+  "dur": 5.851428571428571,
+  "loud": 34.25911538854103,
+  "pitch": 9.070865002094155,
+  "f0": 111.22337989466453,
+  "text": "Six days on one card, this is what broke, and this is what worked."
+ }
+]

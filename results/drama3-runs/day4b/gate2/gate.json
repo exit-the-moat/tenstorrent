@@ -1,0 +1,30 @@
+{
+ "close": {
+  "file": "/opt/ep0/day4b/gate2/close.wav",
+  "seconds": 6.97,
+  "sample_rate": 44100,
+  "peak": 0.8107,
+  "rms_dbfs": -22.9,
+  "clipped_samples": 0,
+  "transcript": "So, did we exit the mode? Not yet, but the climb is shorter than I thought.",
+  "word_match_ratio": 0.938,
+  "frames": 150,
+  "baseline_frames": 133,
+  "frames_within_10pct": false,
+  "identical_frames_prefix": 0
+ },
+ "fix": {
+  "file": "/opt/ep0/day4b/gate2/fix.wav",
+  "seconds": 12.59,
+  "sample_rate": 44100,
+  "peak": 0.8971,
+  "rms_dbfs": -21.7,
+  "clipped_samples": 0,
+  "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time.",
+  "word_match_ratio": 1.0,
+  "frames": 271,
+  "baseline_frames": 263,
+  "frames_within_10pct": true,
+  "identical_frames_prefix": 0
+ }
+}

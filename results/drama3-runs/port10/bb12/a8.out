@@ -1,0 +1,30 @@
+ft_off rc=0 EXIT 0 io=0 disk=70%
+off {'backbone_trace_ms': 10.555, 'tower_trace_ms': 6.291, 'bb_plus_tower_trace_ms': 16.845, 'gen_ms_per_frame': 22.213}
+ft_on rc=0 EXIT 1 io=0 disk=70%
+TypeError: __call__(): incompatible function arguments. The following argument types are supported:
+    raise TypeError(enhanced_msg) from e
+TypeError: 
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json;d=json.load(open("/opt/ep0/port10/bb12/ft_on.json"));print("on",{k:d[k] for k in ("backbone_trace_ms","tower_trace_ms","bb_plus_tower_trace_ms","gen_ms_per_frame")})
+                            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/bb12/ft_on.json'
+ft_off2 rc=0 EXIT 1 io=0 disk=70%
+TypeError: __call__(): incompatible function arguments. The following argument types are supported:
+    raise TypeError(enhanced_msg) from e
+TypeError: 
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json;d=json.load(open("/opt/ep0/port10/bb12/ft_off2.json"));print("off2",{k:d[k] for k in ("backbone_trace_ms","tower_trace_ms","bb_plus_tower_trace_ms","gen_ms_per_frame")})
+                            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/bb12/ft_off2.json'
+ft_on2 rc=0 EXIT 1 io=0 disk=70%
+TypeError: __call__(): incompatible function arguments. The following argument types are supported:
+    raise TypeError(enhanced_msg) from e
+TypeError: 
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json;d=json.load(open("/opt/ep0/port10/bb12/ft_on2.json"));print("on2",{k:d[k] for k in ("backbone_trace_ms","tower_trace_ms","bb_plus_tower_trace_ms","gen_ms_per_frame")})
+                            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/ep0/port10/bb12/ft_on2.json'
+A8_DONE

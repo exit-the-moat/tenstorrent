@@ -1,0 +1,298 @@
+2026-10-31 10:06:12.205 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-31 10:06:12.205 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-31 10:06:12.206 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-31 10:06:12.206 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-31 10:06:12.208 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-31 10:06:12.208 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-31 10:06:12.222 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[1] and remote chip ids {} (cluster.cpp:172)
+2026-10-31 10:06:12.222 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-31 10:06:12.222 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-31 10:06:12.222 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-31 10:06:12.223 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-31 10:06:12.749 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-31 10:06:12.763 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-31 10:06:12.763 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-31 10:06:12.763 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x4) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-31 10:06:12.763 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-31 10:06:12.764 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-31 10:06:12.764 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-31 10:06:12.764 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-31 10:06:12.764 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-31 10:06:12.764 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+2026-10-31 10:06:43.810 | warning  |           Metal | Allocating device buffers is potentially unsafe due to the existence of an active trace. These buffers may be corrupted once a trace is executed if they are not released before then. Use the trace allocation tracker to verify. (allocator.cpp:140)
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/6951469257488337174/" -DKERNEL_COMPILE_TIME_ARGS=32 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/6951469257488337174/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/6951469257488337174/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/15981833673054245370/" -DKERNEL_COMPILE_TIME_ARGS=256 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/15981833673054245370/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/15981833673054245370/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/5007614942006318579/" -DKERNEL_COMPILE_TIME_ARGS=1024 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/5007614942006318579/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/5007614942006318579/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/8798503454129955165/" -DKERNEL_COMPILE_TIME_ARGS=2048 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/8798503454129955165/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/8798503454129955165/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+32 snk {"min_ms": 37.14, "med_ms": 42.22, "med_ms_per_frame": 1.319, "bit_identical": true, "max_abs": 0.0, "snr_db": 326.59}
+32 sa {"min_ms": 40.36, "med_ms": 45.27, "med_ms_per_frame": 1.415, "bit_identical": true, "max_abs": 0.0, "snr_db": 326.59}
+32 snk trace {"trace_bit_identical": true, "trace_snr_db": 326.59, "trace_min_ms": 16.46, "trace_med_ms": 17.36}
+32 sa trace {"trace_bit_identical": true, "trace_snr_db": 326.59, "trace_min_ms": 16.29, "trace_med_ms": 17.34}
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/16138923592764906055/" -DKERNEL_COMPILE_TIME_ARGS=64 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/16138923592764906055/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/16138923592764906055/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/16483619627637812136/" -DKERNEL_COMPILE_TIME_ARGS=512 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/16483619627637812136/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/16483619627637812136/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/4736168713961345521/" -DKERNEL_COMPILE_TIME_ARGS=4096 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/4736168713961345521/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/4736168713961345521/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+64 snk {"min_ms": 41.01, "med_ms": 71.25, "med_ms_per_frame": 1.113, "bit_identical": true, "max_abs": 0.0, "snr_db": 330.75}
+64 sa {"min_ms": 56.25, "med_ms": 73.19, "med_ms_per_frame": 1.144, "bit_identical": true, "max_abs": 0.0, "snr_db": 330.75}
+64 snk trace {"trace_bit_identical": true, "trace_snr_db": 330.75, "trace_min_ms": 28.7, "trace_med_ms": 29.92}
+64 sa trace {"trace_bit_identical": true, "trace_snr_db": 330.75, "trace_min_ms": 28.11, "trace_med_ms": 28.82}
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/8626205147962853680/" -DKERNEL_COMPILE_TIME_ARGS=96 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/8626205147962853680/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/8626205147962853680/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/3801145118586326027/" -DKERNEL_COMPILE_TIME_ARGS=768 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/3801145118586326027/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/3801145118586326027/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/16550976456633921870/" -DKERNEL_COMPILE_TIME_ARGS=3072 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/16550976456633921870/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/16550976456633921870/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="snake_add_compute/2844133106353368115/" -DKERNEL_COMPILE_TIME_ARGS=6144 -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/2844133106353368115/trisc1/trisck.16099317504548512025_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/snake_add_compute/2844133106353368115/trisc1/trisck.16099317504548512025_1.d
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:10,
+                 from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h: In function 'void ckernel::copy_dest_values(uint32_t, uint32_t)':
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/llk_math_eltwise_binary_sfpu_macros.h:55:43: warning: 'void ckernel::sfpu::copy_dest_value(uint, uint, uint) [with bool APPROXIMATION_MODE = false; int ITERATIONS = 8; uint = long unsigned int]' is deprecated: Use copy_dest_value<DataFormat, APPROXIMATION_MODE, ITERATIONS> instead [-Wdeprecated-declarations]
+   55 |      _llk_math_eltwise_binary_sfpu_params_(                                                               \
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |          ::ckernel::sfpu::FN<_SFPU_BIN_EXPAND TEMPLATES>, DST_IN0, DST_IN1, DST_OUT, VECTOR_MODE, ##__VA_ARGS__))
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/compute_kernel_api.h:78:19: note: in definition of macro 'MATH'
+   78 | #define MATH(...) __VA_ARGS__
+      |                   ^~~~~~~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:65:11: note: in expansion of macro 'SFPU_BINARY_CALL'
+   65 |     MATH((SFPU_BINARY_CALL(
+      |           ^~~~~~~~~~~~~~~~
+In file included from /opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/copy_dest_values.h:9,
+                 from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/snake_add_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu/ckernel_sfpu_copy_dest_values.h:39:6: note: declared here
+   39 | void copy_dest_value(const uint dst_index_in, const uint dst_index_out, const uint /* unused */) {
+      |      ^~~~~~~~~~~~~~~
+96 snk {"min_ms": 49.4, "med_ms": 51.08, "med_ms_per_frame": 0.532, "bit_identical": true, "max_abs": 0.0, "snr_db": 332.38}
+96 sa {"min_ms": 48.5, "med_ms": 49.19, "med_ms_per_frame": 0.512, "bit_identical": true, "max_abs": 0.0, "snr_db": 332.38}
+96 snk trace {"trace_bit_identical": true, "trace_snr_db": 332.38, "trace_min_ms": 39.68, "trace_med_ms": 40.63}
+96 sa trace {"trace_bit_identical": true, "trace_snr_db": 332.38, "trace_min_ms": 39.68, "trace_med_ms": 40.4}
+DONE
+2026-10-31 10:07:16.297 | info     |    BuildKernels | JIT cache stats: 1118/1187 hits (94.2%) [1118 cached, 2872 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-31 10:07:16.297 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-31 10:07:16.327 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-31 10:07:16.327 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-31 10:07:16.370 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-31 10:07:16.370 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-31 10:07:16.370 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

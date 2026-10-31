@@ -1,0 +1,135 @@
+{
+ "load": {
+  "download_s": 27.5,
+  "server_start_to_healthy_s": 88.8
+ },
+ "warmup": {
+  "text": "This is a warm-up line. It is not counted in the results.",
+  "sample_rate": 44100,
+  "audio_s": 4.551,
+  "gen_s": 4.488,
+  "rtf": 0.9861,
+  "ttfa_s": 3.7821,
+  "frames_usage": 98,
+  "frames_from_samples": 98.0,
+  "ms_per_frame_whole_request": 45.8,
+  "ms_per_frame_after_first_audio": 8.02,
+  "chunks": 5,
+  "first_chunk_s": 0.464,
+  "finish_reason": "stop",
+  "start_epoch": 1793381137.262,
+  "first_audio_epoch": 1793381141.044,
+  "end_epoch": 1793381141.749
+ },
+ "idle_after_load": {
+  "power_w": {
+   "mean": 102.7,
+   "min": 83.5,
+   "max": 167.2,
+   "n": 20
+  },
+  "memory_mib": {
+   "mean": 75124.5,
+   "min": 74867.0,
+   "max": 75425.0,
+   "n": 20
+  }
+ },
+ "seq": {
+  "lines": 8,
+  "audio_s": 98.1,
+  "gen_s": 16.97,
+  "overall_rtf": 0.173,
+  "rtf_per_line": [
+   0.1713,
+   0.1775
+  ],
+  "ttfa_first_line_s": 0.1645,
+  "ttfa_later_lines_s": [
+   0.1558,
+   0.201
+  ],
+  "ttfa_all_median_s": 0.1601,
+  "frames": 2112,
+  "ms_per_frame_whole_request": 8.04,
+  "ms_per_frame_after_first_audio_median": 7.7,
+  "power_w_while_speaking": {
+   "mean": 262.9,
+   "min": 213.6,
+   "max": 269.4,
+   "n": 34
+  },
+  "memory_mib_while_speaking": {
+   "mean": 76769.0,
+   "min": 76769.0,
+   "max": 76769.0,
+   "n": 34
+  },
+  "finish_reasons": [
+   "stop"
+  ]
+ },
+ "seq2": {
+  "lines": 8,
+  "audio_s": 97.2,
+  "gen_s": 16.79,
+  "overall_rtf": 0.1728,
+  "rtf_per_line": [
+   0.1713,
+   0.178
+  ],
+  "ttfa_first_line_s": 0.1571,
+  "ttfa_later_lines_s": [
+   0.1522,
+   0.1615
+  ],
+  "ttfa_all_median_s": 0.1586,
+  "frames": 2093,
+  "ms_per_frame_whole_request": 8.02,
+  "ms_per_frame_after_first_audio_median": 7.72,
+  "power_w_while_speaking": {
+   "mean": 269.8,
+   "min": 259.3,
+   "max": 273.9,
+   "n": 34
+  },
+  "memory_mib_while_speaking": {
+   "mean": 76769.0,
+   "min": 76769.0,
+   "max": 76769.0,
+   "n": 34
+  },
+  "finish_reasons": [
+   "stop"
+  ]
+ },
+ "c8": {
+  "streams": 8,
+  "wall_s": 5.423,
+  "audio_s": 96.177,
+  "errors": [],
+  "start_epoch": 1793381175.524,
+  "end_epoch": 1793381180.946,
+  "audio_s_per_wall_s": 17.736,
+  "rtf_per_stream": [
+   0.3783,
+   0.5035
+  ],
+  "ttfa_per_stream_s": [
+   1.3716,
+   1.4398
+  ],
+  "power_w": {
+   "mean": 275.4,
+   "min": 135.5,
+   "max": 329.1,
+   "n": 11
+  },
+  "memory_mib": {
+   "mean": 77495.0,
+   "min": 77315.0,
+   "max": 77513.0,
+   "n": 11
+  }
+ }
+}

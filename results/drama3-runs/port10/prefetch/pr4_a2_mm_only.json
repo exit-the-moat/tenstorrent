@@ -1,0 +1,141 @@
+{
+ "args": {
+  "layers": 1,
+  "n": 50,
+  "gcb_kb": 512,
+  "rpb": 4,
+  "ibw": 8,
+  "variants": "a2,b",
+  "fid": "HiFi4",
+  "gap": "addnorm=aa,attn=naaaaaaaa,silumul=aa",
+  "gap_rep": 1,
+  "prof": "a2_mm_only",
+  "out": "/opt/ep0/port10/prefetch/pr4_a2_mm_only.json"
+ },
+ "grid": [
+  11,
+  10
+ ],
+ "dram_banks": 8,
+ "prefetcher_supported": true,
+ "weight_MB_per_layer": 112.85,
+ "b_setup": {
+  "ring": 32,
+  "receiver_grid": [
+   8,
+   4
+  ],
+  "gcb_bytes_per_core": 524288,
+  "block_counts": {
+   "eh_h": 8,
+   "qkvg": 8,
+   "o_proj": 16,
+   "w1": 8,
+   "w3": 8,
+   "w2": 24
+  },
+  "page_bytes": {
+   "eh_h": 32768,
+   "qkvg": 78336,
+   "o_proj": 17408,
+   "w1": 98304,
+   "w3": 98304,
+   "w2": 32768
+  },
+  "per_core_N": {
+   "eh_h": 2,
+   "qkvg": 9,
+   "o_proj": 2,
+   "w1": 6,
+   "w3": 6,
+   "w2": 2
+  }
+ },
+ "check": {
+  "L0_eh_h": {},
+  "L0_qkvg": {},
+  "L0_o_proj": {},
+  "L0_w1": {},
+  "L0_w3": {},
+  "L0_w2": {}
+ },
+ "prof": {
+  "name": "a2_mm_only",
+  "span_us": 326.1,
+  "sum_kernel_us": 324.9,
+  "ops": [
+   {
+    "i": 0,
+    "start_us": 0.0,
+    "dur_us": 22.61,
+    "risc": {
+     "BRISC": 22.23,
+     "NCRISC": 18.81,
+     "TRISC_0": 21.13,
+     "TRISC_1": 21.19,
+     "TRISC_2": 21.74
+    }
+   },
+   {
+    "i": 1,
+    "start_us": 22.85,
+    "dur_us": 69.35,
+    "risc": {
+     "BRISC": 68.95,
+     "NCRISC": 59.63,
+     "TRISC_0": 67.75,
+     "TRISC_1": 67.85,
+     "TRISC_2": 68.45
+    }
+   },
+   {
+    "i": 2,
+    "start_us": 92.44,
+    "dur_us": 25.28,
+    "risc": {
+     "BRISC": 24.85,
+     "NCRISC": 22.36,
+     "TRISC_0": 23.24,
+     "TRISC_1": 23.29,
+     "TRISC_2": 23.83
+    }
+   },
+   {
+    "i": 3,
+    "start_us": 118.01,
+    "dur_us": 73.21,
+    "risc": {
+     "BRISC": 71.95,
+     "NCRISC": 66.2,
+     "TRISC_0": 70.79,
+     "TRISC_1": 70.98,
+     "TRISC_2": 71.46
+    }
+   },
+   {
+    "i": 4,
+    "start_us": 191.46,
+    "dur_us": 72.79,
+    "risc": {
+     "BRISC": 71.98,
+     "NCRISC": 66.11,
+     "TRISC_0": 70.76,
+     "TRISC_1": 70.86,
+     "TRISC_2": 71.46
+    }
+   },
+   {
+    "i": 5,
+    "start_us": 264.49,
+    "dur_us": 61.64,
+    "risc": {
+     "BRISC": 61.27,
+     "NCRISC": 57.9,
+     "TRISC_0": 60.18,
+     "TRISC_1": 60.21,
+     "TRISC_2": 60.76
+    }
+   }
+  ]
+ }
+}

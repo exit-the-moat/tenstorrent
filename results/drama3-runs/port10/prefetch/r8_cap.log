@@ -1,0 +1,49 @@
+2026-10-31 12:08:53.729 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-31 12:08:53.729 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-31 12:08:53.729 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-31 12:08:53.729 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-31 12:08:53.734 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-31 12:08:53.734 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-31 12:08:53.747 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[1] and remote chip ids {} (cluster.cpp:172)
+2026-10-31 12:08:53.747 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-31 12:08:53.747 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-31 12:08:53.747 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-31 12:08:53.748 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-31 12:08:53.820 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-31 12:08:53.834 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-31 12:08:53.834 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-31 12:08:53.834 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x4) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-31 12:08:53.835 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-31 12:08:53.835 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-31 12:08:53.836 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-31 12:08:53.836 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-31 12:08:53.836 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-31 12:08:53.836 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+grid 11 10 dram banks 8 tensor prefetcher supported True
+host weights 0.4 s
+[c_small_ops] {'us_frame': 88.7, 'us_layer': 88.7, 'GBps': 1272.0}
+decode_linear configs {'eh_h': (3, 4, 11, 2), 'qkvg': (12, 4, 11, 3), 'o_proj': (3, 16, 11, 2), 'w1': 'None', 'w3': 'None', 'w2': (3, 4, 11, 2)}
+[a_mm_only] {'us_frame': 317.8, 'us_layer': 317.8, 'GBps': 355.1}
+[a_with_small_ops] {'us_frame': 375.1, 'us_layer': 375.1, 'GBps': 300.8}
+[a2_mm_only] {'us_frame': 387.2, 'us_layer': 387.2, 'GBps': 291.5}
+[a2_with_small_ops] {'us_frame': 443.7, 'us_layer': 443.7, 'GBps': 254.4}
+recv-contig weights 0.1 s
+b setup {'ring': 64, 'receiver_grid': [8, 8], 'gcb_bytes_per_core': 524288, 'block_counts': {'eh_h': 2, 'qkvg': 8, 'o_proj': 4, 'w1': 8, 'w3': 8, 'w2': 6}, 'page_bytes': {'eh_h': 65536, 'qkvg': 43520, 'o_proj': 34816, 'w1': 49152, 'w3': 49152, 'w2': 65536}, 'per_core_N': {'eh_h': 1, 'qkvg': 5, 'o_proj': 1, 'w1': 3, 'w3': 3, 'w2': 1}}
+2026-10-31 12:08:57.390 | info     |           Metal | ShmResourceTracker: removed orphaned shm '/tt_device_141176418608352_memory' (shm_resource_tracker.cpp:282)
+[b_mm_only] {'us_frame': 281.5, 'us_layer': 281.5, 'GBps': 400.9}
+[b_with_small_ops] {'us_frame': 290.6, 'us_layer': 290.6, 'GBps': 388.3}
+check 0 eh_h {'a_pcc_torch': 0.999997, 'a2_pcc_torch': 0.999997, 'b_pcc_torch': 0.999997, 'b_vs_a2_bitexact': True, 'b_vs_a2_maxabs': 0.0, 'b_vs_a_pcc': 1.0, 'b_vs_a_maxabs': 0.0}
+check 0 qkvg {'a_pcc_torch': 0.99997, 'a2_pcc_torch': 0.99997, 'b_pcc_torch': 0.99997, 'b_vs_a2_bitexact': True, 'b_vs_a2_maxabs': 0.0, 'b_vs_a_pcc': 1.0, 'b_vs_a_maxabs': 0.0}
+check 0 o_proj {'a_pcc_torch': 0.999971, 'a2_pcc_torch': 0.999971, 'b_pcc_torch': 0.999971, 'b_vs_a2_bitexact': True, 'b_vs_a2_maxabs': 0.0, 'b_vs_a_pcc': 1.0, 'b_vs_a_maxabs': 0.0}
+check 0 w1 {'a_pcc_torch': 0.999997, 'a2_pcc_torch': 0.999997, 'b_pcc_torch': 0.999997, 'b_vs_a2_bitexact': True, 'b_vs_a2_maxabs': 0.0, 'b_vs_a_pcc': 1.0, 'b_vs_a_maxabs': 0.0}
+check 0 w3 {'a_pcc_torch': 0.999997, 'a2_pcc_torch': 0.999997, 'b_pcc_torch': 0.999997, 'b_vs_a2_bitexact': True, 'b_vs_a2_maxabs': 0.0, 'b_vs_a_pcc': 1.0, 'b_vs_a_maxabs': 0.0}
+check 0 w2 {'a_pcc_torch': 0.999997, 'a2_pcc_torch': 0.999997, 'b_pcc_torch': 0.999997, 'b_vs_a2_bitexact': True, 'b_vs_a2_maxabs': 0.0, 'b_vs_a_pcc': 1.0, 'b_vs_a_maxabs': 0.0}
+DONE
+2026-10-31 12:09:00.738 | info     |    BuildKernels | JIT cache stats: 55/108 hits (50.9%) [55 cached, 14 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-31 12:09:00.738 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-31 12:09:00.747 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-31 12:09:00.747 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-31 12:09:00.823 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-31 12:09:00.823 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-31 12:09:00.823 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

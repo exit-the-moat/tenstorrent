@@ -1,0 +1,56 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+2026-10-29 23:34:53.401 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-29 23:34:53.401 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-29 23:34:53.402 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-29 23:34:53.402 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-29 23:34:53.405 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-29 23:34:53.405 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-29 23:34:53.418 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-29 23:34:53.418 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-29 23:34:53.418 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-29 23:34:53.418 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-29 23:34:53.419 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-29 23:34:53.488 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-29 23:34:53.501 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-29 23:34:53.501 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-29 23:34:53.502 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-29 23:34:53.502 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-29 23:34:53.502 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-29 23:34:53.503 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-29 23:34:53.503 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-29 23:34:53.503 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-29 23:34:53.503 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+{"i": 0, "kind": "conv", "L": 384, "gain": 0.99971, "snr": 56.9}
+{"i": 1, "kind": "snake", "L": 384, "gain": 1.0, "snr": 151.4}
+{"i": 2, "kind": "trans", "L": 384, "gain": 0.99967, "snr": 53.2}
+{"i": 3, "kind": "res", "L": 3072, "gain": 0.99972, "snr": 58.0, "sub": {"snake1": {"gain": 1.0, "snr": 154.9}, "conv7": {"gain": 0.99966, "snr": 55.9}, "snake2": {"gain": 0.99968, "snr": 54.5}, "conv1": {"gain": 0.99908, "snr": 51.0}}}
+{"i": 4, "kind": "res", "L": 3072, "gain": 0.99981, "snr": 57.9, "sub": {"snake1": {"gain": 1.0, "snr": 154.7}, "conv7": {"gain": 0.99967, "snr": 54.0}, "snake2": {"gain": 0.99972, "snr": 53.1}, "conv1": {"gain": 0.99911, "snr": 50.5}}}
+{"i": 5, "kind": "res", "L": 3072, "gain": 0.99974, "snr": 58.6, "sub": {"snake1": {"gain": 1.0, "snr": 153.9}, "conv7": {"gain": 0.99973, "snr": 54.0}, "snake2": {"gain": 0.99969, "snr": 53.4}, "conv1": {"gain": 0.99922, "snr": 51.6}}}
+{"i": 6, "kind": "snake", "L": 3072, "gain": 1.0, "snr": 153.9}
+{"i": 7, "kind": "trans", "L": 3072, "gain": 0.99974, "snr": 56.0}
+{"i": 8, "kind": "res", "L": 24576, "gain": 0.99978, "snr": 55.7, "sub": {"snake1": {"gain": 1.0, "snr": 157.0}, "conv7": {"gain": 0.99966, "snr": 54.0}, "snake2": {"gain": 0.99959, "snr": 52.7}, "conv1": {"gain": 0.99891, "snr": 47.6}}}
+{"i": 9, "kind": "res", "L": 24576, "gain": 0.99997, "snr": 56.0, "sub": {"snake1": {"gain": 1.0, "snr": 156.9}, "conv7": {"gain": 0.99975, "snr": 51.0}, "snake2": {"gain": 0.99972, "snr": 50.4}, "conv1": {"gain": 0.9993, "snr": 47.7}}}
+{"i": 10, "kind": "res", "L": 24576, "gain": 0.9999, "snr": 54.7, "sub": {"snake1": {"gain": 1.0, "snr": 156.6}, "conv7": {"gain": 0.99966, "snr": 51.4}, "snake2": {"gain": 0.9997, "snr": 52.0}, "conv1": {"gain": 0.99933, "snr": 49.4}}}
+{"i": 11, "kind": "snake", "L": 24576, "gain": 1.0, "snr": 156.3}
+{"i": 12, "kind": "trans", "L": 24576, "gain": 0.99978, "snr": 57.2}
+{"i": 13, "kind": "res", "L": 98304, "gain": 0.99966, "snr": 56.3, "sub": {"snake1": {"gain": 1.0, "snr": 159.3}, "conv7": {"gain": 0.9997, "snr": 54.5}, "snake2": {"gain": 0.99965, "snr": 54.5}, "conv1": {"gain": 0.99892, "snr": 48.5}}}
+{"i": 14, "kind": "res", "L": 98304, "gain": 0.99976, "snr": 53.8, "sub": {"snake1": {"gain": 1.0, "snr": 157.3}, "conv7": {"gain": 0.99978, "snr": 53.4}, "snake2": {"gain": 0.99977, "snr": 53.7}, "conv1": {"gain": 0.99928, "snr": 50.1}}}
+{"i": 15, "kind": "res", "L": 98304, "gain": 0.99917, "snr": 54.2, "sub": {"snake1": {"gain": 1.0, "snr": 156.4}, "conv7": {"gain": 0.99978, "snr": 56.9}, "snake2": {"gain": 0.99976, "snr": 56.9}, "conv1": {"gain": 0.99917, "snr": 55.6}}}
+{"i": 16, "kind": "snake", "L": 98304, "gain": 1.0, "snr": 147.8}
+{"i": 17, "kind": "trans", "L": 98304, "gain": 0.99973, "snr": 56.2}
+{"i": 18, "kind": "res", "L": 196608, "gain": 0.99958, "snr": 57.7, "sub": {"snake1": {"gain": 1.0, "snr": 165.4}, "conv7": {"gain": 0.99968, "snr": 57.3}, "snake2": {"gain": 0.99936, "snr": 55.8}, "conv1": {"gain": 0.99891, "snr": 51.3}}}
+{"i": 19, "kind": "res", "L": 196608, "gain": 0.99918, "snr": 49.8, "sub": {"snake1": {"gain": 1.0, "snr": 162.6}, "conv7": {"gain": 0.99976, "snr": 60.0}, "snake2": {"gain": 0.99978, "snr": 59.4}, "conv1": {"gain": 0.99926, "snr": 53.6}}}
+{"i": 20, "kind": "res", "L": 196608, "gain": 0.99959, "snr": 54.8, "sub": {"snake1": {"gain": 1.0, "snr": 165.4}, "conv7": {"gain": 0.99974, "snr": 62.0}, "snake2": {"gain": 0.99978, "snr": 61.1}, "conv1": {"gain": 0.99926, "snr": 56.7}}}
+{"i": 21, "kind": "snake", "L": 196608, "gain": 1.0, "snr": 150.9}
+{"i": 22, "kind": "conv", "L": 196608, "gain": 0.99982, "snr": 55.2}
+{"i": 23, "kind": "tanh", "L": 196608, "gain": 1.0, "snr": 145.8}
+DONE
+2026-10-29 23:35:35.849 | info     |    BuildKernels | JIT cache stats: 136/306 hits (44.4%) [136 cached, 702 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-29 23:35:35.849 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-29 23:35:35.859 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-29 23:35:35.859 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-29 23:35:35.898 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-29 23:35:35.898 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-29 23:35:35.898 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

@@ -1,0 +1,44 @@
+{
+ "summary": {
+  "run": "/opt/ep0/port10/i_all3",
+  "n": 8,
+  "vs_ref_mean": 0.9529,
+  "vs_ref_min": 0.9313,
+  "vs_base_mean": 1.0,
+  "vs_base_min": 1.0
+ },
+ "lines": {
+  "close": {
+   "vs_ref": 0.9502623081207275,
+   "vs_base": 1.0000001192092896
+  },
+  "cold_open": {
+   "vs_ref": 0.9511264562606812,
+   "vs_base": 1.0
+  },
+  "fix": {
+   "vs_ref": 0.9568953514099121,
+   "vs_base": 1.0
+  },
+  "model": {
+   "vs_ref": 0.9312659502029419,
+   "vs_base": 1.0
+  },
+  "price": {
+   "vs_ref": 0.9572174549102783,
+   "vs_base": 1.0
+  },
+  "second_opinion": {
+   "vs_ref": 0.9517313241958618,
+   "vs_base": 1.0
+  },
+  "server": {
+   "vs_ref": 0.9597359895706177,
+   "vs_base": 1.0
+  },
+  "specs": {
+   "vs_ref": 0.9653152227401733,
+   "vs_base": 1.0
+  }
+ }
+}

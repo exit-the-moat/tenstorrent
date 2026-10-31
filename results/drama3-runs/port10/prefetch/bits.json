@@ -1,0 +1,128 @@
+{
+ "eh_h_ibw4": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 8.0
+ },
+ "eh_h_ibw32": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 64.0
+ },
+ "eh_h_ibw64": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 128.0
+ },
+ "qkvg_ibw4": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 21.2
+ },
+ "qkvg_ibw8": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 42.5
+ },
+ "qkvg_ibw16": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 85.0
+ },
+ "o_proj_ibw16": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 17.0
+ },
+ "o_proj_ibw32": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 34.0
+ },
+ "o_proj_ibw64": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 68.0
+ },
+ "w1_ibw4": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 12.8
+ },
+ "w1_ibw16": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 51.0
+ },
+ "w1_ibw32": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 102.0
+ },
+ "w3_ibw4": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 12.8
+ },
+ "w3_ibw16": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 51.0
+ },
+ "w3_ibw32": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 102.0
+ },
+ "w2_ibw8": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 8.5
+ },
+ "w2_ibw64": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 68.0
+ },
+ "w2_ibw96": {
+  "bitexact": true,
+  "maxabs": 0.0,
+  "ndiff": 0,
+  "pad_maxabs": 0.0,
+  "page_kb": 102.0
+ }
+}

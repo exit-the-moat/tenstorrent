@@ -1,0 +1,147 @@
+2026-10-31 13:14:42.445 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-31 13:14:42.445 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-31 13:14:42.445 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-31 13:14:42.445 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-31 13:14:42.449 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-31 13:14:42.449 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-31 13:14:42.462 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-31 13:14:42.462 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-31 13:14:42.462 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-31 13:14:42.462 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-31 13:14:42.463 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-31 13:14:42.482 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-31 13:14:42.496 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-31 13:14:42.496 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-31 13:14:42.496 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-31 13:14:42.496 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-31 13:14:42.497 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-31 13:14:42.497 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-31 13:14:42.497 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-31 13:14:42.497 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-31 13:14:42.497 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+Building trisc0, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=2 -DUCK_CHLKC_UNPACK -DCOMPILE_FOR_TRISC=0 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="sampler_fused_compute/8662215307101684000/" -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/sampler_fused_compute/8662215307101684000/trisc0/trisck.7862434878862536492_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/sampler_fused_compute/8662215307101684000/trisc0/trisck.7862434878862536492_1.d
+In file included from ../chlkc_unpack.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:26,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp: In function 'void kernel_main()':
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:27:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   27 |     copy_tile_to_dst_init_short(cb_x);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:29:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   29 |     copy_tile_to_dst_init_short(cb_m);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:50:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   50 |     copy_tile_to_dst_init_short(cb_v);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:53:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   53 |     copy_tile_to_dst_init_short(cb_z);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:55:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   55 |     copy_tile_to_dst_init_short(cb_n);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+Building trisc2, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=4 -DUCK_CHLKC_PACK -DCOMPILE_FOR_TRISC=2 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="sampler_fused_compute/8662215307101684000/" -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/sampler_fused_compute/8662215307101684000/trisc2/trisck.7862434878862536492_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/sampler_fused_compute/8662215307101684000/trisc2/trisck.7862434878862536492_1.d
+In file included from ../chlkc_pack.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:21,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp: In function 'void kernel_main()':
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:27:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   27 |     copy_tile_to_dst_init_short(cb_x);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:29:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   29 |     copy_tile_to_dst_init_short(cb_m);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:50:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   50 |     copy_tile_to_dst_init_short(cb_v);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:53:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   53 |     copy_tile_to_dst_init_short(cb_z);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:55:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   55 |     copy_tile_to_dst_init_short(cb_n);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+Building trisc1, compile step:
+/opt/ep0/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=1 -flto-partition=one -ffast-math -fno-finite-math-only -fsigned-zeros -fno-associative-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function --param=min-pagesize=0 -mcpu=tt-bh-tensix -Winvalid-pch -Wno-error=invalid-pch -I. -I.. -I/opt/ep0/tt-metal/ -I/opt/ep0/tt-metal/ttnn -I/opt/ep0/tt-metal/ttnn/cpp -I/opt/ep0/tt-metal/tt_metal -I/opt/ep0/tt-metal/tt_metal/hw/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/common -I/opt/ep0/tt-metal/tt_metal/tt-llk/tools/include -I/opt/ep0/tt-metal/tt_metal/hostdevcommon/api -I/opt/ep0/tt-metal/tt_metal/api/ -I/opt/ep0/tt-metal/runtime/sfpi/include -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_io -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/blackhole_defines -I/opt/ep0/tt-metal/tt_metal/hw/inc/internal/tt-1xx/blackhole/noc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/common/inc -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib -I/opt/ep0/tt-metal/tt_metal/tt-llk/tt_llk_blackhole/llk_lib/hal -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api -I/opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/llk_api/llk_sfpu -I/opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels -include /opt/ep0/jit_cache/tt-metal-cache/pch/0bc16e4d0c59bdb9/pch.h -DIS_NOT_POW2_NUM_L1_BANKS=1 -DLOG_BASE_2_OF_NUM_DRAM_BANKS=3 -DNUM_DRAM_BANKS=8 -DNUM_L1_BANKS=110 -DPCIE_NOC_X=19 -DPCIE_NOC_Y=24 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DPROGRAMMABLE_CORE_TYPE=0 -DARCH_BLACKHOLE -DDISPATCH_MESSAGE_ADDR=4290184248 -DKERNEL_BUILD -DFULL_KERNEL_NAME="sampler_fused_compute/8662215307101684000/" -c -o /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/sampler_fused_compute/8662215307101684000/trisc1/trisck.7862434878862536492_1.o /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF /opt/ep0/jit_cache/tt-metal-cache18294268491454734020/kernels/sampler_fused_compute/8662215307101684000/trisc1/trisck.7862434878862536492_1.d
+In file included from ../chlkc_math.cpp:4,
+                 from /opt/ep0/tt-metal/tt_metal/hw/ckernels/blackhole/metal/common/chlkc_list.h:16,
+                 from /opt/ep0/tt-metal/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:14:
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp: In function 'void kernel_main()':
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:27:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   27 |     copy_tile_to_dst_init_short(cb_x);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+In file included from /opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:13:
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:29:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   29 |     copy_tile_to_dst_init_short(cb_m);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:50:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   50 |     copy_tile_to_dst_init_short(cb_v);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:53:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   53 |     copy_tile_to_dst_init_short(cb_z);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/opt/ep0/tt-metal/models/demos/blackhole/drama3/kernels/sampler_fused_compute.cpp:55:32: warning: 'void ckernel::copy_tile_to_dst_init_short(uint32_t, uint32_t, uint32_t, uint32_t) [with bool is_fp32_dest_acc_en = true; uint32_t = long unsigned int]' is deprecated: Renamed to copy_init(). This will be removed after 20-09-2026. [-Wdeprecated-declarations]
+   55 |     copy_tile_to_dst_init_short(cb_n);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/opt/ep0/tt-metal/tt_metal/hw/inc/api/compute/tile_move_copy.h:220:92: note: declared here
+  220 | [[deprecated("Renamed to copy_init(). This will be removed after 20-09-2026.")]] ALWI void copy_tile_to_dst_init_short(
+      |                                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+A [2351, 32616, 38117, 41955, 44055, 57734, 57957, 64728] B [88, 2391, 38072, 38099, 44054, 57917] code 393.0
+A [2351, 33462, 38407, 42218, 44311, 58368, 58489, 74067] B [74, 2391, 38362, 38389, 44319, 58449] code 384.0
+A [2341, 32615, 37151, 40990, 43097, 57205, 57368, 73079] B [69, 2381, 37115, 37142, 43089, 57321] code 965.0
+A [2354, 31660, 35381, 39183, 41290, 55384, 55479, 71160] B [52, 2399, 35336, 35363, 41282, 55439] code 962.0
+A [2363, 32386, 38334, 42150, 44205, 58146, 58372, 72166] B [54, 2403, 38298, 38325, 44203, 58328] code 495.0
+A [2355, 31351, 37815, 41670, 43726, 57730, 57867, 73195] B [46, 2395, 37778, 37807, 43725, 57823] code 566.0
+DONE
+2026-10-31 13:14:44.476 | info     |    BuildKernels | JIT cache stats: 6/11 hits (54.5%) [6 cached, 0 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-31 13:14:44.476 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-31 13:14:44.483 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-31 13:14:44.483 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-31 13:14:44.583 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-31 13:14:44.583 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-31 13:14:44.583 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

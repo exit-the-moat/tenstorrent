@@ -1,0 +1,38 @@
+start 03:45:25 io=0
+prof_sm EXIT 0 03:48:38
+prof_s8 EXIT 0 03:49:51
+tower_b4 EXIT 0
+tower_b4a EXIT 0
+tower_b8 EXIT 0
+=== /opt/ep0/port8/s8_1 start 03:52:40 io_errors=0
+{'price': (53.7, 195.3), 'model': (56.7, 210.7), 'specs': (56.0, 191.7), 'close': (56.5, 189.0), 'cold_open': (52.7, 193.0), 'server': (53.0, 205.5), 'second_opinion': (73.3, 217.0), 'fix': (57.3, 189.3)}
+SUMS_OK /opt/ep0/port8/s8_1
+=== /opt/ep0/port8/s8_1 end 03:54:56 io_errors=0 EXIT 0
+=== /opt/ep0/port8/s8_2 start 03:54:56 io_errors=0
+{'price': (57.3, 212.3), 'model': (57.7, 188.3), 'specs': (58.0, 195.3), 'close': (57.0, 211.0), 'cold_open': (55.3, 203.3), 'server': (49.5, 230.5), 'second_opinion': (57.7, 185.3), 'fix': (53.7, 183.3)}
+SUMS_OK /opt/ep0/port8/s8_2
+=== /opt/ep0/port8/s8_2 end 03:57:04 io_errors=0 EXIT 0
+=== /opt/ep0/port8/s8_3 start 03:57:04 io_errors=0
+{'price': (57.0, 205.0), 'model': (55.0, 172.3), 'specs': (51.8, 181.2), 'close': (48.0, 180.0), 'cold_open': (57.5, 188.0), 'server': (47.5, 183.8), 'second_opinion': (51.3, 168.3), 'fix': (52.3, 217.3)}
+SUMS_OK /opt/ep0/port8/s8_3
+=== /opt/ep0/port8/s8_3 end 03:59:12 io_errors=0 EXIT 0
+=== /opt/ep0/port8/s8b8 start 03:59:12 io_errors=0
+{'price': (55.7, 200.0), 'model': (57.7, 201.0), 'specs': (51.0, 171.3), 'close': (50.5, 191.0), 'cold_open': (57.5, 182.0), 'server': (53.3, 195.0), 'second_opinion': (53.0, 180.3), 'fix': (56.0, 185.5)}
+SUMS_OK /opt/ep0/port8/s8b8
+=== /opt/ep0/port8/s8b8 end 04:01:18 io_errors=0 EXIT 0
+=== /opt/ep0/port8/s8b4 start 04:01:18 io_errors=0
+{'price': (56.7, 186.7), 'model': (53.3, 178.7), 'specs': (54.0, 178.2), 'close': (50.5, 184.5), 'cold_open': (53.3, 190.0), 'server': (76.0, 216.5), 'second_opinion': (50.2, 182.2), 'fix': (57.7, 191.7)}
+SUMS_OK /opt/ep0/port8/s8b4
+=== /opt/ep0/port8/s8b4 end 04:03:38 io_errors=0 EXIT 0
+=== /opt/ep0/port8/s8b4a start 04:03:38 io_errors=0
+{'price': (68.0, 197.0), 'model': (54.2, 188.2), 'specs': (56.7, 179.7), 'close': (49.0, 168.0), 'cold_open': (52.5, 193.5), 'server': (56.7, 212.7), 'second_opinion': (51.8, 175.8), 'fix': (56.3, 181.0)}
+SUMS_OK /opt/ep0/port8/s8b4a
+=== /opt/ep0/port8/s8b4a end 04:05:53 io_errors=0 EXIT 0
+s8_1 lines 8 RTF 0.506 gen ms/frame 23.18 rtf/line 0.494-0.541 TTFA 0.433-0.496 worst_late 0.008 frames 2056 audio 95.5
+s8_2 lines 8 RTF 0.499 gen ms/frame 22.90 rtf/line 0.492-0.537 TTFA 0.436-0.484 worst_late 0.000 frames 2056 audio 95.5
+s8_3 lines 8 RTF 0.502 gen ms/frame 22.99 rtf/line 0.492-0.540 TTFA 0.430-0.480 worst_late 0.000 frames 2056 audio 95.5
+s8b8 lines 8 RTF 0.478 gen ms/frame 21.89 rtf/line 0.473-0.508 TTFA 0.434-0.473 worst_late 0.000 frames 2110 audio 98.0
+s8b4 lines 8 RTF 0.507 gen ms/frame 23.25 rtf/line 0.501-0.538 TTFA 0.434-0.482 worst_late 0.000 frames 2122 audio 98.5
+s8b4a lines 8 RTF 0.517 gen ms/frame 23.68 rtf/line 0.510-0.549 TTFA 0.431-0.504 worst_late 0.000 frames 2096 audio 97.3
+io=0
+CHAIN5_DONE

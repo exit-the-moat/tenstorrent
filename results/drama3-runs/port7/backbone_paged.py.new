@@ -1,0 +1,435 @@
+# SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+"""Drama 3 backbone on one P150, paged + traced (Day 4).
+
+Same qwen36 single-device modules as backbone.py, set up the way qwen36's masked-bucket / traced paths run them:
+- attention layers on a paged KV cache (fixed shape: no per-length programs, trace-safe);
+- GDN layers on persistent external recurrent/conv buffers, written in place in prefill and decode;
+- the whole prompt in ONE masked-bucket prefill (rows padded to a multiple of 128, GDN masked by valid_len,
+  paged K/V filled for the real blocks only), as qwen36 ``_forward_prefill_chunk_masked`` with input embeddings;
+- decode as one captured trace per frame: inputs (embedding row, position, RoPE cos/sin) copied into persistent
+  buffers, outputs (final-norm hidden, candidate logits) in persistent buffers.
+"""
+
+import os
+import time
+
+import torch
+
+import ttnn
+from models.demos.blackhole.drama3.tt.device_check import build_layer, dram_used_gb
+from models.demos.blackhole.drama3.tt.weight_mapping import load_drama3_state_dict
+from models.tt_transformers.tt.common import Mode
+
+TILE = 32
+BLOCK = 64
+
+
+def _host(t, rows):
+    return ttnn.to_torch(ttnn.get_device_tensors(t)[0]).float().reshape(-1, t.shape[-1])[:rows]
+
+
+class PagedBackbone:
+    def __init__(self, mesh, args, cache, wmap, candidates, max_seq=2048, log=print):
+        from models.common.rmsnorm import RMSNorm
+        from models.demos.blackhole.qwen36.tt.rope import Qwen36RoPESetup
+
+        self.mesh, self.args, self.log = mesh, args, log
+        t0 = time.time()
+        from models.demos.blackhole.drama3.tt import decode_linear
+
+        decode_linear.install(mesh)  # DRAMA3_DECODE_LINEAR (default 1): tuned one-token matmul programs
+        self.layers = [build_layer(mesh, args, i, cache, wmap)[0] for i in range(args.n_layers)]
+        sd = load_drama3_state_dict(args.CKPT_DIR, norm=True, lm_head=True, wmap=wmap)
+        self.norm = RMSNorm(
+            device=mesh,
+            dim=args.dim,
+            state_dict=sd,
+            weight_key="norm",
+            weight_cache_path=cache,
+            weight_dtype=ttnn.bfloat16,
+            add_unit_offset=True,
+            eps=args.norm_eps,
+        )
+        self.n_cand = len(candidates)
+        rows = torch.zeros(((self.n_cand + TILE - 1) // TILE) * TILE, args.dim, dtype=torch.bfloat16)
+        rows[: self.n_cand] = sd["output.weight"][candidates]
+        del sd
+        self.head = ttnn.as_tensor(
+            rows,
+            preprocess=lambda t: t.T.contiguous(),
+            dtype=ttnn.bfloat16,
+            layout=ttnn.TILE_LAYOUT,
+            device=mesh,
+            memory_config=ttnn.DRAM_MEMORY_CONFIG,
+            cache_file_name=cache / "drama3.output.candidates.bf16",
+            mesh_mapper=ttnn.ReplicateTensorToMesh(mesh),
+        )
+        self.head_ckc = ttnn.init_device_compute_kernel_config(
+            mesh.arch(), math_fidelity=ttnn.MathFidelity.HiFi4, fp32_dest_acc_en=True, packer_l1_acc=False
+        )
+        self.rope = Qwen36RoPESetup(mesh, args)
+        # DRAMA3_SHARDED_DECODE_NORM (default 1): one-token norms on 8 cores (tt/decode_norm.py)
+        from models.demos.blackhole.drama3.tt import decode_norm
+
+        self.row_norm = None
+        if decode_norm.ENABLED:
+            self.row_norm = decode_norm.ShardedRowNorm(mesh, args.dim)
+            for layer in self.layers:
+                layer.attention_norm = decode_norm.DecodeNormWrapper(layer.attention_norm, self.row_norm)
+                layer.ffn_norm = decode_norm.DecodeNormWrapper(layer.ffn_norm, self.row_norm)
+            self.norm = decode_norm.DecodeNormWrapper(self.norm, self.row_norm)
+        # grouped-by-expert MoE prefill (qwen36 moe/prefill_grouped.py), DRAMA3_GROUPED_MOE=0 for the tile-sparse one
+        self.grouped_moe = os.environ.get("DRAMA3_GROUPED_MOE", "1") == "1"
+        for layer in self.layers:
+            layer.feed_forward.experts.grouped_prefill = self.grouped_moe
+
+        # paged KV for the 10 attention layers, one sequence: page table = identity over max_seq / 64 blocks
+        self.max_seq = max_seq
+        n_blocks = max_seq // BLOCK
+        self.page_table_host = torch.arange(n_blocks, dtype=torch.int32).unsqueeze(0)
+        self.page_table = ttnn.from_torch(self.page_table_host, dtype=ttnn.int32, layout=ttnn.ROW_MAJOR_LAYOUT, device=mesh)
+        # DRAMA3_KV_STREAMS (batch mode, default 1): a K/V pool of that many sequences' blocks; the identity page
+        # table above is stream 0's (host/batch.py maps the other streams' rows)
+        shape = [n_blocks * int(os.environ.get("DRAMA3_KV_STREAMS", "1")), args.n_kv_heads, BLOCK, args.head_dim]
+        self.kv = []
+        for layer in self.layers:
+            if layer.is_full_attention:
+                k = ttnn.zeros(shape, dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh)
+                v = ttnn.zeros(shape, dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh)
+                layer.attention.set_paged_kv_cache(k, v)
+                self.kv.append((k, v))
+        # persistent GDN state, written in place by prefill (chunk) and decode (recurrent)
+        self.gdn_state = []
+        for layer in self.layers:
+            if layer.is_full_attention:
+                continue
+            dn = layer.attention
+            rec = ttnn.zeros(
+                [1, dn.num_v_heads, dn.head_k_dim, dn.head_v_dim], dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh
+            )
+            conv = ttnn.zeros(
+                [1, dn.conv_kernel_size - 1, dn.cfg.q_dim + dn.cfg.k_dim + dn.cfg.v_dim],
+                dtype=ttnn.bfloat16,
+                layout=ttnn.TILE_LAYOUT,
+                device=mesh,
+            )
+            dn.set_external_state(rec, conv)
+            dn.conv_state_q = dn.conv_state_k = dn.conv_state_v = None
+            dn.split_conv_state = None
+            dn._chunk_inplace_state = True
+            self.gdn_state.append((dn, rec, conv))
+        # DRAMA3_GDN_SPLIT_CONV (default 1): decode reads the conv state as 3 separate [1, 1, D] rows (qwen36's split
+        # in-place path: no slices / concat / to_layout per tap); prefill keeps the fused [1, 3, D] buffer and
+        # copies it into the rows at its end (sync_split_conv)
+        self.split_conv = os.environ.get("DRAMA3_GDN_SPLIT_CONV", "1") == "1"
+        if self.split_conv:
+            from models.demos.blackhole.qwen36.tt.gdn.state import split_fused_conv_state
+
+            from models.experimental.gated_attention_gated_deltanet.tt.ttnn_gated_deltanet import ConvPartialSums
+
+            # DRAMA3_GDN_CONV_PARTIALS (default 1): the rows hold running partial sums (5 ops per decode step, not 11)
+            self.conv_partials = os.environ.get("DRAMA3_GDN_CONV_PARTIALS", "1") == "1"
+            for dn, _, _ in self.gdn_state:
+                split_fused_conv_state(dn)
+                if self.conv_partials:
+                    dn.split_conv_state = ConvPartialSums(dn.split_conv_state)
+        # DRAMA3_GDN_FUSED_DECODE (port5, opt-in: "all" or layer indices): the one-token GDN mixer body between the
+        # in-projection and o_proj as one fused program (tt/gdn_fused_decode.py)
+        from models.demos.blackhole.drama3.tt import gdn_fused_decode
+
+        fused = gdn_fused_decode.layers_from_env(len(self.layers))
+        if fused:
+            log(f"fused GDN decode on {gdn_fused_decode.install(self.layers, mesh, fused)} layers")
+        # DRAMA3_MOE_FUSED_TOPK=1 (port5, opt-in): the one-token router top-k as one kernel (tt/moe_fused_decode.py)
+        from models.demos.blackhole.drama3.tt import moe_fused_decode
+
+        n_topk = moe_fused_decode.install_topk(self.layers, mesh)
+        if n_topk:
+            log(f"fused router top-k on {n_topk} layers")
+        n_comb = moe_fused_decode.install_combine(self.layers, mesh)  # DRAMA3_MOE_FUSED_COMBINE=1 (opt-in)
+        # DRAMA3_ATTN_FUSED_PRE=1 (port5, opt-in): the one-token attention pre-SDPA step as one kernel
+        from models.demos.blackhole.drama3.tt import attn_fused_decode
+
+        n_att = attn_fused_decode.install([l.attention for l in self.layers if l.is_full_attention], mesh)
+        if n_att:
+            log(f"fused attention pre-SDPA on {n_att} backbone layers")
+        if n_comb:
+            log(f"fused MoE combine on {n_comb} layers")
+        self.zero_rec = ttnn.zeros(list(self.gdn_state[0][1].shape), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh)
+        self.zero_conv = ttnn.zeros(list(self.gdn_state[0][2].shape), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh)
+
+        # persistent decode inputs / trace
+        H = args.dim
+        self.x_buf = ttnn.from_torch(
+            torch.zeros(1, 1, H), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=mesh, memory_config=ttnn.DRAM_MEMORY_CONFIG
+        )
+        self.pos_buf = ttnn.from_torch(torch.zeros(1, dtype=torch.int32), dtype=ttnn.int32, layout=ttnn.ROW_MAJOR_LAYOUT, device=mesh)
+        # DRAMA3_ROPE_MATMUL (default 1): full-width decode cos / sin + the partial-rotary matmul (qwen36 attention)
+        self.rope_full = os.environ.get("DRAMA3_ROPE_MATMUL", "1") == "1"
+        if self.rope_full:
+            from models.experimental.gated_attention_gated_deltanet.tt.ttnn_gated_attention import register_partial_rope
+
+            register_partial_rope(mesh, args.head_dim, self.rope.get_cos_sin_host(0)[0].shape[-1])
+        c, s = self.cos_sin_host(0)
+        self.cos_buf = ttnn.to_device(c, mesh)
+        self.sin_buf = ttnn.to_device(s, mesh)
+        self.trace_id = None
+        self.dec_out = None
+        self.build_s = time.time() - t0
+        log(f"paged backbone resident: DRAM {dram_used_gb(mesh)[0]:.2f} GB, built in {self.build_s:.0f}s")
+
+    # ---------------------------------------------------------------- state
+    def reset(self):
+        """New sequence: zero the GDN state in place (the paged KV needs no reset: decode overwrites a
+        position before it attends to it, prefill fills every real block)."""
+        for dn, rec, conv in self.gdn_state:
+            ttnn.copy(self.zero_rec, rec)
+            ttnn.copy(self.zero_conv, conv)
+
+    def sync_split_conv(self):
+        """Fused conv state (written by prefill) -> the split decode rows (in place)."""
+        if self.split_conv and self.conv_partials:
+            from models.experimental.gated_attention_gated_deltanet.tt.ttnn_gated_deltanet import conv_partials_from_states
+
+            for dn, _, _ in self.gdn_state:
+                states = [
+                    ttnn.to_layout(dn.fused_conv_state[:, k : k + 1, :], ttnn.TILE_LAYOUT) for k in range(dn.conv_kernel_size - 1)
+                ]
+                w = dn.weights
+                conv_partials_from_states(states, w.fused_conv_weight_taps, w.fused_conv_bias_dev, dn.split_conv_state)
+        elif self.split_conv:
+            for dn, _, _ in self.gdn_state:
+                dn._restore_split_conv_from_fused()
+
+    def snapshot_gdn(self, into=None):
+        """Prefix cache: clone every GDN layer's recurrent + conv state (the paged K/V of the prefix needs no copy:
+        suffix prefill and decode only write blocks at or after the prefix end). into: an earlier snapshot to
+        overwrite in place; a snapshot that lives across trace replays must be allocated before the capture
+        (buffers allocated later may overlap the trace's intermediates)."""
+        if into is not None:
+            for (_, rec, conv), (r, c) in zip(self.gdn_state, into):
+                ttnn.copy(rec, r)
+                ttnn.copy(conv, c)
+            return into
+        return [(ttnn.clone(rec), ttnn.clone(conv)) for _, rec, conv in self.gdn_state]
+
+    def restore_gdn(self, snap):
+        for (dn, rec, conv), (r, c) in zip(self.gdn_state, snap):
+            ttnn.copy(r, rec)
+            ttnn.copy(c, conv)
+
+    def warm_grouped(self, bucket):
+        """Compile the grouped MoE prefill for every M bucket at this prefill bucket (before a trace is parked)."""
+        if not self.grouped_moe:
+            return
+        from models.demos.blackhole.qwen36.tt.moe.prefill_grouped import warm_buckets
+
+        moe = self.layers[0].feed_forward
+        x = ttnn.from_torch(torch.randn(1, 1, bucket, self.args.dim) * 0.5, dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=self.mesh)
+        r = moe.router(x)
+        warm_buckets(moe.experts, x, r)
+        ttnn.deallocate(r)
+        ttnn.deallocate(x)
+
+    # ---------------------------------------------------------------- prefill
+    @staticmethod
+    def bucket_for(n):
+        return ((n + 127) // 128) * 128
+
+    def prefill(self, emb, collect=False, keep_device=False, start=0):
+        """emb [T, H] fp32 (any T) -> (final-norm [T, H], candidate logits of row T-1, per-layer list [T, H]);
+        keep_device=True appends the device final-norm tensor [1, bucket, H] (the tower prefill input; caller frees it).
+        start > 0: the rows sit at positions start.. after an already prefilled prefix (its paged K/V in blocks
+        < start / 64, the GDN state carried in the external buffers); start must be a multiple of 128 (the flexible
+        chunked SDPA's chunk, and the GDN scan's chunk so its boundaries match a whole-prompt prefill)."""
+        T = emb.shape[0]
+        bucket = self.bucket_for(T)
+        assert start % 128 == 0 and start + bucket <= self.max_seq
+        x = torch.zeros(1, bucket, emb.shape[-1])
+        x[0, :T] = emb
+        x = ttnn.from_torch(x, dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=self.mesh, memory_config=ttnn.DRAM_MEMORY_CONFIG)
+        self.rope.build_request_rope(torch.zeros(1, T, dtype=torch.long))
+        cos, sin = self.rope.get_prefill_rot_mats(start, bucket)
+        # K/V fill over the whole bucket: the block count shapes the paged-fill program, so a per-length count would
+        # compile at request time (with the decode trace parked). The padded rows land at positions >= start + T,
+        # which decode overwrites before it attends to them.
+        chunk_pt = ttnn.from_torch(
+            self.page_table_host[:, start // BLOCK : (start + bucket) // BLOCK].contiguous(),
+            dtype=ttnn.int32,
+            layout=ttnn.ROW_MAJOR_LAYOUT,
+            device=self.mesh,
+        )
+        csi = ttnn.from_torch(torch.tensor([start], dtype=torch.int32), dtype=ttnn.int32, layout=ttnn.ROW_MAJOR_LAYOUT, device=self.mesh)
+        per_layer = []
+        for layer in self.layers:
+            layer.feed_forward.experts.prefill_valid_len = T
+            if layer.is_full_attention:
+                y = layer.forward(
+                    x,
+                    cos=cos,
+                    sin=sin,
+                    mode="prefill",
+                    page_table=self.page_table,
+                    chunk_page_table=chunk_pt,
+                    chunk_start_idx_tensor=csi,
+                )
+            else:
+                y = layer.forward(x, mode="prefill", chunk_size=layer.attention.long_prefill_chunk_size, valid_len=T)
+            if len(y.shape) == 4:
+                y = ttnn.reshape(y, (1, y.shape[-2], y.shape[-1]))
+            ttnn.deallocate(x)
+            x = y
+            if collect:
+                per_layer.append(_host(x, T))
+        self.sync_split_conv()
+        xn = self.norm(x, mode=Mode.PREFILL)
+        normed = _host(xn, T)
+        logits = ttnn.linear(xn, self.head, dtype=ttnn.float32, compute_kernel_config=self.head_ckc)
+        last = _host(logits, T)[T - 1, : self.n_cand]
+        for t in (x, logits, chunk_pt, csi):
+            ttnn.deallocate(t)
+        if keep_device:
+            return normed, last, per_layer, xn
+        ttnn.deallocate(xn)
+        return normed, last, per_layer
+
+    # ---------------------------------------------------------------- decode
+    def _decode_body(self, collect=False):
+        x = self.x_buf
+        per_layer = []
+        for layer in self.layers:
+            if layer.is_full_attention:
+                y = layer.forward(
+                    x, cos=self.cos_buf, sin=self.sin_buf, mode="decode", position_tensor=self.pos_buf, page_table=self.page_table
+                )
+            else:
+                y = layer.forward(x, mode="decode")
+            if len(y.shape) == 4:
+                y = ttnn.reshape(y, (1, y.shape[-2], y.shape[-1]))
+            if x is not self.x_buf:
+                ttnn.deallocate(x)
+            x = y
+            if collect:
+                per_layer.append(x)
+        xn = self.norm(x, mode=Mode.PREFILL)
+        logits = ttnn.linear(xn, self.head, dtype=ttnn.float32, compute_kernel_config=self.head_ckc)
+        return xn, logits, per_layer
+
+    def _stage(self, emb_row, pos):
+        ttnn.copy_host_to_device_tensor(
+            ttnn.from_torch(emb_row.reshape(1, 1, -1), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT), self.x_buf
+        )
+        self.stage_pos(pos)
+
+    def stage_pos(self, pos):
+        """Position + cos / sin buffers (shared with the tower, which steps at the position the backbone decode
+        just staged, so it skips the uploads)."""
+        if getattr(self, "staged_pos", None) == pos:
+            return
+        ttnn.copy_host_to_device_tensor(
+            ttnn.from_torch(torch.tensor([pos], dtype=torch.int32), dtype=ttnn.int32, layout=ttnn.ROW_MAJOR_LAYOUT), self.pos_buf
+        )
+        c, s = self.cos_sin_host(pos)
+        ttnn.copy_host_to_device_tensor(c, self.cos_buf)
+        ttnn.copy_host_to_device_tensor(s, self.sin_buf)
+        self.staged_pos = pos
+
+    def cos_sin_host(self, pos):
+        """Decode cos / sin as host tensors: the rotary dims only, or full head width ([cos | 1], [sin | 0])."""
+        if not self.rope_full:
+            return self.rope.get_cos_sin_host(pos)
+        c = self.rope.cos_cpu[pos : pos + 1].float()
+        s = self.rope.sin_cpu[pos : pos + 1].float()
+        pad = self.args.head_dim - c.shape[-1]
+        c = torch.cat([c, torch.ones(1, pad)], -1).reshape(1, 1, -1)
+        s = torch.cat([s, torch.zeros(1, pad)], -1).reshape(1, 1, -1)
+        return (
+            ttnn.from_torch(c.to(torch.bfloat16), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT),
+            ttnn.from_torch(s.to(torch.bfloat16), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT),
+        )
+
+    def decode_eager(self, emb_row, pos, collect=False):
+        self._stage(emb_row, pos)
+        xn, logits, per_layer = self._decode_body(collect)
+        out = _host(xn, 1)[0], _host(logits, 1)[0, : self.n_cand], [_host(p, 1)[0] for p in per_layer]
+        for t in [xn, logits, *per_layer]:
+            ttnn.deallocate(t)
+        return out
+
+    def capture(self, pos=0):
+        """Compile + capture the decode trace (runs the body twice: state is garbage afterwards, reset() it)."""
+        self._stage(torch.zeros(self.args.dim), pos)
+        xn, logits, _ = self._decode_body()  # compile run
+        ttnn.deallocate(xn)
+        ttnn.deallocate(logits)
+        ttnn.synchronize_device(self.mesh)
+        self.trace_id = ttnn.begin_trace_capture(self.mesh, cq_id=0)
+        self.dec_out = self._decode_body()[:2]
+        ttnn.end_trace_capture(self.mesh, self.trace_id, cq_id=0)
+        ttnn.synchronize_device(self.mesh)
+
+    def decode_start(self, emb_row, pos):
+        """Stage + replay without waiting (decode_finish reads the logits): host work can run in between."""
+        self._stage(emb_row, pos)
+        ttnn.execute_trace(self.mesh, self.trace_id, cq_id=0, blocking=False)
+
+    def decode_finish(self):
+        return _host(self.dec_out[1], 1)[0, : self.n_cand]
+
+    # ---------------------------------------------------------------- port7 frame pipe (DRAMA3_FRAME_PIPE=1)
+    def prepare_embed(self, codebook_embeddings, scale, n_codes):
+        """The next frame's input row on the card: Fish's embed_backbone of a semantic frame,
+        (embed_tokens[main] + codebook_embeddings[4096 + code 1]) * scale, from the host-staged text row and the
+        tower's code 1, so the backbone step can be enqueued before the codes are read back. Persistent buffers:
+        call before capture()."""
+        H = self.args.dim
+        self.text_buf = ttnn.from_torch(torch.zeros(1, 1, H), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT, device=self.mesh)
+        self.cb1 = ttnn.from_torch(
+            codebook_embeddings[4096:8192].contiguous().to(torch.bfloat16), dtype=ttnn.bfloat16, layout=ttnn.ROW_MAJOR_LAYOUT, device=self.mesh
+        )
+        self.embed_scale = scale
+        # the tower's codes copied out by the embed replay: the fused tower trace's own output buffer is allocated
+        # after the backbone capture, so the backbone replay may overwrite it before the host reads it
+        self.codes_out = ttnn.from_torch(torch.zeros(1, 1, 1, n_codes), dtype=ttnn.float32, layout=ttnn.TILE_LAYOUT, device=self.mesh)
+
+    def _embed_body(self, codes):
+        c = ttnn.typecast(ttnn.slice(codes, [0, 0, 0, 0], [1, 1, 1, 1]), ttnn.uint32)
+        idx = ttnn.to_layout(ttnn.reshape(c, (1, 1)), ttnn.ROW_MAJOR_LAYOUT)
+        e = ttnn.embedding(idx, self.cb1, layout=ttnn.TILE_LAYOUT)
+        s = ttnn.add(ttnn.typecast(self.text_buf, ttnn.float32), ttnn.typecast(ttnn.reshape(e, (1, 1, e.shape[-1])), ttnn.float32))
+        x = ttnn.typecast(ttnn.multiply(s, self.embed_scale), ttnn.bfloat16)
+        ttnn.copy(x, self.x_buf)
+        ttnn.copy(codes, self.codes_out)
+
+    def capture_embed(self, codes):
+        """codes: the fused tower trace's persistent [1, 1, 1, 9] fp32 code row (code 1 first)."""
+        self._embed_body(codes)  # compile run
+        ttnn.synchronize_device(self.mesh)
+        self.embed_tid = ttnn.begin_trace_capture(self.mesh, cq_id=0)
+        self._embed_body(codes)
+        ttnn.end_trace_capture(self.mesh, self.embed_tid, cq_id=0)
+        ttnn.synchronize_device(self.mesh)
+
+    def read_codes(self, n):
+        """The tower codes the last embed replay copied out (blocking read)."""
+        return ttnn.to_torch(self.codes_out).float().reshape(-1)[:n].round().long()
+
+    def stage_text(self, row):
+        ttnn.copy_host_to_device_tensor(
+            ttnn.from_torch(row.reshape(1, 1, -1), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT), self.text_buf
+        )
+
+    def embed_decode_start(self):
+        """Replay the input embedding + the decode trace (after stage_text / stage_pos), without waiting."""
+        ttnn.execute_trace(self.mesh, self.embed_tid, cq_id=0, blocking=False)
+        ttnn.execute_trace(self.mesh, self.trace_id, cq_id=0, blocking=False)
+
+    def decode(self, emb_row, pos, hidden=True):
+        """Traced decode: stage inputs, replay, read back (final-norm [H] or None with hidden=False, candidate
+        logits [n_cand])."""
+        self._stage(emb_row, pos)
+        ttnn.execute_trace(self.mesh, self.trace_id, cq_id=0, blocking=False)
+        xn, logits = self.dec_out
+        return (_host(xn, 1)[0] if hidden else None), _host(logits, 1)[0, : self.n_cand]

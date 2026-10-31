@@ -1,0 +1,25 @@
+wcheck fb_short_8 fb_short_8 n 32 mean match 0.920 min 0.818 clipped 0
+wcheck f_short_8 f_short_8 n 32 mean match 0.917 min 0.744 clipped 0
+wcheck f_short_12 f_short_12 n 32 mean match 0.932 min 0.837 clipped 0
+wcheck f_short_16 f_short_16 n 32 mean match 0.931 min 0.837 clipped 0
+wcheck f_short_24 f_short_24 n 32 mean match 0.927 min 0.837 clipped 0
+wcheck fb_long_8 fb_long_8 n 32 mean match 0.927 min 0.830 clipped 0
+wcheck f_long_8 f_long_8 n 32 mean match 0.926 min 0.830 clipped 0
+wcheck f_long_16 f_long_16 n 32 mean match 0.930 min 0.820 clipped 0
+wcheck f_long_24 f_long_24 n 32 mean match 0.925 min 0.820 clipped 0
+WC_DONE
+{"run": "/opt/ep0/port10/fb_short_8", "n": 32, "vs_ref_mean": 0.958, "vs_ref_min": 0.9468, "vs_base_mean": 1.0, "vs_base_min": 1.0}
+{"run": "/opt/ep0/port10/f_short_8", "n": 32, "vs_ref_mean": 0.9546, "vs_ref_min": 0.9436, "vs_base_mean": 0.974, "vs_base_min": 0.9474}
+{"run": "/opt/ep0/port10/f_short_16", "n": 32, "vs_ref_mean": 0.9518, "vs_ref_min": 0.936, "vs_base_mean": 0.9742, "vs_base_min": 0.9626}
+{"run": "/opt/ep0/port10/f_short_24", "n": 32, "vs_ref_mean": 0.9542, "vs_ref_min": 0.9373, "vs_base_mean": 0.9703, "vs_base_min": 0.9456}
+{"run": "/opt/ep0/port10/fb_long_8", "n": 32, "vs_ref_mean": 0.9578, "vs_ref_min": 0.9475, "vs_base_mean": 1.0, "vs_base_min": 1.0}
+{"run": "/opt/ep0/port10/f_long_8", "n": 32, "vs_ref_mean": 0.9582, "vs_ref_min": 0.9474, "vs_base_mean": 0.9953, "vs_base_min": 0.9878}
+{"run": "/opt/ep0/port10/f_long_16", "n": 32, "vs_ref_mean": 0.9606, "vs_ref_min": 0.9527, "vs_base_mean": 0.9865, "vs_base_min": 0.9797}
+{"run": "/opt/ep0/port10/f_long_24", "n": 32, "vs_ref_mean": 0.9624, "vs_ref_min": 0.9497, "vs_base_mean": 0.9866, "vs_base_min": 0.982}
+{"run": "/opt/ep0/port10/f_short_8", "base": "/opt/ep0/port10/fb_short_8", "lines": 32, "mean_diff": {"0-500": -0.106, "500-2000": 0.058, "2000-4000": -0.065, "4000-8000": 0.349, "8000-12000": -0.401, "12000-16000": -0.384, "16000-22050": -0.347, "flatness": -0.0, "rms_dbfs": 0.256}, "clipped": 0, "flags": []}
+{"run": "/opt/ep0/port10/f_short_16", "base": "/opt/ep0/port10/fb_short_8", "lines": 32, "mean_diff": {"0-500": -0.042, "500-2000": 0.17, "2000-4000": -0.153, "4000-8000": 0.486, "8000-12000": -0.175, "12000-16000": -0.143, "16000-22050": -0.223, "flatness": -0.0, "rms_dbfs": 0.015}, "clipped": 0, "flags": []}
+{"run": "/opt/ep0/port10/f_short_24", "base": "/opt/ep0/port10/fb_short_8", "lines": 32, "mean_diff": {"0-500": -0.118, "500-2000": -0.007, "2000-4000": 0.058, "4000-8000": 0.305, "8000-12000": -0.654, "12000-16000": -0.358, "16000-22050": -0.255, "flatness": -0.0, "rms_dbfs": 0.016}, "clipped": 0, "flags": []}
+{"run": "/opt/ep0/port10/f_long_8", "base": "/opt/ep0/port10/fb_long_8", "lines": 32, "mean_diff": {"0-500": 0.063, "500-2000": 0.015, "2000-4000": -0.122, "4000-8000": 0.007, "8000-12000": -0.186, "12000-16000": -0.18, "16000-22050": -0.196, "flatness": -0.0, "rms_dbfs": 0.134}, "clipped": 0, "flags": []}
+{"run": "/opt/ep0/port10/f_long_16", "base": "/opt/ep0/port10/fb_long_8", "lines": 32, "mean_diff": {"0-500": 0.125, "500-2000": 0.059, "2000-4000": 0.07, "4000-8000": -0.261, "8000-12000": -0.435, "12000-16000": -0.365, "16000-22050": -0.315, "flatness": -0.0, "rms_dbfs": 0.2}, "clipped": 0, "flags": []}
+{"run": "/opt/ep0/port10/f_long_24", "base": "/opt/ep0/port10/fb_long_8", "lines": 32, "mean_diff": {"0-500": -0.079, "500-2000": -0.126, "2000-4000": 0.211, "4000-8000": 0.264, "8000-12000": 0.07, "12000-16000": 0.037, "16000-22050": 0.132, "flatness": 0.0, "rms_dbfs": 0.092}, "clipped": 0, "flags": []}
+POST_DONE

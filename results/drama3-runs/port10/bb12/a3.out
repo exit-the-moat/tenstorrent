@@ -1,0 +1,12 @@
+bits_bb rc=0 EXIT 0 io=0 disk=70%
+bits in_proj 1 {'bitexact': True, 'maxabs': 0.0, 'ndiff': 0, 'pad_maxabs': 0.0, 'page_kb': 7.4}
+bits in_proj 8 {'bitexact': True, 'maxabs': 0.0, 'ndiff': 0, 'pad_maxabs': 0.0, 'page_kb': 59.5}
+bits in_proj 16 {'bitexact': True, 'maxabs': 0.0, 'ndiff': 0, 'pad_maxabs': 0.0, 'page_kb': 119.0}
+bits qkvg 4 {'bitexact': True, 'maxabs': 0.0, 'ndiff': 0, 'pad_maxabs': 0.0, 'page_kb': 21.2}
+bits qkvg 8 {'bitexact': True, 'maxabs': 0.0, 'ndiff': 0, 'pad_maxabs': 0.0, 'page_kb': 42.5}
+bits qkvg 16 {'bitexact': True, 'maxabs': 0.0, 'ndiff': 0, 'pad_maxabs': 0.0, 'page_kb': 85.0}
+bits o_proj 16 {'bitexact': True, 'maxabs': 0.0, 'ndiff': 0, 'pad_maxabs': 0.0, 'page_kb': 17.0}
+bits o_proj 32 {'bitexact': True, 'maxabs': 0.0, 'ndiff': 0, 'pad_maxabs': 0.0, 'page_kb': 34.0}
+bits o_proj 64 {'bitexact': True, 'maxabs': 0.0, 'ndiff': 0, 'pad_maxabs': 0.0, 'page_kb': 68.0}
+golden_off rc=0 EXIT 0 io=0 disk=70%
+A3_DONE

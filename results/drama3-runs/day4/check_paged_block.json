@@ -1,0 +1,47 @@
+{
+ "prefill_s_first": 4.85,
+ "prefill_layer_pcc_min": 0.997187,
+ "prefill_layer_pcc_mean": 0.999508,
+ "prefill_final_norm_pcc": 0.994249,
+ "tail16_row_layer_pcc_min": [
+  0.99978,
+  0.99799,
+  0.99975,
+  0.99971,
+  0.99975,
+  0.99973,
+  0.99975,
+  0.9997,
+  0.99971,
+  0.99962,
+  0.99914,
+  0.99893,
+  0.98439,
+  0.99756,
+  0.97349,
+  0.99892
+ ],
+ "last_logits_pcc": 0.996192,
+ "last_top1_match": true,
+ "last_top5_overlap": 4,
+ "capture_s": 5.5,
+ "trace": {
+  "prefill_s": 1.98,
+  "ms_per_step_median": 45.1,
+  "ms_per_step_min": 44.7,
+  "final_norm_pcc_min": 0.98607,
+  "final_norm_pcc_mean": 0.992744,
+  "logits_pcc_mean": 0.997295,
+  "top1": "18/24"
+ },
+ "eager": {
+  "prefill_s": 1.98,
+  "ms_per_step_median": 181.3,
+  "ms_per_step_min": 180.0,
+  "final_norm_pcc_min": 0.98607,
+  "final_norm_pcc_mean": 0.992744,
+  "logits_pcc_mean": 0.997295,
+  "top1": "18/24"
+ },
+ "trace_vs_eager_logits_maxdiff": 0.0
+}

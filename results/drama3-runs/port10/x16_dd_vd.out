@@ -1,0 +1,2 @@
+x16_dd_vd EXIT 0 09:57:39 io=0 disk=70%
+{"run": "x16_dd_vd", "B": 16, "jobs": 32, "audio_s": 386.798, "wall_s": 65.111, "audio_per_wall": 5.941, "mean_active": 12.88, "ms_step": "38.16 + 9.47 + 32.1", "rtf_decode": "1.56 / 2.21 / 2.86", "rtf": "2.51 / 3.43 / 7.79", "ttfa_admit": "0.61 / 1.95 / 7.81", "ttfa_t0": "7.81 / 14.36 / 42.61", "worst_late": "6.88 / 13.95 / 20.70", "eos": 32, "dram_gb": 31.38, "board_W": "201.2 (238.0)"}

@@ -1,0 +1,7 @@
+=== chain3 start 23:57:52 io=0
+i_base7 EXIT 0 00:00:00
+i_pipe EXIT 0 00:02:14
+i_base7 8 of 8 identical to i_qdt
+i_pipe 8 of 8 identical to i_qdt
+=== chain3 end 00:02:22 io=0
+CHAIN3_DONE

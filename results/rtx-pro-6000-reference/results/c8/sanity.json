@@ -1,0 +1,98 @@
+[
+ {
+  "file": "/opt/ep0/refgpu/c8/price.wav",
+  "seconds": 12.03,
+  "sample_rate": 44100,
+  "peak": 0.9409,
+  "rms_dbfs": -22.5,
+  "clipped_samples": 0,
+  "transcript": "One RTX Pro 6000 costs about 15 and a half thousand euros. Two 10-storrent P150 cards cost about a fifth of that.",
+  "word_match_ratio": 0.75,
+  "id": "price",
+  "match_written": 0.889
+ },
+ {
+  "file": "/opt/ep0/refgpu/c8/model.wav",
+  "seconds": 12.86,
+  "sample_rate": 44100,
+  "peak": 0.728,
+  "rms_dbfs": -22.0,
+  "clipped_samples": 0,
+  "transcript": "The model is Quen 3.8, 27 billion parameters at 4-bit NVFP4 on the RTX, BF4 on the 10-storrent cards.",
+  "word_match_ratio": 0.51,
+  "id": "model",
+  "match_written": 0.884
+ },
+ {
+  "file": "/opt/ep0/refgpu/c8/specs.wav",
+  "seconds": 14.21,
+  "sample_rate": 44100,
+  "peak": 0.8691,
+  "rms_dbfs": -21.9,
+  "clipped_samples": 0,
+  "transcript": "Each card has 120 106 cores and 4 QSFP DD ports. Speculative decoding with D-Flash 2 gives us 87 tokens per second.",
+  "word_match_ratio": 0.593,
+  "id": "specs",
+  "match_written": 0.818
+ },
+ {
+  "file": "/opt/ep0/refgpu/c8/close.wav",
+  "seconds": 6.46,
+  "sample_rate": 44100,
+  "peak": 0.7973,
+  "rms_dbfs": -21.5,
+  "clipped_samples": 0,
+  "transcript": "So did we exit the mode? Not yet, but the climb is shorter than I thought.",
+  "word_match_ratio": 0.938,
+  "id": "close",
+  "match_written": 0.938
+ },
+ {
+  "file": "/opt/ep0/refgpu/c8/cold_open.wav",
+  "seconds": 11.66,
+  "sample_rate": 44100,
+  "peak": 0.8203,
+  "rms_dbfs": -21.5,
+  "clipped_samples": 0,
+  "transcript": "This is the sound of a $1,400 AI card not working. I spent a whole day sure it was broken, both of them. They weren't.",
+  "word_match_ratio": 0.906,
+  "id": "cold_open",
+  "match_written": 1.0
+ },
+ {
+  "file": "/opt/ep0/refgpu/c8/server.wav",
+  "seconds": 12.59,
+  "sample_rate": 44100,
+  "peak": 0.8091,
+  "rms_dbfs": -21.0,
+  "clipped_samples": 0,
+  "transcript": "Power on, the power supply shuts off. Without a power cable on the card, it still shuts off. With an old Radeon in the same slot, everything works.",
+  "word_match_ratio": 1.0,
+  "id": "server",
+  "match_written": 1.0
+ },
+ {
+  "file": "/opt/ep0/refgpu/c8/second_opinion.wav",
+  "seconds": 14.12,
+  "sample_rate": 44100,
+  "peak": 0.8271,
+  "rms_dbfs": -21.5,
+  "clipped_samples": 0,
+  "transcript": "Second opinion, my desktop. It boots, the cards fan spin, and Windows never sees it. Card 2. Identical. Two dead cards. I wrote the return ticket.",
+  "word_match_ratio": 0.885,
+  "id": "second_opinion",
+  "match_written": 0.868
+ },
+ {
+  "file": "/opt/ep0/refgpu/c8/fix.wav",
+  "seconds": 12.26,
+  "sample_rate": 44100,
+  "peak": 0.9106,
+  "rms_dbfs": -21.6,
+  "clipped_samples": 0,
+  "transcript": "One last try with the power supply's own cable instead of the adapter. It boots. The card shows up healthy. The adapter was the problem the whole time.",
+  "word_match_ratio": 1.0,
+  "id": "fix",
+  "match_written": 1.0
+ }
+]

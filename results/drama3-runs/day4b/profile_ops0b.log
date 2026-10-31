@@ -1,0 +1,193 @@
+2026-10-29 22:50:11.587 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-29 22:50:11.587 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-29 22:50:11.587 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-29 22:50:11.587 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-29 22:50:11.591 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-29 22:50:11.591 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-29 22:50:11.608 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-29 22:50:11.608 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-29 22:50:11.608 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-29 22:50:11.608 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-29 22:50:11.609 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-29 22:50:11.653 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-29 22:50:11.666 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-29 22:50:11.666 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-29 22:50:11.666 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-29 22:50:11.667 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-29 22:50:11.667 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-29 22:50:11.667 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-29 22:50:11.667 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-29 22:50:11.667 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-29 22:50:11.667 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-29 22:50:11.776 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-29 22:50:11.776 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-29 22:50:11.776 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-29 22:50:11.776 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-29 22:50:11.776 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-29 22:50:13.662 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-29 22:50:13.667 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-29 22:50:13.667 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-29 22:50:13.667 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-29 22:50:15.395 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-29 22:50:15.583 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-29 22:50:15.583 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-29 22:50:15.583 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-29 22:50:15.583 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 22:50:15.583 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-29 22:50:15.583 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+paged backbone resident: DRAM 26.09 GB, built in 12s
+  0.0050  ttnn.to_memory_config                      decode_norm.py:35
+  0.0111  ttnn.rms_norm                              decode_norm.py:36
+  0.0025  ttnn.deallocate                            decode_norm.py:37
+  0.0049  ttnn.to_memory_config                      decode_norm.py:38
+  0.0022  ttnn.deallocate                            decode_norm.py:39
+  0.0819  ttnn.linear                                ttnn_gated_deltanet.py:434
+  0.0091  Tensor.__getitem__                         ttnn_gated_deltanet.py:436
+  0.0024  ttnn.to_layout                             ttnn_gated_deltanet.py:437
+  0.0042  Tensor.__getitem__                         ttnn_gated_deltanet.py:438
+  0.0023  ttnn.to_layout                             ttnn_gated_deltanet.py:439
+  0.0041  Tensor.__getitem__                         ttnn_gated_deltanet.py:440
+  0.0022  ttnn.to_layout                             ttnn_gated_deltanet.py:441
+  0.0085  Tensor.__getitem__                         ttnn_gated_deltanet.py:442
+  0.0023  ttnn.to_layout                             ttnn_gated_deltanet.py:443
+  0.0022  ttnn.deallocate                            ttnn_gated_deltanet.py:444
+  0.0116  ttnn.multiply                              ttnn_gated_deltanet.py:72
+  0.0128  ttnn.multiply                              ttnn_gated_deltanet.py:74
+  0.0101  ttnn.add                                   ttnn_gated_deltanet.py:75
+  0.0129  ttnn.multiply                              ttnn_gated_deltanet.py:74
+  0.0101  ttnn.add                                   ttnn_gated_deltanet.py:75
+  0.0129  ttnn.multiply                              ttnn_gated_deltanet.py:74
+  0.0101  ttnn.add                                   ttnn_gated_deltanet.py:75
+  0.0103  ttnn.copy                                  ttnn_gated_deltanet.py:82
+  0.0104  ttnn.copy                                  ttnn_gated_deltanet.py:82
+  0.0098  ttnn.copy                                  ttnn_gated_deltanet.py:83
+  0.0114  ttnn.silu                                  ttnn_gated_deltanet.py:85
+  0.0079  Tensor.__getitem__                         ttnn_gated_deltanet.py:501
+  0.0079  Tensor.__getitem__                         ttnn_gated_deltanet.py:502
+  0.0086  Tensor.__getitem__                         ttnn_gated_deltanet.py:503
+  0.0022  ttnn.to_layout                             ttnn_gated_deltanet.py:504
+  0.0023  ttnn.to_layout                             ttnn_gated_deltanet.py:505
+  0.0022  ttnn.to_layout                             ttnn_gated_deltanet.py:506
+  0.0024  ttnn.deallocate                            ttnn_gated_deltanet.py:507
+  0.0115  ttnn.reshape                               ttnn_gated_deltanet.py:660
+  0.0114  ttnn.reshape                               ttnn_gated_deltanet.py:661
+  0.0181  ttnn.reshape                               ttnn_gated_deltanet.py:662
+  0.0141  ttnn.repeat_interleave                     ttnn_gated_deltanet.py:667
+  0.0141  ttnn.repeat_interleave                     ttnn_gated_deltanet.py:668
+  0.0091  ttnn.sigmoid                               ttnn_gated_deltanet.py:673
+  0.0087  ttnn.add                                   ttnn_gated_deltanet.py:691
+  0.0092  ttnn.softplus                              ttnn_gated_deltanet.py:692
+  0.0093  ttnn.multiply                              ttnn_gated_deltanet.py:694
+  0.0068  ttnn.rms_norm                              ttnn_delta_rule_ops.py:235
+  0.0102  ttnn.multiply                              ttnn_delta_rule_ops.py:236
+  0.0069  ttnn.rms_norm                              ttnn_delta_rule_ops.py:235
+  0.0102  ttnn.multiply                              ttnn_delta_rule_ops.py:236
+  0.0100  ttnn.multiply                              ttnn_delta_rule_ops.py:414
+  0.0105  ttnn.reshape                               ttnn_delta_rule_ops.py:418
+  0.0104  ttnn.reshape                               ttnn_delta_rule_ops.py:419
+  0.0023  ttnn.reshape                               ttnn_delta_rule_ops.py:420
+  0.0023  ttnn.reshape                               ttnn_delta_rule_ops.py:421
+  0.0025  ttnn.reshape                               ttnn_delta_rule_ops.py:422
+  0.0107  ttnn.to_memory_config                      ttnn_delta_rule_ops.py:435
+  0.0074  ttnn.reshape                               ttnn_delta_rule_ops.py:455
+  0.0134  ttnn.multiply                              ttnn_delta_rule_ops.py:456
+  0.0089  ttnn.matmul                                ttnn_delta_rule_ops.py:459
+  0.0182  ttnn.reshape                               ttnn_delta_rule_ops.py:462
+  0.0088  ttnn.subtract                              ttnn_delta_rule_ops.py:465
+  0.0183  ttnn.reshape                               ttnn_delta_rule_ops.py:466
+  0.0023  ttnn.reshape                               ttnn_delta_rule_ops.py:259
+  0.0074  ttnn.reshape                               ttnn_delta_rule_ops.py:262
+  0.0147  ttnn.reshape                               ttnn_delta_rule_ops.py:266
+  0.0104  ttnn.reshape                               ttnn_delta_rule_ops.py:267
+  0.0023  ttnn.to_memory_config                      ttnn_delta_rule_ops.py:269
+  0.0023  ttnn.to_memory_config                      ttnn_delta_rule_ops.py:270
+  0.0216  ttnn.matmul                                ttnn_delta_rule_ops.py:279
+  0.0124  ttnn.multiply                              ttnn_delta_rule_ops.py:288
+  0.0116  ttnn.add                                   ttnn_delta_rule_ops.py:297
+  0.0089  ttnn.matmul                                ttnn_delta_rule_ops.py:474
+  0.0182  ttnn.reshape                               ttnn_delta_rule_ops.py:479
+  0.0118  ttnn.copy                                  ttnn_delta_rule_ops.py:508
+  0.0023  ttnn.deallocate                            ttnn_delta_rule_ops.py:509
+  0.0183  ttnn.reshape                               ttnn_gated_deltanet.py:749
+  0.0072  ttnn.rms_norm                              ttnn_gated_deltanet.py:31
+  0.0096  ttnn.silu                                  ttnn_gated_deltanet.py:32
+  0.0089  ttnn.clip                                  ttnn_gated_deltanet.py:33
+  0.0096  ttnn.multiply                              ttnn_gated_deltanet.py:34
+  0.0089  ttnn.clip                                  ttnn_gated_deltanet.py:757
+  0.0106  ttnn.reshape                               ttnn_gated_deltanet.py:758
+  0.0023  ttnn.to_memory_config                      ttnn_gated_deltanet.py:760
+  0.0841  ttnn.linear                                ttnn_gated_deltanet.py:761
+  0.0023  ttnn.deallocate                            layer.py:296
+  0.0094  ttnn.add                                   layer.py:298
+  0.0025  ttnn.deallocate                            layer.py:299
+  0.0048  ttnn.to_memory_config                      decode_norm.py:35
+  0.0107  ttnn.rms_norm                              decode_norm.py:36
+  0.0022  ttnn.deallocate                            decode_norm.py:37
+  0.0047  ttnn.to_memory_config                      decode_norm.py:38
+  0.0023  ttnn.deallocate                            decode_norm.py:39
+  0.0022  ttnn.reshape                               moe.py:42
+  0.0023  ttnn.reshape                               moe.py:43
+  0.0512  ttnn.linear                                router.py:47
+  0.0087  ttnn.softmax                               router.py:48
+  0.0416  ttnn.topk                                  router.py:50
+  0.0156  ttnn.sum                                   router.py:53
+  0.0104  ttnn.div                                   router.py:54
+  0.0047  ttnn.to_layout                             decode.py:63
+  0.0568  ttnn.sparse_matmul                         decode.py:69
+  0.0024  ttnn.reshape                               decode.py:80
+  0.0274  ttnn.swiglu                                operations.py:31
+  0.0449  ttnn.sparse_matmul                         decode.py:83
+  0.0025  ttnn.deallocate                            decode.py:96
+  0.0099  ttnn.slice                                 decode.py:98
+  0.0117  ttnn.reshape                               decode.py:99
+  0.0055  ttnn.reshape                               decode.py:100
+  0.0117  ttnn.mul                                   decode.py:100
+  0.0141  ttnn.sum                                   decode.py:101
+  0.0023  ttnn.reshape                               decode.py:102
+  0.0023  ttnn.deallocate                            moe.py:49
+  0.0022  ttnn.deallocate                            moe.py:50
+  0.0491  ttnn.linear                                shared.py:54
+  0.0097  ttnn.sigmoid                               shared.py:54
+  0.0357  ttnn.linear                                mlp.py:211
+  0.0334  ttnn.linear                                mlp.py:212
+  0.0096  ttnn.mul                                   mlp.py:213
+  0.0024  ttnn.deallocate                            mlp.py:214
+  0.0025  ttnn.deallocate                            mlp.py:215
+  0.0212  ttnn.linear                                mlp.py:223
+  0.0023  ttnn.deallocate                            mlp.py:224
+  0.0116  ttnn.mul                                   shared.py:56
+  0.0023  ttnn.reshape                               moe.py:57
+  0.0090  ttnn.add                                   moe.py:58
+  0.0022  ttnn.deallocate                            moe.py:59
+  0.0022  ttnn.reshape                               moe.py:61
+  0.0022  ttnn.deallocate                            layer.py:304
+  0.0092  ttnn.add                                   layer.py:306
+  0.0023  ttnn.deallocate                            layer.py:307
+  0.0023  ttnn.deallocate                            layer.py:308
+  0.0022  ttnn.deallocate                            profile_ops.py:35
+layer 0 (GDN): whole layer traced 0.845 ms, 129 ops, sum of one-op traces 1.430 ms
+  0.3566 ms  ttnn.linear
+  0.2256 ms  ttnn.reshape
+  0.1252 ms  ttnn.multiply
+  0.1017 ms  ttnn.sparse_matmul
+  0.0782 ms  ttnn.add
+  0.0503 ms  Tensor.__getitem__
+  0.0464 ms  ttnn.deallocate
+  0.0427 ms  ttnn.rms_norm
+  0.0422 ms  ttnn.copy
+  0.0416 ms  ttnn.topk
+  0.0394 ms  ttnn.matmul
+  0.0368 ms  ttnn.to_memory_config
+  0.0329 ms  ttnn.mul
+  0.0297 ms  ttnn.sum
+  0.0281 ms  ttnn.repeat_interleave
+DONE
+2026-10-29 22:50:28.702 | info     |    BuildKernels | JIT cache stats: 269/269 hits (100.0%) [269 cached, 69 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-29 22:50:28.702 | info     |    BuildKernels | JIT telemetry: 33 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-29 22:50:28.705 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-29 22:50:28.705 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-29 22:50:28.758 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-29 22:50:28.758 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-29 22:50:28.758 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

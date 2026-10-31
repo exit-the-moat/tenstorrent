@@ -1,0 +1,7 @@
+s09-01_s0        1.000 13.2s loud 27.2dB pitch  8.4st f0  115Hz | At the end of Day 2, the card needed 0.85 seconds for every second of speech on my test lines and 0.96 over the whole narration.
+s09-01_s1        1.000 14.0s loud 28.5dB pitch  8.1st f0  116Hz | At the end of Day 2, the card needed 0.85 seconds for every second of speech on my test lines and 0.96 over the whole narration.
+s09-01_s2        1.000 13.6s loud 28.4dB pitch  8.3st f0  118Hz | At the end of Day 2, the card needed 0.85 seconds for every second of speech on my test lines and 0.96 over the whole narration.
+s09-02_s0        1.000 13.0s loud 30.0dB pitch  7.7st f0  118Hz | Four more days of optimization later, it's 0.38 on the test lines and 0.4 over this narration, more than two times faster.
+s09-02_s1        1.000 13.0s loud 28.6dB pitch  8.3st f0  120Hz | Four more days of optimization later, it's 0.38 on the test lines and 0.4 over this narration, more than two times faster.
+s09-02_s2        1.000 12.4s loud 30.5dB pitch  9.6st f0  116Hz | Four more days of optimization later, it's 0.38 on the test lines and 0.4 over this narration, more than two times faster.
+ANA_DONE

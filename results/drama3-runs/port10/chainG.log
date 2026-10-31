@@ -1,0 +1,5 @@
+g16_t4 EXIT 0 10:24:12 io=0 disk=70%
+{"run": "g16_t4", "B": 16, "jobs": 32, "audio_s": 386.613, "wall_s": 56.757, "audio_per_wall": 6.812, "mean_active": 12.88, "ms_step": "35.67 + 9.29 + 22.66", "rtf_decode": "1.40 / 1.91 / 2.36", "rtf": "2.13 / 2.84 / 6.80", "ttfa_admit": "0.88 / 2.35 / 7.20", "ttfa_t0": "7.20 / 12.68 / 36.39", "worst_late": "4.10 / 11.17 / 15.18", "eos": 32, "dram_gb": 30.93, "board_W": "199.9 (299.0)"}
+g16_gc EXIT 0 10:26:25 io=0 disk=70%
+{"run": "g16_gc", "B": 16, "jobs": 32, "audio_s": 392.278, "wall_s": 55.776, "audio_per_wall": 7.033, "mean_active": 13.46, "ms_step": "36.25 + 9.27 + 23.78", "rtf_decode": "1.47 / 1.89 / 2.43", "rtf": "2.05 / 2.84 / 6.76", "ttfa_admit": "0.89 / 2.23 / 6.46", "ttfa_t0": "6.46 / 11.97 / 35.84", "worst_late": "4.52 / 10.11 / 15.67", "eos": 32, "dram_gb": 30.94, "board_W": "203.3 (230.0)"}
+CHAIN_G_DONE

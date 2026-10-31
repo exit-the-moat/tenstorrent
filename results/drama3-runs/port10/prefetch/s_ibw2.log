@@ -1,0 +1,43 @@
+2026-10-31 12:01:55.944 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-31 12:01:55.944 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-31 12:01:55.944 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-31 12:01:55.944 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-31 12:01:55.947 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-31 12:01:55.947 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-31 12:01:55.961 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[1] and remote chip ids {} (cluster.cpp:172)
+2026-10-31 12:01:55.961 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-31 12:01:55.961 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-31 12:01:55.961 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-31 12:01:55.962 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-31 12:01:56.035 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-31 12:01:56.049 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-31 12:01:56.049 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-31 12:01:56.050 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x4) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-31 12:01:56.050 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-31 12:01:56.050 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-31 12:01:56.051 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-31 12:01:56.051 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-31 12:01:56.051 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-31 12:01:56.051 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+grid 11 10 dram banks 8 tensor prefetcher supported True
+host weights 0.4 s
+recv-contig weights 0.1 s
+b setup {'ring': 32, 'receiver_grid': [8, 4], 'gcb_bytes_per_core': 524288, 'block_counts': {'eh_h': 32, 'qkvg': 32, 'o_proj': 64, 'w1': 32, 'w3': 32, 'w2': 96}, 'page_bytes': {'eh_h': 8192, 'qkvg': 19584, 'o_proj': 4352, 'w1': 24576, 'w3': 24576, 'w2': 8192}, 'per_core_N': {'eh_h': 2, 'qkvg': 9, 'o_proj': 2, 'w1': 6, 'w3': 6, 'w2': 2}}
+2026-10-31 12:01:56.719 | info     |           Metal | ShmResourceTracker: removed orphaned shm '/tt_device_141176418608352_memory' (shm_resource_tracker.cpp:282)
+[b_mm_only] {'us_frame': 400.2, 'us_layer': 400.2, 'GBps': 282.0}
+[b_with_small_ops] {'us_frame': 578.3, 'us_layer': 578.3, 'GBps': 195.1}
+check 0 eh_h {'b_pcc_torch': 0.999997}
+check 0 qkvg {'b_pcc_torch': 0.99997}
+check 0 o_proj {'b_pcc_torch': 0.999971}
+check 0 w1 {'b_pcc_torch': 0.999997}
+check 0 w3 {'b_pcc_torch': 0.999997}
+check 0 w2 {'b_pcc_torch': 0.999997}
+DONE
+2026-10-31 12:02:00.080 | info     |    BuildKernels | JIT cache stats: 18/46 hits (39.1%) [18 cached, 16 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-31 12:02:00.080 | info     |    BuildKernels | JIT telemetry: 43 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-31 12:02:00.089 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-31 12:02:00.089 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-31 12:02:00.137 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-31 12:02:00.137 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-31 12:02:00.137 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

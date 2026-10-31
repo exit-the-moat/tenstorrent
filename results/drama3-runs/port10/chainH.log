@@ -1,0 +1,7 @@
+h16 EXIT 0 10:28:23 io=0 disk=70%
+{"run": "h16", "B": 16, "jobs": 32, "audio_s": 386.613, "wall_s": 49.002, "audio_per_wall": 7.89, "mean_active": 12.88, "ms_step": "35.69 + 9.28 + 11.42", "rtf_decode": "1.20 / 1.64 / 2.07", "rtf": "1.84 / 2.47 / 5.85", "ttfa_admit": "0.86 / 1.92 / 6.66", "ttfa_t0": "6.66 / 11.01 / 31.77", "worst_late": "3.06 / 8.25 / 11.47", "eos": 32, "dram_gb": 30.94, "board_W": "206.6 (276.0)"}
+h24 EXIT 1 10:29:25 io=0 disk=70%
+2026-10-31 09:29:17.316 | critical |          Always | TT_FATAL: Out of Memory: Not enough space to allocate 671219712 B DRAM buffer across 8 banks, where each bank needs to store 83902464 B, but bank size is 4238786944 B (allocated: 4072184832 B, free: 166602112 B, largest free block: 83886080 B) (
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/bank_manager.cpp:495: false
+RuntimeError: TT_FATAL @ /work/tt_metal/impl/allocator/bank_manager.cpp:495: false
+CHAIN_H_DONE

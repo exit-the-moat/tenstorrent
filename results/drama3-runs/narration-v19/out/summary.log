@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/summarize_day4.py", line 66, in <module>
+    main()
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/tests/summarize_day4.py", line 38, in main
+    r = T.check(d / f"{l['id']}.wav", m, l["text"])
+  File "/opt/ep0/tt-metal/models/demos/blackhole/drama3/host/transcribe.py", line 30, in check
+    audio, sr = sf.read(path, dtype="float32", always_2d=True)
+  File "/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/soundfile.py", line 313, in read
+    with SoundFile(file, 'r', samplerate, channels,
+  File "/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/soundfile.py", line 708, in __init__
+    self._file = self._open(file, mode_int, closefd)
+  File "/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/soundfile.py", line 1296, in _open
+    raise LibsndfileError(err, prefix=f"Error opening {self.name!r}: ")
+soundfile.LibsndfileError: Error opening '/opt/ep0/v19/out/s03-01.wav': System error.

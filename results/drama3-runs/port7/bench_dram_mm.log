@@ -1,0 +1,485 @@
+2026-10-30 22:07:25.982 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-30 22:07:25.983 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-30 22:07:25.985 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-30 22:07:25.985 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-30 22:07:25.992 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-30 22:07:25.992 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-30 22:07:26.083 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-30 22:07:26.083 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-30 22:07:26.084 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-30 22:07:26.084 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-30 22:07:26.090 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-30 22:07:26.100 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-30 22:07:26.209 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-30 22:07:26.209 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-30 22:07:26.213 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-30 22:07:26.225 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-30 22:07:26.230 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-30 22:07:26.234 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-30 22:07:26.235 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-30 22:07:26.235 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-30 22:07:26.236 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+grid 11 10 dram banks 8
+tiny add replay us 8.62
+tower w1 / w3 {'kind': 'interleaved-default', 'ckc': 'HiFi4', 'us': 76.57, 'GBps': 328.6, 'err': 0.00353}
+tower w1 / w3 {'kind': 'interleaved-default', 'ckc': 'HiFi2', 'us': 76.28, 'GBps': 329.9, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 150.14, 'GBps': 167.6, 'err': 0.01564}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 91.16, 'GBps': 276.1, 'err': 0.00748}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 81.2, 'GBps': 309.9, 'err': 0.01564}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 74.12, 'GBps': 339.5, 'err': 0.00748}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 117.5, 'GBps': 214.2, 'err': 0.00928}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 61.5, 'GBps': 409.2, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 74.37, 'GBps': 338.4, 'err': 0.00928}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 73.97, 'GBps': 340.2, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 102.74, 'GBps': 244.9, 'err': 0.00522}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 60.91, 'GBps': 413.2, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 75.39, 'GBps': 333.8, 'err': 0.00522}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 74.21, 'GBps': 339.1, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 97.09, 'GBps': 259.2, 'err': 0.00459}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 63.33, 'GBps': 397.4, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 78.25, 'GBps': 321.6, 'err': 0.00459}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 75.59, 'GBps': 332.9, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 151.3, 'GBps': 166.3, 'err': 0.01564}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 92.41, 'GBps': 272.3, 'err': 0.00748}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 89.77, 'GBps': 280.3, 'err': 0.01564}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 88.9, 'GBps': 283.1, 'err': 0.00748}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 118.68, 'GBps': 212.1, 'err': 0.00928}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 62.85, 'GBps': 400.4, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 90.75, 'GBps': 277.3, 'err': 0.00928}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 89.62, 'GBps': 280.8, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 103.92, 'GBps': 242.2, 'err': 0.00522}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 62.04, 'GBps': 405.6, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 92.2, 'GBps': 273.0, 'err': 0.00522}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 90.82, 'GBps': 277.1, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 151.41, 'GBps': 166.2, 'err': 0.01564}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 92.21, 'GBps': 272.9, 'err': 0.00748}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 91.89, 'GBps': 273.9, 'err': 0.01564}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 91.33, 'GBps': 275.6, 'err': 0.00748}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 118.71, 'GBps': 212.0, 'err': 0.00928}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 62.58, 'GBps': 402.1, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 91.95, 'GBps': 273.7, 'err': 0.00928}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 91.36, 'GBps': 275.5, 'err': 0.00648}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 151.87, 'GBps': 165.7, 'err': 0.01564}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 92.9, 'GBps': 270.9, 'err': 0.00748}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 81.2, 'GBps': 309.9, 'err': 0.01564}
+tower w1 / w3 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 61.54, 'GBps': 408.9, 'err': 0.00748}
+BEST tower w1 / w3 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 60.91, 'GBps': 413.2, 'err': 0.00648}
+tower w2 {'kind': 'interleaved-tuned', 'ckc': 'HiFi4', 'us': 69.85, 'GBps': 360.3, 'err': 0.00346}
+tower w2 {'kind': 'interleaved-tuned', 'ckc': 'HiFi2', 'us': 68.83, 'GBps': 365.6, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 150.8, 'GBps': 166.9, 'err': 0.04151}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 139.09, 'GBps': 180.9, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 151.01, 'GBps': 166.7, 'err': 0.04151}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 151.12, 'GBps': 166.5, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 117.63, 'GBps': 213.9, 'err': 0.02544}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 80.88, 'GBps': 311.2, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 86.52, 'GBps': 290.9, 'err': 0.02544}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 83.1, 'GBps': 302.8, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 101.5, 'GBps': 247.9, 'err': 0.01473}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 65.0, 'GBps': 387.2, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 74.25, 'GBps': 338.9, 'err': 0.01473}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 73.47, 'GBps': 342.5, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 93.63, 'GBps': 268.8, 'err': 0.00639}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 59.25, 'GBps': 424.7, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 73.3, 'GBps': 343.3, 'err': 0.00639}
+tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 72.81, 'GBps': 345.6, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 151.92, 'GBps': 165.7, 'err': 0.04151}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 140.39, 'GBps': 179.3, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 152.36, 'GBps': 165.2, 'err': 0.04151}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 152.51, 'GBps': 165.0, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 118.75, 'GBps': 211.9, 'err': 0.02544}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 81.54, 'GBps': 308.6, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 89.4, 'GBps': 281.5, 'err': 0.02544}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 88.43, 'GBps': 284.6, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 102.28, 'GBps': 246.1, 'err': 0.01473}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 65.89, 'GBps': 381.9, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 89.79, 'GBps': 280.3, 'err': 0.01473}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 88.3, 'GBps': 285.0, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 12, 'nw': 1, 'ckc': 'HiFi4', 'us': 93.13, 'GBps': 270.2, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 12, 'nw': 1, 'ckc': 'HiFi2', 'us': 61.33, 'GBps': 410.3, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 12, 'nw': 2, 'ckc': 'HiFi4', 'us': 91.27, 'GBps': 275.7, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 12, 'nw': 2, 'ckc': 'HiFi2', 'us': 90.34, 'GBps': 278.6, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 152.36, 'GBps': 165.2, 'err': 0.04151}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 141.21, 'GBps': 178.2, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 153.57, 'GBps': 163.9, 'err': 0.04151}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 154.04, 'GBps': 163.4, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 118.82, 'GBps': 211.8, 'err': 0.02544}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 81.76, 'GBps': 307.8, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 91.56, 'GBps': 274.8, 'err': 0.02544}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 91.42, 'GBps': 275.3, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 6, 'nw': 1, 'ckc': 'HiFi4', 'us': 97.31, 'GBps': 258.6, 'err': 0.00938}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 6, 'nw': 1, 'ckc': 'HiFi2', 'us': 60.62, 'GBps': 415.2, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 6, 'nw': 2, 'ckc': 'HiFi4', 'us': 91.47, 'GBps': 275.1, 'err': 0.00938}
+tower w2 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 6, 'nw': 2, 'ckc': 'HiFi2', 'us': 90.43, 'GBps': 278.3, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 152.94, 'GBps': 164.6, 'err': 0.04151}
+tower w2 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 141.38, 'GBps': 178.0, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 154.14, 'GBps': 163.3, 'err': 0.04151}
+tower w2 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 154.1, 'GBps': 163.3, 'err': 0.00554}
+tower w2 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 3, 'nw': 1, 'ckc': 'HiFi4', 'us': 107.97, 'GBps': 233.1, 'err': 0.01473}
+tower w2 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 3, 'nw': 1, 'ckc': 'HiFi2', 'us': 71.6, 'GBps': 351.5, 'err': 0.0055}
+tower w2 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 3, 'nw': 2, 'ckc': 'HiFi4', 'us': 75.0, 'GBps': 335.6, 'err': 0.01473}
+tower w2 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 3, 'nw': 2, 'ckc': 'HiFi2', 'us': 62.53, 'GBps': 402.4, 'err': 0.0055}
+BEST tower w2 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 59.25, 'GBps': 424.7, 'err': 0.0055}
+tower wqkv {'kind': 'interleaved-default', 'ckc': 'HiFi4', 'us': 107.45, 'GBps': 351.3, 'err': 0.00348}
+tower wqkv {'kind': 'interleaved-default', 'ckc': 'HiFi2', 'us': 108.03, 'GBps': 349.4, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 221.3, 'GBps': 170.6, 'err': 0.01506}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 125.5, 'GBps': 300.8, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 123.4, 'GBps': 305.9, 'err': 0.01506}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 107.89, 'GBps': 349.9, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 173.46, 'GBps': 217.6, 'err': 0.00864}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 85.88, 'GBps': 439.6, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 107.17, 'GBps': 352.2, 'err': 0.00864}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 106.71, 'GBps': 353.8, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 150.31, 'GBps': 251.1, 'err': 0.00591}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 87.84, 'GBps': 429.8, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 108.91, 'GBps': 346.6, 'err': 0.00591}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 107.34, 'GBps': 351.7, 'err': 0.00667}
+2026-10-30 22:08:48.603 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 7-9] grow to 2135040 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+2026-10-30 22:08:49.499 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 7-9] grow to 2135040 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 112.34, 'GBps': 336.0, 'err': 0.0044}
+tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 109.44, 'GBps': 344.9, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 222.52, 'GBps': 169.6, 'err': 0.01506}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 126.56, 'GBps': 298.3, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 130.54, 'GBps': 289.2, 'err': 0.01506}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 129.29, 'GBps': 292.0, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 174.63, 'GBps': 216.2, 'err': 0.00864}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 88.6, 'GBps': 426.0, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 134.31, 'GBps': 281.1, 'err': 0.00864}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 132.62, 'GBps': 284.6, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 151.45, 'GBps': 249.2, 'err': 0.00591}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 88.89, 'GBps': 424.7, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 136.83, 'GBps': 275.9, 'err': 0.00591}
+tower wqkv {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 135.33, 'GBps': 278.9, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 222.59, 'GBps': 169.6, 'err': 0.01506}
+tower wqkv {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 126.69, 'GBps': 298.0, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 132.48, 'GBps': 284.9, 'err': 0.01506}
+tower wqkv {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 131.87, 'GBps': 286.3, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 174.75, 'GBps': 216.0, 'err': 0.00864}
+tower wqkv {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 87.25, 'GBps': 432.6, 'err': 0.00667}
+tower wqkv {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 133.5, 'GBps': 282.8, 'err': 0.00864}
+tower wqkv {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 132.29, 'GBps': 285.4, 'err': 0.00667}
+BEST tower wqkv {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 85.88, 'GBps': 439.6, 'err': 0.00667}
+tower wo {'kind': 'interleaved-default', 'ckc': 'HiFi4', 'us': 85.06, 'GBps': 197.2, 'err': 0.00265}
+tower wo {'kind': 'interleaved-default', 'ckc': 'HiFi2', 'us': 85.12, 'GBps': 197.1, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 103.3, 'GBps': 162.4, 'err': 0.02324}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 95.34, 'GBps': 176.0, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 103.59, 'GBps': 162.0, 'err': 0.02324}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 103.68, 'GBps': 161.8, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 80.96, 'GBps': 207.2, 'err': 0.01175}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 56.3, 'GBps': 298.0, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 60.71, 'GBps': 276.4, 'err': 0.01175}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 58.42, 'GBps': 287.2, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 70.2, 'GBps': 239.0, 'err': 0.00655}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 45.97, 'GBps': 364.9, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 52.87, 'GBps': 317.4, 'err': 0.00655}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 51.91, 'GBps': 323.2, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 65.61, 'GBps': 255.7, 'err': 0.006}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 42.88, 'GBps': 391.2, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 52.51, 'GBps': 319.5, 'err': 0.006}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 51.75, 'GBps': 324.2, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 16, 'nw': 1, 'ckc': 'HiFi4', 'us': 64.82, 'GBps': 258.8, 'err': 0.00323}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 16, 'nw': 1, 'ckc': 'HiFi2', 'us': 44.35, 'GBps': 378.3, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 16, 'nw': 2, 'ckc': 'HiFi4', 'us': 54.08, 'GBps': 310.2, 'err': 0.00323}
+tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 16, 'nw': 2, 'ckc': 'HiFi2', 'us': 52.4, 'GBps': 320.2, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 104.44, 'GBps': 160.6, 'err': 0.02324}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 96.36, 'GBps': 174.1, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 104.69, 'GBps': 160.3, 'err': 0.02324}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 104.4, 'GBps': 160.7, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 82.32, 'GBps': 203.8, 'err': 0.01175}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 57.66, 'GBps': 291.0, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 62.91, 'GBps': 266.7, 'err': 0.01175}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 62.13, 'GBps': 270.0, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 71.31, 'GBps': 235.3, 'err': 0.00655}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 47.11, 'GBps': 356.1, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 63.37, 'GBps': 264.8, 'err': 0.00655}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 61.91, 'GBps': 271.0, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 66.89, 'GBps': 250.8, 'err': 0.006}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 43.93, 'GBps': 381.9, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 63.68, 'GBps': 263.4, 'err': 0.006}
+tower wo {'kind': 'dram_sharded', 'cores': 16, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 63.02, 'GBps': 266.2, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 104.78, 'GBps': 160.1, 'err': 0.02324}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 97.53, 'GBps': 172.0, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 105.59, 'GBps': 158.9, 'err': 0.02324}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 105.88, 'GBps': 158.5, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 82.43, 'GBps': 203.5, 'err': 0.01175}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 57.71, 'GBps': 290.7, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 64.38, 'GBps': 260.6, 'err': 0.01175}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 64.18, 'GBps': 261.4, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 71.38, 'GBps': 235.0, 'err': 0.00655}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 47.04, 'GBps': 356.6, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 64.31, 'GBps': 260.9, 'err': 0.00655}
+tower wo {'kind': 'dram_sharded', 'cores': 32, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 63.59, 'GBps': 263.8, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 105.09, 'GBps': 159.6, 'err': 0.02324}
+tower wo {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 97.44, 'GBps': 172.2, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 105.3, 'GBps': 159.3, 'err': 0.02324}
+tower wo {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 105.33, 'GBps': 159.3, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 64, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 82.5, 'GBps': 203.4, 'err': 0.01175}
+tower wo {'kind': 'dram_sharded', 'cores': 64, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 57.77, 'GBps': 290.4, 'err': 0.00523}
+tower wo {'kind': 'dram_sharded', 'cores': 64, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 60.75, 'GBps': 276.2, 'err': 0.01175}
+tower wo {'kind': 'dram_sharded', 'cores': 64, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 60.51, 'GBps': 277.3, 'err': 0.00523}
+BEST tower wo {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 42.88, 'GBps': 391.2, 'err': 0.00523}
+tower eh half {'kind': 'interleaved-tuned', 'ckc': 'HiFi4', 'us': 30.07, 'GBps': 279.0, 'err': 0.00303}
+tower eh half {'kind': 'interleaved-tuned', 'ckc': 'HiFi2', 'us': 29.92, 'GBps': 280.4, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 55.85, 'GBps': 150.2, 'err': 0.01373}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 51.62, 'GBps': 162.5, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 56.15, 'GBps': 149.4, 'err': 0.01373}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 56.15, 'GBps': 149.4, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 44.55, 'GBps': 188.3, 'err': 0.00791}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 32.4, 'GBps': 258.9, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 35.02, 'GBps': 239.5, 'err': 0.00791}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 33.97, 'GBps': 247.0, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 39.23, 'GBps': 213.8, 'err': 0.005}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 27.18, 'GBps': 308.6, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 31.59, 'GBps': 265.6, 'err': 0.005}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 30.87, 'GBps': 271.7, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 37.63, 'GBps': 222.9, 'err': 0.00417}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 26.41, 'GBps': 317.7, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 31.48, 'GBps': 266.4, 'err': 0.00417}
+tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 30.7, 'GBps': 273.3, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 56.95, 'GBps': 147.3, 'err': 0.01373}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 53.02, 'GBps': 158.2, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 56.73, 'GBps': 147.9, 'err': 0.01373}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 56.98, 'GBps': 147.2, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 45.74, 'GBps': 183.4, 'err': 0.00791}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 33.47, 'GBps': 250.6, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 36.47, 'GBps': 230.0, 'err': 0.00791}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 36.04, 'GBps': 232.8, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 40.49, 'GBps': 207.2, 'err': 0.005}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 28.36, 'GBps': 295.8, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 36.86, 'GBps': 227.6, 'err': 0.005}
+tower eh half {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 35.63, 'GBps': 235.4, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 57.16, 'GBps': 146.8, 'err': 0.01373}
+tower eh half {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 53.06, 'GBps': 158.1, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 57.13, 'GBps': 146.8, 'err': 0.01373}
+tower eh half {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 57.23, 'GBps': 146.6, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 45.65, 'GBps': 183.7, 'err': 0.00791}
+tower eh half {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 33.58, 'GBps': 249.8, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 37.3, 'GBps': 224.9, 'err': 0.00791}
+tower eh half {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 36.98, 'GBps': 226.9, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 57.81, 'GBps': 145.1, 'err': 0.01373}
+tower eh half {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 54.19, 'GBps': 154.8, 'err': 0.00654}
+tower eh half {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 58.57, 'GBps': 143.2, 'err': 0.01373}
+tower eh half {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 58.9, 'GBps': 142.4, 'err': 0.00654}
+BEST tower eh half {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 26.41, 'GBps': 317.7, 'err': 0.00654}
+tower w1 / w3 bfp8 {'kind': 'interleaved-tuned', 'ckc': 'HiFi4', 'us': 47.35, 'GBps': 282.4, 'err': 0.00768}
+tower w1 / w3 bfp8 {'kind': 'interleaved-tuned', 'ckc': 'HiFi2', 'us': 46.32, 'GBps': 288.7, 'err': 0.00994}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 151.75, 'GBps': 88.1, 'err': 0.0159}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 88.35, 'GBps': 151.3, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 81.51, 'GBps': 164.0, 'err': 0.0159}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 58.87, 'GBps': 227.1, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 117.84, 'GBps': 113.5, 'err': 0.01142}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 59.77, 'GBps': 223.7, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 64.51, 'GBps': 207.3, 'err': 0.01142}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 44.73, 'GBps': 298.9, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 101.83, 'GBps': 131.3, 'err': 0.00908}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 55.11, 'GBps': 242.6, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 57.25, 'GBps': 233.5, 'err': 0.00908}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 45.29, 'GBps': 295.2, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 94.56, 'GBps': 141.4, 'err': 0.00908}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 53.86, 'GBps': 248.2, 'err': 0.00908}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 55.04, 'GBps': 242.9, 'err': 0.00908}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 46.6, 'GBps': 286.9, 'err': 0.00908}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 155.0, 'GBps': 86.3, 'err': 0.0159}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 89.97, 'GBps': 148.6, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 81.34, 'GBps': 164.4, 'err': 0.0159}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 58.95, 'GBps': 226.8, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 118.88, 'GBps': 112.5, 'err': 0.01142}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 61.1, 'GBps': 218.8, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 65.14, 'GBps': 205.2, 'err': 0.01142}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 52.43, 'GBps': 255.0, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 102.52, 'GBps': 130.4, 'err': 0.00908}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 56.32, 'GBps': 237.4, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 58.48, 'GBps': 228.6, 'err': 0.00908}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 53.75, 'GBps': 248.7, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 152.73, 'GBps': 87.5, 'err': 0.0159}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 89.17, 'GBps': 149.9, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 81.3, 'GBps': 164.5, 'err': 0.0159}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 58.98, 'GBps': 226.7, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 118.79, 'GBps': 112.5, 'err': 0.01142}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 61.0, 'GBps': 219.2, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 65.11, 'GBps': 205.3, 'err': 0.01142}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 53.86, 'GBps': 248.2, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 153.27, 'GBps': 87.2, 'err': 0.0159}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 89.71, 'GBps': 149.0, 'err': 0.01095}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 82.28, 'GBps': 162.5, 'err': 0.0159}
+tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 59.86, 'GBps': 223.3, 'err': 0.01095}
+BEST tower w1 / w3 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 44.73, 'GBps': 298.9, 'err': 0.01095}
+tower w2 bfp8 {'kind': 'interleaved-tuned', 'ckc': 'HiFi4', 'us': 46.63, 'GBps': 286.7, 'err': 0.00741}
+tower w2 bfp8 {'kind': 'interleaved-tuned', 'ckc': 'HiFi2', 'us': 45.61, 'GBps': 293.1, 'err': 0.00753}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 157.68, 'GBps': 84.8, 'err': 0.04151}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 139.2, 'GBps': 96.0, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 150.96, 'GBps': 88.6, 'err': 0.04151}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 151.13, 'GBps': 88.5, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 116.68, 'GBps': 114.6, 'err': 0.02544}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 80.6, 'GBps': 165.9, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 86.45, 'GBps': 154.6, 'err': 0.02544}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 82.76, 'GBps': 161.5, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 100.2, 'GBps': 133.4, 'err': 0.01345}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 62.12, 'GBps': 215.2, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 66.55, 'GBps': 200.9, 'err': 0.01345}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 49.09, 'GBps': 272.3, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 92.36, 'GBps': 144.8, 'err': 0.01233}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 55.02, 'GBps': 243.0, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 57.81, 'GBps': 231.2, 'err': 0.01233}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 42.29, 'GBps': 316.1, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 151.96, 'GBps': 88.0, 'err': 0.04151}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 140.32, 'GBps': 95.3, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 155.72, 'GBps': 85.9, 'err': 0.04151}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 155.03, 'GBps': 86.2, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 118.01, 'GBps': 113.3, 'err': 0.02544}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 82.07, 'GBps': 162.9, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 86.51, 'GBps': 154.5, 'err': 0.02544}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 83.27, 'GBps': 160.6, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 101.46, 'GBps': 131.8, 'err': 0.01345}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 63.32, 'GBps': 211.1, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 66.82, 'GBps': 200.1, 'err': 0.01345}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 52.3, 'GBps': 255.6, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 12, 'nw': 1, 'ckc': 'HiFi4', 'us': 91.44, 'GBps': 146.2, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 12, 'nw': 1, 'ckc': 'HiFi2', 'us': 54.29, 'GBps': 246.3, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 12, 'nw': 2, 'ckc': 'HiFi4', 'us': 57.28, 'GBps': 233.4, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 16, 'ibw': 12, 'nw': 2, 'ckc': 'HiFi2', 'us': 52.39, 'GBps': 255.2, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 152.79, 'GBps': 87.5, 'err': 0.04151}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 141.42, 'GBps': 94.5, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 153.61, 'GBps': 87.0, 'err': 0.04151}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 153.59, 'GBps': 87.0, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 117.98, 'GBps': 113.3, 'err': 0.02544}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 81.96, 'GBps': 163.1, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 86.51, 'GBps': 154.5, 'err': 0.02544}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 84.35, 'GBps': 158.5, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 6, 'nw': 1, 'ckc': 'HiFi4', 'us': 96.12, 'GBps': 139.1, 'err': 0.01233}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 6, 'nw': 1, 'ckc': 'HiFi2', 'us': 58.94, 'GBps': 226.8, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 6, 'nw': 2, 'ckc': 'HiFi4', 'us': 60.99, 'GBps': 219.2, 'err': 0.01233}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 32, 'ibw': 6, 'nw': 2, 'ckc': 'HiFi2', 'us': 53.11, 'GBps': 251.7, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 153.61, 'GBps': 87.0, 'err': 0.04151}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 141.34, 'GBps': 94.6, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 154.19, 'GBps': 86.7, 'err': 0.04151}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 154.84, 'GBps': 86.3, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 3, 'nw': 1, 'ckc': 'HiFi4', 'us': 106.97, 'GBps': 125.0, 'err': 0.01613}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 3, 'nw': 1, 'ckc': 'HiFi2', 'us': 68.86, 'GBps': 194.1, 'err': 0.01078}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 3, 'nw': 2, 'ckc': 'HiFi4', 'us': 72.72, 'GBps': 183.9, 'err': 0.01613}
+tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 64, 'ibw': 3, 'nw': 2, 'ckc': 'HiFi2', 'us': 62.08, 'GBps': 215.3, 'err': 0.01078}
+BEST tower w2 bfp8 {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 42.29, 'GBps': 316.1, 'err': 0.01078}
+GDN in-proj {'kind': 'interleaved-tuned', 'ckc': 'HiFi4', 'us': 148.71, 'GBps': 180.7, 'err': 0.00761}
+GDN in-proj {'kind': 'interleaved-tuned', 'ckc': 'HiFi2', 'us': 81.92, 'GBps': 328.1, 'err': 0.00936}
+GDN in-proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 313.59, 'GBps': 85.7, 'err': 0.01772}
+GDN in-proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 165.39, 'GBps': 162.5, 'err': 0.00952}
+2026-10-30 22:11:36.074 | critical |          Always | TT_FATAL: DRAM-sharded matmul weight shard width 49 tiles per bank must be divisible by workers_per_bank 2 (assert.hpp:104)
+2026-10-30 22:11:36.076 | critical |          Always | TT_FATAL: DRAM-sharded matmul weight shard width 49 tiles per bank must be divisible by workers_per_bank 2 (assert.hpp:104)
+GDN in-proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 238.33, 'GBps': 112.8, 'err': 0.01216}
+GDN in-proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 107.85, 'GBps': 249.2, 'err': 0.01012}
+2026-10-30 22:11:38.317 | critical |          Always | TT_FATAL: DRAM-sharded matmul weight shard width 49 tiles per bank must be divisible by workers_per_bank 2 (assert.hpp:104)
+2026-10-30 22:11:38.320 | critical |          Always | TT_FATAL: DRAM-sharded matmul weight shard width 49 tiles per bank must be divisible by workers_per_bank 2 (assert.hpp:104)
+GDN in-proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 201.95, 'GBps': 133.1, 'err': 0.00952}
+GDN in-proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 100.59, 'GBps': 267.2, 'err': 0.00952}
+2026-10-30 22:11:39.745 | critical |          Always | TT_FATAL: DRAM-sharded matmul weight shard width 49 tiles per bank must be divisible by workers_per_bank 2 (assert.hpp:104)
+2026-10-30 22:11:39.746 | critical |          Always | TT_FATAL: DRAM-sharded matmul weight shard width 49 tiles per bank must be divisible by workers_per_bank 2 (assert.hpp:104)
+2026-10-30 22:11:40.290 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 7-9] grow to 1743360 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+2026-10-30 22:11:40.900 | critical |          Always | TT_THROW: Statically allocated dataflow buffers on core range [0-0 - 7-9] grow to 1743360 B which is beyond max L1 size of 1572864 B (assert.hpp:104)
+2026-10-30 22:11:40.903 | critical |          Always | TT_FATAL: DRAM-sharded matmul weight shard width 49 tiles per bank must be divisible by workers_per_bank 2 (assert.hpp:104)
+2026-10-30 22:11:40.905 | critical |          Always | TT_FATAL: DRAM-sharded matmul weight shard width 49 tiles per bank must be divisible by workers_per_bank 2 (assert.hpp:104)
+BEST GDN in-proj {'kind': 'interleaved-tuned', 'ckc': 'HiFi2', 'us': 81.92, 'GBps': 328.1, 'err': 0.00936}
+GDN / attn o_proj {'kind': 'interleaved-tuned', 'ckc': 'HiFi4', 'us': 35.44, 'GBps': 251.5, 'err': 0.00707}
+GDN / attn o_proj {'kind': 'interleaved-tuned', 'ckc': 'HiFi2', 'us': 32.63, 'GBps': 273.1, 'err': 0.0082}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 104.3, 'GBps': 85.5, 'err': 0.02324}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 95.38, 'GBps': 93.4, 'err': 0.00766}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 103.78, 'GBps': 85.9, 'err': 0.02324}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 103.44, 'GBps': 86.2, 'err': 0.00766}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 80.33, 'GBps': 110.9, 'err': 0.01425}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 56.48, 'GBps': 157.8, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 60.31, 'GBps': 147.8, 'err': 0.01425}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 57.86, 'GBps': 154.0, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 69.39, 'GBps': 128.4, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 44.02, 'GBps': 202.5, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 47.44, 'GBps': 187.9, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 35.79, 'GBps': 249.1, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 64.32, 'GBps': 138.6, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 39.88, 'GBps': 223.5, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 41.76, 'GBps': 213.4, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 31.55, 'GBps': 282.5, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 16, 'nw': 1, 'ckc': 'HiFi4', 'us': 62.71, 'GBps': 142.1, 'err': 0.0085}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 16, 'nw': 1, 'ckc': 'HiFi2', 'us': 38.32, 'GBps': 232.6, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 16, 'nw': 2, 'ckc': 'HiFi4', 'us': 39.82, 'GBps': 223.8, 'err': 0.0085}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 16, 'nw': 2, 'ckc': 'HiFi2', 'us': 32.55, 'GBps': 273.8, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 104.53, 'GBps': 85.3, 'err': 0.02324}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 96.6, 'GBps': 92.3, 'err': 0.00766}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 105.02, 'GBps': 84.9, 'err': 0.02324}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 104.83, 'GBps': 85.0, 'err': 0.00766}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 81.61, 'GBps': 109.2, 'err': 0.01425}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 57.9, 'GBps': 153.9, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 60.38, 'GBps': 147.6, 'err': 0.01425}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 58.48, 'GBps': 152.4, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 70.79, 'GBps': 125.9, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 45.42, 'GBps': 196.2, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 47.76, 'GBps': 186.6, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 38.3, 'GBps': 232.7, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 65.66, 'GBps': 135.7, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 40.88, 'GBps': 218.0, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 42.69, 'GBps': 208.8, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 16, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 37.92, 'GBps': 235.1, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 104.72, 'GBps': 85.1, 'err': 0.02324}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 97.37, 'GBps': 91.5, 'err': 0.00766}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 105.58, 'GBps': 84.4, 'err': 0.02324}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 105.36, 'GBps': 84.6, 'err': 0.00766}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 82.06, 'GBps': 108.6, 'err': 0.01425}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 57.76, 'GBps': 154.3, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 61.56, 'GBps': 144.8, 'err': 0.01425}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 59.16, 'GBps': 150.7, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 70.81, 'GBps': 125.9, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 45.28, 'GBps': 196.8, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 48.29, 'GBps': 184.6, 'err': 0.00994}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 32, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 38.71, 'GBps': 230.2, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 104.85, 'GBps': 85.0, 'err': 0.02324}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 96.69, 'GBps': 92.2, 'err': 0.00766}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 105.14, 'GBps': 84.8, 'err': 0.02324}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 64, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 105.13, 'GBps': 84.8, 'err': 0.00766}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 64, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 82.14, 'GBps': 108.5, 'err': 0.01425}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 64, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 57.75, 'GBps': 154.3, 'err': 0.00719}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 64, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 60.76, 'GBps': 146.7, 'err': 0.01425}
+GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 64, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 60.38, 'GBps': 147.6, 'err': 0.00719}
+BEST GDN / attn o_proj {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 31.55, 'GBps': 282.5, 'err': 0.00719}
+attn qkv merged {'kind': 'interleaved-tuned', 'ckc': 'HiFi4', 'us': 75.27, 'GBps': 266.4, 'err': 0.00771}
+attn qkv merged {'kind': 'interleaved-tuned', 'ckc': 'HiFi2', 'us': 66.06, 'GBps': 303.6, 'err': 0.01}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 223.34, 'GBps': 89.8, 'err': 0.01798}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 121.74, 'GBps': 164.7, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 124.26, 'GBps': 161.4, 'err': 0.01798}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 80.26, 'GBps': 249.9, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 173.1, 'GBps': 115.9, 'err': 0.01341}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 81.19, 'GBps': 247.0, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 95.61, 'GBps': 209.7, 'err': 0.01341}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 61.69, 'GBps': 325.1, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 148.43, 'GBps': 135.1, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 76.45, 'GBps': 262.3, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 82.77, 'GBps': 242.3, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 62.26, 'GBps': 322.1, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi4', 'us': 137.79, 'GBps': 145.5, 'err': 0.00852}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 1, 'ckc': 'HiFi2', 'us': 75.79, 'GBps': 264.6, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi4', 'us': 78.89, 'GBps': 254.2, 'err': 0.00852}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 8, 'nw': 2, 'ckc': 'HiFi2', 'us': 64.25, 'GBps': 312.1, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 224.37, 'GBps': 89.4, 'err': 0.01798}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 122.87, 'GBps': 163.2, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 124.92, 'GBps': 160.5, 'err': 0.01798}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 80.8, 'GBps': 248.2, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 174.34, 'GBps': 115.0, 'err': 0.01341}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 82.37, 'GBps': 243.4, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 96.04, 'GBps': 208.8, 'err': 0.01341}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 75.33, 'GBps': 266.2, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi4', 'us': 149.59, 'GBps': 134.1, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 1, 'ckc': 'HiFi2', 'us': 77.67, 'GBps': 258.2, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi4', 'us': 84.45, 'GBps': 237.5, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 16, 'ibw': 4, 'nw': 2, 'ckc': 'HiFi2', 'us': 75.9, 'GBps': 264.2, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi4', 'us': 224.37, 'GBps': 89.4, 'err': 0.01798}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 1, 'ckc': 'HiFi2', 'us': 126.07, 'GBps': 159.1, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi4', 'us': 124.89, 'GBps': 160.6, 'err': 0.01798}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 32, 'ibw': 1, 'nw': 2, 'ckc': 'HiFi2', 'us': 81.18, 'GBps': 247.0, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi4', 'us': 174.2, 'GBps': 115.1, 'err': 0.01341}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 1, 'ckc': 'HiFi2', 'us': 82.47, 'GBps': 243.2, 'err': 0.01022}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi4', 'us': 96.4, 'GBps': 208.0, 'err': 0.01341}
+attn qkv merged {'kind': 'dram_sharded', 'cores': 32, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 75.58, 'GBps': 265.3, 'err': 0.01022}
+BEST attn qkv merged {'kind': 'dram_sharded', 'cores': 8, 'ibw': 2, 'nw': 2, 'ckc': 'HiFi2', 'us': 61.69, 'GBps': 325.1, 'err': 0.01022}
+DONE
+2026-10-30 22:12:33.675 | info     |    BuildKernels | JIT cache stats: 0/1011 hits (0.0%) [0 cached, 760 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-30 22:12:33.675 | info     |    BuildKernels | JIT telemetry: 42 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-30 22:12:33.697 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-30 22:12:33.697 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-30 22:12:33.754 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-30 22:12:33.754 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-30 22:12:33.754 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)

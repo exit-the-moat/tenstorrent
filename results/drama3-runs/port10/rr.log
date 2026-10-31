@@ -1,0 +1,4 @@
+fb_short_8c EXIT 0 11:31:27 io=0 disk=70%
+{"run": "fb_short_8c", "B": 8, "jobs": 32, "audio_s": 391.581, "wall_s": 100.304, "audio_per_wall": 3.904, "mean_active": 7.06, "ms_step": "39.16 + 8.69 + 19.46", "rtf_decode": "1.28 / 1.68 / 2.66", "rtf": "2.50 / 5.03 / 12.80", "ttfa_admit": "0.55 / 0.65 / 12.19", "ttfa_t0": "12.19 / 41.32 / 82.91", "worst_late": "5.73 / 10.04 / 13.71", "eos": 32, "dram_gb": 30.24, "board_W": "198.2 (324.0)"}
+f_short_8c EXIT 0 11:33:33 io=0 disk=70%
+{"run": "f_short_8c", "B": 8, "jobs": 32, "audio_s": 387.588, "wall_s": 62.586, "audio_per_wall": 6.193, "mean_active": 7.06, "ms_step": "26.68 + 8.69 + 7.32", "rtf_decode": "0.81 / 1.17 / 1.29", "rtf": "1.25 / 3.05 / 8.27", "ttfa_admit": "0.72 / 0.82 / 3.38", "ttfa_t0": "3.38 / 22.32 / 51.85", "worst_late": "2.21 / 3.99 / 5.28", "eos": 32, "dram_gb": 29.91, "board_W": "210.3 (348.0)"}

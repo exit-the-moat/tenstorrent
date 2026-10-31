@@ -1,0 +1,1 @@
+port8 soft reboot 03:15:23: card wedged after a deadlocked test kernel (ExpertMM v2 down path), smoke.py hung after device open

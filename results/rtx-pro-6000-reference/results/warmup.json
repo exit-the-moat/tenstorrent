@@ -1,0 +1,18 @@
+{
+ "text": "This is a warm-up line. It is not counted in the results.",
+ "sample_rate": 44100,
+ "audio_s": 4.551,
+ "gen_s": 4.488,
+ "rtf": 0.9861,
+ "ttfa_s": 3.7821,
+ "frames_usage": 98,
+ "frames_from_samples": 98.0,
+ "ms_per_frame_whole_request": 45.8,
+ "ms_per_frame_after_first_audio": 8.02,
+ "chunks": 5,
+ "first_chunk_s": 0.464,
+ "finish_reason": "stop",
+ "start_epoch": 1793381137.262,
+ "first_audio_epoch": 1793381141.044,
+ "end_epoch": 1793381141.749
+}

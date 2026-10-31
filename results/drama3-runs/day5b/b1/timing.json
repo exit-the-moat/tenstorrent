@@ -1,0 +1,89 @@
+{
+ "_batch": {
+  "batch_size": 1,
+  "dram_gb": 28.38
+ },
+ "fix": {
+  "prompt_rows": 717,
+  "prefix_rows": 640,
+  "batch": 1,
+  "batch_jobs": 1,
+  "voice_prefill_s": 1.698,
+  "prefill_s": 2.499,
+  "gen_s": 11.934,
+  "frames": 266,
+  "steps": 267,
+  "gdn_load_s": 0.017,
+  "decode_backbone_s": 6.132,
+  "tower_steps_s": 2.537,
+  "host_s": 0.745,
+  "backbone_ms_per_step": 22.967,
+  "tower_ms_per_step": 9.503,
+  "host_ms_per_step": 2.791,
+  "overlap_host_ms_per_step": 1.051,
+  "ras_redraws": 9,
+  "first_frame_s": 2.529,
+  "stopped_by_eos": true,
+  "ttfa_s": 2.97,
+  "audio_done_s": 12.075,
+  "card_codec_s": 0.426,
+  "codec_tail_s": 0.143,
+  "batch_wall_s": 12.077,
+  "save_s": 0.143,
+  "audio_s": 12.353,
+  "compute_s": 12.075,
+  "rtf": 0.977,
+  "batch_index": 0,
+  "start_epoch": 1793329718.864,
+  "end_epoch": 1793329730.941
+ },
+ "_batch0": {
+  "jobs": [
+   "fix"
+  ],
+  "wall_s": 12.078,
+  "audio_s": 12.353,
+  "audio_per_wall": 1.023
+ },
+ "close": {
+  "prompt_rows": 704,
+  "prefix_rows": 640,
+  "batch": 1,
+  "batch_jobs": 1,
+  "prefill_s": 0.753,
+  "gen_s": 5.728,
+  "frames": 138,
+  "steps": 139,
+  "gdn_load_s": 0.018,
+  "decode_backbone_s": 3.181,
+  "tower_steps_s": 1.32,
+  "host_s": 0.454,
+  "backbone_ms_per_step": 22.885,
+  "tower_ms_per_step": 9.499,
+  "host_ms_per_step": 3.268,
+  "overlap_host_ms_per_step": 1.048,
+  "ras_redraws": 3,
+  "first_frame_s": 0.782,
+  "stopped_by_eos": true,
+  "ttfa_s": 1.225,
+  "audio_done_s": 5.868,
+  "card_codec_s": 0.28,
+  "codec_tail_s": 0.142,
+  "batch_wall_s": 5.87,
+  "save_s": 1.017,
+  "audio_s": 6.409,
+  "compute_s": 5.868,
+  "rtf": 0.916,
+  "batch_index": 1,
+  "start_epoch": 1793329731.086,
+  "end_epoch": 1793329736.956
+ },
+ "_batch1": {
+  "jobs": [
+   "close"
+  ],
+  "wall_s": 5.871,
+  "audio_s": 6.409,
+  "audio_per_wall": 1.092
+ }
+}

@@ -1,0 +1,525 @@
+# SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+"""Fused pieces of the one-token MoE decode (port5 Track B, opt-in).
+
+DRAMA3_MOE_FUSED_TOPK=1: the router's top-k (FillPad + TopK + the index untilize, ~39 us of device time per layer,
+tests/profile_ops_dev.py) as one data-movement program on one core (kernels/router_topk.cpp): the top-8 scores of
+the 256 router logits and their expert ids, ready for sparse_matmul (uint16 ROW_MAJOR). The softmax over the 8
+(QWEN36_ROUTER_TOPK_FIRST) stays a ttnn op.
+"""
+
+import os
+
+import torch
+
+import ttnn
+
+KDIR = "models/demos/blackhole/drama3/kernels"
+
+
+class RouterTopK:
+    def __init__(self, mesh, E=256, k=8, core=(0, 0)):
+        assert E % 32 == 0 and k <= 16
+        self.mesh, self.E, self.k = mesh, E, k
+        c = ttnn.CoreCoord(*core)
+        self.crs = ttnn.CoreRangeSet([ttnn.CoreRange(c, c)])
+        self.core = c
+
+    def __call__(self, scores):
+        """scores [1, 1, 1, E] bf16 TILE -> (top-k scores [1, 1, 1, k] bf16 TILE, ids [1, 1, 1, k] uint16 ROW_MAJOR);
+        fresh output tensors each call (the MoE block frees them)."""
+        L1 = ttnn.L1_MEMORY_CONFIG
+        val = ttnn.allocate_tensor_on_device(ttnn.Shape([1, 1, 1, self.k]), ttnn.bfloat16, ttnn.TILE_LAYOUT, self.mesh, L1)
+        idx = ttnn.allocate_tensor_on_device(ttnn.Shape([1, 1, 1, self.k]), ttnn.uint16, ttnn.ROW_MAJOR_LAYOUT, self.mesh, L1)
+        ct = [self.E, self.k]
+        for t in (scores, val, idx):
+            ct.extend(ttnn.TensorAccessorArgs(t).get_compile_time_args())
+        rt = ttnn.RuntimeArgs()
+        rt[self.core.x][self.core.y] = [scores.buffer_address(), val.buffer_address(), idx.buffer_address()]
+        kern = ttnn.KernelDescriptor(
+            kernel_source=f"{KDIR}/router_topk.cpp",
+            source_type=ttnn.KernelDescriptor.SourceType.FILE_PATH,
+            core_ranges=self.crs,
+            compile_time_args=ct,
+            runtime_args=rt,
+            config=ttnn.ReaderConfigDescriptor(),
+        )
+        nt = self.E // 32
+        cbs = [
+            ttnn.CBDescriptor(
+                total_size=2048 * (nt + 1),
+                core_ranges=self.crs,
+                format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=0, data_format=ttnn.bfloat16, page_size=2048)],
+            ),
+            ttnn.CBDescriptor(
+                total_size=64,
+                core_ranges=self.crs,
+                format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=1, data_format=ttnn.bfloat16, page_size=64)],
+            ),
+        ]
+        ttnn.generic_op([scores, val, idx], ttnn.ProgramDescriptor(kernels=[kern], semaphores=[], cbs=cbs))
+        return val, idx
+
+
+def install_topk(layers, mesh):
+    """Route every MoE router's one-token topk() through RouterTopK (needs QWEN36_ROUTER_TOPK_FIRST=1)."""
+    if os.environ.get("DRAMA3_MOE_FUSED_TOPK", "0") != "1":
+        return 0
+    assert os.environ.get("QWEN36_ROUTER_TOPK_FIRST", "0") == "1"
+    rk = RouterTopK(mesh)
+    n = 0
+    for layer in layers:
+        r = getattr(layer.feed_forward, "router", None)
+        if r is None or not r.norm_topk_prob:
+            continue
+        orig = r.topk
+
+        def topk(hidden_states, _r=r, _orig=orig):
+            if hidden_states.shape[-2] != 1:
+                return _orig(hidden_states)
+            s = ttnn.linear(hidden_states, _r.proj_weight, compute_kernel_config=_r.compute_kernel_config)
+            raw, idx = rk(s)
+            s.deallocate(True)
+            v = ttnn.softmax(raw, dim=-1)
+            raw.deallocate(True)
+            return v, idx
+
+        r.topk = topk
+        n += 1
+    return n
+
+
+class MoECombine:
+    """out = sum_j v_j * down_j + sigmoid(g) * shared for one token (kernels/moe_combine_*.cpp), the hidden tiles
+    spread over n_cores cores. down: the compact [1, k, 32, H] sparse_matmul output (row 0 of each slot),
+    v: the softmax'd routing weights [1, 1, 1, k], shared: the shared expert MLP output [1, 1, H], g: the shared
+    gate pre-activation (one value at [0, 0])."""
+
+    def __init__(self, mesh, H=2048, k=8, n_cores=None):
+        n_cores = n_cores or int(os.environ.get("DRAMA3_MOE_COMBINE_CORES", "16"))
+        self.mesh, self.H, self.k = mesh, H, k
+        self.HT = H // 32
+        assert self.HT % n_cores == 0
+        g = mesh.compute_with_storage_grid_size()
+        self.cores = [ttnn.CoreCoord(i % g.x, i // g.x) for i in range(n_cores)]
+        self.per = self.HT // n_cores
+        self.crs = ttnn.CoreRangeSet([ttnn.CoreRange(c, c) for c in self.cores])
+
+    def __call__(self, down, v, shared, g):
+        L1 = ttnn.L1_MEMORY_CONFIG
+        out = ttnn.allocate_tensor_on_device(ttnn.Shape([1, 1, 1, self.H]), ttnn.bfloat16, ttnn.TILE_LAYOUT, self.mesh, L1)
+        rct = [self.k, self.HT]
+        for t in (down, v, shared, g):
+            rct.extend(ttnn.TensorAccessorArgs(t).get_compile_time_args())
+        wct = list(ttnn.TensorAccessorArgs(out).get_compile_time_args())
+        rrt, wrt = ttnn.RuntimeArgs(), ttnn.RuntimeArgs()
+        for i, c in enumerate(self.cores):
+            t0 = i * self.per
+            rrt[c.x][c.y] = [t0, self.per, down.buffer_address(), v.buffer_address(), shared.buffer_address(), g.buffer_address()]
+            wrt[c.x][c.y] = [t0, self.per, out.buffer_address()]
+        kd = lambda src, ct, rt, cfg: ttnn.KernelDescriptor(  # noqa: E731
+            kernel_source=f"{KDIR}/{src}",
+            source_type=ttnn.KernelDescriptor.SourceType.FILE_PATH,
+            core_ranges=self.crs,
+            compile_time_args=ct,
+            runtime_args=rt,
+            config=cfg,
+        )
+        kernels = [
+            kd("moe_combine_reader.cpp", rct, rrt, ttnn.ReaderConfigDescriptor()),
+            kd("moe_combine_writer.cpp", wct, wrt, ttnn.WriterConfigDescriptor()),
+            kd("moe_combine_compute.cpp", [self.k, self.per], [],
+               ttnn.ComputeConfigDescriptor(math_fidelity=ttnn.MathFidelity.HiFi4, fp32_dest_acc_en=True, math_approx_mode=False)),
+        ]
+        sizes = {0: 1, 1: self.k, 2: 2 * self.k, 3: 2, 4: 1, 5: 1, 16: 2}
+        cbs = [
+            ttnn.CBDescriptor(
+                total_size=2048 * n,
+                core_ranges=self.crs,
+                format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=i, data_format=ttnn.bfloat16, page_size=2048)],
+            )
+            for i, n in sizes.items()
+        ]
+        ttnn.generic_op([down, v, shared, g, out], ttnn.ProgramDescriptor(kernels=kernels, semaphores=[], cbs=cbs))
+        return out
+
+
+_EXPERT_MM = {}
+
+
+def _down_indexed(hidden_states, top_k_indices, weights, config, sparsity, swiglu=None):
+    """decode_forward_indexed (qwen36 moe/decode.py) up to the compact down output [1, k, 32, H]; with
+    DRAMA3_MOE_EXPERT_MM=1 (needs the fused top-k ids and the SwiGLU kernel) both expert matmuls run as ExpertMM."""
+    if os.environ.get("DRAMA3_MOE_EXPERT_MM", "0") == "1" and swiglu is not None and top_k_indices.layout == ttnn.ROW_MAJOR_LAYOUT:
+        mesh = hidden_states.device()
+        if not _EXPERT_MM:
+            kb = int(os.environ.get("DRAMA3_MOE_EXPERT_MM_KB", "16"))
+            _EXPERT_MM["gu"] = ExpertMM(mesh, int(os.environ.get("DRAMA3_MOE_EXPERT_MM_CORES_GU", "64")), kb)
+            _EXPERT_MM["dn"] = ExpertMM(mesh, int(os.environ.get("DRAMA3_MOE_EXPERT_MM_CORES_DN", "64")), kb)
+        k = config.top_k
+        up_gate = _EXPERT_MM["gu"](hidden_states, weights.gate_up_proj, top_k_indices, k, True)
+        down_input = swiglu(up_gate)
+        up_gate.deallocate(True)
+        down = _EXPERT_MM["dn"](down_input, weights.down_proj, top_k_indices, k, False)
+        down_input.deallocate(True)
+        return down
+    from models.demos.blackhole.qwen36.tt.moe.decode import _build_sparse_matmul_config, expert_decode_compute_kernel_config
+    from models.demos.blackhole.qwen36.tt.moe.operations import apply_swiglu
+
+    k, H = config.top_k, config.hidden_size
+    intermediate_size = weights.intermediate_size_per_device
+    idx = ttnn.to_layout(top_k_indices, ttnn.ROW_MAJOR_LAYOUT)
+    output_tile = ttnn.Tile([32, 32])
+    gate_up_config = _build_sparse_matmul_config(1, 2 * intermediate_size, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_GATE_UP", "1")))
+    down_config = _build_sparse_matmul_config(1, H, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_DOWN", "1")))
+    up_gate = ttnn.sparse_matmul(
+        hidden_states, weights.gate_up_proj, sparsity=sparsity, indices=idx, memory_config=ttnn.L1_MEMORY_CONFIG,
+        output_tile=output_tile, program_config=gate_up_config, compute_kernel_config=expert_decode_compute_kernel_config(),
+        dtype=ttnn.bfloat16,
+    )
+    up_gate = ttnn.reshape(up_gate, (1, k, 1, up_gate.shape[-1]))
+    down_input = swiglu(up_gate) if swiglu is not None else apply_swiglu(up_gate)
+    up_gate.deallocate(True)
+    down = ttnn.sparse_matmul(
+        down_input, weights.down_proj, sparsity=sparsity, indices=idx, memory_config=ttnn.L1_MEMORY_CONFIG,
+        output_tile=output_tile, program_config=down_config, compute_kernel_config=expert_decode_compute_kernel_config(),
+        is_input_a_sparse=True, dtype=ttnn.bfloat16,
+    )
+    down_input.deallocate(True)
+    if idx is not top_k_indices:
+        ttnn.deallocate(idx)
+    return down
+
+
+def install_combine(layers, mesh):
+    """DRAMA3_MOE_FUSED_COMBINE=1: the one-token MoE block's routed-slot sum and the gated shared expert add in one
+    kernel (MoECombine) instead of slice + mul + fill-pad + sum + sigmoid + mul + add."""
+    if os.environ.get("DRAMA3_MOE_FUSED_COMBINE", "0") != "1":
+        return 0
+    mc = MoECombine(mesh)
+    # DRAMA3_MOE_FUSED_SWIGLU=1 (with the combine): the routed SwiGLU and the shared expert ([w3 | w1] + SwiGLU kernel)
+    fused_sw = os.environ.get("DRAMA3_MOE_FUSED_SWIGLU", "0") == "1"
+    if fused_sw:  # a tuned one-token program for the merged shared [w3 | w1] (as tt/decode_linear.py's (2048, 512) one)
+        from models.demos.blackhole.drama3.tt import decode_linear
+
+        decode_linear.TABLE.setdefault(((2048, 1024), "BFLOAT4_B", None), (2, 16, 2))
+    sw_routed = Swiglu(mesh, int(os.environ.get("DRAMA3_MOE_SWIGLU_CORES", "64"))) if fused_sw else None
+    sw_shared = Swiglu(mesh, 16) if fused_sw else None
+    n = 0
+    for layer in layers:
+        moe = layer.feed_forward
+        if getattr(moe, "shared", None) is None or not getattr(moe.experts, "indexed_decode", False):
+            continue
+        orig = moe.forward
+        shared_fused = SharedExpertFused(moe.shared.mlp, mesh, sw_shared) if fused_sw else None
+
+        def forward(x, mode="decode", _m=moe, _orig=orig, _sf=shared_fused):
+            if mode == "decode" and x.shape[-2] > 1 and _m.config.num_devices == 1 and batch_on():
+                return forward_batch(_m, x, _sf)
+            if mode != "decode" or x.shape[-2] != 1 or _m.config.num_devices != 1:
+                return _orig(x, mode=mode)
+            H = x.shape[-1]
+            x4 = ttnn.reshape(x, (1, 1, 1, H))
+            x3 = ttnn.reshape(x, (1, 1, H))
+            vals, idx = _m.router.topk(x4)
+            down = _down_indexed(x4, idx, _m.experts.weights, _m.config, _m.experts.decode_sparsity, sw_routed)
+            g = ttnn.linear(x3, _m.shared.gate_weight)
+            sh = _sf(x3) if _sf is not None else _m.shared.mlp.forward(x3)
+            out = mc(down, vals, sh, g)
+            for t in (down, g, sh, vals, idx):
+                ttnn.deallocate(t)
+            return ttnn.reshape(out, tuple(x.shape))
+
+        moe.forward = forward
+        n += 1
+    _BATCH["sw"] = sw_routed
+    return n
+
+
+# ---------------------------------------------------------------- port6: B decode rows
+_BATCH = {}
+
+
+def batch_on():
+    """DRAMA3_MOE_FUSED_BATCH=1 (port6, opt-in, with the fused top-k / combine / SwiGLU): the MoE block of B
+    decode rows (batch mode) through RouterTopKB, the batched gather sparse_matmuls and MoECombineB."""
+    return os.environ.get("DRAMA3_MOE_FUSED_BATCH", "0") == "1"
+
+
+class RouterTopKB:
+    """kernels/router_topk_b.cpp: one core per row: scores [1, 1, B, E] -> (top-k scores [1, 1, B, k] TILE,
+    ids [1, 1, 1, B * k] uint16 ROW_MAJOR: the gather list of all rows), both fresh L1 tensors."""
+
+    def __init__(self, mesh, E=256, k=8):
+        self.mesh, self.E, self.k = mesh, E, k
+        g = mesh.compute_with_storage_grid_size()
+        self.g = g
+
+    def __call__(self, scores):
+        B = scores.shape[-2]
+        L1 = ttnn.L1_MEMORY_CONFIG
+        val = ttnn.allocate_tensor_on_device(ttnn.Shape([1, 1, B, self.k]), ttnn.bfloat16, ttnn.TILE_LAYOUT, self.mesh, L1)
+        idx = ttnn.allocate_tensor_on_device(ttnn.Shape([1, 1, 1, B * self.k]), ttnn.uint16, ttnn.ROW_MAJOR_LAYOUT, self.mesh, L1)
+        cores = [ttnn.CoreCoord(i % self.g.x, i // self.g.x) for i in range(B)]
+        crs = ttnn.CoreRangeSet([ttnn.CoreRange(c, c) for c in cores])
+        ct = [self.E, self.k, B]
+        for t in (scores, val, idx):
+            ct.extend(ttnn.TensorAccessorArgs(t).get_compile_time_args())
+        rt = ttnn.RuntimeArgs()
+        for b, c in enumerate(cores):
+            rt[c.x][c.y] = [scores.buffer_address(), val.buffer_address(), idx.buffer_address(), b]
+        kern = ttnn.KernelDescriptor(
+            kernel_source=f"{KDIR}/router_topk_b.cpp", source_type=ttnn.KernelDescriptor.SourceType.FILE_PATH,
+            core_ranges=crs, compile_time_args=ct, runtime_args=rt, config=ttnn.ReaderConfigDescriptor(),
+        )
+        cbs = [ttnn.CBDescriptor(total_size=2048 * 2, core_ranges=crs,
+                                 format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=0, data_format=ttnn.bfloat16, page_size=2048)])]
+        ttnn.generic_op([scores, val, idx], ttnn.ProgramDescriptor(kernels=[kern], semaphores=[], cbs=cbs))
+        return val, idx
+
+
+class MoECombineB:
+    """kernels/moe_combine_b_*.cpp: out[b] = sum_j v[b, j] * down[b * k + j][row b] + sigmoid(g_b) * shared[b] for B
+    decode rows; down [1, B * k, 32, H] (the batched gather sparse_matmul output), v [1, 1, B, k], shared [1, B, H],
+    g [1, B, 1] -> [1, 1, B, H]. MODE (DRAMA3_MOE_COMBINE_B_MODE, default 0): 0 = the FPU column-broadcast multiplies
+    accumulate in DST, 1 = products added on the SFPU."""
+
+    def __init__(self, mesh, H=2048, k=8, n_cores=None):
+        n_cores = n_cores or int(os.environ.get("DRAMA3_MOE_COMBINE_B_CORES", "32"))
+        self.mesh, self.H, self.k, self.HT = mesh, H, k, H // 32
+        assert self.HT % n_cores == 0
+        g = mesh.compute_with_storage_grid_size()
+        self.cores = [ttnn.CoreCoord(i % g.x, i // g.x) for i in range(n_cores)]
+        self.per = self.HT // n_cores
+        self.crs = ttnn.CoreRangeSet([ttnn.CoreRange(c, c) for c in self.cores])
+        self.mode = int(os.environ.get("DRAMA3_MOE_COMBINE_B_MODE", "0"))
+
+    def __call__(self, down, v, shared, g):
+        B = v.shape[-2]
+        S = B * self.k
+        out = ttnn.allocate_tensor_on_device(ttnn.Shape([1, 1, B, self.H]), ttnn.bfloat16, ttnn.TILE_LAYOUT, self.mesh, ttnn.L1_MEMORY_CONFIG)
+        rct = [self.k, self.HT, B]
+        for t in (down, v, shared, g):
+            rct.extend(ttnn.TensorAccessorArgs(t).get_compile_time_args())
+        wct = list(ttnn.TensorAccessorArgs(out).get_compile_time_args())
+        rrt, wrt = ttnn.RuntimeArgs(), ttnn.RuntimeArgs()
+        for i, c in enumerate(self.cores):
+            t0 = i * self.per
+            rrt[c.x][c.y] = [t0, self.per, down.buffer_address(), v.buffer_address(), shared.buffer_address(), g.buffer_address()]
+            wrt[c.x][c.y] = [t0, self.per, out.buffer_address()]
+        kd = lambda src, ct, rt, cfg: ttnn.KernelDescriptor(  # noqa: E731
+            kernel_source=f"{KDIR}/{src}", source_type=ttnn.KernelDescriptor.SourceType.FILE_PATH, core_ranges=self.crs,
+            compile_time_args=ct, runtime_args=rt, config=cfg,
+        )
+        kernels = [
+            kd("moe_combine_b_reader.cpp", rct, rrt, ttnn.ReaderConfigDescriptor()),
+            kd("moe_combine_writer.cpp", wct, wrt, ttnn.WriterConfigDescriptor()),
+            kd("moe_combine_b_compute.cpp", [S, self.per, self.mode], [],
+               ttnn.ComputeConfigDescriptor(math_fidelity=ttnn.MathFidelity.HiFi4, fp32_dest_acc_en=True, math_approx_mode=False)),
+        ]
+        sizes = {0: 1, 1: S, 2: S, 3: 1, 4: 1, 5: 1, 16: 2}
+        cbs = [
+            ttnn.CBDescriptor(total_size=2048 * n, core_ranges=self.crs,
+                              format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=i, data_format=ttnn.bfloat16, page_size=2048)])
+            for i, n in sizes.items()
+        ]
+        ttnn.generic_op([down, v, shared, g, out], ttnn.ProgramDescriptor(kernels=kernels, semaphores=[], cbs=cbs))
+        return out
+
+
+def forward_batch(moe, x, shared_fused):
+    """The MoE block for B decode rows x [1, B, H] (batch mode) -> [1, B, H]."""
+    from models.demos.blackhole.qwen36.tt.moe.decode import _build_sparse_matmul_config, expert_decode_compute_kernel_config
+    from models.demos.blackhole.qwen36.tt.moe.operations import apply_swiglu
+
+    mesh = x.device()
+    if "rk" not in _BATCH:
+        _BATCH["rk"] = RouterTopKB(mesh)
+        _BATCH["mc"] = MoECombineB(mesh)
+    B, H = x.shape[-2], x.shape[-1]
+    k = moe.config.top_k
+    L1 = ttnn.L1_MEMORY_CONFIG
+    x4 = ttnn.reshape(x, (1, 1, B, H))
+    x3 = ttnn.reshape(x, (1, B, H))
+    r = moe.router
+    sc = ttnn.linear(x4, r.proj_weight, compute_kernel_config=r.compute_kernel_config)
+    raw, idx = _BATCH["rk"](sc)
+    sc.deallocate(True)
+    v = ttnn.softmax(raw, dim=-1)
+    raw.deallocate(True)
+    w = moe.experts.weights
+    I = w.intermediate_size_per_device
+    ot = ttnn.Tile([32, 32])
+    gu_cfg = _build_sparse_matmul_config(B, 2 * I, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_GATE_UP", "1")))
+    dn_cfg = _build_sparse_matmul_config(B, H, in0_block_w=int(os.environ.get("QWEN36_MOE_DECODE_BLOCK_DOWN", "1")))
+    ckc = expert_decode_compute_kernel_config()
+    sp = moe.experts.decode_sparsity
+    ug = ttnn.sparse_matmul(x4, w.gate_up_proj, sparsity=sp, indices=idx, memory_config=L1, output_tile=ot,
+                            program_config=gu_cfg, compute_kernel_config=ckc, dtype=ttnn.bfloat16)  # [1,1,1,B*k,M,2I]
+    ug = ttnn.reshape(ug, (1, B * k, ug.shape[-2], ug.shape[-1]))
+    sw = _BATCH.get("sw")
+    act = sw(ug) if sw is not None else apply_swiglu(ug)
+    ug.deallocate(True)
+    down = ttnn.sparse_matmul(act, w.down_proj, sparsity=sp, indices=idx, memory_config=L1, output_tile=ot,
+                              program_config=dn_cfg, compute_kernel_config=ckc, is_input_a_sparse=True, dtype=ttnn.bfloat16)
+    act.deallocate(True)
+    ttnn.deallocate(idx)
+    if down.shape[-2] != 32:
+        down = ttnn.reshape(down, (1, B * k, down.shape[-2], H), (1, B * k, 32, H))
+    g = ttnn.linear(x3, moe.shared.gate_weight)  # [1, B, 1]
+    if shared_fused is not None:
+        sh = _shared_rows(shared_fused, x3)
+    else:
+        sh = moe.shared.mlp.forward(x3)
+    out = _BATCH["mc"](down, v, sh, g)
+    for t in (down, g, sh, v):
+        ttnn.deallocate(t)
+    return ttnn.reshape(out, tuple(x.shape))
+
+
+def _shared_rows(sf, x3):
+    """SharedExpertFused for B rows: [w3 | w1] matmul, the SwiGLU kernel on [1, 1, B, 2I], w2."""
+    L1 = ttnn.L1_MEMORY_CONFIG
+    B = x3.shape[-2]
+    gu = ttnn.linear(x3, sf.w_gu, compute_kernel_config=sf.ckc, memory_config=L1)
+    h = sf.sw(ttnn.reshape(gu, (1, 1, B, gu.shape[-1])))
+    ttnn.deallocate(gu)
+    out = ttnn.linear(ttnn.reshape(h, (1, B, h.shape[-1])), sf.w2, compute_kernel_config=sf.ckc, memory_config=L1)
+    ttnn.deallocate(h)
+    return out
+
+
+class Swiglu:
+    """out = up * silu(gate) over [up | gate] for one token per slot (kernels/swiglu_*.cpp): x [1, S, 1, 2N] bf16 TILE
+    -> [1, S, 1, N], S * N/32 output tiles over n_cores cores (each the same count)."""
+
+    def __init__(self, mesh, n_cores):
+        self.mesh = mesh
+        g = mesh.compute_with_storage_grid_size()
+        self.cores = [ttnn.CoreCoord(i % g.x, i // g.x) for i in range(n_cores)]
+        self.crs = ttnn.CoreRangeSet([ttnn.CoreRange(c, c) for c in self.cores])
+
+    def __call__(self, x):
+        S, N2 = x.shape[1], x.shape[-1]
+        NT = N2 // 64
+        items = S * NT
+        per = items // len(self.cores)
+        assert per * len(self.cores) == items, (items, len(self.cores))
+        assert x.shape[2] <= 32  # one tile row per slot (B decode rows: rows 0..B-1)
+        out = ttnn.allocate_tensor_on_device(ttnn.Shape([1, S, x.shape[2], N2 // 2]), ttnn.bfloat16, ttnn.TILE_LAYOUT, self.mesh, ttnn.L1_MEMORY_CONFIG)
+        rrt, wrt = ttnn.RuntimeArgs(), ttnn.RuntimeArgs()
+        for i, c in enumerate(self.cores):
+            rrt[c.x][c.y] = [i * per, per, x.buffer_address()]
+            wrt[c.x][c.y] = [i * per, per, out.buffer_address()]
+        kd = lambda src, ct, rt, cfg: ttnn.KernelDescriptor(  # noqa: E731
+            kernel_source=f"{KDIR}/{src}",
+            source_type=ttnn.KernelDescriptor.SourceType.FILE_PATH,
+            core_ranges=self.crs,
+            compile_time_args=ct,
+            runtime_args=rt,
+            config=cfg,
+        )
+        kernels = [
+            kd("swiglu_reader.cpp", [NT] + list(ttnn.TensorAccessorArgs(x).get_compile_time_args()), rrt, ttnn.ReaderConfigDescriptor()),
+            kd("swiglu_writer.cpp", list(ttnn.TensorAccessorArgs(out).get_compile_time_args()), wrt, ttnn.WriterConfigDescriptor()),
+            kd("swiglu_compute.cpp", [per], [],
+               ttnn.ComputeConfigDescriptor(math_fidelity=ttnn.MathFidelity.HiFi4, fp32_dest_acc_en=True, math_approx_mode=False)),
+        ]
+        cbs = [
+            ttnn.CBDescriptor(
+                total_size=2048 * per,
+                core_ranges=self.crs,
+                format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=i, data_format=ttnn.bfloat16, page_size=2048)],
+            )
+            for i in (0, 1, 16)
+        ]
+        ttnn.generic_op([x, out], ttnn.ProgramDescriptor(kernels=kernels, semaphores=[], cbs=cbs))
+        return out
+
+
+class SharedExpertFused:
+    """The shared expert's one-token MLP with w3 | w1 as ONE [H, 2I] matmul and the SwiGLU kernel
+    (instead of w1 + silu, w3, mul): silu(w1 x) * (w3 x) -> w2."""
+
+    def __init__(self, mlp, mesh, sw):
+        w = mlp.weights
+        gu = torch.cat([ttnn.to_torch(w.w3).float(), ttnn.to_torch(w.w1).float()], dim=-1)  # [up | gate]
+        self.w_gu = ttnn.from_torch(gu.reshape(gu.shape[-2], gu.shape[-1]), dtype=w.w1.dtype, layout=ttnn.TILE_LAYOUT, device=mesh)
+        self.w2, self.ckc, self.sw = w.w2, mlp.compute_kernel_config_decode, sw
+
+    def __call__(self, x3):
+        L1 = ttnn.L1_MEMORY_CONFIG
+        gu = ttnn.linear(x3, self.w_gu, compute_kernel_config=self.ckc, memory_config=L1)
+        h = self.sw(ttnn.reshape(gu, (1, 1, 1, gu.shape[-1])))
+        ttnn.deallocate(gu)
+        out = ttnn.linear(ttnn.reshape(h, (1, 1, h.shape[-1])), self.w2, compute_kernel_config=self.ckc, memory_config=L1)
+        ttnn.deallocate(h)
+        return out
+
+
+TILE_BYTES = {"BFLOAT16": 2048, "BFLOAT8_B": 1088, "BFLOAT4_B": 576}
+
+
+class ExpertMM:
+    """One-token indexed expert matmul (kernels/expert_mm_*.cpp), DRAMA3_MOE_EXPERT_MM=1: out[j] = A_j @ W[ids[j]] for
+    the k routed slots, the k * N/32 output tiles (jobs) spread over n_cores cores (sparse_matmul's program puts one
+    output tile column per core: 32 cores for the gate_up of N = 1024). A: one shared row (gate_up) or one row per slot
+    (down); ids: the router top-k's uint16 ROW_MAJOR ids. -> [1, k, 1, N] bf16 TILE (row 0 of each slot's tiles)."""
+
+    def __init__(self, mesh, n_cores, kb=16):
+        self.mesh, self.kb = mesh, kb
+        g = mesh.compute_with_storage_grid_size()
+        self.cores = [ttnn.CoreCoord(i % g.x, i // g.x) for i in range(n_cores)]
+        self.crs = ttnn.CoreRangeSet([ttnn.CoreRange(c, c) for c in self.cores])
+
+    def __call__(self, a, w, ids, nslot, shared_a):
+        KT, NT = w.shape[-2] // 32, w.shape[-1] // 32
+        KB = min(self.kb, KT)
+        assert KT % KB == 0
+        out = ttnn.allocate_tensor_on_device(ttnn.Shape([1, nslot, 1, NT * 32]), ttnn.bfloat16, ttnn.TILE_LAYOUT, self.mesh, ttnn.L1_MEMORY_CONFIG)
+        jobs, C = nslot * NT, len(self.cores)
+        per, extra = divmod(jobs, C)
+        acc = lambda *ts: [x for t in ts for x in ttnn.TensorAccessorArgs(t).get_compile_time_args()]  # noqa: E731
+        rr, rw, rc = ttnn.RuntimeArgs(), ttnn.RuntimeArgs(), ttnn.RuntimeArgs()
+        j0 = 0
+        for i, c in enumerate(self.cores):
+            nj = per + (1 if i < extra else 0)
+            rr[c.x][c.y] = [a.buffer_address(), w.buffer_address(), ids.buffer_address(), j0, nj]
+            rw[c.x][c.y] = [w.buffer_address(), ids.buffer_address(), out.buffer_address(), j0, nj]
+            rc[c.x][c.y] = [nj]
+            j0 += nj
+        kd = lambda src, ct, rt, cfg: ttnn.KernelDescriptor(  # noqa: E731
+            kernel_source=f"{KDIR}/{src}", source_type=ttnn.KernelDescriptor.SourceType.FILE_PATH, core_ranges=self.crs,
+            compile_time_args=ct, runtime_args=rt, config=cfg,
+        )
+        fid = getattr(ttnn.MathFidelity, os.environ.get("QWEN36_DECODE_MATH_FIDELITY", "LoFi"))
+        kernels = [
+            kd("expert_mm_reader.cpp", [KT, NT, KB, int(shared_a), nslot] + acc(a, w, ids), rr, ttnn.ReaderConfigDescriptor()),
+            kd("expert_mm_writer.cpp", [KT, NT, KB, nslot] + acc(w, ids, out), rw, ttnn.WriterConfigDescriptor()),
+            ttnn.KernelDescriptor(
+                kernel_source=f"{KDIR}/expert_mm_compute.cpp", source_type=ttnn.KernelDescriptor.SourceType.FILE_PATH,
+                core_ranges=self.crs, compile_time_args=[KT, KB, int(shared_a)], runtime_args=rc,
+                defines=[("EMM_NO_MATH", "1")] if os.environ.get("DRAMA3_MOE_EXPERT_MM_NO_MATH") else [],
+                config=ttnn.ComputeConfigDescriptor(math_fidelity=fid, fp32_dest_acc_en=True, math_approx_mode=False),
+            ),
+        ]
+        wt = str(w.dtype).split(".")[-1]
+        cbs = [
+            ttnn.CBDescriptor(total_size=2048 * (KT if shared_a else 2 * KT), core_ranges=self.crs,
+                              format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=0, data_format=ttnn.bfloat16, page_size=2048)]),
+            ttnn.CBDescriptor(total_size=TILE_BYTES[wt] * KB, core_ranges=self.crs,
+                              format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=1, data_format=w.dtype, page_size=TILE_BYTES[wt])]),
+            ttnn.CBDescriptor(total_size=TILE_BYTES[wt] * KB, core_ranges=self.crs,
+                              format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=4, data_format=w.dtype, page_size=TILE_BYTES[wt])]),
+            ttnn.CBDescriptor(total_size=64, core_ranges=self.crs,
+                              format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=5, data_format=ttnn.bfloat16, page_size=64)]),
+            ttnn.CBDescriptor(total_size=64, core_ranges=self.crs,
+                              format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=2, data_format=ttnn.bfloat16, page_size=64)]),
+            ttnn.CBDescriptor(total_size=2048 * 2, core_ranges=self.crs,
+                              format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=16, data_format=ttnn.bfloat16, page_size=2048)]),
+            ttnn.CBDescriptor(total_size=2048 * max(1, KT // 16), core_ranges=self.crs,  # staging for the shared row's chunks
+                              format_descriptors=[ttnn.CBFormatDescriptor(buffer_index=3, data_format=ttnn.bfloat16, page_size=2048)]),
+        ]
+        ttnn.generic_op([a, w, ids, out], ttnn.ProgramDescriptor(kernels=kernels, semaphores=[], cbs=cbs))
+        return out

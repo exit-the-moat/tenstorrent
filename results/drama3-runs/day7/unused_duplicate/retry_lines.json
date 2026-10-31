@@ -1,0 +1,58 @@
+[
+ {
+  "id": "s04-05_orig",
+  "line": "s04-05",
+  "variant": "orig",
+  "written": "That logic felt airtight.",
+  "spoken": "That logic felt airtight."
+ },
+ {
+  "id": "s05-02_orig",
+  "line": "s05-02",
+  "variant": "orig",
+  "written": "Card two: identical. Two dead cards.",
+  "spoken": "Card two: identical. Two dead cards."
+ },
+ {
+  "id": "s02-01_orig",
+  "line": "s02-01",
+  "variant": "orig",
+  "written": "This channel is called Exit the Moat.",
+  "spoken": "This channel is called Exit the Moat."
+ },
+ {
+  "id": "s02-01_mote",
+  "line": "s02-01",
+  "variant": "mote",
+  "written": "This channel is called Exit the Moat.",
+  "spoken": "This channel is called Exit the Mote."
+ },
+ {
+  "id": "s02-02_orig",
+  "line": "s02-02",
+  "variant": "orig",
+  "written": "In AI, the moat is CUDA and the cloud bills that keep you inside.",
+  "spoken": "In A I, the moat is CUDA and the cloud bills that keep you inside."
+ },
+ {
+  "id": "s02-02_mote",
+  "line": "s02-02",
+  "variant": "mote",
+  "written": "In AI, the moat is CUDA and the cloud bills that keep you inside.",
+  "spoken": "In A I, the mote is CUDA and the cloud bill's that keep you inside."
+ },
+ {
+  "id": "s10-02_orig",
+  "line": "s10-02",
+  "variant": "orig",
+  "written": "So, did we exit the moat? Not yet.",
+  "spoken": "So, did we exit the moat? Not yet."
+ },
+ {
+  "id": "s10-02_mote",
+  "line": "s10-02",
+  "variant": "mote",
+  "written": "So, did we exit the moat? Not yet.",
+  "spoken": "So, did we exit the mote? Not yet."
+ }
+]

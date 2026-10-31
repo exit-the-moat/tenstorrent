@@ -1,0 +1,4 @@
+start 14:39:47 io=0 disk=70%
+killed container e8b3f2b44f6f
+sg2 default 96 {"trace_ms": 34.36, "trace_dev_ms": 33.46, "trace_equal_eager": true} io=0 disk=70%
+R1_DONE

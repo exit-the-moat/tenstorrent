@@ -1,0 +1,55 @@
+io 0 17:52:50
+		LnkSta:	Speed 8GT/s (downgraded), Width x16
+cache 29590013952 bytes, 124 files
+STEP disk_read 17:52:52
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.0: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.1: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.10: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.11: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.12: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.13: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.14: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.15: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.16: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.17: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.18: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.19: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.2: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.20: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.21: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.22: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.23: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.24: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.25: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.26: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.27: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.28: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.29: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.3: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.30: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.31: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.32: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.33: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.34: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.35: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.36: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.37: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.38: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.39: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.4: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.5: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.6: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.7: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.8: Is a directory
+cat: /opt/ep0/cache/drama3/P150/tensor_cache_bfp8/layers.9: Is a directory
+DISK_READ_S .271077368
+STEP warm1 17:52:52
+warm1 WALL_S 352.194009600 [16:57:43] paged backbone resident: DRAM 26.09 GB, built in 183s EXIT 0
+STEP warm2 17:58:44
+warm2 WALL_S 70.567241325 [16:59:25] paged backbone resident: DRAM 26.09 GB, built in 11s EXIT 0
+STEP cold 17:59:59
+cold WALL_S 365.334550319 [17:04:56] paged backbone resident: DRAM 26.09 GB, built in 186s EXIT 0
+STEP pcie 18:06:04
+PCIE {"bytes_gib": 1.0, "h2d_s": [0.1208338737487793, 0.12084412574768066, 0.1208033561706543, 0.12108874320983887], "d2h_s": [1.241758108139038, 1.3047237396240234, 1.310631275177002, 1.3034989833831787], "roundtrip_equal": true, "h2d_gib_s": 8.277915711111023, "d2h_gib_s": 0.7671659224501584}
+io 0 18:06:30
+DONE

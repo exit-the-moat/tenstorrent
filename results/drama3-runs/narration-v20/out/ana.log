@@ -1,0 +1,139 @@
+s03-01_s0        0.870  6.1s loud 24.8dB pitch  9.3st f0  130Hz | Two 10-storrent P-150 cards. No Nvidia anywhere.
+s03-01_s1        0.870  5.3s loud 26.9dB pitch  9.6st f0  124Hz | two 10-storrent P150 cards, no Nvidia anywhere.
+s03-01_s2        0.870  5.4s loud 26.7dB pitch  9.2st f0  122Hz | two 10-storrent P150 cards, no Nvidia anywhere.
+s03-02_s0        1.000  9.4s loud 28.6dB pitch  8.3st f0  118Hz | The plan. Replace the GPUs in my home AI server and see how far these cards get with a real coding model.
+s03-02_s1        1.000  9.3s loud 26.2dB pitch  7.9st f0  117Hz | The plan – replace the GPUs in my home AI server and see how far these cards get with a real coding model.
+s03-02_s2        1.000  9.8s loud 26.1dB pitch  8.2st f0  116Hz | The plan. Replace the GPUs in my home AI server and see how far these cards get with a real coding model.
+s03-03_s0        1.000  3.6s loud 30.9dB pitch 12.2st f0  122Hz | That's Episode 1. First, install them.
+s03-03_s1        1.000  3.4s loud 35.1dB pitch  9.7st f0  127Hz | That's Episode 1. First, install them.
+s03-03_s2        1.000  3.7s loud 32.6dB pitch  9.7st f0  126Hz | That's Episode 1. First, install them.
+s04-01_s0        0.923  5.2s loud 30.0dB pitch  7.7st f0  110Hz | Ah, power on. The PSU shuts off.
+s04-01_s1        0.923  5.1s loud 28.2dB pitch  5.6st f0  109Hz | Ah, power on. The PSU shuts off.
+s04-01_s2        1.000  4.5s loud 27.4dB pitch  6.6st f0  114Hz | Power on, the PSU shuts off.
+s04-02_s0        1.000  5.9s loud 30.1dB pitch  5.6st f0  116Hz | No power cable on the card at all. Still shuts off.
+s04-02_s1        1.000  5.6s loud 32.0dB pitch  9.3st f0  122Hz | No power cable on the card at all, still shuts off.
+s04-02_s2        1.000  5.5s loud 30.0dB pitch  6.1st f0  122Hz | no power cable on the card at all, still shuts off.
+s04-03_s0        0.889  4.4s loud 23.0dB pitch  8.2st f0  112Hz | An old radion in the same slot boots fine.
+s04-03_s1        0.889  4.2s loud 27.2dB pitch  7.7st f0  119Hz | An old radion in the same slot boots fine.
+s04-03_s2        0.889  4.3s loud 25.6dB pitch  7.2st f0  108Hz | An old radion in the same slot boots fine.
+s04-04_s0        1.000  3.2s loud 27.4dB pitch  9.6st f0  121Hz | So the card is shorting. Definitely.
+s04-04_s1        1.000  3.5s loud 31.8dB pitch  6.0st f0  109Hz | So the card is shorting, definitely.
+s04-04_s2        1.000  3.3s loud 28.9dB pitch  5.2st f0  115Hz | So the card is shorting. Definitely.
+s04-05_s0        1.000  1.9s loud 20.4dB pitch  4.4st f0  111Hz | seemed logical to me.
+s04-05_s1        1.000  2.0s loud 22.4dB pitch  4.7st f0  107Hz | seemed logical to me.
+s04-05_s2        1.000  2.0s loud 18.3dB pitch  8.8st f0  100Hz | seemed logical to me.
+s04-10_s0        0.897  7.2s loud 30.4dB pitch  5.9st f0  121Hz | The card got its power through an adapter from two regular PCI Express cables.
+s04-10_s1        0.897  7.1s loud 27.5dB pitch  7.4st f0  118Hz | The card got its power through an adapter from two regular PCI Express cables.
+s04-10_s2        0.897  6.8s loud 26.2dB pitch  6.0st f0  115Hz | The card got its power through an adapter from two regular PCI express cables.
+s05-01_s0        0.933  9.2s loud 32.6dB pitch  7.5st f0  141Hz | Second opinion. My desktop. It boots. The cards fan spin, and Windows never sees it.
+s05-01_s1        0.933  8.7s loud 33.4dB pitch  7.4st f0  124Hz | Second Opinion, my desktop. It boots, the cards fan spin, and Windows never sees it.
+s05-01_s2        0.933  9.5s loud 31.7dB pitch  8.2st f0  120Hz | Second opinion. My desktop. It boots, the cards fan spin, and Windows never sees it.
+s05-02_s0        0.833  5.5s loud 35.9dB pitch 12.9st f0  105Hz | Part 2. Identical. Two dead cards.
+s05-02_s1        1.000  5.3s loud 34.4dB pitch 12.3st f0  126Hz | card 2. Identical. Two dead cards.
+s05-02_s2        1.000  4.8s loud 32.8dB pitch 11.5st f0  133Hz | card 2. Identical. Two dead cards.
+s05-03_s0        1.000  3.3s loud 26.0dB pitch  2.8st f0  111Hz | I wrote the return ticket.
+s05-03_s1        1.000  3.5s loud 27.0dB pitch  2.9st f0  112Hz | I wrote the return ticket.
+s05-03_s2        1.000  2.9s loud 31.5dB pitch  4.4st f0  107Hz | I wrote the return ticket.
+s06-01_s0        1.000  7.5s loud 26.0dB pitch  6.1st f0  106Hz | One last Hail Mary. The power supply's own cable. No adapter.
+s06-01_s1        1.000  6.3s loud 34.2dB pitch  4.7st f0  112Hz | One last Hail Mary, the power supply's own cable, no adapter.
+s06-01_s2        1.000  6.8s loud 31.6dB pitch  6.9st f0  114Hz | One last Hail Mary, the power supply's own cable, no adapter.
+s06-02_s0        0.933  4.5s loud 36.2dB pitch  9.4st f0  155Hz | Haha! It boots! The card shows up healthy.
+s06-02_s1        0.824  5.1s loud 35.7dB pitch 10.6st f0  147Hz | Ha ha ha! It boots! The card shows up healthy.
+s06-02_s2        0.706  4.9s loud 33.2dB pitch  7.1st f0  127Hz | Ha ha ha, it boots. The cart shows up healthy.
+s06-03_s0        0.950 10.4s loud 29.3dB pitch  9.0st f0  136Hz | The adapter was the problem the whole time. Of course, my power supplies maker said so. But who believes them?
+s06-03_s1        0.950 11.4s loud 28.7dB pitch  6.7st f0  113Hz | The adapter was the problem the whole time. Of course, my power supplies maker said so. But who believes them?
+s06-03_s2        0.950 10.8s loud 28.1dB pitch  8.4st f0  121Hz | The adapter was the problem the whole time. Of course, my power supplies maker said so. But who believes them?
+s06-04_s0        1.000  6.4s loud 34.3dB pitch  9.2st f0  124Hz | My own research had said an approved adapter was fine, apparently not.
+s06-04_s1        1.000  5.9s loud 27.9dB pitch  7.7st f0  116Hz | My own research had said an approved adapter was fine, apparently not.
+s06-04_s2        1.000  5.8s loud 30.4dB pitch  5.4st f0  120Hz | My own research had said an approved adapter was fine, apparently not.
+s06-05_s0        1.000 12.8s loud 31.1dB pitch  6.3st f0  110Hz | Lesson 1 of this channel, RTFM, not the one for the shiny new card, the one for the boring power supply you already own.
+s06-05_s1        1.000 11.9s loud 30.2dB pitch  7.7st f0  109Hz | Lesson 1 of this channel, RTFM, not the one for the shiny new card, the one for the boring power supply you already own.
+s06-05_s2        1.000 13.4s loud 33.2dB pitch  7.1st f0  112Hz | Lesson 1 of this channel, RTFM, not the one for the shiny new card, the one for the boring power supply you already own.
+s06-06_s0        0.927  9.4s loud 26.3dB pitch  8.5st f0  115Hz | One thing I could not find anywhere on the net, the card actually runs fine on PCI Express Gen 3.
+s06-06_s1        0.927  9.2s loud 26.0dB pitch  6.2st f0  111Hz | One thing I could not find anywhere on the net. The card actually runs fine on PCI Express Gen 3.
+s06-06_s2        0.927  8.6s loud 26.1dB pitch  9.3st f0  115Hz | One thing I could not find anywhere on the net. The card actually runs fine on PCI Express Gen 3.
+s06-07_s0        1.000  3.3s loud 25.3dB pitch  7.9st f0  116Hz | My CPU can't do more.
+s06-07_s1        1.000  3.3s loud 26.5dB pitch  8.7st f0  120Hz | My CPU can't do more.
+s06-07_s2        1.000  3.2s loud 28.4dB pitch  7.2st f0  113Hz | My CPU can't do more.
+s06-08_s0        1.000  6.6s loud 24.7dB pitch  6.4st f0  119Hz | With the model already in system RAM, loading it onto the card takes 11 seconds.
+s06-08_s1        1.000  6.6s loud 26.8dB pitch  9.9st f0  131Hz | With the model already in system RAM, loading it onto the card takes 11 seconds.
+s06-08_s2        1.000  6.0s loud 22.7dB pitch  7.3st f0  122Hz | With the model already in system RAM, loading it onto the card takes 11 seconds.
+s06-09_s0        1.000  8.5s loud 27.4dB pitch  8.2st f0  113Hz | On Gen 5, the card's maximum, it would barely change. Only about 3 of those seconds are the link.
+s06-09_s1        1.000  8.3s loud 29.7dB pitch  8.0st f0  116Hz | On Gen 5, the card's maximum, it would barely change, only about 3 of those seconds are the link.
+s06-09_s2        1.000  8.0s loud 30.3dB pitch  8.4st f0  121Hz | On Gen 5, the card's maximum, it would barely change. Only about three of those seconds are the link.
+s06-10_s0        1.000  7.5s loud 31.5dB pitch  5.7st f0  123Hz | From my SSD it takes about 3 minutes, the slow part is the SSD, not the slot.
+s06-10_s1        1.000  7.3s loud 31.8dB pitch  6.9st f0  114Hz | From my SSD, it takes about three minutes. The slow part is the SSD, not the slot.
+s06-10_s2        1.000  7.8s loud 28.2dB pitch  5.8st f0  128Hz | From my SSD, it takes about three minutes. The slow part is the SSD, not the slot.
+s06-20_s0        1.000  6.2s loud 23.0dB pitch  6.5st f0  118Hz | While I was at it, I updated the card's firmware and power-cycled the server.
+s06-20_s1        1.000  5.9s loud 28.4dB pitch  7.1st f0  118Hz | While I was at it, I updated the card's firmware and power-cycled the server.
+s06-20_s2        1.000  6.0s loud 23.0dB pitch  4.4st f0  117Hz | While I was at it, I updated the card's firmware and power-cycled the server.
+s08-01_s0        0.933 10.2s loud 27.4dB pitch  9.0st f0  116Hz | The model is Fish Audio Drama, 3.36 billion parameters, but only about 3 billion work for each slice of sound.
+s08-01_s1        0.933  9.8s loud 27.4dB pitch  8.5st f0  120Hz | The model is Fish Audio Drama, 3.36 billion parameters, but only about 3 billion work for each slice of sound.
+s08-01_s2        0.933 10.3s loud 27.7dB pitch  8.9st f0  118Hz | The model is Fish Audio Drama, 3.36 billion parameters, but only about 3 billion work for each slice of sound.
+s08-02_s0        1.000  3.5s loud 25.1dB pitch  8.8st f0  117Hz | At 4 bits, it fits on one card.
+s08-02_s1        1.000  3.5s loud 28.6dB pitch  8.4st f0  115Hz | At 4 bits it fits on one card.
+s08-02_s2        1.000  3.8s loud 32.7dB pitch 10.4st f0  115Hz | At 4 bits, it fits on one card.
+s08-03_s0        0.923  7.9s loud 27.3dB pitch  7.6st f0  117Hz | Nobody had published a run of it on 10-storrent, so Claude Code and I ported it in two days.
+s08-03_s1        0.842  7.3s loud 25.9dB pitch  7.5st f0  122Hz | Nobody had published a run of it on 10-storrent, so ClaudeCode and I ported it in two days.
+s08-03_s2        0.900  7.5s loud 26.3dB pitch  6.2st f0  120Hz | Nobody had published a run of it on 10 store and so Claude code and I ported it in two days
+s08-04_s0        0.970 14.3s loud 31.4dB pitch  6.3st f0  110Hz | What broke? The server's disk corrupted a wait file, a stale library path crashed the compiler, and a faster setting for the expert math filled a layer with garbage, so it stayed off.
+s08-04_s1        0.970 14.1s loud 29.6dB pitch  5.2st f0  111Hz | What broke? The server's disk corrupted a wait file, a stale library path crashed the compiler, and a faster setting for the expert math filled a layer with garbage, so it stayed off.
+s08-04_s2        0.970 16.5s loud 30.4dB pitch  6.3st f0  111Hz | What broke? The server's disk corrupted a wait file, a stale library path crashed the compiler and a faster setting for the expert math filled a layer with garbage, so it stayed off.
+s08-05_s0        1.000  8.8s loud 28.8dB pitch  6.5st f0  117Hz | Still on day 2, the first 8 test lines took 14.7 seconds for every second of speech.
+s08-05_s1        1.000  9.1s loud 26.1dB pitch  7.9st f0  126Hz | Still on day 2, the first 8 test lines took 14.7 seconds for every second of speech.
+s08-05_s2        1.000  8.8s loud 27.1dB pitch  5.9st f0  120Hz | Still on day 2, the first 8 test lines took 14.7 seconds for every second of speech.
+s08-06_s0        0.971 15.2s loud 29.1dB pitch  7.0st f0  117Hz | What worked, one traced path through the network for every frame, the audio decoder in a single trace, sampling on the card, a cached voice prompt, and the codec on the card as well.
+s08-06_s1        1.000 15.7s loud 30.2dB pitch  8.6st f0  116Hz | What worked? One traced pass through the network for every frame, the audio decoder in a single trace, sampling on the card, a cached voice prompt, and the codec on the card as well.
+s08-06_s2        1.000 15.5s loud 30.3dB pitch  8.1st f0  119Hz | What worked? One traced pass through the network for every frame, the audio decoder in a single trace, sampling on the card, a cached voice prompt, and the codec on the card as well.
+s08-07_s0        1.000 10.5s loud 28.4dB pitch  8.9st f0  122Hz | We kept the 4-bit weights and by the end of Day 2 the card needed 0.85 seconds for every second of speech.
+s08-07_s1        1.000 10.1s loud 31.3dB pitch  8.4st f0  119Hz | We kept the 4-bit weights and by the end of Day 2 the card needed 0.85 seconds for every second of speech.
+s08-07_s2        1.000 10.5s loud 27.8dB pitch  7.3st f0  116Hz | We kept the 4-bit weights, and by the end of Day 2, the card needed 0.85 seconds for every second of speech.
+s08-08_s0        0.947  9.5s loud 27.4dB pitch  7.6st f0  121Hz | Days 3 to 6, every optimization sins, this whole narration on the card, the video itself and publishing it.
+s08-08_s1        0.947  9.7s loud 30.5dB pitch  9.2st f0  120Hz | Days 3 to 6, every optimization sins, this whole narration on the card, the video itself and publishing it.
+s08-08_s2        1.000  9.4s loud 32.5dB pitch  9.4st f0  127Hz | days 3 to 6, every optimization since, this whole narration on the card, the video itself and publishing it.
+s08-09_s0        1.000 13.3s loud 29.2dB pitch  6.2st f0  108Hz | Day 1 also gave us the original model on the CPU, one layer at a time, as a reference. On Day 2, every weight was mapped and checked against it.
+s08-09_s1        1.000 12.4s loud 31.1dB pitch  6.9st f0  115Hz | Day 1 also gave us the original model on the CPU, one layer at a time, as a reference. On Day 2, every weight was mapped and checked against it.
+s08-09_s2        1.000 12.4s loud 31.0dB pitch  7.6st f0  114Hz | Day 1 also gave us the original model on the CPU, one layer at a time, as a reference. On day 2, every weight was mapped and checked against it.
+s08-10_s0        1.000  5.7s loud 31.6dB pitch  9.8st f0  121Hz | seven days on one card, this is what broke and this is what worked.
+s08-10_s1        1.000  5.7s loud 28.5dB pitch  8.1st f0  117Hz | seven days on one card. This is what broke and this is what worked.
+s08-10_s2        1.000  5.9s loud 28.8dB pitch  8.0st f0  113Hz | Seven days on one card. This is what broke and this is what worked
+s08-11_s0        1.000  6.7s loud 29.0dB pitch  7.8st f0  120Hz | And on the seventh day, you should rest. I will let you know how that goes.
+s08-11_s1        1.000  6.3s loud 26.4dB pitch  6.5st f0  115Hz | And on the seventh day, you should rest. I will let you know how that goes.
+s08-11_s2        1.000  6.6s loud 28.6dB pitch  4.9st f0  114Hz | And on the seventh day, you should rest. I will let you know how that goes.
+s09-01_s0        1.000 17.5s loud 28.4dB pitch  7.9st f0  114Hz | On my test lines the card needs 0.85 seconds for every second of speech and 0.96 over the whole narration at about 57 watts for the chip and 180 for the whole board.
+s09-01_s1        1.000 17.0s loud 28.3dB pitch  7.1st f0  120Hz | On my test lines the card needs 0.85 seconds for every second of speech and 0.96 over the whole narration at about 57 watts for the chip and 180 for the whole board.
+s09-01_s2        1.000 17.6s loud 28.6dB pitch  6.8st f0  123Hz | On my test lines the card needs 0.85 seconds for every second of speech and 0.96 over the whole narration at about 57 watts for the chip and 180 for the whole board.
+s09-02_s0        1.000 12.8s loud 29.9dB pitch  6.2st f0  115Hz | Whisper's transcript matches the script at 94%. With today's live settings, after a lot more tuning, my card needs about 0.38.
+s09-02_s1        1.000 12.7s loud 32.0dB pitch  8.0st f0  114Hz | Whisper's transcript matches the script at 94%. With today's live settings, after a lot more tuning, my card needs about 0.38.
+s09-02_s2        1.000 12.7s loud 30.3dB pitch  6.3st f0  118Hz | Whisper's transcript matches the script at 94%. With today's live settings, after a lot more tuning, my card needs about 0.38.
+s09-03_s0        1.000  9.8s loud 31.2dB pitch  9.0st f0  117Hz | And whether it sounds like me, you decide, except for my intro and that one part, every word you heard was spoken by the card.
+s09-03_s1        1.000 10.3s loud 30.3dB pitch  8.6st f0  116Hz | And whether it sounds like me, you decide. Except for my intro and that one part, every word you heard was spoken by the card.
+s09-03_s2        1.000  9.7s loud 28.7dB pitch  7.2st f0  120Hz | And whether it sounds like me, you decide, except for my intro and that one part every word you heard was spoken by the card.
+s09-05_s0        0.901 21.8s loud 29.6dB pitch  9.0st f0  116Hz | The original model on a rented RTX Pro 6000 is still about 2.2x faster. Its memory is 3.5x faster. So for every gigabyte per second, my card already gets more speech out, mostly because it moves fewer bytes.
+s09-05_s1        0.889 19.5s loud 28.9dB pitch  8.3st f0  120Hz | The model on a rented RTX Pro 6000 is still about 2.2x faster. Its memory is 3.5x faster. So for every gigabyte per second, my card already gets more speech out, mostly because it moves fewer bytes.
+s09-05_s2        0.033 27.9s loud 13.4dB pitch 13.2st f0  134Hz | Thank you so much for watching, and I'll see you in the next video!
+s09-06_s0        0.000 27.9s loud 12.5dB pitch 14.9st f0  137Hz | 
+s09-06_s1        0.879 18.5s loud 27.7dB pitch  7.6st f0  114Hz | Haha, lesson two, same lesson one. RT FM. My family, my expert panel, said this voice sounded sleepy. Haha, turns out the model takes stage directions. It was in the docks the whole time.
+s09-06_s2        0.896 17.6s loud 31.3dB pitch  6.5st f0  118Hz | Ha ha, lesson 2, same as lesson, RTFM. My family, my expert panel, said this voice sounded sleepy. Ha ha, turns out the model takes stage directions. It was in the docks the whole time.
+s09-07_s0        1.000 12.0s loud 26.7dB pitch  6.2st f0  118Hz | but that GPU ran its default settings and the defaults are where you usually stay. You pay the premium so that everything works out of the box.
+s09-07_s1        1.000 11.8s loud 28.0dB pitch  6.7st f0  107Hz | But that GPU ran its default settings, and the defaults are where you usually stay. You pay the premium so that everything works out of the box.
+s09-07_s2        1.000 12.2s loud 27.8dB pitch  8.8st f0  115Hz | But that GPU ran its default settings, and the defaults are where you usually stay. You pay the premium so that everything works out of the box.
+s09-08_s0        0.851 27.9s loud 31.5dB pitch 10.2st f0  116Hz | and the price. Fish Audio's own service charges $50 per million bytes of text. My card, speaking 16 lines at once, needs about 2 hours and 20 Euro cents of electricity for the same million bytes. At that rate, the card pays for itself after about 600 hours of speech or 720 with
+s09-08_s1        0.838 27.9s loud 28.5dB pitch  7.3st f0  115Hz | and the price. Fish Audio's own service charges $50 per million bytes of text. My card, speaking 16 lines at once, needs about 2 hours and 20 Euro cents of electricity for the same million bytes. At that rate, the card pays for itself after about 600 hours of speech, or 720 with V8.
+s09-08_s2        0.842 27.9s loud 28.9dB pitch  8.0st f0  117Hz | and the price. Fish Audio's own service charges $50 per million bytes of text. My card, speaking 16 lines at once, needs about 2 hours and 20 Euro cents of electricity for the same million bytes. At that rate, the card pays for itself after about 600 hours of speech, or 720
+s10-01_s0        1.000  8.1s loud 29.9dB pitch  9.8st f0  136Hz | Next episode both cards one coding model and a 15,000 euro GPU to beat
+s10-01_s1        1.000  8.1s loud 29.5dB pitch 10.3st f0  124Hz | Next episode, both cards, one coding model and a 15,000 euro GPU to beat.
+s10-01_s2        1.000  8.3s loud 27.2dB pitch  9.3st f0  123Hz | Next episode both cards one coding model and a 15,000 euro GPU to beat
+s10-04_s0        1.000  4.4s loud 25.3dB pitch  4.2st f0  114Hz | and one card is already enough for real-time audio.
+s10-04_s1        1.000  4.0s loud 26.9dB pitch  4.3st f0  113Hz | and one card is already enough for real-time audio.
+s10-04_s2        1.000  4.3s loud 26.5dB pitch  6.3st f0  112Hz | And one card is already enough for real-time audio.
+s10-07_s0        0.833  2.6s loud 28.2dB pitch  8.1st f0  129Hz | So, did we exit the mode?
+s10-07_s1        0.833  2.7s loud 33.8dB pitch  7.8st f0  118Hz | So, did we exit the mode?
+s10-07_s2        0.833  2.7s loud 39.0dB pitch  8.0st f0  119Hz | So, did we exit the mode?
+s10-08_s0        1.000  4.1s loud 30.5dB pitch  7.3st f0  111Hz | We found the door and it was a power cable.
+s10-08_s1        1.000  4.0s loud 28.8dB pitch 10.0st f0  123Hz | We found the door and it was a power cable.
+s10-08_s2        1.000  4.4s loud 29.0dB pitch  5.6st f0  113Hz | We found the door and it was a power cable.
+s10-09_s0        0.936 11.9s loud 33.8dB pitch  6.7st f0  122Hz | for the voice of a YouTube video. Yes. For an audiobook, probably. For a service help desk, not yet. Important parts are still missing.
+s10-09_s1        0.936 11.7s loud 34.9dB pitch  8.6st f0  115Hz | for the voice of a YouTube video? Yes. For an audiobook? Probably. For a service help desk? Not yet. Important parts are still missing.
+s10-09_s2        0.936 12.4s loud 33.8dB pitch  8.0st f0  116Hz | for the voice of a YouTube video? Yes, for an audiobook, probably. For a service help desk, not yet. Important parts are still missing.
+ANA_DONE

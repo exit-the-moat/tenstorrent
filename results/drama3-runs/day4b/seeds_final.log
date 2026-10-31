@@ -1,0 +1,103 @@
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[01:28:13] codec ready (compiled) in 21s
+2026-10-30 01:28:13.423 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:232)
+2026-10-30 01:28:13.423 | info     |             UMD | Cluster constructor started. (cluster.cpp:405)
+2026-10-30 01:28:13.423 | info     |             UMD | Creating TopologyDiscovery for architecture: blackhole (topology_discovery.cpp:131)
+2026-10-30 01:28:13.423 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:150)
+2026-10-30 01:28:13.427 | info     |             UMD | Established firmware bundle version: 19.15.0 (topology_discovery.cpp:654)
+2026-10-30 01:28:13.428 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:154)
+2026-10-30 01:28:13.441 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {} (cluster.cpp:172)
+2026-10-30 01:28:13.441 | info     |             UMD | IOMMU: disabled (cluster.cpp:146)
+2026-10-30 01:28:13.441 | info     |             UMD | KMD version: 2.11.0 (cluster.cpp:149)
+2026-10-30 01:28:13.441 | info     |             UMD | Cluster constructor completed. (cluster.cpp:719)
+2026-10-30 01:28:13.442 | info     |             UMD | Starting devices in cluster (cluster.cpp:1305)
+2026-10-30 01:28:13.496 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1314)
+2026-10-30 01:28:13.508 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:421)
+2026-10-30 01:28:13.508 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:483)
+2026-10-30 01:28:13.508 | warning  |          Always | Unknown motherboard 'PRIME B550-PLUS' for chip_id=0 (bus_id=0x1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:119)
+2026-10-30 01:28:13.509 | info     |          Fabric | Loaded physical groupings from: /opt/ep0/tt-metal/tests/tt_metal/tt_fabric/physical_groupings/default_physical_grouping_descriptor.textproto (physical_grouping_descriptor_core.cpp:813)
+2026-10-30 01:28:13.509 | info     |          Fabric | No specific Physical Grouping Descriptor found; using default. (physical_grouping_descriptor_core.cpp:897)
+2026-10-30 01:28:13.509 | info     |          Fabric | Matching MESH mgd groupings to MESH groupings (physical_grouping_descriptor_matching.cpp:1428)
+2026-10-30 01:28:13.509 | info     |          Fabric | Grouping valid candidates by node difference (physical_grouping_descriptor_matching.cpp:1522)
+2026-10-30 01:28:13.509 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': 1 topology match(es), committed: 1x1_Mesh_flat (MESH) (physical_grouping_descriptor_matching.cpp:1731)
+2026-10-30 01:28:13.509 | info     |          Fabric | Physical groupings: Mesh graph descriptor 'M0': MGD placement fallback M0 (MESH) embeds on PSD (physical_grouping_descriptor_matching.cpp:1848)
+2026-10-30 01:28:14.694 | INFO     | models.tt_transformers.tt.model_config:__init__:637 - Inferring device name: P150
+2026-10-30 01:28:14.695 | INFO     | models.tt_transformers.tt.model_config:__init__:720 - Checkpoint directory: /opt/ep0/drama3_shim
+2026-10-30 01:28:14.695 | INFO     | models.tt_transformers.tt.model_config:__init__:721 - Tokenizer file: /opt/ep0/drama3_shim/tokenizer.model
+2026-10-30 01:28:14.695 | INFO     | models.tt_transformers.tt.model_config:__init__:722 - Cache directory: /opt/ep0/cache/drama3/P150
+2026-10-30 01:28:14.695 | INFO     | models.tt_transformers.tt.model_config:__init__:723 - Model name: drama3_shim
+2026-10-30 01:28:16.495 | INFO     | models.tt_transformers.tt.model_config:_set_params_from_dict:2968 - Model name from config: drama3_shim
+2026-10-30 01:28:16.500 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4103 - Tokenizer path: /opt/ep0/drama3_shim
+2026-10-30 01:28:16.500 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4104 - Model name: drama3_shim
+2026-10-30 01:28:16.500 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4105 - Base model name: drama3_shim
+[transformers] The tokenizer you are loading from '/opt/ep0/drama3_shim' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+2026-10-30 01:28:18.269 | INFO     | models.tt_transformers.tt.model_config:create_tokenizer:4116 - Successfully loaded tokenizer from /opt/ep0/drama3_shim
+2026-10-30 01:28:18.456 | WARNING  | models.tt_transformers.tt.model_config:create_processor:4189 - Failed to load processor from /opt/ep0/drama3_shim: Can't load image processor for '/opt/ep0/drama3_shim'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure '/opt/ep0/drama3_shim' is the correct path to a directory containing a preprocessor_config.json file
+2026-10-30 01:28:18.457 | INFO     | models.tt_transformers.tt.model_config:__init__:1269 - Attention grid: ttnn.CoreGrid(x=8, y=4)
+2026-10-30 01:28:18.457 | INFO     | models.tt_transformers.tt.model_config:__init__:1270 - MLP grid: ttnn.CoreGrid(x=8, y=2)
+2026-10-30 01:28:18.457 | INFO     | models.tt_transformers.tt.model_config:__init__:1271 - MLP prefill grids @ 32: w1/w3: (8, 8), w2: (8, 8)
+2026-10-30 01:28:18.457 | INFO     | models.tt_transformers.tt.model_config:__init__:1272 - MLP prefill grids @ max_seq_len(4096): w1/w3: (8, 8), w2: (8, 8)
+2026-10-30 01:28:18.457 | INFO     | models.tt_transformers.tt.model_config:__init__:1275 - LM head grid: ttnn.CoreGrid(x=8, y=8)
+[01:28:29] paged backbone resident: DRAM 26.09 GB, built in 11s
+/home/container_app_user/tt-metal/python_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[01:28:41] card codec ready in 9s
+[01:28:41] prefix cache: 677 shared prompt rows of [684, 684, 704, 717], split at 640
+2026-10-30 01:28:50.887 | warning  |           Metal | Allocating device buffers is potentially unsafe due to the existence of an active trace. These buffers may be corrupted once a trace is executed if they are not released before then. Use the trace allocation tracker to verify. (allocator.cpp:140)
+[01:28:52] warm-up + trace capture 10.8s, card DRAM 28.29 GB
+[01:28:52] fidelity env {'QWEN36_GDN_DECODE_NOCLIP': '1', 'QWEN36_MOE_DECODE_BLOCK_DOWN': '8', 'QWEN36_DECODE_MATH_FIDELITY': 'LoFi', 'QWEN36_ROUTER_TOPK_FIRST': '1', 'QWEN36_MOE_MATH_FIDELITY': 'HiFi2', 'QWEN36_GDN_LEAN_DECODE': '1', 'QWEN36_MOE_DECODE_BLOCK_GATE_UP': '32', 'QWEN36_ATTN_MATH_FIDELITY': 'HiFi2', 'QWEN36_MLP_MATH_FIDELITY': 'HiFi2', 'QWEN36_MOE_DECODE_INDEXED': '1'}, tower bf16/HiFi4
+[01:28:57]   frame 50: backbone 23.2 ms, tower 10.5 ms per frame
+[01:28:58]   frame 100: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:00] close: {"prompt_rows": 704, "prefix_rows": 640, "prefill_bucket": 128, "voice_prefill_s": 1.969, "prefill_s": 0.724, "card_codec_s": 0.294, "codec_decode_s": 0.527, "codec_tail_s": 0.153, "ttfa_s": 3.113, "frames": 131, "decode_backbone_s": 3.04, "tower_steps_s": 1.386, "embed_s": 0.029, "backbone_ms_per_frame": 23.205, "tower_ms_per_frame": 10.503, "ras_redraws": 2, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 2.705, "stopped_by_eos": true, "gen_s": 7.31, "compute_s": 7.463, "save_s": 0.163, "audio_s": 6.084, "rtf": 1.227, "start_epoch": 1793323732.535, "end_epoch": 1793323740.161}
+[01:29:02]   frame 50: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:04]   frame 100: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:06]   frame 150: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:08]   frame 200: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:09]   frame 250: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:10] fix: {"prompt_rows": 717, "prefix_rows": 640, "prefill_bucket": 128, "prefill_s": 0.797, "card_codec_s": 0.427, "codec_decode_s": 0.818, "codec_tail_s": 0.141, "ttfa_s": 1.218, "frames": 264, "decode_backbone_s": 6.122, "tower_steps_s": 2.78, "embed_s": 0.056, "backbone_ms_per_frame": 23.188, "tower_ms_per_frame": 10.489, "ras_redraws": 5, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 0.809, "stopped_by_eos": true, "gen_s": 10.157, "compute_s": 10.298, "save_s": 0.078, "audio_s": 12.26, "rtf": 0.84, "start_epoch": 1793323740.162, "end_epoch": 1793323750.539}
+[01:29:13]   frame 50: backbone 23.1 ms, tower 10.5 ms per frame
+[01:29:14]   frame 100: backbone 23.1 ms, tower 10.4 ms per frame
+[01:29:16] close: {"prompt_rows": 704, "prefix_rows": 640, "prefill_bucket": 128, "prefill_s": 0.727, "card_codec_s": 0.275, "codec_decode_s": 0.524, "codec_tail_s": 0.14, "ttfa_s": 1.145, "frames": 138, "decode_backbone_s": 3.184, "tower_steps_s": 1.45, "embed_s": 0.023, "backbone_ms_per_frame": 23.069, "tower_ms_per_frame": 10.428, "ras_redraws": 3, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 0.739, "stopped_by_eos": true, "gen_s": 5.616, "compute_s": 5.757, "save_s": 0.045, "audio_s": 6.409, "rtf": 0.898, "start_epoch": 1793323750.54, "end_epoch": 1793323756.341}
+[01:29:18]   frame 50: backbone 23.3 ms, tower 10.6 ms per frame
+[01:29:20]   frame 100: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:22]   frame 150: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:24]   frame 200: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:25]   frame 250: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:27] fix: {"prompt_rows": 717, "prefix_rows": 640, "prefill_bucket": 128, "prefill_s": 0.767, "card_codec_s": 0.434, "codec_decode_s": 0.809, "codec_tail_s": 0.143, "ttfa_s": 1.185, "frames": 274, "decode_backbone_s": 6.358, "tower_steps_s": 2.892, "embed_s": 0.061, "backbone_ms_per_frame": 23.205, "tower_ms_per_frame": 10.518, "ras_redraws": 9, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 0.778, "stopped_by_eos": true, "gen_s": 10.49, "compute_s": 10.634, "save_s": 0.659, "audio_s": 12.725, "rtf": 0.836, "start_epoch": 1793323756.342, "end_epoch": 1793323767.635}
+[01:29:30]   frame 50: backbone 23.1 ms, tower 10.5 ms per frame
+[01:29:31]   frame 100: backbone 23.1 ms, tower 10.5 ms per frame
+[01:29:33] close: {"prompt_rows": 704, "prefix_rows": 640, "prefill_bucket": 128, "prefill_s": 0.718, "card_codec_s": 0.281, "codec_decode_s": 0.537, "codec_tail_s": 0.147, "ttfa_s": 1.136, "frames": 137, "decode_backbone_s": 3.169, "tower_steps_s": 1.446, "embed_s": 0.026, "backbone_ms_per_frame": 23.129, "tower_ms_per_frame": 10.477, "ras_redraws": 3, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 0.73, "stopped_by_eos": true, "gen_s": 5.595, "compute_s": 5.743, "save_s": 0.026, "audio_s": 6.362, "rtf": 0.903, "start_epoch": 1793323767.636, "end_epoch": 1793323773.405}
+[01:29:35]   frame 50: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:37]   frame 100: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:39]   frame 150: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:41]   frame 200: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:42]   frame 250: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:44] fix: {"prompt_rows": 717, "prefix_rows": 640, "prefill_bucket": 128, "prefill_s": 0.783, "card_codec_s": 0.424, "codec_decode_s": 0.803, "codec_tail_s": 0.148, "ttfa_s": 1.206, "frames": 277, "decode_backbone_s": 6.433, "tower_steps_s": 2.915, "embed_s": 0.062, "backbone_ms_per_frame": 23.223, "tower_ms_per_frame": 10.486, "ras_redraws": 7, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 0.795, "stopped_by_eos": true, "gen_s": 10.593, "compute_s": 10.742, "save_s": 0.747, "audio_s": 12.864, "rtf": 0.835, "start_epoch": 1793323773.408, "end_epoch": 1793323784.897}
+[01:29:47]   frame 50: backbone 23.3 ms, tower 10.5 ms per frame
+[01:29:49]   frame 100: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:51] close: {"prompt_rows": 704, "prefix_rows": 640, "prefill_bucket": 128, "prefill_s": 0.723, "card_codec_s": 0.28, "codec_decode_s": 0.53, "codec_tail_s": 0.14, "ttfa_s": 1.143, "frames": 137, "decode_backbone_s": 3.181, "tower_steps_s": 1.445, "embed_s": 0.032, "backbone_ms_per_frame": 23.22, "tower_ms_per_frame": 10.475, "ras_redraws": 1, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 0.735, "stopped_by_eos": true, "gen_s": 5.62, "compute_s": 5.76, "save_s": 0.697, "audio_s": 6.362, "rtf": 0.905, "start_epoch": 1793323784.898, "end_epoch": 1793323791.355}
+[01:29:54]   frame 50: backbone 23.2 ms, tower 10.4 ms per frame
+[01:29:56]   frame 100: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:58]   frame 150: backbone 23.2 ms, tower 10.5 ms per frame
+[01:29:59]   frame 200: backbone 23.2 ms, tower 10.5 ms per frame
+[01:30:01]   frame 250: backbone 23.2 ms, tower 10.4 ms per frame
+[01:30:02] fix: {"prompt_rows": 717, "prefix_rows": 640, "prefill_bucket": 128, "prefill_s": 0.767, "card_codec_s": 0.425, "codec_decode_s": 0.791, "codec_tail_s": 0.143, "ttfa_s": 1.927, "frames": 270, "decode_backbone_s": 6.26, "tower_steps_s": 2.836, "embed_s": 0.799, "backbone_ms_per_frame": 23.185, "tower_ms_per_frame": 10.466, "ras_redraws": 11, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 0.779, "stopped_by_eos": true, "gen_s": 11.062, "compute_s": 11.206, "save_s": 0.246, "audio_s": 12.539, "rtf": 0.894, "start_epoch": 1793323791.356, "end_epoch": 1793323802.809}
+[01:30:05]   frame 50: backbone 23.1 ms, tower 10.5 ms per frame
+[01:30:07]   frame 100: backbone 23.1 ms, tower 10.4 ms per frame
+[01:30:08] close: {"prompt_rows": 704, "prefix_rows": 640, "prefill_bucket": 128, "prefill_s": 0.722, "card_codec_s": 0.277, "codec_decode_s": 0.529, "codec_tail_s": 0.142, "ttfa_s": 1.141, "frames": 142, "decode_backbone_s": 3.288, "tower_steps_s": 1.495, "embed_s": 0.028, "backbone_ms_per_frame": 23.156, "tower_ms_per_frame": 10.456, "ras_redraws": 7, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 0.733, "stopped_by_eos": true, "gen_s": 5.77, "compute_s": 5.911, "save_s": 0.064, "audio_s": 6.594, "rtf": 0.896, "start_epoch": 1793323802.81, "end_epoch": 1793323808.785}
+[01:30:11]   frame 50: backbone 23.2 ms, tower 10.5 ms per frame
+[01:30:13]   frame 100: backbone 23.2 ms, tower 10.5 ms per frame
+[01:30:14]   frame 150: backbone 23.2 ms, tower 10.5 ms per frame
+[01:30:16]   frame 200: backbone 23.2 ms, tower 10.5 ms per frame
+[01:30:18]   frame 250: backbone 23.1 ms, tower 10.4 ms per frame
+[01:30:19] fix: {"prompt_rows": 717, "prefix_rows": 640, "prefill_bucket": 128, "prefill_s": 0.77, "card_codec_s": 0.436, "codec_decode_s": 0.803, "codec_tail_s": 0.146, "ttfa_s": 1.187, "frames": 271, "decode_backbone_s": 6.272, "tower_steps_s": 2.844, "embed_s": 0.056, "backbone_ms_per_frame": 23.144, "tower_ms_per_frame": 10.454, "ras_redraws": 12, "device_sampling": true, "sampler_mismatch": null, "first_frame_s": 0.782, "stopped_by_eos": true, "gen_s": 10.353, "compute_s": 10.499, "save_s": 0.09, "audio_s": 12.585, "rtf": 0.834, "start_epoch": 1793323808.787, "end_epoch": 1793323819.376}
+DONE
+2026-10-30 01:30:22.037 | info     |    BuildKernels | JIT cache stats: 2027/2027 hits (100.0%) [2027 cached, 2647 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:268)
+2026-10-30 01:30:22.037 | info     |    BuildKernels | JIT telemetry: 33 registered TelemetryTokens (build_cache_telemetry.cpp:325)
+2026-10-30 01:30:22.053 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:528)
+2026-10-30 01:30:22.053 | info     |             UMD | Closing devices in cluster (cluster.cpp:1319)
+2026-10-30 01:30:22.122 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1329)
+2026-10-30 01:30:22.122 | info     |             UMD | Cluster destructor started. (cluster.cpp:1050)
+2026-10-30 01:30:22.122 | info     |             UMD | Cluster destructor completed. (cluster.cpp:1063)
+EXIT 0

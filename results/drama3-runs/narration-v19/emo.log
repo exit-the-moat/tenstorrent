@@ -1,0 +1,18 @@
+e01-frus_s0      1.000  4.8s loud 29.9dB pitch  5.8st f0  117Hz | I spent a whole day sure it was broken, both of them.
+e01-frus_s1      1.000  5.2s loud 31.4dB pitch  7.2st f0  130Hz | I spent a whole day sure it was broken, both of them.
+e01-plain_s0     1.000  5.1s loud 29.7dB pitch  7.1st f0  124Hz | I spent a whole day sure it was broken, both of them.
+e01-plain_s1     1.000  4.4s loud 23.0dB pitch  6.5st f0  107Hz | I spent a whole day sure it was broken, both of them.
+e01-sigh_s0      1.000  5.6s loud 30.8dB pitch  6.3st f0  125Hz | I spent a whole day sure it was broken. Both of them.
+e01-sigh_s1      1.000  5.9s loud 33.2dB pitch  8.4st f0  121Hz | I spent a whole day sure it was broken. Both of them.
+e02-exc_s0       1.000  3.6s loud 33.7dB pitch 12.0st f0  213Hz | It boots! The card shows up healthy!
+e02-exc_s1       1.000  3.7s loud 36.1dB pitch 11.1st f0  253Hz | It boots! The card shows up! Healthy!
+e02-laugh_s0     0.933  4.7s loud 34.8dB pitch 13.6st f0  145Hz | Haha! It boots! The card shows up healthy!
+e02-laugh_s1     0.824  4.7s loud 33.2dB pitch  7.7st f0  160Hz | Ha ha ha, it boots! The card shows up, healthy!
+e02-plain_s0     1.000  3.7s loud 36.2dB pitch  7.2st f0  133Hz | It boots. The card shows up healthy.
+e02-plain_s1     1.000  3.5s loud 30.6dB pitch  5.7st f0  114Hz | It boots. The card shows up healthy.
+e03-angry_s0     1.000  2.1s loud 29.6dB pitch 10.7st f0  183Hz | Two dead cards!
+e03-angry_s1     1.000  1.9s loud 35.7dB pitch  9.8st f0  181Hz | Two dead cards!
+e03-plain_s0     1.000  1.7s loud 31.3dB pitch  8.5st f0  120Hz | two dead cards.
+e03-plain_s1     1.000  1.7s loud 28.8dB pitch  9.1st f0  118Hz | two dead cards.
+ANA_DONE
+ALL_DONE

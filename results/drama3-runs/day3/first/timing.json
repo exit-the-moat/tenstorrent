@@ -1,0 +1,23 @@
+{
+ "close": {
+  "prompt_rows": 718,
+  "prefill_rows": 704,
+  "prefill_s": 71.249,
+  "tail_s": 45.239,
+  "tower_prefill_s": 5.115,
+  "decode_backbone_s": 95.058,
+  "tower_steps_s": 33.383,
+  "frames": 128,
+  "ras_redraws": 4,
+  "first_frame_s": 122.512,
+  "stopped_by_eos": true,
+  "gen_s": 250.197,
+  "codec_s": 6.283,
+  "ttfa_s": 122.968,
+  "compute_s": 257.035,
+  "audio_s": 5.944,
+  "rtf": 43.243,
+  "start_epoch": 1793299057.67,
+  "end_epoch": 1793299314.705
+ }
+}

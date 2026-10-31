@@ -1,0 +1,11 @@
+prefetch/r8_cap EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/r8_ahead EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/r4_ahead EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/r8_ahead_p128 EXIT 0 io=0 disk=70%
+T1_DONE
+prefetch/r8_ahead_hifi2 EXIT 0 io=0 disk=70%
+T1_DONE
+SWEEP_DONE

@@ -1,0 +1,11 @@
+c1_s16 EXIT 1 10:01:44 io=0 disk=70%
+TypeError: __call__(): incompatible function arguments. The following argument types are supported:
+    raise TypeError(enhanced_msg) from e
+TypeError: 
+c1e_s16 EXIT 1 10:02:49 io=0 disk=70%
+TypeError: __call__(): incompatible function arguments. The following argument types are supported:
+    raise TypeError(enhanced_msg) from e
+TypeError: 
+c1_s8 EXIT 0 10:05:51 io=0 disk=70%
+{"run": "c1_s8", "B": 8, "jobs": 32, "audio_s": 392.835, "wall_s": 102.193, "audio_per_wall": 3.844, "mean_active": 7.01, "ms_step": "28.34 + 8.92 + 30.4", "rtf_decode": "1.24 / 1.90 / 2.22", "rtf": "1.75 / 4.90 / 13.24", "ttfa_admit": "0.54 / 1.09 / 3.25", "ttfa_t0": "3.26 / 34.96 / 85.90", "worst_late": "3.94 / 12.98 / 18.43", "eos": 32, "dram_gb": 30.23, "board_W": "188.6 (242.0)"}
+CHAIN_B_DONE
