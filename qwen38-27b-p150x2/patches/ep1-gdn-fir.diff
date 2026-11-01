@@ -1,0 +1,4 @@
+210c210
+<         self._gdn_conv1d = True
+---
+>         self._gdn_conv1d = os.environ.get("QWEN36_GDN_CONV1D", "1") == "1"  # ep1 patch: 0 = FIR conv in prefill (TP=2 L1 clash)

@@ -1,0 +1,25 @@
+196a197,200
+>         # ep1 patch: QWEN36_GDN_UNFUSED_RS=1 -> separate matmul + fp32 reduce-scatter (the fused op puts its RS workers
+>         # on core row 10 at nd=2, beyond the 10-row p150 grid)
+>         if os.environ.get("QWEN36_GDN_UNFUSED_RS") == "1":
+>             self._fuse_out_mmrs_prefill = False
+210c214
+<         self._gdn_conv1d = True
+---
+>         self._gdn_conv1d = os.environ.get("QWEN36_GDN_CONV1D", "1") == "1"  # ep1 patch: 0 = FIR conv in prefill (TP=2 L1 clash)
+491c495,497
+<         qkv, z, a, b = self._project_qkvzab(x, T, out_mc=ttnn.L1_MEMORY_CONFIG)
+---
+>         # ep1 patch: QWEN36_GDN_PREFILL_DRAM=1 keeps the prefill projections + FIR conv in DRAM (TP=2: L1 too small)
+>         _gdn_mc = ttnn.DRAM_MEMORY_CONFIG if os.environ.get("QWEN36_GDN_PREFILL_DRAM") == "1" else ttnn.L1_MEMORY_CONFIG
+>         qkv, z, a, b = self._project_qkvzab(x, T, out_mc=_gdn_mc)
+506c512
+<                 memory_config=ttnn.L1_MEMORY_CONFIG,
+---
+>                 memory_config=_gdn_mc,
+632a639,641
+>         _f32 = os.environ.get("QWEN36_GDN_UNFUSED_RS") == "1"  # ep1 patch: cross-device sum in fp32, as the fused op
+>         if _f32:
+>             partial = ttnn.typecast(partial, ttnn.float32)
+640a650
+>             **({"dtype": ttnn.float32} if _f32 else {}),

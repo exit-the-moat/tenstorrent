@@ -1,0 +1,14 @@
+{
+ "url": "http://127.0.0.1:8085",
+ "config": "1card-default",
+ "system": "1x-p150a",
+ "cards": 1,
+ "cables": 0,
+ "precision": "default-bfp8-bfp4mlp",
+ "users": "1",
+ "inputs": "8192",
+ "out_tokens": 256,
+ "repeats": 2,
+ "results": "/opt/ep1/bench/results.csv",
+ "run_dir": null
+}

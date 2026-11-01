@@ -1,0 +1,4 @@
+31c31
+< _PREFILL_WARMUP_CHUNK = 2048
+---
+> _PREFILL_WARMUP_CHUNK = int(os.environ.get("QWEN36_PREFILL_CHUNK", "2048"))  # ep1 patch: TP=2 conv1d L1 clash at 2048

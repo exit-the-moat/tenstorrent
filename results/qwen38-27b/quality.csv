@@ -1,0 +1,4 @@
+date,config,precision,benchmark,correct,total,score_pct,cut_by_length,run_dir
+2026-11-01T04:47:15,1card-default,default-bfp8-bfp4mlp,gsm8k-test-first60-greedy-nothink,59,60,98.3,0,/opt/ep1/eval/runs/20261101-040409-1card-default
+2026-11-01T06:13:32,2card-2cable-default,default-bfp8-bfp4mlp,gsm8k-test-first60-greedy-nothink,59,60,98.3,0,/opt/ep1/eval/runs/20261101-060901-2card-2cable-default
+2026-11-01T07:53:30,2card-2cable-naivebf4,naive-bf4,gsm8k-test-first60-greedy-nothink,60,60,100.0,1,/opt/ep1/eval/runs/20261101-074852-2card-2cable-naivebf4

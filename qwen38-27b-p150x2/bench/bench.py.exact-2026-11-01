@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+"""Load-ladder benchmark for an OpenAI-compatible server (vLLM on Tenstorrent, the DGX Spark, a GPU).
+
+    bench.py --config <label> --cards N --cables N --precision <p> [--users 1,4,8] [--inputs 128,4096,32768]
+             [--out-tokens 256] [--repeats 2] [--url http://127.0.0.1:8085] [--results results.csv]
+
+Method (the Episode 1 rules):
+- Every user of one step starts at the same moment (a burst); each sends a different coding prompt of exactly
+  --inputs tokens (counted with the server's own /tokenize), so no two requests share a prefix.
+- Output pinned: max_tokens = --out-tokens with ignore_eos, greedy (temperature 0), thinking off
+  (chat_template_kwargs enable_thinking=false) on every system.
+- Per request: TTFT = request sent -> first streamed token; decode tok/s = (tokens - 1) / (last token - first token).
+  Aggregate tok/s = all output tokens of the step / (last token of the step - start of the step).
+  Prefill tok/s (1 user only) = input tokens / TTFT.
+- Power: tt-smi sampled on the host every ~0.5 s during the step, summed over the cards in EP1_POWER_CARDS (e.g. "0";
+  default: every card in the machine, which counts an idle card too) (board and chip W).
+- The first run of every step (each users x input shape) is a warm-up and doesn't count (Sebastian's rule from earlier
+  benchmarking): it runs as repeat 0, goes to requests.jsonl only, never to results.csv. Prompts start at 1,024 tokens;
+  shorter prompts are too short to measure prefill.
+- One row per (users, input, repeat) in results.csv; raw per-request records in <run dir>/requests.jsonl.
+Standard library only.
+"""
+import argparse
+import csv
+import datetime
+import glob
+import json
+import os
+import statistics
+import subprocess
+import threading
+import time
+import urllib.request
+
+TT_SMI = "/opt/tenstorrent/venv/bin/tt-smi"
+CORPUS_GLOB = "/opt/tenstorrent/tt-metal/models/**/*.py"
+FIELDS = ["date", "config", "system", "cards", "cables", "precision", "users", "input_tokens", "output_tokens",
+          "repeat", "ttft_median_s", "ttft_max_s", "decode_tps_user_median", "decode_tps_user_min",
+          "aggregate_tps", "prefill_tps", "step_wall_s", "board_w_mean", "chip_w_mean", "ok_requests",
+          "versions", "run_dir"]
+
+
+def post(url, body, timeout=3600):
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
+    return urllib.request.urlopen(req, timeout=timeout)
+
+
+def tokenize(base, text):
+    return json.load(post(base + "/tokenize", {"model": "qwen38", "prompt": text, "add_special_tokens": False}))["tokens"]
+
+
+def detokenize(base, tokens):
+    return json.load(post(base + "/detokenize", {"model": "qwen38", "tokens": tokens}))["prompt"]
+
+
+class Corpus:
+    """Real source code (tt-metal model code), tokenised once; each prompt takes a different slice."""
+
+    def __init__(self, base):
+        files = sorted(glob.glob(CORPUS_GLOB, recursive=True))
+        text = "".join(f"\n# file: {os.path.relpath(f, '/opt/tenstorrent/tt-metal')}\n" + open(f, errors="ignore").read()
+                       for f in files[:1500])
+        self.base = base
+        self.tokens = tokenize(base, text[:4_000_000])
+        self.pos = 0
+
+    def prompt(self, n_tokens):
+        head = "Review the following code. List bugs, unclear names and missing tests, then suggest fixes.\n\n"
+        # chat template + instruction add a fixed overhead; measured once per call so the request is exactly n_tokens
+        body_n = max(1, n_tokens - len(tokenize(self.base, head)) - CHAT_OVERHEAD)
+        if self.pos + body_n > len(self.tokens):
+            self.pos = 0
+        body = detokenize(self.base, self.tokens[self.pos:self.pos + body_n])
+        self.pos += body_n
+        return head + body
+
+
+CHAT_OVERHEAD = 0  # set in main() from the server's own count of a chat request
+
+
+def chat_body(prompt, out_tokens, stream=True):
+    body = {"model": "qwen38", "messages": [{"role": "user", "content": prompt}], "max_tokens": out_tokens,
+            "temperature": 0, "ignore_eos": True, "stream": stream, "chat_template_kwargs": {"enable_thinking": False}}
+    if stream:  # vLLM rejects stream_options on a non-streaming request (HTTP 400)
+        body["stream_options"] = {"include_usage": True}
+    return body
+
+
+def one_request(base, prompt, out_tokens, t_start, rec):
+    t_sent = time.time()
+    times, usage, err = [], None, None
+    try:
+        with post(base + "/v1/chat/completions", chat_body(prompt, out_tokens)) as r:
+            for raw in r:
+                line = raw.decode().strip()
+                if not line.startswith("data:") or line == "data: [DONE]":
+                    continue
+                d = json.loads(line[5:])
+                if d.get("usage"):
+                    usage = d["usage"]
+                for ch in d.get("choices", []):
+                    delta = ch.get("delta", {})
+                    if delta.get("content") or delta.get("reasoning_content") or delta.get("reasoning"):
+                        times.append(time.time())
+    except Exception as e:  # recorded, the step continues
+        err = repr(e)
+    n = (usage or {}).get("completion_tokens", len(times))
+    rec.update(t_start=t_start, t_sent=t_sent, n_tokens=n, prompt_tokens=(usage or {}).get("prompt_tokens"),
+               t_first=times[0] if times else None, t_last=times[-1] if times else None, chunks=len(times), error=err)
+
+
+class Power(threading.Thread):
+    def __init__(self):
+        super().__init__(daemon=True)
+        self.samples, self.stop = [], threading.Event()
+
+    def run(self):
+        while not self.stop.is_set():
+            try:
+                d = json.loads(subprocess.run([TT_SMI, "-s"], capture_output=True, text=True, timeout=30).stdout)
+                tel = [x["telemetry"] for x in d["device_info"]]
+                if os.environ.get("EP1_POWER_CARDS"):  # only the cards this server uses (tt-smi order = device id)
+                    tel = [tel[int(i)] for i in os.environ["EP1_POWER_CARDS"].split(",")]
+                self.samples.append(dict(t=time.time(), board=sum(float(t["board_power"]) for t in tel),
+                                         chip=sum(float(t["power"]) for t in tel)))
+            except Exception:
+                pass
+            self.stop.wait(0.5)
+
+
+def versions():
+    v = {"image": os.environ.get("EP1_IMAGE", ""), "tt_metal": os.environ.get("EP1_TT_METAL", "")}
+    try:
+        d = json.loads(subprocess.run([TT_SMI, "-s"], capture_output=True, text=True, timeout=30).stdout)
+        v["fw"] = d["device_info"][0].get("firmwares", {}).get("fw_bundle_version", "")
+        v["kmd"] = d.get("host_info", {}).get("Driver", "")
+    except Exception:
+        pass
+    return json.dumps(v, separators=(",", ":"))
+
+
+def main():
+    global CHAT_OVERHEAD
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--url", default="http://127.0.0.1:8085")
+    ap.add_argument("--config", required=True)
+    ap.add_argument("--system", default="2x p150a")
+    ap.add_argument("--cards", type=int, required=True)
+    ap.add_argument("--cables", type=int, required=True)
+    ap.add_argument("--precision", required=True)
+    ap.add_argument("--users", default="1,4,8")
+    ap.add_argument("--inputs", default="1024,4096,32768")
+    ap.add_argument("--out-tokens", type=int, default=256)
+    ap.add_argument("--repeats", type=int, default=2)
+    ap.add_argument("--results", default="/opt/ep1/bench/results.csv")
+    ap.add_argument("--run-dir", default=None)
+    a = ap.parse_args()
+
+    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    run_dir = a.run_dir or f"/opt/ep1/bench/runs/{stamp}-{a.config}"
+    os.makedirs(run_dir, exist_ok=True)
+    json.dump(vars(a), open(os.path.join(run_dir, "args.json"), "w"), indent=1)
+    ver = versions()
+
+    # chat-template overhead: prompt_tokens the server reports for a one-word message minus that word
+    r = json.load(post(a.url + "/v1/chat/completions", chat_body("hello", 1, stream=False)))
+    CHAT_OVERHEAD = r["usage"]["prompt_tokens"] - len(tokenize(a.url, "hello"))
+    corpus = Corpus(a.url)
+    print(f"chat overhead {CHAT_OVERHEAD} tokens, corpus {len(corpus.tokens)} tokens", flush=True)
+
+
+    new_file = not os.path.exists(a.results)
+    with open(a.results, "a", newline="") as fcsv, open(os.path.join(run_dir, "requests.jsonl"), "a") as fraw:
+        w = csv.DictWriter(fcsv, fieldnames=FIELDS)
+        if new_file:
+            w.writeheader()
+        for n_in in [int(x) for x in a.inputs.split(",")]:
+            for users in [int(x) for x in a.users.split(",")]:
+                for rep in range(0, a.repeats + 1):  # rep 0 = warm-up, not counted
+                    prompts = [corpus.prompt(n_in) for _ in range(users)]
+                    recs = [dict() for _ in range(users)]
+                    pw = Power(); pw.start()
+                    t_start = time.time()
+                    th = [threading.Thread(target=one_request, args=(a.url, p, a.out_tokens, t_start, rc))
+                          for p, rc in zip(prompts, recs)]
+                    for t in th: t.start()
+                    for t in th: t.join()
+                    pw.stop.set(); pw.join()
+                    ok = [r for r in recs if r.get("t_first") and not r.get("error")]
+                    for rc in recs:
+                        fraw.write(json.dumps(dict(config=a.config, users=users, input_tokens=n_in, repeat=rep, **rc)) + "\n")
+                    fraw.flush()
+                    if rep == 0:
+                        print(f"warm-up users={users} in={n_in}: {len(ok)}/{users} ok", flush=True)
+                        continue
+                    if not ok:
+                        print(f"FAILED step users={users} in={n_in} rep={rep}: {recs[0].get('error')}", flush=True)
+                        continue
+                    ttft = [r["t_first"] - r["t_sent"] for r in ok]
+                    dec = [(r["n_tokens"] - 1) / (r["t_last"] - r["t_first"]) for r in ok if r["t_last"] > r["t_first"]]
+                    t_end = max(r["t_last"] for r in ok)
+                    ps = [s for s in pw.samples if t_start <= s["t"] <= t_end]
+                    row = dict(date=datetime.datetime.now().isoformat(timespec="seconds"), config=a.config,
+                               system=a.system, cards=a.cards, cables=a.cables, precision=a.precision, users=users,
+                               input_tokens=n_in, output_tokens=a.out_tokens, repeat=rep,
+                               ttft_median_s=round(statistics.median(ttft), 3), ttft_max_s=round(max(ttft), 3),
+                               decode_tps_user_median=round(statistics.median(dec), 2) if dec else "",
+                               decode_tps_user_min=round(min(dec), 2) if dec else "",
+                               aggregate_tps=round(sum(r["n_tokens"] for r in ok) / (t_end - t_start), 2),
+                               prefill_tps=round(n_in / ttft[0], 1) if users == 1 else "",
+                               step_wall_s=round(t_end - t_start, 2),
+                               board_w_mean=round(statistics.mean(s["board"] for s in ps), 1) if ps else "",
+                               chip_w_mean=round(statistics.mean(s["chip"] for s in ps), 1) if ps else "",
+                               ok_requests=f"{len(ok)}/{users}", versions=ver, run_dir=run_dir)
+                    w.writerow(row); fcsv.flush()
+                    print(json.dumps(row), flush=True)
+    print("DONE", flush=True)
+
+
+if __name__ == "__main__":
+    main()

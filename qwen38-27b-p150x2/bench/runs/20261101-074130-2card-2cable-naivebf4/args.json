@@ -1,0 +1,14 @@
+{
+ "url": "http://127.0.0.1:8085",
+ "config": "2card-2cable-naivebf4",
+ "system": "2x p150a",
+ "cards": 2,
+ "cables": 2,
+ "precision": "naive-bf4",
+ "users": "1,4,8",
+ "inputs": "1024,4096",
+ "out_tokens": 256,
+ "repeats": 2,
+ "results": "/opt/ep1/bench/results.csv",
+ "run_dir": null
+}
