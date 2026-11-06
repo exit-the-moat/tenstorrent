@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """GSM8K quality check: the first 60 questions of the openai/gsm8k "main" test split, greedy, thinking off.
 
-    gsm8k.py fetch                       -> /opt/ep1/eval/gsm8k60.jsonl (once; the fixed subset)
+    gsm8k.py fetch                       -> eval/gsm8k60.jsonl (once; already in the repo)
     gsm8k.py run --config <label> --precision <p> [--url ...] [--workers 4] [--max-tokens 2048]
 
 Score = exact match of the last number in the answer with the reference after "####". Writes one row to
-/opt/ep1/eval/quality.csv and every answer to <run dir>/answers.jsonl. Standard library only.
+$EP1_EVAL_DIR/quality.csv (default ../work/eval) and every answer to <run dir>/answers.jsonl. Standard library only.
 """
 import argparse, csv, datetime, json, os, re, sys, threading, urllib.request
 
-SUBSET = "/opt/ep1/eval/gsm8k60.jsonl"
+HERE = os.path.dirname(os.path.abspath(__file__))
+SUBSET = os.path.join(HERE, "gsm8k60.jsonl")  # the fixed subset, shipped with the repo
+OUT = os.environ.get("EP1_EVAL_DIR") or os.path.join(os.environ.get("WORK") or os.path.join(HERE, "..", "work"), "eval")  # runs/, quality.csv
 PROMPT = "Solve this math problem. Show your working briefly, then give the final answer on its own line as '#### <number>'.\n\n"
 
 
@@ -38,7 +40,7 @@ def norm(x):
 def run(a):
     qs = [json.loads(l) for l in open(SUBSET)]
     stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    run_dir = f"/opt/ep1/eval/runs/{stamp}-{a.config}"
+    run_dir = os.path.join(OUT, "runs", f"{stamp}-{a.config}")
     os.makedirs(run_dir, exist_ok=True)
     out = [None] * len(qs)
     lock = threading.Lock()
@@ -76,7 +78,8 @@ def run(a):
             f.write(json.dumps(o) + "\n")
     n_ok = sum(o["correct"] for o in out)
     n_cut = sum(o["finish"] == "length" for o in out)
-    path = "/opt/ep1/eval/quality.csv"
+    os.makedirs(OUT, exist_ok=True)
+    path = os.path.join(OUT, "quality.csv")
     new = not os.path.exists(path)
     with open(path, "a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["date", "config", "precision", "benchmark", "correct", "total", "score_pct",

@@ -31,6 +31,7 @@ optimization.
 | # | Topic | Folder |
 |---|---|---|
 | 0 | I almost returned two Tenstorrent AI cards. It was the cable. (Fish Audio Drama 3 on one p150) | [`fish-drama3-p150/`](fish-drama3-p150) · weights: [Hugging Face](https://huggingface.co/exit-the-moat/drama-3-exit-the-moat-tenstorrent-p150) · video: [YouTube](https://youtu.be/mpleglhA_Dg) |
+| 1 | Qwen 3.8 27B on 2 Tenstorrent p150: getting started (vLLM-TT on 1 and 2 cards, the team benchmark, the patches) | [`qwen38-27b-p150x2/`](qwen38-27b-p150x2) · video: [YouTube](https://youtu.be/3AvhL99p77M) |
 
 New episodes are added here when they are published.
 

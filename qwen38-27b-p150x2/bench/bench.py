@@ -3,18 +3,24 @@
 
     bench.py --config <label> --cards N --cables N --precision <p> [--users 1,4,8] [--inputs 128,4096,32768]
              [--out-tokens 256] [--repeats 2] [--url http://127.0.0.1:8085] [--results results.csv]
+             [--corpus <tt-metal checkout>] [--open]
 
 Method (the Episode 1 rules):
 - Every user of one step starts at the same moment (a burst); each sends a different coding prompt of exactly
   --inputs tokens (counted with the server's own /tokenize), so no two requests share a prefix.
-- Output: at least --out-tokens (min_tokens), no cap, greedy (temperature 0), thinking off; --exact pins it to exactly
-  --out-tokens (max_tokens + ignore_eos), the mode of the 2026-11-01 night rows
-  (chat_template_kwargs enable_thinking=false) on every system.
+- Output: exactly --out-tokens (max_tokens + ignore_eos), greedy (temperature 0), thinking off
+  (chat_template_kwargs enable_thinking=false) on every system: the mode of the Episode 1 rows (2026-11-01).
+  --open instead asks for at least --out-tokens (min_tokens) with no cap: requests then run to EOS (3-5k tokens,
+  10+ minutes per step on one card), so those numbers are not comparable with the episode's.
+- Prompts: real source code, the tt-metal model code (models/**/*.py) of a tt-metal checkout given with --corpus
+  (or $BENCH_CORPUS). The Episode 1 rows used tt-metal commit 70222e907; any source code works for speed.
 - Per request: TTFT = request sent -> first streamed token; decode tok/s = (tokens - 1) / (last token - first token).
   Aggregate tok/s = all output tokens of the step / (last token of the step - start of the step).
   Prefill tok/s (1 user only) = input tokens / TTFT.
-- Power: tt-smi sampled on the host every ~0.5 s during the step, summed over the cards in EP1_POWER_CARDS (e.g. "0";
-  default: every card in the machine, which counts an idle card too) (board and chip W).
+- Power: tt-smi ($TT_SMI, default: tt-smi on the PATH) sampled on the host every ~0.5 s during the step, summed over
+  the cards in EP1_POWER_CARDS (e.g. "0"; default: every card in the machine, which counts an idle card too)
+  (board and chip W). Without tt-smi the power columns stay empty.
+- EP1_IMAGE / EP1_TT_METAL: free-text version labels written into the results' versions column (optional).
 - The first run of every step (each users x input shape) is a warm-up and doesn't count (Sebastian's rule from earlier
   benchmarking): it runs as repeat 0, goes to requests.jsonl only, never to results.csv. Prompts start at 1,024 tokens;
   shorter prompts are too short to measure prefill.
@@ -33,8 +39,9 @@ import threading
 import time
 import urllib.request
 
-TT_SMI = "/opt/tenstorrent/venv/bin/tt-smi"
-CORPUS_GLOB = "/opt/tenstorrent/tt-metal/models/**/*.py"
+TT_SMI = os.environ.get("TT_SMI", "tt-smi")
+CORPUS = os.environ.get("BENCH_CORPUS", "/opt/tenstorrent/tt-metal")  # --corpus overrides
+WORK = os.environ.get("EP1_WORK") or os.environ.get("WORK") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "work")
 FIELDS = ["date", "config", "system", "cards", "cables", "precision", "users", "input_tokens", "output_tokens",
           "repeat", "ttft_median_s", "ttft_max_s", "decode_tps_user_median", "decode_tps_user_min",
           "aggregate_tps", "prefill_tps", "step_wall_s", "board_w_mean", "chip_w_mean", "ok_requests",
@@ -58,8 +65,10 @@ class Corpus:
     """Real source code (tt-metal model code), tokenised once; each prompt takes a different slice."""
 
     def __init__(self, base):
-        files = sorted(glob.glob(CORPUS_GLOB, recursive=True))
-        text = "".join(f"\n# file: {os.path.relpath(f, '/opt/tenstorrent/tt-metal')}\n" + open(f, errors="ignore").read()
+        files = sorted(glob.glob(os.path.join(CORPUS, "models", "**", "*.py"), recursive=True))
+        if not files:
+            raise SystemExit(f"no prompt corpus: {CORPUS}/models/**/*.py not found (pass --corpus <tt-metal checkout>)")
+        text = "".join(f"\n# file: {os.path.relpath(f, CORPUS)}\n" + open(f, errors="ignore").read()
                        for f in files[:1500])
         self.base = base
         self.tokens = tokenize(base, text[:4_000_000])
@@ -79,7 +88,7 @@ class Corpus:
 CHAT_OVERHEAD = 0  # set in main() from the server's own count of a chat request
 
 
-EXACT = False  # set in main() from --exact
+EXACT = True  # set in main(): False with --open
 
 
 def chat_body(prompt, out_tokens, stream=True):
@@ -159,16 +168,22 @@ def main():
     ap.add_argument("--users", default="1,4,8")
     ap.add_argument("--inputs", default="1024,4096,32768")
     ap.add_argument("--out-tokens", type=int, default=256)
-    ap.add_argument("--exact", action="store_true", help="exactly --out-tokens (old pinned mode)")
+    ap.add_argument("--exact", action="store_true", help="exactly --out-tokens (the default; kept for old commands)")
+    ap.add_argument("--open", action="store_true", help="at least --out-tokens, runs to EOS (not the episode's mode)")
+    ap.add_argument("--corpus", default=None, help="tt-metal checkout for the prompts (default $BENCH_CORPUS)")
     ap.add_argument("--repeats", type=int, default=2)
-    ap.add_argument("--results", default="/opt/ep1/bench/results.csv")
+    ap.add_argument("--results", default=None, help="default: $EP1_WORK/results.csv (EP1_WORK default: ../work)")
     ap.add_argument("--run-dir", default=None)
     a = ap.parse_args()
     global EXACT
-    EXACT = a.exact
+    EXACT = not a.open
+    global CORPUS
+    CORPUS = a.corpus or CORPUS
+    a.results = a.results or os.path.join(WORK, "results.csv")
+    os.makedirs(os.path.dirname(os.path.abspath(a.results)), exist_ok=True)
 
     stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    run_dir = a.run_dir or f"/opt/ep1/bench/runs/{stamp}-{a.config}"
+    run_dir = a.run_dir or os.path.join(WORK, "runs", f"{stamp}-{a.config}")
     os.makedirs(run_dir, exist_ok=True)
     json.dump(vars(a), open(os.path.join(run_dir, "args.json"), "w"), indent=1)
     ver = versions()
