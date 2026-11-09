@@ -10,6 +10,47 @@ Every number in a video comes from the code and the `results/` data in this repo
 - Hugging Face: [exit-the-moat](https://huggingface.co/exit-the-moat) (converted weights)
 - Patreon: [Exit the Moat](https://patreon.com/Exitthemoat) (support the channel)
 
+## Episode 2 in numbers: Qwen 3.8 27B with DFlash2 on 1 and 2 Tenstorrent p150a
+
+Lossless speculative decoding, one switch per setup, 2026-11-09. Decode = mean over the same 8 coding prompts (about 580 tokens each), one request at a
+time unless the row says otherwise, gated on two starts and rebuilt from the package's README. Details, method and checks:
+[`qwen38-27b-p150-dflash2/`](qwen38-27b-p150-dflash2).
+
+| | 1 x p150a | 2 x p150a |
+|---|---|---|
+| decode, one developer | **75.8 tok/s** | **140 tok/s** |
+| 4 developers at once, each | - (one request at a time) | **56.2 tok/s** (49-62) |
+| 4 developers at once, total | - | **225 tok/s** while decoding, 191 tok/s including the wait for the first token |
+| time to first token, 4 developers at once | - | 0.7 s median, 1.2 s for the last one |
+| 8 developers at once, each | - | **26.4 tok/s** (24-32) |
+| 8 developers at once, total | - | **211 tok/s** while decoding, 185 tok/s including the wait for the first token |
+| time to first token, 8 developers at once | - | 1.3 s median, 2.6 s for the last one |
+| time to first token, 1k prompt | 0.39 s | 0.27 s |
+| time to first token, 8k prompt | 3.1 s | 1.8 s |
+| time to first token, 32k prompt | 14.5 s | 8.3 s |
+| outputs exact against the reference | 5/5 | 5/5 |
+| GSM8K (60) | 60 / 60 | 59 / 60 |
+| needle in a haystack | 6 / 6 | 6 / 6 |
+
+The 33 tok/s per developer quoted in the video comes from the separate plain-decoding vLLM build of Episode 2, which is
+not part of this package.
+
+The 80 tok/s for one card in the video used a different set of code prompts: on that set this package's 1-card server
+also measures 79.6-80.2 tok/s, against the 75.8 tok/s above on the 8 prompts in `check/`.
+
+For comparison, my own RTX PRO 6000 run (NVFP4 + DFlash2, coding prompts, a different harness) does 239 tok/s for one
+developer.
+
+## Episode 1 in numbers: Qwen 3.8 27B on 1 and 2 Tenstorrent p150a
+
+Plain decoding with vLLM-TT, 2026-11-01. Details, method and patches: [`qwen38-27b-p150x2/`](qwen38-27b-p150x2).
+
+| | 1 x p150a | 2 x p150a |
+|---|---|---|
+| 1 developer, 1k prompt | 7.4 tok/s | 14.6 tok/s |
+| 8 developers, 4k prompts | - (batch 1 only) | 11.2 tok/s each, 58 total |
+| GSM8K (60) | 59 / 60 | 59 / 60 |
+
 ## Episode 0 in numbers: Fish Audio Drama 3 (36B voice model) on one Tenstorrent p150a
 
 One card, PCIe Gen3 x16, 8 test lines, 2026-10-31. RTF = compute seconds per second of audio (lower is better).
@@ -30,8 +71,9 @@ optimization.
 
 | # | Topic | Folder |
 |---|---|---|
-| 0 | I almost returned two Tenstorrent AI cards. It was the cable. (Fish Audio Drama 3 on one p150) | [`fish-drama3-p150/`](fish-drama3-p150) · weights: [Hugging Face](https://huggingface.co/exit-the-moat/drama-3-exit-the-moat-tenstorrent-p150) · video: [YouTube](https://youtu.be/mpleglhA_Dg) |
+| 2 | Qwen 3.8 27B on 2 Tenstorrent p150: optimization results (DFlash2 on 1 and 2 cards, one switch per setup) | [`qwen38-27b-p150-dflash2/`](qwen38-27b-p150-dflash2) · video: [YouTube](https://youtu.be/TFR_2J9H__Q) |
 | 1 | Qwen 3.8 27B on 2 Tenstorrent p150: getting started (vLLM-TT on 1 and 2 cards, the team benchmark, the patches) | [`qwen38-27b-p150x2/`](qwen38-27b-p150x2) · video: [YouTube](https://youtu.be/3AvhL99p77M) |
+| 0 | I almost returned two Tenstorrent AI cards. It was the cable. (Fish Audio Drama 3 on one p150) | [`fish-drama3-p150/`](fish-drama3-p150) · weights: [Hugging Face](https://huggingface.co/exit-the-moat/drama-3-exit-the-moat-tenstorrent-p150) · video: [YouTube](https://youtu.be/mpleglhA_Dg) |
 
 New episodes are added here when they are published.
 
