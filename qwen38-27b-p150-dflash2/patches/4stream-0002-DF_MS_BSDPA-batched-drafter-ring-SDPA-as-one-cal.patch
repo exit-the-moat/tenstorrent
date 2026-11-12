@@ -1,0 +1,160 @@
+From 0b2b9ea520f16ec5d98a9042b46b720ed170bf18 Mon Sep 17 00:00:00 2001
+From: schoggie <no-reply@exit-the-moat.com>
+Date: Thu, 12 Nov 2026 21:25:06 +0100
+Subject: [PATCH 2/3] ms4: DF_MS_BSDPA (batched drafter ring SDPA as one call,
+ streams as the batch dim), DF_MS4_T host timers, DF_PREUP in the batched
+ staging; all default off
+
+---
+ .../blackhole/qwen36/ep2_dflash/df_ms.py      | 64 ++++++++++++++++++-
+ 1 file changed, 62 insertions(+), 2 deletions(-)
+
+diff --git a/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py b/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
+index 32c6762..c792889 100644
+--- a/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
++++ b/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
+@@ -83,6 +83,10 @@ PLAIN_LIVE = int(os.environ.get("DF_PLAIN_LIVE", "7") or 7)
+ PLAIN_BUCKETS = [int(x) for x in os.environ.get("DF_PLAIN_BUCKETS", "8,16,32").split(",") if x.strip()]
+ LANE_SLOTS = os.environ.get("DF_MS_LANE_SLOTS", "0") == "1"  # dfa: lane-only slots keep base/hist only (StreamState)
+ PCACHE = os.environ.get("DF_PREFIX_CACHE", "0") == "1"  # ep2 dfpc (df_pcache.py)
++# ms4 DF_MS_BSDPA=1 (default off): the batched drafter's per-stream ring SDPA calls (one per stream and layer, each
++# parallel over 16 heads only, ~145 us) as ONE SDPA with the streams as the batch dim (rings concatenated per layer).
++# Drafter-only (drafts change acceptance, never the output).
++BSDPA = os.environ.get("DF_MS_BSDPA", "0") == "1"
+ 
+ 
+ def _rep(mesh):
+@@ -643,6 +647,10 @@ class MsVerifier(Verifier):
+         _t6 = time.perf_counter()
+         self.timing["verify_ms"] = 1000 * (_t6 - t0)
+         self.timing["xt"] = (_t1 - t0, _t2 - _t1, _t3 - _t2, _t4 - _t3, _t5 - _t4, _t6 - _t5)
++        if _T4:
++            for k_, d_ in (("v_gcb", _t1 - t0), ("v_stage", _t2 - _t1), ("v_exec", _t3 - _t2), ("v_pre", _t4 - _t3),
++                           ("v_wait_ids", _t5 - _t4), ("v_blk", _t6 - _t5)):
++                _t4add((k_, self.S), d_)
+         return [int(v) for v in blk.tolist()], post
+ 
+     def _read_ids(self):
+@@ -766,6 +774,7 @@ class MsDraft:
+         vb = d0._heads(vb, R, D.NKV_L)
+         kc, vc = d0._ctx_kv(L, ctx_h, R, cos_c, sin_c)  # [1, NKV_L, R, 128]
+         outs = []
++        qps, ks, vs = [], [], []
+         for s, d in enumerate(self.ds):
+             for src, ring, ix in ((kc, d.ring_k[li], d.in_idx), (vc, d.ring_v[li], d.in_idx),
+                                   (kb, d.ring_k[li], d.blk_idx), (vb, d.ring_v[li], d.blk_idx)):
+@@ -780,11 +789,28 @@ class MsDraft:
+             vfull = ttnn.reshape(d.ring_v[li], (1, D.NKV_L, D.RING, D.HD))
+             qs = self._rows(q, s)
+             qp = ttnn.pad(qs, [1, D.NH_L, D.QPAD, D.HD], [0, 0, 0, 0], 0.0)
++            if BSDPA:
++                qps.append(qp)
++                ks.append(kfull)
++                vs.append(vfull)
++                continue
+             attn = ttnn.transformer.scaled_dot_product_attention(
+                 qp, kfull, vfull, attn_mask=per[s]["mask"], is_causal=False, scale=D.HD ** -0.5,
+                 program_config=d0.sdpa_cfg, compute_kernel_config=d0.hifi2)
+             outs.append(ttnn.slice(attn, (0, 0, 0, 0), (1, D.NH_L, B, D.HD)))
+             ttnn.deallocate(attn)
++        if BSDPA:
++            qa = ttnn.concat(qps, dim=0)  # [S, NH_L, QPAD, HD]
++            ka = ttnn.concat(ks, dim=0)  # [S, NKV_L, RING, HD]
++            va = ttnn.concat(vs, dim=0)
++            attn = ttnn.transformer.scaled_dot_product_attention(
++                qa, ka, va, attn_mask=self._mask_all, is_causal=False, scale=D.HD ** -0.5,
++                program_config=d0.sdpa_cfg, compute_kernel_config=d0.hifi2)
++            for t in [qa, ka, va] + qps:
++                ttnn.deallocate(t)
++            for s in range(self.S):
++                outs.append(ttnn.slice(attn, (s, 0, 0, 0), (s + 1, D.NH_L, B, D.HD)))
++            ttnn.deallocate(attn)
+         for t in (kc, vc, kb, vb, q):
+             ttnn.deallocate(t)
+         a = ttnn.concat(outs, dim=2)
+@@ -850,6 +876,7 @@ class MsDraft:
+             p["perm"] = ttnn.slice(b, (0, 0, D.QPAD, 4 * D.HD), (1, 1, D.QPAD + D.NCTX, 4 * D.HD + D.NCTX))
+             per.append(p)
+         cos_b, sin_b, cos_c, sin_c = [ttnn.concat([p["rope"][i] for p in per], dim=2) for i in range(4)]
++        self._mask_all = ttnn.concat([p["mask"] for p in per], dim=0) if BSDPA else None  # [S, 1, QPAD, KLEN]
+         tok = ttnn.concat([d.in_tok for d in self.ds], dim=0)  # [R] uint32
+         x = d0.target.embd(tok)
+         x = ttnn.reshape(x, (1, 1, R, x.shape[-1]))
+@@ -878,6 +905,9 @@ class MsDraft:
+                 ttnn.deallocate(t)
+         for t in (cos_b, sin_b, cos_c, sin_c):
+             ttnn.deallocate(t)
++        if self._mask_all is not None:
++            ttnn.deallocate(self._mask_all)
++            self._mask_all = None
+         hn = d0._rms(x, d0.norm)
+         ttnn.deallocate(x)
+         _pc = d0._pc1d(hn, d0.lm_w, key="lm")
+@@ -944,8 +974,12 @@ def stage_only(d, anchor, start, prev_a):
+         d.pending_ctx = None
+         d.pos = pos
+         ttnn.copy(taps, d.in_ctx)
+-        ttnn.copy_host_to_device_tensor(idx_h, d.in_idx)
+-        ttnn.copy_host_to_device_tensor(blob_h, d.in_blob)
++        if getattr(d, "preup", False):  # ms4: DF_PREUP=1 = the variants were uploaded during the verify (prepare_all)
++            ttnn.copy(d.pre_idx[prev_a], d.in_idx)
++            ttnn.copy(d.pre_blob[prev_a], d.in_blob)
++        else:
++            ttnn.copy_host_to_device_tensor(idx_h, d.in_idx)
++            ttnn.copy_host_to_device_tensor(blob_h, d.in_blob)
+         d._h2d(torch.tensor([int(anchor)] + [d.mask_id] * (T - 1), dtype=torch.int32), d.in_tok, ttnn.uint32,
+                ttnn.ROW_MAJOR_LAYOUT)
+     else:
+@@ -1054,6 +1088,17 @@ def finish(a):
+     req.done.set()
+ 
+ 
++_T4 = os.environ.get("DF_MS4_T", "0") == "1"  # ms4: host timers per step section (log every 50 steps per live count)
++_T4A = {}
++
++
++def _t4add(key, dt):
++    if _T4:
++        a = _T4A.setdefault(key, [0, 0.0])
++        a[0] += 1
++        a[1] += dt
++
++
+ def gcb_up():
+     """The prefetcher's global CB back (same L1 address) and the prefetcher running, as DF_EARLY_GCB does before the
+     single-stream server's first draft: the drafter traces are captured with it up (ms1o 18:22: a drafter trace
+@@ -1112,9 +1157,13 @@ def step(ms, ds, active):
+             bdg.run()
+         step.bd = getattr(step, "bd", 0) + 1
+     elif bd is not None and bd.trace_id is not None and BD_MIN and len(live) >= BD_MIN:
++        t4 = time.perf_counter()
+         for s in live:  # DF_MS_BDRAFT: the live drafters' inputs, then one replay for all streams
+             stage_only(ds[s], active[s].out[-1], active[s].start, active[s].prev_a)
++        t5 = time.perf_counter()
+         bd.run()
++        _t4add(("dstage", len(live)), t5 - t4)
++        _t4add(("drun", len(live)), time.perf_counter() - t5)
+         step.bd = getattr(step, "bd", 0) + 1
+     else:
+         for s in live:
+@@ -1213,6 +1262,17 @@ def step(ms, ds, active):
+             finish(a)
+             active[s] = None
+     step.t = (tb - ta, tc - tb, time.perf_counter() - tc)
++    if _T4:
++        L_ = len(live)
++        _t4add(("step_draft", L_), tb - ta)
++        _t4add(("step_verify", L_), tc - tb)
++        _t4add(("step_post", L_), step.t[2])
++        n_ = _T4A[("step_post", L_)][0]
++        if n_ % 50 == 0:
++            vs_ = getattr(vspec, "S", L_)
++            srv.log(f"[ms4-T] live {L_} (verifier S {vs_}) n {n_}: " + " ".join(
++                f"{k[0]} {1e3 * v[1] / max(1, v[0]):.2f}" for k, v in sorted(_T4A.items())
++                if (k[0].startswith("v_") and k[1] == vs_) or (not k[0].startswith("v_") and k[1] == L_)))
+     step.n = getattr(step, "n", 0) + 1
+     if XT:
+         step.tend = time.perf_counter()
+-- 
+2.54.0
+

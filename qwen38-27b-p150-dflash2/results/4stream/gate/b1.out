@@ -1,0 +1,24 @@
+=== ms4 gate2 b1 06:40:55 steps exact,gsm2,gsm4,binv,det
+=== exact 1 live (spec k=8, width 1x8) 06:40:55
+captured 5 prompts -> ep2-ms4-b1-e.json
+prompt 0: identical (128 tokens)
+prompt 1: identical (128 tokens)
+prompt 2: identical (128 tokens)
+prompt 3: identical (128 tokens)
+prompt 4: identical (128 tokens)
+EXACT 5/5
+=== gsm8k w2 (spec k=8, width 2x8) 06:41:03
+DONE 59/60 correct (98.3 %), 1 cut by length
+=== gsm8k w4 (spec k=8, width 4x8) 06:43:11
+DONE 59/60 correct (98.3 %), 1 cut by length
+=== batch invariance: exact prompts at 4 live vs the 1-live capture ep2-ms4-b1-e 06:44:42
+prompt 3: DIFFERS at char 12: 'Elias lived at the edge of the w' vs 'Elias lived in a lighthouse that'
+prompt 4: DIFFERS at char 48: 'ssion $17 \\times 23 + 144 / 12$, we must follow th' vs 'ssion $17 \\times 23 + 144 / 12\n\n**Step 1: Perform '
+BATCHINV4 together 0/5 (5.3 s, 4 requests)
+=== batch invariance: exact prompts at 8 live vs the 1-live capture ep2-ms4-b1-e 06:44:47
+prompt 3: identical
+prompt 4: identical
+BATCHINV8 together 5/5 (6.2 s, 8 requests)
+=== determinism: two 4-live bursts of the corpus, token for token (same width) 06:44:53
+DETERMINISM 4/4
+GATE_DONE b1 06:45:04

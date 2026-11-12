@@ -1,0 +1,91 @@
+2026-11-12 21:30:09 locks taken (owner ms4)
+2026-11-12 21:30:09 start wy: serve.sh --cards 2 
+2026-11-12 21:56:43 START FAILED wy
+ --- python(+0x289888) [0x55d2fba3d888]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x94a83) [0x7faabd34da83]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x126890) [0x7faabd3df890]
+
+
+stopped qwen38-serve in 121 s
+NO CLOSE LINE in <dir> reset both cards (tt-smi -r 0 1), then ./serve.sh smoke 0 1. If a card stays wedged, soft-reboot the host.
+2026-11-12 21:58:45 start nowy: serve.sh --cards 2 --no-wy
+QWEN38_BEST=2card-nowy: 121 switches, overridden by explicit env: none
+prompt 0: identical (128 tokens)
+prompt 1: identical (128 tokens)
+prompt 2: identical (128 tokens)
+prompt 3: identical (128 tokens)
+prompt 4: identical (128 tokens)
+EXACT 5/5
+STEADY n=1: steady_total_tps median 156.0 [156.1, 156.0, 155.9]; aggregate_tps [144.6, 144.5, 144.4]
+STEADY n=2: steady_total_tps median 249.5 [249.8, 249.4, 249.5]; aggregate_tps [218.3, 218.4, 218.5]
+STEADY n=3: steady_total_tps median 327.1 [327.2, 326.3, 327.1]; aggregate_tps [276.4, 275.6, 276.3]
+STEADY n=4: steady_total_tps median 382.3 [382.3, 385.1, 382.2]; aggregate_tps [316.0, 316.3, 316.1]
+CLEAN_STOP qwen38-serve
+card 0: SMOKE_OK
+card 1: SMOKE_OK
+2026-11-12 22:07:38 start ep2: serve.sh --cards 2 --ep2
+QWEN38_BEST=2card-ep2: 118 switches, overridden by explicit env: none
+prompt 0: identical (128 tokens)
+prompt 1: identical (128 tokens)
+prompt 2: identical (128 tokens)
+prompt 3: identical (128 tokens)
+prompt 4: identical (128 tokens)
+EXACT 5/5
+STEADY n=1: steady_total_tps median 156.4 [156.4, 156.5, 156.1]; aggregate_tps [144.9, 144.9, 144.6]
+STEADY n=2: steady_total_tps median 174.1 [174.1, 174.0, 176.4]; aggregate_tps [159.8, 159.7, 160.5]
+STEADY n=3: steady_total_tps median 226.3 [226.3, 226.3, 226.2]; aggregate_tps [201.0, 200.7, 200.9]
+STEADY n=4: steady_total_tps median 264.5 [265.9, 264.5, 264.3]; aggregate_tps [230.9, 230.9, 230.9]
+CLEAN_STOP qwen38-serve
+card 0: SMOKE_OK
+card 1: SMOKE_OK
+2026-11-12 22:14:26 locks released; SELFTEST_DONE
+2026-11-12 22:14:55 selftest2: locks taken
+2026-11-12 22:19:18 selftest2 START FAILED
+stopped qwen38-serve in 122 s
+NO CLOSE LINE in <dir> reset both cards (tt-smi -r 0 1), then ./serve.sh smoke 0 1. If a card stays wedged, soft-reboot the host.
+2026-11-12 22:21:20 selftest2: locks released; SELFTEST2_DONE
+2026-11-12 22:22:37 selftest3: locks taken; root  70%
+2026-11-12 22:23:19 reset done
+card 0: SMOKE_OK
+card 1: SMOKE_OK
+QWEN38_BEST=2card: 122 switches, overridden by explicit env: none
+prompt 0: DIFFERS at token 33 of 128
+prompt 1: identical (128 tokens)
+prompt 2: DIFFERS at token 55 of 128
+prompt 3: DIFFERS at token 42 of 128
+prompt 4: DIFFERS at token 87 of 128
+EXACT 1/5
+STEADY n=1: steady_total_tps median 157.5 [157.6, 157.2, 157.5]; aggregate_tps [145.9, 145.6, 145.9]
+STEADY n=2: steady_total_tps median 274.7 [274.7, 274.3, 275.6]; aggregate_tps [237.1, 237.7, 238.0]
+STEADY n=3: steady_total_tps median 363.0 [363.0, 361.5, 364.4]; aggregate_tps [302.1, 300.1, 302.4]
+STEADY n=4: steady_total_tps median 459.1 [460.4, 459.1, 457.4]; aggregate_tps [363.6, 363.8, 362.6]
+GSM8K st-wy3-w4: 59/60 correct, 1 cut by length
+NIAH 6/6
+CLEAN_STOP qwen38-serve
+card 0: SMOKE_OK
+card 1: SMOKE_OK
+2026-11-12 22:31:09 selftest3: locks released; root  70%; SELFTEST3_DONE
+2026-11-12 22:55:25 selftest4: locks taken; root  70%
+QWEN38_BEST=2card: 122 switches, overridden by explicit env: none
+2026-11-12 22:59:35 wy4 vs st-wy3:
+prompt 0: identical (128 tokens)
+prompt 1: identical (128 tokens)
+prompt 2: identical (128 tokens)
+prompt 3: identical (128 tokens)
+prompt 4: identical (128 tokens)
+EXACT 5/5
+CLEAN_STOP qwen38-serve
+card 0: SMOKE_OK
+card 1: SMOKE_OK
+QWEN38_BEST=2card: 122 switches, overridden by explicit env: {'DF_DRAFT_BF4ALL': '0', 'DF_DRAFT_LM_HALF': '0', 'QWEN36_PF_LMHEAD': '0'}
+2026-11-12 23:03:44 wyx vs <dir>
+prompt 0: identical (128 tokens)
+prompt 1: identical (128 tokens)
+prompt 2: identical (128 tokens)
+prompt 3: identical (128 tokens)
+prompt 4: identical (128 tokens)
+EXACT 5/5
+CLEAN_STOP qwen38-serve
+card 0: SMOKE_OK
+card 1: SMOKE_OK
+2026-11-12 23:04:04 selftest4: locks released; SELFTEST4_DONE

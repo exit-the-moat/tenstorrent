@@ -1,0 +1,8 @@
+GSM8K w2 texts g4 vs g3: 60/60 identical; correct 59 / 59
+GSM8K w4 texts g4 vs g3: 60/60 identical; correct 59 / 59
+GSM8K w6 texts g4 vs g3: 31/60 identical; correct 59 / 59
+GSM8K w8 texts g4 vs g3: 60/60 identical; correct 59 / 59
+mc 4 live g4-a vs g3-a: 4/4 identical
+mc 4 live g4-b vs g3-a: 4/4 identical
+mc 6 live g4-a vs g3-a: 3/6 identical
+mc 6 live g4-b vs g3-a: 3/6 identical

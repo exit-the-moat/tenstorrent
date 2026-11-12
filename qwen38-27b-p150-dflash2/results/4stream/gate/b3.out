@@ -1,0 +1,8 @@
+=== ms4 gate2 b3 07:56:34 steps gsm6,det
+=== gsm8k w6 (6 live -> spec k=5) 07:56:34
+DONE 59/60 correct (98.3 %), 0 cut by length
+=== determinism: two 4-live bursts of the corpus, token for token (same width) 07:58:03
+DETERMINISM 4/4
+=== determinism: two 6-live bursts of the corpus, token for token (same width) 07:58:14
+DETERMINISM 1/6
+GATE_DONE b3 07:58:31

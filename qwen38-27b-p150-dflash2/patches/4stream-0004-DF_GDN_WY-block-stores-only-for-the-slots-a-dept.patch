@@ -1,0 +1,48 @@
+From f2cee6d7e79027576a56e0d09f2696f9674ebe14 Mon Sep 17 00:00:00 2001
+From: schoggie <no-reply@exit-the-moat.com>
+Date: Thu, 12 Nov 2026 22:22:08 +0100
+Subject: [PATCH] ms4: DF_GDN_WY block stores only for the slots a depth-8
+ verifier can hold (DF_SPEC_PLAN), ~185 MB per card less DRAM; with the
+ drafter/LM-head prefetch of the release config the 8-slot stores ran out of
+ DRAM in warm-up
+
+---
+ models/demos/blackhole/qwen36/ep2_dflash/df_ms.py | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py b/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
+index 99147d5..a6ae32e 100644
+--- a/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
++++ b/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
+@@ -132,7 +132,7 @@ class StreamState(Verifier):
+         self._alloc_fused_stash()
+         self._alloc_chain()
+         self.proto = "old"
+-        if WY and not self.lane_only:
++        if WY and not self.lane_only and s < _wy_slots():
+             from models.demos.blackhole.qwen36.tt.gdn import fused_wy
+ 
+             self.blk = {id(dn): fused_wy.alloc_blk(self._fused(dn), self.mesh) for dn in self.gdn}
+@@ -708,6 +708,19 @@ class MsVerifier(Verifier):
+ _BLK_ID = {}
+ 
+ 
++def _wy_slots():
++    """The stream slots a k = T (WY) verifier can hold: the largest slot count of a depth-T entry of DF_SPEC_PLAN
++    ("1:8,2:8,3:8,4:8,5:6,6:5" -> 4). Only these slots get a WY block store (~46 MB per slot and card); a stream in a
++    higher slot never runs a depth-T step (pick() needs every live slot < the verifier's slot count)."""
++    n = 0
++    for it in os.environ.get("DF_SPEC_PLAN", "").split(","):
++        if ":" in it:
++            a_, k_ = it.split(":")
++            if int(k_) == T:
++                n = max(n, int(a_))
++    return n or int(os.environ.get("DF_STREAMS", "8") or 8)
++
++
+ def _blk_identity(ms, dn):
+     """A blk whose recompute gives S0 = base exactly (gamma = 1, K = U = R = 0): after an old-engine step."""
+     key = id(dn)
+-- 
+2.54.0
+

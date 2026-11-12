@@ -1,0 +1,53 @@
+=== ms4 gate2 g5 10:40:39 steps exact,gsm2,gsm4,gsm6,gsm8,niah,mix,binv,det,lx,steady,speed
+=== exact 1 live (spec k=8, width 1x8) 10:40:39
+captured 5 prompts -> ep2-ms4-g5-e.json
+prompt 0: DIFFERS at token 7 of 128
+prompt 1: identical (128 tokens)
+prompt 2: DIFFERS at token 6 of 128
+prompt 3: DIFFERS at token 12 of 128
+prompt 4: DIFFERS at token 42 of 128
+EXACT 1/5
+=== gsm8k w8 (8 live -> plain lane R=8) 10:40:47
+DONE 59/60 correct (98.3 %), 1 cut by length
+=== gsm8k w2 (spec k=8, width 2x8) 10:42:32
+DONE 59/60 correct (98.3 %), 0 cut by length
+=== gsm8k w4 (spec k=8, width 4x8) 10:43:57
+DONE 59/60 correct (98.3 %), 0 cut by length
+=== gsm8k w6 (6 live -> spec k=5) 10:44:53
+DONE 58/60 correct (96.7 %), 1 cut by length
+=== niah 8k+32k (6 live) 10:46:21
+NIAH 6/6
+=== mixed live: 6 long (spec) + 2 short join after 2 s (-> 8 live, plain lane), drain, then 3 (spec again) 10:46:50
+MIX wall 11.2 ok 8 errors 0 long {'n': 6, 'ttft': 1.05, 'decode_tps': 25.12, 'tokens': [256, 256, 256, 256, 256, 256], 'fence': 6, 'def_test': 6, 'uuid_leak': 0} short {'n': 2, 'ttft': 0.5, 'decode_tps': 18.04, 'tokens': [48, 48], 'fence': 2, 'def_test': 0, 'uuid_leak': 0} phase2 {'n': 3, 'tokens': [128, 128, 128], 'fence': 3, 'def_test': 3, 'decode_tps': 77.77, 'ttft': 0.61}
+09:46:53 [ms] engine -> PLAIN (8 live, 8 in the lane)
+09:47:01 [ms] engine -> SPEC (plain lane drained)
+=== batch invariance: exact prompts at 4 live vs the 1-live capture ep2-ms4-g5-e 10:47:03
+prompt 3: DIFFERS at char 12: 'Elias lived at the edge of the w' vs 'Elias lived on the edge of the w'
+prompt 4: DIFFERS at char 28: 'To solve the expression $17 \\times 23 + 144 / 12' vs 'To solve the expression $17 * 23 + 17 * 23 + 144'
+BATCHINV4 together 0/5 (5.0 s, 4 requests)
+=== batch invariance: exact prompts at 8 live vs the 1-live capture ep2-ms4-g5-e 10:47:08
+prompt 3: DIFFERS at char 48: ' edge of the world, where the jagged cliffs of Bla' vs ' edge of the world, where the cliffs of Blackwood '
+prompt 4: DIFFERS at char 144: 'ed by the acronym **PEMDAS** (Parentheses, Exponen' vs 'ed by the acronym **PEMDAS** (or BODMAS):\n\n1.  **P'
+BATCHINV8 together 1/5 (6.2 s, 8 requests)
+=== determinism: two 4-live bursts of the corpus, token for token (same width) 10:47:15
+DETERMINISM 4/4
+=== determinism: two 6-live bursts of the corpus, token for token (same width) 10:47:22
+DETERMINISM 1/6
+=== long prompts (9 x 2k-8.5k, 256 out) C=1 10:47:37
+lx-g5-c1: C=1 9 long prompts in 35s
+=== long prompts (9 x 2k-8.5k, 256 out) C=4 10:48:21
+lx-g5-c4: C=4 9 long prompts in 19s
+=== steady 1 live 10:48:48
+STEADY n=1: steady_total_tps median 148.0 [148.0, 148.1, 148.0]; aggregate_tps [137.7, 137.7, 137.6]
+=== steady 2 live 10:49:02
+STEADY n=2: steady_total_tps median 259.1 [260.6, 259.1, 259.1]; aggregate_tps [226.6, 226.4, 226.3]
+=== steady 3 live 10:49:21
+STEADY n=3: steady_total_tps median 344.4 [344.4, 345.8, 344.1]; aggregate_tps [290.4, 288.2, 288.6]
+=== steady 4 live 10:49:42
+STEADY n=4: steady_total_tps median 455.4 [455.2, 455.4, 458.1]; aggregate_tps [351.8, 349.2, 350.0]
+=== speed 1 live 10:50:05
+=== speed 2 live 10:50:14
+=== speed 3 live 10:50:24
+=== speed 4 live 10:50:36
+=== speed 6 live 10:50:49
+GATE_DONE g5 10:51:14

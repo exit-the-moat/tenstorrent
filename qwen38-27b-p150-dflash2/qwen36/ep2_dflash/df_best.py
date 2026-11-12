@@ -12,7 +12,7 @@ os.environ.setdefault, so an explicit -e KEY=VALUE on the container always wins 
 This file was generated from the effective environment of the two gated starts; gen_best.py in the release notes is
 not needed to use it. Without QWEN38_BEST this module does nothing.
 
-  python3 df_best.py --env 2card    # the switches as KEY=VALUE lines
+  python3 df_best.py --env 2card    # the switches as KEY=VALUE lines (also 2card-nowy, 2card-ep2: see PROFILES below)
 """
 import os
 import sys
@@ -238,6 +238,16 @@ PROFILES = {
 }
 
 
+# Update 12 Nov 2026 (4 parallel chats): the 2card default adds the multi-stream batching switches and the WY block GDN
+# verify (patches/4stream-000*.patch). The previous setups stay one name away:
+#   2card-ep2   exactly the Episode 2 release (9 Nov 2026)
+#   2card-nowy  Episode 2 + the batching switches (DF_MS_ROWS_AUTO, DF_MS_BDPREFIX, DF_MS_BSDPA), without DF_GDN_WY
+#   2card       2card-nowy + DF_GDN_WY=1 (the default of serve.sh --cards 2)
+PROFILES["2card-ep2"] = dict(PROFILES["2card"])
+PROFILES["2card-nowy"] = dict(PROFILES["2card-ep2"], DF_MS_ROWS_AUTO="1", DF_MS_BDPREFIX="2,4,6", DF_MS_BSDPA="1")
+PROFILES["2card"] = dict(PROFILES["2card-nowy"], DF_GDN_WY="1")
+
+
 def apply():
     name = os.environ.get("QWEN38_BEST", "")
     if not name or os.environ.get("_QWEN38_BEST_APPLIED") == name:
@@ -257,4 +267,4 @@ if __name__ == "__main__":
         for k, v in PROFILES[sys.argv[2]].items():
             print(f"{k}={v}")
     else:
-        sys.exit("usage: df_best.py --env 2card|1card")
+        sys.exit("usage: df_best.py --env 2card|2card-nowy|2card-ep2|1card")

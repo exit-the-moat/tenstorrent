@@ -1,0 +1,65 @@
+[
+ {
+  "streams": 4,
+  "steady_window_s": 7.745,
+  "steady_tokens": 2005,
+  "steady_total_tps": 258.9,
+  "steady_per_stream_tps": 64.72,
+  "aggregate_tps": 226.5,
+  "wall_s": 9.04,
+  "completion_tokens": [
+   512,
+   512,
+   512,
+   512
+  ],
+  "ttft_s": [
+   0.268,
+   0.906,
+   0.541,
+   1.176
+  ]
+ },
+ {
+  "streams": 4,
+  "steady_window_s": 7.741,
+  "steady_tokens": 2005,
+  "steady_total_tps": 259.0,
+  "steady_per_stream_tps": 64.75,
+  "aggregate_tps": 224.9,
+  "wall_s": 9.11,
+  "completion_tokens": [
+   512,
+   512,
+   512,
+   512
+  ],
+  "ttft_s": [
+   0.268,
+   0.542,
+   1.179,
+   0.908
+  ]
+ },
+ {
+  "streams": 4,
+  "steady_window_s": 7.743,
+  "steady_tokens": 2005,
+  "steady_total_tps": 258.9,
+  "steady_per_stream_tps": 64.74,
+  "aggregate_tps": 226.3,
+  "wall_s": 9.05,
+  "completion_tokens": [
+   512,
+   512,
+   512,
+   512
+  ],
+  "ttft_s": [
+   0.267,
+   1.18,
+   0.538,
+   0.908
+  ]
+ }
+]

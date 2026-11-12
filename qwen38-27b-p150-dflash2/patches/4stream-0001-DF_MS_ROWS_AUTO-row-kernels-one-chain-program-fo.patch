@@ -1,0 +1,70 @@
+From be674ce12fa35b0846a7a35ad1bdc16cc50718e5 Mon Sep 17 00:00:00 2001
+From: schoggie <no-reply@exit-the-moat.com>
+Date: Thu, 12 Nov 2026 21:25:06 +0100
+Subject: [PATCH 1/3] ms4: DF_MS_ROWS_AUTO (row kernels + one chain program for
+ k=8 verifiers only) and DF_MS_BDPREFIX (batched drafter graphs over the first
+ n slots); both default off
+
+---
+ .../blackhole/qwen36/ep2_dflash/df_ms.py      | 22 +++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py b/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
+index 6f2c059..32c6762 100644
+--- a/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
++++ b/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
+@@ -46,6 +46,12 @@ A_NONE = T + 247  # kernel convention: a >= T = start from base / hist
+ PRESTAGE = os.environ.get("DF_PRESTAGE", "0") == "1"  # the preset's host staging of the next draft during the verify
+ ROWS = os.environ.get("DF_MS_ROWS", "1") == "1"  # ms1o: GDN chains on rows of the shared tensors (no slice / concat)
+ MULTI = ROWS and os.environ.get("DF_MS_MULTI", "1") == "1"  # ms1o: + all streams' chains as one program per GDN layer
++# ms4 (12 Nov): DF_MS_ROWS_AUTO=1 (default off) = the row kernels (+ DF_MS_MULTI's one chain program for all streams)
++# per verifier, only where they are valid: S > 1 and depth k == T = 8 (2-4 live under DF_AUTO, rows 8 s .. 8 s + 7 inside
++# one 16-row tile face; the window kernel copies GDNW_T = 8 rows, which at k < 8 reads the next stream's rows / crosses
++# a face). DF_AUTO runs DF_MS_ROWS=0 because the R=30 (6 x 5) verifier is broken under the row kernels (r64t).
++ROWS_AUTO = os.environ.get("DF_MS_ROWS_AUTO", "0") == "1"
++MULTI_AUTO = os.environ.get("DF_MS_MULTI", "1") == "1"
+ MULTI_G = int(os.environ.get("DF_MS_MULTI_G", "4"))  # streams per chain program (smaller groups: more cores per head)
+ BD_MIN = int(os.environ.get("DF_MS_BDRAFT", "2"))  # ms1o: one batched drafter graph when >= this many streams are live (0 = off)
+ XT = os.environ.get("DF_XFER_T", "0") == "1"  # xfer: per-step host timers in the log (measurement only, default off)
+@@ -357,10 +363,12 @@ class MsVerifier(Verifier):
+         tw = dn.tw
+         qkvzab = dn._qkvzab_proj(x, R, _L1)
+         W = qkvzab.shape[-1]
+-        if ROWS:  # ms1o DF_MS_ROWS: the chains read / write their rows of the shared tensors in place
++        rows_ok = ROWS or (ROWS_AUTO and self.S > 1 and self.T == T)
++        multi_ok = MULTI or (ROWS_AUTO and rows_ok and MULTI_AUTO)
++        if rows_ok:  # ms1o DF_MS_ROWS: the chains read / write their rows of the shared tensors in place
+             gated = ttnn.allocate_tensor_on_device(ttnn.Shape([1, R, dn.Nv * 128]), ttnn.bfloat16, ttnn.TILE_LAYOUT,
+                                                    self.mesh, _L1)
+-            if MULTI and self.S > 1:  # ms1o DF_MS_MULTI: all streams' chains in ONE program (a core group each)
++            if multi_ok and self.S > 1:  # ms1o DF_MS_MULTI: all streams' chains in ONE program (a core group each)
+                 ml = []
+                 for s, st in enumerate(self.streams):
+                     st._k = self.T
+@@ -1081,6 +1089,11 @@ def step(ms, ds, active):
+     else:
+         groups = [live]
+     bd = (getattr(ms, "bdrafts", None) or {}).get(live) or getattr(ms, "bdraft", None)  # DF_MS_BDSUB: live streams only
++    if spec and live and ms.bdrafts and live not in ms.bdrafts:
++        # ms4 DF_MS_BDPREFIX: the smallest prefix graph (slots 0 .. n-1) that holds every live slot
++        pre_ = [g for g in ms.bdrafts if g == tuple(range(len(g))) and max(live) < len(g)]
++        if pre_:
++            bd = ms.bdrafts[min(pre_, key=len)]
+     if kstep == 1:
+         # r64t k = 1: plain decode. No drafter replay - the committed token alone is row 0 of each stream's block.
+         for s in live:
+@@ -1462,6 +1475,11 @@ def bring_up_ms(srv, NS):
+             # live stream is skipped.
+             if NS <= 8:
+                 ms.bdraft = MsDraft(S.drafters)
++                # ms4 DF_MS_BDPREFIX="2,4" (default off): also batched drafter graphs over the first n slots only
++                # (R = 8 n rows instead of 8 NS = 64); a step whose live slots all lie below n uses the smallest one.
++                for n_ in [int(x) for x in os.environ.get("DF_MS_BDPREFIX", "").split(",") if x.strip()]:
++                    if 2 <= n_ < NS:
++                        ms.bdrafts[tuple(range(n_))] = MsDraft(S.drafters[:n_])
+             else:
+                 for g0 in range(0, NS, 8):
+                     g = tuple(range(g0, min(g0 + 8, NS)))
+-- 
+2.54.0
+

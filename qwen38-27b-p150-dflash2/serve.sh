@@ -16,6 +16,8 @@
 #   --device N     the card for --cards 1 (default 0)
 #   --write-bps D:RATE  throttle container writes, e.g. /dev/sda:80mb (optional; we used it on a slow SATA SSD)
 #   --env KEY=VAL  extra container variable, overrides the switch of the same name (repeatable)
+#   --no-wy        2 cards: without the WY block GDN verify (QWEN38_BEST=2card-nowy, the batching switches only)
+#   --ep2          2 cards: exactly the Episode 2 release of 9 Nov 2026 (QWEN38_BEST=2card-ep2)
 #   --wait-min N   minutes to wait for READY (default 60)
 #
 # The image and the mounts below are everything; nothing else on the host is touched.
@@ -24,7 +26,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 IMAGE=ghcr.io/tenstorrent/tt-inference-server/vllm-tt-metal-src-release-ubuntu-22.04-amd64:0.20.0-de59f8a-03fa3af
 Q=/home/container_app_user/tt-metal/models/demos/blackhole/qwen36
 TTM=/home/container_app_user/tt-metal
-NAME=qwen38-serve; WORK="$HERE/work"; PORT=8087; DEVICE=0; WAITMIN=60; THROTTLE=""; EXTRA=(); CARDS=""; MODELS=""; CACHE=""
+VARIANT=""; NAME=qwen38-serve; WORK="$HERE/work"; PORT=8087; DEVICE=0; WAITMIN=60; THROTTLE=""; EXTRA=(); CARDS=""; MODELS=""; CACHE=""
 
 die(){ echo "serve.sh: $*" >&2; exit 2; }
 parse(){
@@ -40,6 +42,8 @@ parse(){
       --write-bps) THROTTLE="--device-write-bps $2"; shift 2;;
       --wait-min) WAITMIN=$2; shift 2;;
       --env) EXTRA+=(-e "$2"); shift 2;;
+      --no-wy) VARIANT=-nowy; shift;;
+      --ep2) VARIANT=-ep2; shift;;
       *) die "unknown option $1";;
     esac
   done
@@ -78,11 +82,12 @@ stop(){
 case "${1:-}" in
   stop) shift; parse "$@"; stop; exit $?;;
   smoke) shift; smoke "$@"; exit $?;;
-  ""|-h|--help) sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'; exit 0;;
+  ""|-h|--help) sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//'; exit 0;;
 esac
 
 parse "$@"
 [ "$CARDS" = 1 ] || [ "$CARDS" = 2 ] || die "--cards must be 1 or 2"
+[ -z "$VARIANT" ] || [ "$CARDS" = 2 ] || die "--no-wy and --ep2 are 2-card options"
 [ -n "$MODELS" ] && [ -d "$MODELS/qwen38-bf16" ] && [ -d "$MODELS/qwen38-dflash2" ] || die "--models must contain qwen38-bf16/ and qwen38-dflash2/ (see README.md)"
 [ -n "$CACHE" ] || die "--cache DIR is required"
 [ -e /dev/tenstorrent ] || die "/dev/tenstorrent not found: install tt-kmd"
@@ -93,7 +98,7 @@ MODELS=$(readlink -f "$MODELS"); CACHE=$(readlink -f "$CACHE"); WORK=$(readlink 
 chmod a+rwx "$CACHE" "$CACHE/tt_cache" "$WORK/jit" "$WORK/stats"
 
 if [ "$CARDS" = 2 ]; then
-  BEST=2card; TAG=qwen38-p150x2-naivebf4
+  BEST=2card$VARIANT; TAG=qwen38-p150x2-naivebf4
   CARD_ARGS=(-e TT_VISIBLE_DEVICES=0,1 -e MESH_DEVICE=P150x2
     -e TT_MESH_GRAPH_DESC_PATH=$TTM/tt_metal/fabric/mesh_graph_descriptors/p150_x2_mesh_graph_descriptor.textproto
     -v "$HERE/patches/model_config.py":$TTM/models/tt_transformers/tt/model_config.py:ro)

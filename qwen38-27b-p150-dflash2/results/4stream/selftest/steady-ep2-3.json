@@ -1,0 +1,59 @@
+[
+ {
+  "streams": 3,
+  "steady_window_s": 6.555,
+  "steady_tokens": 1483,
+  "steady_total_tps": 226.3,
+  "steady_per_stream_tps": 75.42,
+  "aggregate_tps": 201.0,
+  "wall_s": 7.64,
+  "completion_tokens": [
+   512,
+   512,
+   512
+  ],
+  "ttft_s": [
+   0.267,
+   0.876,
+   0.604
+  ]
+ },
+ {
+  "streams": 3,
+  "steady_window_s": 6.557,
+  "steady_tokens": 1484,
+  "steady_total_tps": 226.3,
+  "steady_per_stream_tps": 75.44,
+  "aggregate_tps": 200.7,
+  "wall_s": 7.65,
+  "completion_tokens": [
+   512,
+   512,
+   512
+  ],
+  "ttft_s": [
+   0.267,
+   0.538,
+   0.903
+  ]
+ },
+ {
+  "streams": 3,
+  "steady_window_s": 6.557,
+  "steady_tokens": 1483,
+  "steady_total_tps": 226.2,
+  "steady_per_stream_tps": 75.39,
+  "aggregate_tps": 200.9,
+  "wall_s": 7.65,
+  "completion_tokens": [
+   512,
+   512,
+   512
+  ],
+  "ttft_s": [
+   0.268,
+   0.607,
+   0.878
+  ]
+ }
+]

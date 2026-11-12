@@ -1,0 +1,14 @@
+=== ms4 gate2 r1 10:35:11 steps exact,lx
+=== exact 1 live (spec k=8, width 1x8) 10:35:11
+captured 5 prompts -> ep2-ms4-r1-e.json
+prompt 0: identical (128 tokens)
+prompt 1: identical (128 tokens)
+prompt 2: identical (128 tokens)
+prompt 3: identical (128 tokens)
+prompt 4: identical (128 tokens)
+EXACT 5/5
+=== long prompts (9 x 2k-8.5k, 256 out) C=1 10:35:18
+lx-r1-c1: C=1 9 long prompts in 35s
+=== long prompts (9 x 2k-8.5k, 256 out) C=4 10:36:02
+lx-r1-c4: C=4 9 long prompts in 21s
+GATE_DONE r1 10:36:32

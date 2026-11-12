@@ -1,0 +1,12 @@
+=== ms4 gate2 p2 15:05:38 steps exact,steady
+=== exact 1 live (spec k=8, width 1x8) 15:05:38
+captured 5 prompts -> ep2-ms4-p2-e.json
+prompt 0: DIFFERS at token 7 of 128
+prompt 1: identical (128 tokens)
+prompt 2: DIFFERS at token 6 of 128
+prompt 3: DIFFERS at token 12 of 128
+prompt 4: DIFFERS at token 42 of 128
+EXACT 1/5
+=== steady 4 live 15:05:46
+STEADY n=4: steady_total_tps median 456.1 [456.1, 455.8, 457.9]; aggregate_tps [348.0, 348.4, 350.3]
+GATE_DONE p2 15:06:10

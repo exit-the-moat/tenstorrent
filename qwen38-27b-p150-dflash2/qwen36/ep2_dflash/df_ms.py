@@ -46,6 +46,12 @@ A_NONE = T + 247  # kernel convention: a >= T = start from base / hist
 PRESTAGE = os.environ.get("DF_PRESTAGE", "0") == "1"  # the preset's host staging of the next draft during the verify
 ROWS = os.environ.get("DF_MS_ROWS", "1") == "1"  # ms1o: GDN chains on rows of the shared tensors (no slice / concat)
 MULTI = ROWS and os.environ.get("DF_MS_MULTI", "1") == "1"  # ms1o: + all streams' chains as one program per GDN layer
+# ms4 (12 Nov): DF_MS_ROWS_AUTO=1 (default off) = the row kernels (+ DF_MS_MULTI's one chain program for all streams)
+# per verifier, only where they are valid: S > 1 and depth k == T = 8 (2-4 live under DF_AUTO, rows 8 s .. 8 s + 7 inside
+# one 16-row tile face; the window kernel copies GDNW_T = 8 rows, which at k < 8 reads the next stream's rows / crosses
+# a face). DF_AUTO runs DF_MS_ROWS=0 because the R=30 (6 x 5) verifier is broken under the row kernels (r64t).
+ROWS_AUTO = os.environ.get("DF_MS_ROWS_AUTO", "0") == "1"
+MULTI_AUTO = os.environ.get("DF_MS_MULTI", "1") == "1"
 MULTI_G = int(os.environ.get("DF_MS_MULTI_G", "4"))  # streams per chain program (smaller groups: more cores per head)
 BD_MIN = int(os.environ.get("DF_MS_BDRAFT", "2"))  # ms1o: one batched drafter graph when >= this many streams are live (0 = off)
 XT = os.environ.get("DF_XFER_T", "0") == "1"  # xfer: per-step host timers in the log (measurement only, default off)
@@ -77,6 +83,15 @@ PLAIN_LIVE = int(os.environ.get("DF_PLAIN_LIVE", "7") or 7)
 PLAIN_BUCKETS = [int(x) for x in os.environ.get("DF_PLAIN_BUCKETS", "8,16,32").split(",") if x.strip()]
 LANE_SLOTS = os.environ.get("DF_MS_LANE_SLOTS", "0") == "1"  # dfa: lane-only slots keep base/hist only (StreamState)
 PCACHE = os.environ.get("DF_PREFIX_CACHE", "0") == "1"  # ep2 dfpc (df_pcache.py)
+# ms4 DF_MS_BSDPA=1 (default off): the batched drafter's per-stream ring SDPA calls (one per stream and layer, each
+# parallel over 16 heads only, ~145 us) as ONE SDPA with the streams as the batch dim (rings concatenated per layer).
+# Drafter-only (drafts change acceptance, never the output).
+BSDPA = os.environ.get("DF_MS_BSDPA", "0") == "1"
+# ms4 DF_GDN_WY=1 (default off): the k = 8 verifiers' GDN chains in block (WY) form (tt/gdn/fused_wy.py,
+# kernels/gdnwy_*): S0 -> base and the block's K / U / R / gamma -> blk per stream and layer instead of 8 slot states
+# (bufs). A stream's state convention follows the last step's engine (st.proto): 'wy' = recompute from base + blk at
+# the accepted slot, 'old' = bufs[a]; switch_proto() converts when a step uses the other engine (k < 8 / plain lane).
+WY = os.environ.get("DF_GDN_WY", "0") == "1"
 
 
 def _rep(mesh):
@@ -116,6 +131,11 @@ class StreamState(Verifier):
                 mesh_mapper=_rep(self.mesh))
         self._alloc_fused_stash()
         self._alloc_chain()
+        self.proto = "old"
+        if WY and not self.lane_only and s < _wy_slots():
+            from models.demos.blackhole.qwen36.tt.gdn import fused_wy
+
+            self.blk = {id(dn): fused_wy.alloc_blk(self._fused(dn), self.mesh) for dn in self.gdn}
         assert self.nocommit and self.chain1 and self.xpersist, "DF_NOCOMMIT=1 DF_XWIN=1 (preset) required"
         assert os.environ.get("DF_XWIN", "0") == "1"
         # one `a` tensor for every depth: the kernels read element k*k of it (a < k = start from bufs[a])
@@ -297,6 +317,7 @@ class MsVerifier(Verifier):
         """After the prompt prefill into slot s: stream s's base <- rec_state row s, hist <- conv_states rows."""
         st = self.streams[s]
         st.pending_a = None
+        st.proto = "wy" if WY else "old"
         if BEGIN_DIRECT:  # the prefill wrote base / hist already (install_begin_direct)
             return
         if self.begin_tids.get(s) is not None:  # DF_BEGIN_TRACE: the copies as one trace per stream
@@ -357,10 +378,28 @@ class MsVerifier(Verifier):
         tw = dn.tw
         qkvzab = dn._qkvzab_proj(x, R, _L1)
         W = qkvzab.shape[-1]
-        if ROWS:  # ms1o DF_MS_ROWS: the chains read / write their rows of the shared tensors in place
+        if WY and self.T == T:
+            from models.demos.blackhole.qwen36.tt.gdn import fused_wy
+
             gated = ttnn.allocate_tensor_on_device(ttnn.Shape([1, R, dn.Nv * 128]), ttnn.bfloat16, ttnn.TILE_LAYOUT,
                                                    self.mesh, _L1)
-            if MULTI and self.S > 1:  # ms1o DF_MS_MULTI: all streams' chains in ONE program (a core group each)
+            ml = []
+            for s, st in enumerate(self.streams):
+                st._k = self.T
+                ml.append(dict(Xl=st.window_rows(dn, qkvzab, self.T * s), base=st.base[id(dn)], blk=st.blk[id(dn)],
+                               kvm=st.a_dev, xrow0=self.T * s, orow0=self.T * s, oz0=R if s == 0 else 32))
+            for g0 in range(0, len(ml), MULTI_G):
+                fused_wy.chain_wy(fd, qkvzab, gated, ml[g0:g0 + MULTI_G], self.T)
+            for m_ in ml:
+                ttnn.deallocate(m_["Xl"])
+            ttnn.deallocate(qkvzab)
+            return self._gdn_out(dn, gated, R)
+        rows_ok = ROWS or (ROWS_AUTO and self.S > 1 and self.T == T)
+        multi_ok = MULTI or (ROWS_AUTO and rows_ok and MULTI_AUTO)
+        if rows_ok:  # ms1o DF_MS_ROWS: the chains read / write their rows of the shared tensors in place
+            gated = ttnn.allocate_tensor_on_device(ttnn.Shape([1, R, dn.Nv * 128]), ttnn.bfloat16, ttnn.TILE_LAYOUT,
+                                                   self.mesh, _L1)
+            if multi_ok and self.S > 1:  # ms1o DF_MS_MULTI: all streams' chains in ONE program (a core group each)
                 ml = []
                 for s, st in enumerate(self.streams):
                     st._k = self.T
@@ -390,7 +429,10 @@ class MsVerifier(Verifier):
         if len(outs) > 1:
             for o in outs:
                 ttnn.deallocate(o)
-        partial = dn._row_proj(gated, tw["out"])
+        return self._gdn_out(dn, gated, R)
+
+    def _gdn_out(self, dn, gated, R):
+        partial = dn._row_proj(gated, dn.tw["out"])
         ttnn.deallocate(gated)
         partial = ttnn.reshape(partial, (1, 1, R, partial.shape[-1]))
         from models.demos.blackhole.qwen36.tt import tp_common as _tpc
@@ -635,6 +677,10 @@ class MsVerifier(Verifier):
         _t6 = time.perf_counter()
         self.timing["verify_ms"] = 1000 * (_t6 - t0)
         self.timing["xt"] = (_t1 - t0, _t2 - _t1, _t3 - _t2, _t4 - _t3, _t5 - _t4, _t6 - _t5)
+        if _T4:
+            for k_, d_ in (("v_gcb", _t1 - t0), ("v_stage", _t2 - _t1), ("v_exec", _t3 - _t2), ("v_pre", _t4 - _t3),
+                           ("v_wait_ids", _t5 - _t4), ("v_blk", _t6 - _t5)):
+                _t4add((k_, self.S), d_)
         return [int(v) for v in blk.tolist()], post
 
     def _read_ids(self):
@@ -659,6 +705,68 @@ class MsVerifier(Verifier):
 
 
 # ---------------------------------------------------------------------------------------------- drafters
+_BLK_ID = {}
+
+
+def _wy_slots():
+    """The stream slots a k = T (WY) verifier can hold: the largest slot count of a depth-T entry of DF_SPEC_PLAN
+    ("1:8,2:8,3:8,4:8,5:6,6:5" -> 4). Only these slots get a WY block store (~46 MB per slot and card); a stream in a
+    higher slot never runs a depth-T step (pick() needs every live slot < the verifier's slot count)."""
+    n = 0
+    for it in os.environ.get("DF_SPEC_PLAN", "").split(","):
+        if ":" in it:
+            a_, k_ = it.split(":")
+            if int(k_) == T:
+                n = max(n, int(a_))
+    return n or int(os.environ.get("DF_STREAMS", "8") or 8)
+
+
+def _blk_identity(ms, dn):
+    """A blk whose recompute gives S0 = base exactly (gamma = 1, K = U = R = 0): after an old-engine step."""
+    key = id(dn)
+    if key not in _BLK_ID:
+        Nv = dn.Nv
+        t = torch.zeros(1, Nv * 10 * 32, 32, dtype=torch.float32)
+        for hv in range(Nv):
+            t[0, (hv * 10 + 9) * 32:(hv * 10 + 10) * 32] = 1.0
+        _BLK_ID[key] = ttnn.from_torch(t, dtype=ttnn.float32, layout=ttnn.TILE_LAYOUT, device=ms.mesh,
+                                       memory_config=ttnn.DRAM_MEMORY_CONFIG, mesh_mapper=_rep(ms.mesh))
+    return _BLK_ID[key]
+
+
+def _stage_a(st):
+    ttnn.copy_host_to_device_tensor(ttnn.from_torch(st.a_host(), dtype=ttnn.int32, layout=ttnn.ROW_MAJOR_LAYOUT),
+                                    st.a_dev)
+
+
+def wy_commit(ms, st):
+    """base <- the state at the accepted slot (recomputed from base + blk); pending_a is kept (the conv history of the
+    next step still comes from window rows a + 1 ..)."""
+    from models.demos.blackhole.qwen36.tt.gdn import fused_wy
+
+    _stage_a(st)
+    for dn in ms.gdn:
+        fused_wy.commit(ms._fused(dn), st.base[id(dn)], st.blk[id(dn)], st.a_dev, T)
+
+
+def switch_proto(ms, st, want):
+    """Make stream st's state readable by a step of engine `want` ('wy' / 'old'); no-op without a pending slot."""
+    if not WY or st.proto == want:
+        return
+    a = st.pending_a
+    if a is not None and int(a) < T:
+        if want == "wy":  # old -> wy: base <- bufs[a], blk <- identity
+            for dn in ms.gdn:
+                ttnn.copy(st.bufs[id(dn)][int(a)], st.base[id(dn)])
+                ttnn.copy(_blk_identity(ms, dn), st.blk[id(dn)])
+        else:  # wy -> old: base <- S_a, bufs[a] <- base
+            wy_commit(ms, st)
+            for dn in ms.gdn:
+                ttnn.copy(st.base[id(dn)], st.bufs[id(dn)][int(a)])
+        switch_proto.n = getattr(switch_proto, "n", 0) + 1
+    st.proto = want
+
+
 def make_drafters(d0, S, tokbufs):
     """S drafters: d0 + clones sharing d0's weights (own ring, inputs, trace); drafter s writes tokbufs[s]."""
     ds = [d0]
@@ -758,6 +866,7 @@ class MsDraft:
         vb = d0._heads(vb, R, D.NKV_L)
         kc, vc = d0._ctx_kv(L, ctx_h, R, cos_c, sin_c)  # [1, NKV_L, R, 128]
         outs = []
+        qps, ks, vs = [], [], []
         for s, d in enumerate(self.ds):
             for src, ring, ix in ((kc, d.ring_k[li], d.in_idx), (vc, d.ring_v[li], d.in_idx),
                                   (kb, d.ring_k[li], d.blk_idx), (vb, d.ring_v[li], d.blk_idx)):
@@ -772,10 +881,27 @@ class MsDraft:
             vfull = ttnn.reshape(d.ring_v[li], (1, D.NKV_L, D.RING, D.HD))
             qs = self._rows(q, s)
             qp = ttnn.pad(qs, [1, D.NH_L, D.QPAD, D.HD], [0, 0, 0, 0], 0.0)
+            if BSDPA:
+                qps.append(qp)
+                ks.append(kfull)
+                vs.append(vfull)
+                continue
             attn = ttnn.transformer.scaled_dot_product_attention(
                 qp, kfull, vfull, attn_mask=per[s]["mask"], is_causal=False, scale=D.HD ** -0.5,
                 program_config=d0.sdpa_cfg, compute_kernel_config=d0.hifi2)
             outs.append(ttnn.slice(attn, (0, 0, 0, 0), (1, D.NH_L, B, D.HD)))
+            ttnn.deallocate(attn)
+        if BSDPA:
+            qa = ttnn.concat(qps, dim=0)  # [S, NH_L, QPAD, HD]
+            ka = ttnn.concat(ks, dim=0)  # [S, NKV_L, RING, HD]
+            va = ttnn.concat(vs, dim=0)
+            attn = ttnn.transformer.scaled_dot_product_attention(
+                qa, ka, va, attn_mask=self._mask_all, is_causal=False, scale=D.HD ** -0.5,
+                program_config=d0.sdpa_cfg, compute_kernel_config=d0.hifi2)
+            for t in [qa, ka, va] + qps:
+                ttnn.deallocate(t)
+            for s in range(self.S):
+                outs.append(ttnn.slice(attn, (s, 0, 0, 0), (s + 1, D.NH_L, B, D.HD)))
             ttnn.deallocate(attn)
         for t in (kc, vc, kb, vb, q):
             ttnn.deallocate(t)
@@ -842,6 +968,7 @@ class MsDraft:
             p["perm"] = ttnn.slice(b, (0, 0, D.QPAD, 4 * D.HD), (1, 1, D.QPAD + D.NCTX, 4 * D.HD + D.NCTX))
             per.append(p)
         cos_b, sin_b, cos_c, sin_c = [ttnn.concat([p["rope"][i] for p in per], dim=2) for i in range(4)]
+        self._mask_all = ttnn.concat([p["mask"] for p in per], dim=0) if BSDPA else None  # [S, 1, QPAD, KLEN]
         tok = ttnn.concat([d.in_tok for d in self.ds], dim=0)  # [R] uint32
         x = d0.target.embd(tok)
         x = ttnn.reshape(x, (1, 1, R, x.shape[-1]))
@@ -870,6 +997,9 @@ class MsDraft:
                 ttnn.deallocate(t)
         for t in (cos_b, sin_b, cos_c, sin_c):
             ttnn.deallocate(t)
+        if self._mask_all is not None:
+            ttnn.deallocate(self._mask_all)
+            self._mask_all = None
         hn = d0._rms(x, d0.norm)
         ttnn.deallocate(x)
         _pc = d0._pc1d(hn, d0.lm_w, key="lm")
@@ -936,8 +1066,12 @@ def stage_only(d, anchor, start, prev_a):
         d.pending_ctx = None
         d.pos = pos
         ttnn.copy(taps, d.in_ctx)
-        ttnn.copy_host_to_device_tensor(idx_h, d.in_idx)
-        ttnn.copy_host_to_device_tensor(blob_h, d.in_blob)
+        if getattr(d, "preup", False):  # ms4: DF_PREUP=1 = the variants were uploaded during the verify (prepare_all)
+            ttnn.copy(d.pre_idx[prev_a], d.in_idx)
+            ttnn.copy(d.pre_blob[prev_a], d.in_blob)
+        else:
+            ttnn.copy_host_to_device_tensor(idx_h, d.in_idx)
+            ttnn.copy_host_to_device_tensor(blob_h, d.in_blob)
         d._h2d(torch.tensor([int(anchor)] + [d.mask_id] * (T - 1), dtype=torch.int32), d.in_tok, ttnn.uint32,
                ttnn.ROW_MAJOR_LAYOUT)
     else:
@@ -1046,6 +1180,17 @@ def finish(a):
     req.done.set()
 
 
+_T4 = os.environ.get("DF_MS4_T", "0") == "1"  # ms4: host timers per step section (log every 50 steps per live count)
+_T4A = {}
+
+
+def _t4add(key, dt):
+    if _T4:
+        a = _T4A.setdefault(key, [0, 0.0])
+        a[0] += 1
+        a[1] += dt
+
+
 def gcb_up():
     """The prefetcher's global CB back (same L1 address) and the prefetcher running, as DF_EARLY_GCB does before the
     single-stream server's first draft: the drafter traces are captured with it up (ms1o 18:22: a drafter trace
@@ -1080,7 +1225,16 @@ def step(ms, ds, active):
         groups = [g for g in (tuple(s for s in live if s in ch) for ch in chains) if g]
     else:
         groups = [live]
+    if WY and spec:
+        want_ = "wy" if int(kstep) == T else "old"
+        for s in live:
+            switch_proto(ms, ms.streams[s], want_)
     bd = (getattr(ms, "bdrafts", None) or {}).get(live) or getattr(ms, "bdraft", None)  # DF_MS_BDSUB: live streams only
+    if spec and live and ms.bdrafts and live not in ms.bdrafts:
+        # ms4 DF_MS_BDPREFIX: the smallest prefix graph (slots 0 .. n-1) that holds every live slot
+        pre_ = [g for g in ms.bdrafts if g == tuple(range(len(g))) and max(live) < len(g)]
+        if pre_:
+            bd = ms.bdrafts[min(pre_, key=len)]
     if kstep == 1:
         # r64t k = 1: plain decode. No drafter replay - the committed token alone is row 0 of each stream's block.
         for s in live:
@@ -1099,9 +1253,13 @@ def step(ms, ds, active):
             bdg.run()
         step.bd = getattr(step, "bd", 0) + 1
     elif bd is not None and bd.trace_id is not None and BD_MIN and len(live) >= BD_MIN:
+        t4 = time.perf_counter()
         for s in live:  # DF_MS_BDRAFT: the live drafters' inputs, then one replay for all streams
             stage_only(ds[s], active[s].out[-1], active[s].start, active[s].prev_a)
+        t5 = time.perf_counter()
         bd.run()
+        _t4add(("dstage", len(live)), t5 - t4)
+        _t4add(("drun", len(live)), time.perf_counter() - t5)
         step.bd = getattr(step, "bd", 0) + 1
     else:
         for s in live:
@@ -1200,6 +1358,17 @@ def step(ms, ds, active):
             finish(a)
             active[s] = None
     step.t = (tb - ta, tc - tb, time.perf_counter() - tc)
+    if _T4:
+        L_ = len(live)
+        _t4add(("step_draft", L_), tb - ta)
+        _t4add(("step_verify", L_), tc - tb)
+        _t4add(("step_post", L_), step.t[2])
+        n_ = _T4A[("step_post", L_)][0]
+        if n_ % 50 == 0:
+            vs_ = getattr(vspec, "S", L_)
+            srv.log(f"[ms4-T] live {L_} (verifier S {vs_}) n {n_}: " + " ".join(
+                f"{k[0]} {1e3 * v[1] / max(1, v[0]):.2f}" for k, v in sorted(_T4A.items())
+                if (k[0].startswith("v_") and k[1] == vs_) or (not k[0].startswith("v_") and k[1] == L_)))
     step.n = getattr(step, "n", 0) + 1
     if XT:
         step.tend = time.perf_counter()
@@ -1462,6 +1631,11 @@ def bring_up_ms(srv, NS):
             # live stream is skipped.
             if NS <= 8:
                 ms.bdraft = MsDraft(S.drafters)
+                # ms4 DF_MS_BDPREFIX="2,4" (default off): also batched drafter graphs over the first n slots only
+                # (R = 8 n rows instead of 8 NS = 64); a step whose live slots all lie below n uses the smallest one.
+                for n_ in [int(x) for x in os.environ.get("DF_MS_BDPREFIX", "").split(",") if x.strip()]:
+                    if 2 <= n_ < NS:
+                        ms.bdrafts[tuple(range(n_))] = MsDraft(S.drafters[:n_])
             else:
                 for g0 in range(0, NS, 8):
                     g = tuple(range(g0, min(g0 + 8, NS)))
@@ -1746,6 +1920,9 @@ def migrate_chain_to_rows(ms, s):
     so a ttnn.copy into a slice view of rec_state / conv_states is silently lost."""
     st = ms.streams[s]
     a = st.pending_a
+    if WY and st.proto == "wy" and a is not None:
+        wy_commit(ms, st)  # base <- S_a (the bufs are not written by the WY engine)
+    wyb = WY and st.proto == "wy" and a is not None
     for dn in ms.gdn:
         if a is None:
             # a fresh admission: with DF_MS_BEGIN_DIRECT the prefill redirected the model slot write into the chain
@@ -1753,7 +1930,7 @@ def migrate_chain_to_rows(ms, s):
             # against base, and the rows are never written while BEGIN_DIRECT is on)
             src, h = st.base[id(dn)], st.hist[id(dn)]
         else:
-            src = st.bufs[id(dn)][int(a)]
+            src = st.base[id(dn)] if wyb else st.bufs[id(dn)][int(a)]
             h = ttnn.slice(st.Xp[id(dn)], (0, int(a) + 1, 0), (1, int(a) + dn.K, dn.qkv_dim_tp))
         dn._write_index(dn.rec_state, ttnn.clone(src), s, dim=0)
         dn._write_index(dn.conv_states[0], ttnn.clone(dn._slice_along(dn._zero_conv0, 1, s, s + 1)), s, dim=1)

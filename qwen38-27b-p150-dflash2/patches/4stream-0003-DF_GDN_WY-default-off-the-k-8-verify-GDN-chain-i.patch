@@ -1,0 +1,1406 @@
+From 4be2d46bfcea2130b71984fd0308c6ce6b6c3a1b Mon Sep 17 00:00:00 2001
+From: schoggie <no-reply@exit-the-moat.com>
+Date: Thu, 12 Nov 2026 21:25:06 +0100
+Subject: [PATCH 3/3] ms4: DF_GDN_WY (default off): the k=8 verify GDN chain in
+ block (WY) form - kernels/gdnwy_*, tt/gdn/fused_wy.py; S0 -> base and the
+ block K/U/R/gamma -> blk instead of 8 slot states; engine switch conversions
+ (k<8, plain lane)
+
+---
+ .../blackhole/qwen36/ep2_dflash/df_ms.py      |  90 ++-
+ .../qwen36/kernels/gdnwy_compute.cpp          | 533 ++++++++++++++++++
+ .../blackhole/qwen36/kernels/gdnwy_reader.cpp | 311 ++++++++++
+ .../blackhole/qwen36/kernels/gdnwy_writer.cpp | 201 +++++++
+ .../demos/blackhole/qwen36/tt/gdn/fused_wy.py | 157 ++++++
+ 5 files changed, 1290 insertions(+), 2 deletions(-)
+ create mode 100644 models/demos/blackhole/qwen36/kernels/gdnwy_compute.cpp
+ create mode 100644 models/demos/blackhole/qwen36/kernels/gdnwy_reader.cpp
+ create mode 100644 models/demos/blackhole/qwen36/kernels/gdnwy_writer.cpp
+ create mode 100644 models/demos/blackhole/qwen36/tt/gdn/fused_wy.py
+
+diff --git a/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py b/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
+index c792889..99147d5 100644
+--- a/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
++++ b/models/demos/blackhole/qwen36/ep2_dflash/df_ms.py
+@@ -87,6 +87,11 @@ PCACHE = os.environ.get("DF_PREFIX_CACHE", "0") == "1"  # ep2 dfpc (df_pcache.py
+ # parallel over 16 heads only, ~145 us) as ONE SDPA with the streams as the batch dim (rings concatenated per layer).
+ # Drafter-only (drafts change acceptance, never the output).
+ BSDPA = os.environ.get("DF_MS_BSDPA", "0") == "1"
++# ms4 DF_GDN_WY=1 (default off): the k = 8 verifiers' GDN chains in block (WY) form (tt/gdn/fused_wy.py,
++# kernels/gdnwy_*): S0 -> base and the block's K / U / R / gamma -> blk per stream and layer instead of 8 slot states
++# (bufs). A stream's state convention follows the last step's engine (st.proto): 'wy' = recompute from base + blk at
++# the accepted slot, 'old' = bufs[a]; switch_proto() converts when a step uses the other engine (k < 8 / plain lane).
++WY = os.environ.get("DF_GDN_WY", "0") == "1"
+ 
+ 
+ def _rep(mesh):
+@@ -126,6 +131,11 @@ class StreamState(Verifier):
+                 mesh_mapper=_rep(self.mesh))
+         self._alloc_fused_stash()
+         self._alloc_chain()
++        self.proto = "old"
++        if WY and not self.lane_only:
++            from models.demos.blackhole.qwen36.tt.gdn import fused_wy
++
++            self.blk = {id(dn): fused_wy.alloc_blk(self._fused(dn), self.mesh) for dn in self.gdn}
+         assert self.nocommit and self.chain1 and self.xpersist, "DF_NOCOMMIT=1 DF_XWIN=1 (preset) required"
+         assert os.environ.get("DF_XWIN", "0") == "1"
+         # one `a` tensor for every depth: the kernels read element k*k of it (a < k = start from bufs[a])
+@@ -307,6 +317,7 @@ class MsVerifier(Verifier):
+         """After the prompt prefill into slot s: stream s's base <- rec_state row s, hist <- conv_states rows."""
+         st = self.streams[s]
+         st.pending_a = None
++        st.proto = "wy" if WY else "old"
+         if BEGIN_DIRECT:  # the prefill wrote base / hist already (install_begin_direct)
+             return
+         if self.begin_tids.get(s) is not None:  # DF_BEGIN_TRACE: the copies as one trace per stream
+@@ -367,6 +378,22 @@ class MsVerifier(Verifier):
+         tw = dn.tw
+         qkvzab = dn._qkvzab_proj(x, R, _L1)
+         W = qkvzab.shape[-1]
++        if WY and self.T == T:
++            from models.demos.blackhole.qwen36.tt.gdn import fused_wy
++
++            gated = ttnn.allocate_tensor_on_device(ttnn.Shape([1, R, dn.Nv * 128]), ttnn.bfloat16, ttnn.TILE_LAYOUT,
++                                                   self.mesh, _L1)
++            ml = []
++            for s, st in enumerate(self.streams):
++                st._k = self.T
++                ml.append(dict(Xl=st.window_rows(dn, qkvzab, self.T * s), base=st.base[id(dn)], blk=st.blk[id(dn)],
++                               kvm=st.a_dev, xrow0=self.T * s, orow0=self.T * s, oz0=R if s == 0 else 32))
++            for g0 in range(0, len(ml), MULTI_G):
++                fused_wy.chain_wy(fd, qkvzab, gated, ml[g0:g0 + MULTI_G], self.T)
++            for m_ in ml:
++                ttnn.deallocate(m_["Xl"])
++            ttnn.deallocate(qkvzab)
++            return self._gdn_out(dn, gated, R)
+         rows_ok = ROWS or (ROWS_AUTO and self.S > 1 and self.T == T)
+         multi_ok = MULTI or (ROWS_AUTO and rows_ok and MULTI_AUTO)
+         if rows_ok:  # ms1o DF_MS_ROWS: the chains read / write their rows of the shared tensors in place
+@@ -402,7 +429,10 @@ class MsVerifier(Verifier):
+         if len(outs) > 1:
+             for o in outs:
+                 ttnn.deallocate(o)
+-        partial = dn._row_proj(gated, tw["out"])
++        return self._gdn_out(dn, gated, R)
++
++    def _gdn_out(self, dn, gated, R):
++        partial = dn._row_proj(gated, dn.tw["out"])
+         ttnn.deallocate(gated)
+         partial = ttnn.reshape(partial, (1, 1, R, partial.shape[-1]))
+         from models.demos.blackhole.qwen36.tt import tp_common as _tpc
+@@ -675,6 +705,55 @@ class MsVerifier(Verifier):
+ 
+ 
+ # ---------------------------------------------------------------------------------------------- drafters
++_BLK_ID = {}
++
++
++def _blk_identity(ms, dn):
++    """A blk whose recompute gives S0 = base exactly (gamma = 1, K = U = R = 0): after an old-engine step."""
++    key = id(dn)
++    if key not in _BLK_ID:
++        Nv = dn.Nv
++        t = torch.zeros(1, Nv * 10 * 32, 32, dtype=torch.float32)
++        for hv in range(Nv):
++            t[0, (hv * 10 + 9) * 32:(hv * 10 + 10) * 32] = 1.0
++        _BLK_ID[key] = ttnn.from_torch(t, dtype=ttnn.float32, layout=ttnn.TILE_LAYOUT, device=ms.mesh,
++                                       memory_config=ttnn.DRAM_MEMORY_CONFIG, mesh_mapper=_rep(ms.mesh))
++    return _BLK_ID[key]
++
++
++def _stage_a(st):
++    ttnn.copy_host_to_device_tensor(ttnn.from_torch(st.a_host(), dtype=ttnn.int32, layout=ttnn.ROW_MAJOR_LAYOUT),
++                                    st.a_dev)
++
++
++def wy_commit(ms, st):
++    """base <- the state at the accepted slot (recomputed from base + blk); pending_a is kept (the conv history of the
++    next step still comes from window rows a + 1 ..)."""
++    from models.demos.blackhole.qwen36.tt.gdn import fused_wy
++
++    _stage_a(st)
++    for dn in ms.gdn:
++        fused_wy.commit(ms._fused(dn), st.base[id(dn)], st.blk[id(dn)], st.a_dev, T)
++
++
++def switch_proto(ms, st, want):
++    """Make stream st's state readable by a step of engine `want` ('wy' / 'old'); no-op without a pending slot."""
++    if not WY or st.proto == want:
++        return
++    a = st.pending_a
++    if a is not None and int(a) < T:
++        if want == "wy":  # old -> wy: base <- bufs[a], blk <- identity
++            for dn in ms.gdn:
++                ttnn.copy(st.bufs[id(dn)][int(a)], st.base[id(dn)])
++                ttnn.copy(_blk_identity(ms, dn), st.blk[id(dn)])
++        else:  # wy -> old: base <- S_a, bufs[a] <- base
++            wy_commit(ms, st)
++            for dn in ms.gdn:
++                ttnn.copy(st.base[id(dn)], st.bufs[id(dn)][int(a)])
++        switch_proto.n = getattr(switch_proto, "n", 0) + 1
++    st.proto = want
++
++
+ def make_drafters(d0, S, tokbufs):
+     """S drafters: d0 + clones sharing d0's weights (own ring, inputs, trace); drafter s writes tokbufs[s]."""
+     ds = [d0]
+@@ -1133,6 +1212,10 @@ def step(ms, ds, active):
+         groups = [g for g in (tuple(s for s in live if s in ch) for ch in chains) if g]
+     else:
+         groups = [live]
++    if WY and spec:
++        want_ = "wy" if int(kstep) == T else "old"
++        for s in live:
++            switch_proto(ms, ms.streams[s], want_)
+     bd = (getattr(ms, "bdrafts", None) or {}).get(live) or getattr(ms, "bdraft", None)  # DF_MS_BDSUB: live streams only
+     if spec and live and ms.bdrafts and live not in ms.bdrafts:
+         # ms4 DF_MS_BDPREFIX: the smallest prefix graph (slots 0 .. n-1) that holds every live slot
+@@ -1824,6 +1907,9 @@ def migrate_chain_to_rows(ms, s):
+     so a ttnn.copy into a slice view of rec_state / conv_states is silently lost."""
+     st = ms.streams[s]
+     a = st.pending_a
++    if WY and st.proto == "wy" and a is not None:
++        wy_commit(ms, st)  # base <- S_a (the bufs are not written by the WY engine)
++    wyb = WY and st.proto == "wy" and a is not None
+     for dn in ms.gdn:
+         if a is None:
+             # a fresh admission: with DF_MS_BEGIN_DIRECT the prefill redirected the model slot write into the chain
+@@ -1831,7 +1917,7 @@ def migrate_chain_to_rows(ms, s):
+             # against base, and the rows are never written while BEGIN_DIRECT is on)
+             src, h = st.base[id(dn)], st.hist[id(dn)]
+         else:
+-            src = st.bufs[id(dn)][int(a)]
++            src = st.base[id(dn)] if wyb else st.bufs[id(dn)][int(a)]
+             h = ttnn.slice(st.Xp[id(dn)], (0, int(a) + 1, 0), (1, int(a) + dn.K, dn.qkv_dim_tp))
+         dn._write_index(dn.rec_state, ttnn.clone(src), s, dim=0)
+         dn._write_index(dn.conv_states[0], ttnn.clone(dn._slice_along(dn._zero_conv0, 1, s, s + 1)), s, dim=1)
+diff --git a/models/demos/blackhole/qwen36/kernels/gdnwy_compute.cpp b/models/demos/blackhole/qwen36/kernels/gdnwy_compute.cpp
+new file mode 100644
+index 0000000..f43465b
+--- /dev/null
++++ b/models/demos/blackhole/qwen36/kernels/gdnwy_compute.cpp
+@@ -0,0 +1,533 @@
++// SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
++// SPDX-License-Identifier: Apache-2.0
++//
++// ms4 (Exit the Moat, Episode 2): the DFlash2 verify GDN chain in block (WY) form, compute. Rows of every tile = the NT
++// slots of this stream (rows NT .. 31 exactly 0 where it matters). Per value head (own state columns c0 .. c0+NC-1):
++//   S0   = gamma_a * base + K_prev^T (W (.) U_prev)                     (W: row j = R_prev[a, j]; a >= NT: S0 = base)
++//   g    = A_neg * softplus(a + dt_bias)   (log decay per slot); the reader sums it in fp32: Gc_t, D[t, j] = Gc_t - Gc_j
++//   gam  = exp(Gc), R = exp(D) (.) Mi                                     (R[t, j] = gamma_t / gamma_j, j <= t)
++//   L    = beta (.) (K K^T) (.) R (.) Ms,  inv = (I - L)(I + L^2)(I + L^4) = (I + L)^-1   (L^8 = 0)
++//   U    = inv @ (beta (.) (V - gam (.) K S0))
++//   O    = gam (.) Q S0 + ((Q K^T) (.) R) @ U   -> o_all, then rms norm * w * silu(z) of all slots (gdnq4c RMSALL)
++// and K / U / R / gam go to blk for the next step. The same recurrence as the NT chained slots (gdnq4c), summed in a
++// different order (a numerics change: judged gate). CPU check of the algebra: ms4 wy_check.py (fp64 exact).
++// GDNWY_COMMIT: S0 only.
++
++#include <cstdint>
++#include "api/compute/common.h"
++#include "api/compute/compute_kernel_api.h"
++#include "api/compute/matmul.h"
++#include "api/compute/eltwise_binary.h"
++#include "api/compute/bcast.h"
++#include "api/compute/tile_move_copy.h"
++#include "api/compute/transpose.h"
++#include "api/compute/reconfig_data_format.h"
++#include "api/compute/eltwise_binary_sfpu.h"
++#include "api/compute/eltwise_unary/eltwise_unary.h"
++#include "api/compute/eltwise_unary/exp.h"
++#include "api/compute/eltwise_unary/rsqrt.h"
++#include "api/compute/eltwise_unary/softplus.h"
++#include "api/compute/eltwise_unary/binop_with_scalar.h"
++#include "api/dataflow/circular_buffer.h"
++
++namespace {
++
++// bf16
++constexpr uint32_t cb_z = 3, cb_a = 4, cb_b = 5, cb_dtb = 6, cb_aneg = 7, cb_onw = 9, cb_out = 16;
++// fp32
++constexpr uint32_t cb_sdst = 8, cb_qs = 14, cb_state = 17, cb_on = 24, cb_ks = 25, cb_u = 26, cb_o = 28, cb_tmp = 29,
++                   cb_g = 35, cb_beta = 36, cb_qn = 42, cb_kn = 43, cb_oall = 46, cb_rm = 47, cb_gam = 48, cb_kp = 50,
++                   cb_up = 51, cb_wr = 52, cb_gu = 53, cb_kt = 54, cb_uw = 55, cb_gc = 56, cb_bm = 57, cb_l = 58,
++                   cb_inv = 59, cb_rhs = 60, cb_mq = 61, cb_cel = 62, cb_gct = 63, cb_a1 = 0, cb_l2 = 1, cb_l2b = 2,
++                   cb_l4 = 11, cb_p1 = 12, cb_p2 = 13, cb_p3 = 15, cb_t2 = 18, cb_qk = 19, cb_ld = 20, cb_s0 = 21;
++constexpr uint32_t cb_orecv = 33;
++// constant tiles: cb_cel 0 = Ms, 1 = Mi, 2 = RowMask, 3 = I
++
++inline void copy_in(uint32_t cb, uint32_t tile, uint32_t dst) {
++    reconfig_data_format_srca(cb);
++    copy_tile_to_dst_init_short(cb);
++    copy_tile(cb, tile, dst);
++}
++
++void mm(uint32_t a, uint32_t a_off, uint32_t b, uint32_t b_off, uint32_t o, uint32_t K, uint32_t N, bool tr) {
++    CircularBuffer co(o);
++    co.reserve_back(N);
++    reconfig_data_format<SrcOrder::Reverse>(a, b);
++    pack_reconfig_data_format(o);
++    matmul_init(a, b, tr ? 1 : 0);
++    for (uint32_t ni = 0; ni < N; ni++) {
++        tile_regs_acquire();
++        for (uint32_t ki = 0; ki < K; ki++) {
++            matmul_tiles(a, b, a_off + ki, b_off + (tr ? ni * K + ki : ki * N + ni), 0);
++        }
++        tile_regs_commit();
++        tile_regs_wait();
++        pack_tile(0, o);
++        tile_regs_release();
++    }
++    co.push_back(N);
++}
++
++// one-tile product a @ b (K = 1) packed into o1 and o2
++void mm1x2(uint32_t a, uint32_t b, uint32_t o1, uint32_t o2) {
++    CircularBuffer c1(o1), c2(o2);
++    c1.reserve_back(1);
++    c2.reserve_back(1);
++    reconfig_data_format<SrcOrder::Reverse>(a, b);
++    matmul_init(a, b, 0);
++    tile_regs_acquire();
++    matmul_tiles(a, b, 0, 0, 0);
++    tile_regs_commit();
++    tile_regs_wait();
++    pack_reconfig_data_format(o1);
++    pack_tile(0, o1);
++    pack_reconfig_data_format(o2);
++    pack_tile(0, o2);
++    tile_regs_release();
++    c1.push_back(1);
++    c2.push_back(1);
++}
++
++void tile_rsqrt_to(uint32_t pre_bits, uint32_t eps_bits, uint32_t post_bits, uint32_t o) {
++    CircularBuffer t(cb_tmp), s(o);
++    t.wait_front(1);
++    s.reserve_back(1);
++    pack_reconfig_data_format(o);
++    tile_regs_acquire();
++    copy_in(cb_tmp, 0, 0);
++    binop_with_scalar_tile_init();
++    mul_unary_tile(0, pre_bits);
++    add_unary_tile(0, eps_bits);
++    rsqrt_tile_init();
++    rsqrt_tile(0);
++    binop_with_scalar_tile_init();
++    mul_unary_tile(0, post_bits);
++    tile_regs_commit();
++    tile_regs_wait();
++    pack_tile(0, o);
++    tile_regs_release();
++    s.push_back(1);
++    t.pop_front(1);
++}
++
++// out tiles o[0..n) = a[a_off + i] (.) b[b_off] (FPU, the b tile carries its row / column pattern itself)
++void wy_mul(uint32_t a, uint32_t a_off, uint32_t b, uint32_t b_off, uint32_t o, uint32_t n) {
++    CircularBuffer co(o);
++    co.reserve_back(n);
++    reconfig_data_format(a, b);
++    pack_reconfig_data_format(o);
++    mul_tiles_init(a, b);
++    for (uint32_t i = 0; i < n; i++) {
++        tile_regs_acquire();
++        mul_tiles(a, b, a_off + i, b_off, 0);
++        tile_regs_commit();
++        tile_regs_wait();
++        pack_tile(0, o);
++        tile_regs_release();
++    }
++    co.push_back(n);
++}
++
++void transpose_block(uint32_t in, uint32_t o, uint32_t n) {
++    CircularBuffer co(o);
++    co.reserve_back(n);
++    reconfig_data_format_srca(in);
++    pack_reconfig_data_format(o);
++    transpose_init(in);
++    for (uint32_t i = 0; i < n; i++) {
++        tile_regs_acquire();
++        transpose_tile(in, i, 0);
++        tile_regs_commit();
++        tile_regs_wait();
++        pack_tile(0, o);
++        tile_regs_release();
++    }
++    co.push_back(n);
++}
++
++// o = x (+/-) I  (SFPU, exact fp32; x from an unpack-to-dest CB)
++void eye_pm(uint32_t x, uint32_t o, bool minus) {
++    CircularBuffer co(o);
++    co.reserve_back(1);
++    pack_reconfig_data_format(o);
++    tile_regs_acquire();
++    copy_in(cb_cel, 3, 0);
++    copy_in(x, 0, 1);
++    if (minus) {
++        sub_binary_tile_init();
++        sub_binary_tile(0, 1, 0);
++    } else {
++        add_binary_tile_init();
++        add_binary_tile(0, 1, 0);
++    }
++    tile_regs_commit();
++    tile_regs_wait();
++    pack_tile(0, o);
++    tile_regs_release();
++    co.push_back(1);
++}
++
++}  // namespace
++
++void kernel_main() {
++    constexpr uint32_t QSCALE = get_compile_time_arg_val(0);
++    constexpr uint32_t L2_EPS = get_compile_time_arg_val(1);
++    constexpr uint32_t ONE = get_compile_time_arg_val(2);
++    constexpr uint32_t INV_V = get_compile_time_arg_val(3);
++    constexpr uint32_t NORM_EPS = get_compile_time_arg_val(4);
++    constexpr uint32_t SP_THRESHOLD = get_compile_time_arg_val(5);
++    constexpr uint32_t CS = get_compile_time_arg_val(6);
++    constexpr uint32_t NC = 4 / CS;
++    const uint32_t c0 = get_arg_val<uint32_t>(0);
++    (void)QSCALE;
++    (void)L2_EPS;
++    (void)INV_V;
++    (void)NORM_EPS;
++    (void)SP_THRESHOLD;
++    (void)c0;
++
++    compute_kernel_hw_startup(cb_kp, cb_up, cb_state);
++
++    // ---- S0 = gamma_a * base + K_prev^T (W (.) U_prev)  -> cb_state (own columns, tiles mi * NC + j)
++    {
++        CircularBuffer kp(cb_kp), up(cb_up), wr(cb_wr), gu(cb_gu), sd(cb_sdst), st(cb_state), kt(cb_kt), uw(cb_uw);
++        kp.wait_front(4);
++        up.wait_front(NC);
++        wr.wait_front(1);
++        gu.wait_front(1);
++        transpose_block(cb_kp, cb_kt, 4);
++        wy_mul(cb_up, 0, cb_wr, 0, cb_uw, NC);
++        kt.wait_front(4);
++        uw.wait_front(NC);
++        sd.wait_front(4 * NC);
++        st.reserve_back(4 * NC);
++#ifndef GDNWY_COMMIT
++        CircularBuffer(cb_s0).reserve_back(4 * NC);
++#endif
++        for (uint32_t mi = 0; mi < 4; mi++) {
++            for (uint32_t j = 0; j < NC; j++) {
++                tile_regs_acquire();
++                copy_in(cb_sdst, mi * NC + j, 0);
++                copy_in(cb_gu, 0, 1);
++                mul_binary_tile_init();
++                mul_binary_tile(0, 1, 0);
++                reconfig_data_format<SrcOrder::Reverse>(cb_kt, cb_uw);
++                matmul_init(cb_kt, cb_uw, 0);
++                matmul_tiles(cb_kt, cb_uw, mi, j, 0);
++                tile_regs_commit();
++                tile_regs_wait();
++                pack_reconfig_data_format(cb_state);
++                pack_tile<true>(0, cb_state, mi * NC + j);
++#ifndef GDNWY_COMMIT
++                pack_tile<true>(0, cb_s0, mi * NC + j);
++#endif
++                tile_regs_release();
++            }
++        }
++        st.push_back(4 * NC);
++#ifndef GDNWY_COMMIT
++        CircularBuffer(cb_s0).push_back(4 * NC);
++#endif
++        sd.pop_front(4 * NC);
++        kt.pop_front(4);
++        uw.pop_front(NC);
++        kp.pop_front(4);
++        up.pop_front(NC);
++        wr.pop_front(1);
++        gu.pop_front(1);
++    }
++#ifndef GDNWY_COMMIT
++    CircularBuffer dtb(cb_dtb), aneg(cb_aneg), cel(cb_cel);
++    dtb.wait_front(1);
++    aneg.wait_front(1);
++    // ---- g = A_neg * softplus(a + dt_bias) (no exp: the log decay) and beta = sigmoid(b), rows = slots
++    {
++        CircularBuffer a(cb_a), b(cb_b), gg(cb_g), bb(cb_beta);
++        a.wait_front(1);
++        b.wait_front(1);
++        gg.reserve_back(1);
++        pack_reconfig_data_format(cb_g);
++        reconfig_data_format(cb_a, cb_dtb);
++        add_tiles_init(cb_a, cb_dtb);
++        tile_regs_acquire();
++        add_tiles(cb_a, cb_dtb, 0, 0, 0);
++        softplus_tile_init();
++        softplus_tile(0, ONE, ONE, SP_THRESHOLD);
++        copy_in(cb_aneg, 0, 1);
++        mul_binary_tile_init();
++        mul_binary_tile(0, 1, 0);
++        tile_regs_commit();
++        tile_regs_wait();
++        pack_tile(0, cb_g);
++        tile_regs_release();
++        gg.push_back(1);
++        bb.reserve_back(1);
++        pack_reconfig_data_format(cb_beta);
++        tile_regs_acquire();
++        copy_in(cb_b, 0, 0);
++        sigmoid_tile_init();
++        sigmoid_tile(0);
++        tile_regs_commit();
++        tile_regs_wait();
++        pack_tile(0, cb_beta);
++        tile_regs_release();
++        bb.push_back(1);
++        a.pop_front(1);
++        b.pop_front(1);
++    }
++    // ---- GDNQ_PRO prologue (as gdnq4c_compute.cpp): conv of every channel tile (rows = slots) -> cb 41, q / k norms
++    constexpr uint32_t NT9 = 8 + NC;
++    {
++        CircularBuffer pa(37), pw(38), yall(41), col(40);
++        yall.reserve_back(NT9);
++        pack_reconfig_data_format(41);
++        reconfig_data_format(37, 38);
++        mul_tiles_init(37, 38);
++        for (uint32_t t = 0; t < NT9; t++) {
++            pa.wait_front(4);
++            pw.wait_front(4);
++            tile_regs_acquire();
++            mul_tiles(37, 38, 0, 0, 1);
++            mul_tiles(37, 38, 1, 1, 2);
++            mul_tiles(37, 38, 2, 2, 3);
++            mul_tiles(37, 38, 3, 3, 0);
++            add_binary_tile_init();
++            add_binary_tile(0, 1, 0);
++            add_binary_tile(0, 2, 0);
++            add_binary_tile(0, 3, 0);
++            silu_tile_init();
++            silu_tile(0);
++            tile_regs_commit();
++            tile_regs_wait();
++            pack_tile(0, 41);
++            tile_regs_release();
++            pa.pop_front(4);
++            pw.pop_front(4);
++            mul_tiles_init(37, 38);
++        }
++        yall.push_back(NT9);
++        yall.wait_front(NT9);
++        mm(41, 0, 41, 0, cb_tmp, 4, 1, true);
++        tile_rsqrt_to(ONE, L2_EPS, QSCALE, 39);
++        col.wait_front(1);
++        wy_mul(41, 0, 40, 0, cb_qn, 4);
++        col.pop_front(1);
++        mm(41, 4, 41, 4, cb_tmp, 4, 1, true);
++        tile_rsqrt_to(ONE, L2_EPS, ONE, 39);
++        col.wait_front(1);
++        wy_mul(41, 4, 40, 0, cb_kn, 4);
++        col.pop_front(1);
++    }
++    CircularBuffer qn(cb_qn), kn(cb_kn), yall(41);
++    qn.wait_front(4);
++    kn.wait_front(4);
++    cel.wait_front(4);
++    // ---- gam = exp(Gc), R = exp(D) (.) Mi from the reader fp32 sums (Gfull: row t = Gc_t; D[t, j] = Gc_t - Gc_j,
++    // j <= t, 0 elsewhere), betam = beta rows (reader, rows >= NT zero)
++    CircularBuffer gfu(cb_gc), dd(cb_gct), gm(cb_gam), rm(cb_rm), bm(cb_bm);
++    gfu.wait_front(1);
++    dd.wait_front(1);
++    gm.reserve_back(1);
++    pack_reconfig_data_format(cb_gam);
++    tile_regs_acquire();
++    copy_in(cb_gc, 0, 0);
++    exp_tile_init();
++    exp_tile(0);
++    tile_regs_commit();
++    tile_regs_wait();
++    pack_tile(0, cb_gam);
++    tile_regs_release();
++    gm.push_back(1);
++    rm.reserve_back(1);
++    pack_reconfig_data_format(cb_rm);
++    tile_regs_acquire();
++    copy_in(cb_gct, 0, 0);
++    exp_tile_init();
++    exp_tile(0);
++    copy_in(cb_cel, 1, 1);
++    mul_binary_tile_init();
++    mul_binary_tile(0, 1, 0);
++    tile_regs_commit();
++    tile_regs_wait();
++    pack_tile(0, cb_rm);
++    tile_regs_release();
++    rm.push_back(1);
++    gfu.pop_front(1);
++    dd.pop_front(1);
++    gm.wait_front(1);
++    rm.wait_front(1);
++    bm.wait_front(1);
++    // ---- L = betam (.) (K K^T) (.) R (.) Ms -> cb_l (matmul operand) and cb_ld (unpack-to-dest copy for I - L)
++    {
++        CircularBuffer a1(cb_a1), l(cb_l), ld(cb_ld);
++        mm(cb_kn, 0, cb_kn, 0, cb_a1, 4, 1, true);
++        a1.wait_front(1);
++        l.reserve_back(1);
++        ld.reserve_back(1);
++        tile_regs_acquire();
++        copy_in(cb_a1, 0, 0);
++        copy_in(cb_bm, 0, 1);
++        mul_binary_tile_init();
++        mul_binary_tile(0, 1, 0);
++        copy_in(cb_rm, 0, 1);
++        mul_binary_tile_init();
++        mul_binary_tile(0, 1, 0);
++        copy_in(cb_cel, 0, 1);
++        mul_binary_tile_init();
++        mul_binary_tile(0, 1, 0);
++        tile_regs_commit();
++        tile_regs_wait();
++        pack_reconfig_data_format(cb_l);
++        pack_tile(0, cb_l);
++        pack_reconfig_data_format(cb_ld);
++        pack_tile(0, cb_ld);
++        tile_regs_release();
++        l.push_back(1);
++        ld.push_back(1);
++        a1.pop_front(1);
++    }
++    // ---- inv = (I - L)(I + L^2)(I + L^4)
++    {
++        CircularBuffer l(cb_l), ld(cb_ld), l2(cb_l2), l2b(cb_l2b), l4(cb_l4), p1(cb_p1), p2(cb_p2), p3(cb_p3), t2(cb_t2);
++        l.wait_front(1);
++        ld.wait_front(1);
++        mm1x2(cb_l, cb_l, cb_l2, cb_l2b);  // L^2: cb_l2 (dest copy), cb_l2b (matmul operand)
++        l2.wait_front(1);
++        l2b.wait_front(1);
++        mm(cb_l2b, 0, cb_l2b, 0, cb_l4, 1, 1, false);
++        l4.wait_front(1);
++        eye_pm(cb_ld, cb_p1, true);
++        eye_pm(cb_l2, cb_p2, false);
++        eye_pm(cb_l4, cb_p3, false);
++        p1.wait_front(1);
++        p2.wait_front(1);
++        p3.wait_front(1);
++        mm(cb_p1, 0, cb_p2, 0, cb_t2, 1, 1, false);
++        t2.wait_front(1);
++        mm(cb_t2, 0, cb_p3, 0, cb_inv, 1, 1, false);
++        for (uint32_t c : {cb_l, cb_ld, cb_l2, cb_l2b, cb_l4, cb_p1, cb_p2, cb_p3, cb_t2}) {
++            CircularBuffer(c).pop_front(1);
++        }
++    }
++    // ---- K S0, Q S0 (own columns), U = inv @ (betam (.) (V - gam (.) K S0))
++    CircularBuffer st(cb_s0), ks(cb_ks), qs(cb_qs), inv(cb_inv), rhs(cb_rhs), u(cb_u);
++    st.wait_front(4 * NC);
++    mm(cb_kn, 0, cb_s0, 0, cb_ks, 4, NC, false);
++    mm(cb_qn, 0, cb_s0, 0, cb_qs, 4, NC, false);
++    ks.wait_front(NC);
++    qs.wait_front(NC);
++    inv.wait_front(1);
++    rhs.reserve_back(NC);
++    pack_reconfig_data_format(cb_rhs);
++    for (uint32_t j = 0; j < NC; j++) {
++        tile_regs_acquire();
++        copy_in(41, 8 + j, 0);
++        copy_in(cb_ks, j, 1);
++        copy_in(cb_gam, 0, 2);
++        mul_binary_tile_init();
++        mul_binary_tile(1, 2, 1);
++        sub_binary_tile_init();
++        sub_binary_tile(0, 1, 0);
++        copy_in(cb_bm, 0, 1);
++        mul_binary_tile_init();
++        mul_binary_tile(0, 1, 0);
++        tile_regs_commit();
++        tile_regs_wait();
++        pack_tile(0, cb_rhs);
++        tile_regs_release();
++    }
++    rhs.push_back(NC);
++    rhs.wait_front(NC);
++    mm(cb_inv, 0, cb_rhs, 0, cb_u, 1, NC, false);
++    u.wait_front(NC);
++    // ---- Mq = (Q K^T) (.) R ; O = gam (.) Q S0 + Mq @ U  -> cb_o (own column tiles, to o_all by the writer)
++    {
++        CircularBuffer qk(cb_qk), mq(cb_mq), o(cb_o);
++        mm(cb_qn, 0, cb_kn, 0, cb_qk, 4, 1, true);
++        qk.wait_front(1);
++        mq.reserve_back(1);
++        pack_reconfig_data_format(cb_mq);
++        tile_regs_acquire();
++        copy_in(cb_qk, 0, 0);
++        copy_in(cb_rm, 0, 1);
++        mul_binary_tile_init();
++        mul_binary_tile(0, 1, 0);
++        tile_regs_commit();
++        tile_regs_wait();
++        pack_tile(0, cb_mq);
++        tile_regs_release();
++        mq.push_back(1);
++        mq.wait_front(1);
++        o.reserve_back(NC);
++        for (uint32_t j = 0; j < NC; j++) {
++            tile_regs_acquire();
++            copy_in(cb_qs, j, 0);
++            copy_in(cb_gam, 0, 1);
++            mul_binary_tile_init();
++            mul_binary_tile(0, 1, 0);
++            reconfig_data_format<SrcOrder::Reverse>(cb_mq, cb_u);
++            matmul_init(cb_mq, cb_u, 0);
++            matmul_tiles(cb_mq, cb_u, 0, j, 0);
++            tile_regs_commit();
++            tile_regs_wait();
++            pack_reconfig_data_format(cb_o);
++            pack_tile(0, cb_o);
++            tile_regs_release();
++        }
++        o.push_back(NC);
++        qk.pop_front(1);
++        mq.pop_front(1);
++    }
++    // ---- out = rms_norm(o) * w_norm * silu(z) of ALL slots (gdnq4c RMSALL; o_all from the writer)
++    {
++        CircularBuffer oall(cb_oall), col(40), on(cb_on), z(cb_z), onw(cb_onw), out(cb_out), orecv(cb_orecv);
++        orecv.wait_front(1);
++        oall.wait_front(4);
++        mm(cb_oall, 0, cb_oall, 0, cb_tmp, 4, 1, true);
++        tile_rsqrt_to(INV_V, NORM_EPS, ONE, 39);
++        col.wait_front(1);
++        on.reserve_back(NC);
++        reconfig_data_format(cb_oall, 40);
++        pack_reconfig_data_format(cb_on);
++        mul_tiles_init(cb_oall, 40);
++        for (uint32_t j = 0; j < NC; j++) {
++            tile_regs_acquire();
++            mul_tiles(cb_oall, 40, c0 + j, 0, 0);
++            tile_regs_commit();
++            tile_regs_wait();
++            pack_tile(0, cb_on);
++            tile_regs_release();
++        }
++        on.push_back(NC);
++        col.pop_front(1);
++        on.wait_front(NC);
++        z.wait_front(NC);
++        onw.wait_front(NC);
++        out.reserve_back(NC);
++        pack_reconfig_data_format(cb_out);
++        for (uint32_t i = 0; i < NC; i++) {
++            tile_regs_acquire();
++            copy_in(cb_z, i, 0);
++            silu_tile_init();
++            silu_tile(0);
++            copy_in(cb_on, i, 1);
++            mul_binary_tile_init();
++            mul_binary_tile(0, 1, 0);
++            copy_in(cb_onw, i, 1);
++            mul_binary_tile_init();
++            mul_binary_tile(0, 1, 0);
++            tile_regs_commit();
++            tile_regs_wait();
++            pack_tile(0, cb_out);
++            tile_regs_release();
++        }
++        out.push_back(NC);
++        on.pop_front(NC);
++        z.pop_front(NC);
++        orecv.pop_front(1);
++    }
++    // K / R / gam / U stay in their CBs until the writer stored them (never popped: the program ends)
++    dtb.pop_front(1);
++    aneg.pop_front(1);
++#endif
++}
+diff --git a/models/demos/blackhole/qwen36/kernels/gdnwy_reader.cpp b/models/demos/blackhole/qwen36/kernels/gdnwy_reader.cpp
+new file mode 100644
+index 0000000..73caa74
+--- /dev/null
++++ b/models/demos/blackhole/qwen36/kernels/gdnwy_reader.cpp
+@@ -0,0 +1,311 @@
++// SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
++// SPDX-License-Identifier: Apache-2.0
++//
++// ms4 (Exit the Moat, Episode 2): the DFlash2 verify GDN chain in block (WY) form, reader. One program per GDN layer
++// for every live stream (core group per stream, CS cores per value head, rows as runtime args), the gdnq4c GDNQ_PRO
++// prologue unchanged (conv of all NT slots as rows, q / k l2 norms), then instead of NT chained slots:
++//   S0 = gamma_a * base + K_prev^T diag(w) U_prev   (the state at the previous step accepted slot a, recomputed from
++//        the previous block; a >= NT: S0 = base), written back to base by the writer,
++//   the block outputs from S0 in closed form (see gdnwy_compute.cpp), and this block K / U / R / gamma stored to blk
++//   for the next step. The NT slot states are never written (no bufs).
++// GDNWY_COMMIT: only S0 -> base (a commit before a non-WY step / the plain lane), nothing else.
++
++#include "api/dataflow/dataflow_api.h"
++#include "api/dataflow/noc.h"
++#include "api/dataflow/circular_buffer.h"
++#include "api/tensor/noc_traits.h"
++
++#define XOFF(f, r) (((xrow0_ + (r)) / 16) * 1024 + (f) * 512 + ((xrow0_ + (r)) % 16) * 32)
++
++constexpr uint32_t cb_z = 3, cb_sdst = 8, cb_onw = 9;
++constexpr uint32_t cb_kp = 50, cb_up = 51, cb_wr = 52, cb_gu = 53, cb_cel = 62;
++
++void kernel_main() {
++    constexpr uint32_t NK = get_compile_time_arg_val(0);
++    constexpr uint32_t NV = get_compile_time_arg_val(1);
++    constexpr uint32_t ZT0 = get_compile_time_arg_val(2);
++    constexpr uint32_t CS = get_compile_time_arg_val(3);
++    constexpr uint32_t NC = 4 / CS;
++    constexpr uint32_t RF = NV / NK;
++    constexpr uint32_t NT = GDNQ_CHAIN;
++    static_assert(NT <= 16, "WY block: the slots of a stream in one 16-row tile face");
++    constexpr auto xa = TensorAccessorArgs<4>();
++    constexpr auto xla = TensorAccessorArgs<xa.next_compile_time_args_offset()>();
++    constexpr auto wpa = TensorAccessorArgs<xla.next_compile_time_args_offset()>();
++    constexpr auto basea = TensorAccessorArgs<wpa.next_compile_time_args_offset()>();
++    constexpr auto onwa = TensorAccessorArgs<basea.next_compile_time_args_offset()>();
++    constexpr auto kva = TensorAccessorArgs<onwa.next_compile_time_args_offset()>();
++    constexpr auto blka = TensorAccessorArgs<kva.next_compile_time_args_offset()>();
++    constexpr uint32_t KT0 = 4 * NK, VT0 = 8 * NK;
++
++    uint32_t i = 0;
++    const uint32_t hv = get_arg_val<uint32_t>(i++);
++    const uint32_t ci = get_arg_val<uint32_t>(i++);
++    const uint32_t x_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t xl_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t wp_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t base_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t onw_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t kv_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t blk_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t xrow0_ = get_arg_val<uint32_t>(i++);
++    (void)x_addr;
++    (void)xl_addr;
++    (void)wp_addr;
++    (void)onw_addr;
++    (void)xrow0_;
++
++    const uint32_t hk = hv / RF;
++    const uint32_t c0 = ci * NC;
++    constexpr uint32_t tb = 2048, tf = 4096;
++    const auto base = TensorAccessor(basea, base_addr, tf);
++    const auto blk = TensorAccessor(blka, blk_addr, tf);
++    Noc noc;
++    const uint64_t zeros = get_noc_addr(MEM_ZEROS_BASE);
++    auto zfill = [&](uint32_t addr, uint32_t bytes) {  // MEM_ZEROS is 512 bytes
++        for (uint32_t o = 0; o < bytes; o += 512) {
++            noc_async_read(zeros, addr + o, 512);
++        }
++    };
++    auto f32 = [](uint32_t addr) { return reinterpret_cast<volatile tt_l1_ptr uint32_t*>(addr); };
++    // element (r, c) of a fp32 tile: face (r / 16) * 2 + (c / 16), row r % 16, column c % 16
++    auto eidx = [](uint32_t r, uint32_t c) -> uint32_t {
++        return ((r / 16) * 2 + (c / 16)) * 256 + (r % 16) * 16 + (c % 16);
++    };
++    constexpr uint32_t ONEF = 0x3f800000u;
++
++    // ---- the previous step accepted slot a (element NT * NT of the `a` input); a >= NT: start from base
++    CircularBuffer ck(cb_kp), cu(cb_up), cw(cb_wr), cg(cb_gu);
++    ck.reserve_back(4);
++    cu.reserve_back(NC);
++    cw.reserve_back(1);
++    cg.reserve_back(1);
++    const uint32_t pk = ck.get_write_ptr(), pu = cu.get_write_ptr(), pw = cw.get_write_ptr(), pg = cg.get_write_ptr();
++    uint32_t a = 255;
++    {
++        const auto kvt = TensorAccessor(kva, kv_addr, (NT * NT + 16) * 4);
++        noc_async_read(kvt.get_noc_addr(0, NT * NT * 4), pg, 64);
++        noc_async_read_barrier();
++        a = f32(pg)[0];
++    }
++    const bool rec = a < NT;
++
++    // ---- base state (own columns) -> cb_sdst (unpack to dest: exact fp32 copies in the compute)
++    {
++        CircularBuffer cs(cb_sdst);
++        cs.reserve_back(4 * NC);
++        const uint32_t pd = cs.get_write_ptr();
++        for (uint32_t ki = 0; ki < 4; ki++) {
++            for (uint32_t j = 0; j < NC; j++) {
++                noc_async_read(base.get_noc_addr(hv * 16 + ki * 4 + c0 + j), pd + (ki * NC + j) * tf, tf);
++            }
++        }
++        noc.async_read_barrier();
++        cs.push_back(4 * NC);
++    }
++    // ---- the previous block: K (4 tiles), U (own columns), and from R / gamma: the row-scale tile W (row j = w_j =
++    // R[a, j], j <= a, on every column) and the uniform gamma_a tile. a >= NT: K = U = W = 0, gamma = 1 (S0 = base)
++    if (rec) {
++        for (uint32_t t = 0; t < 4; t++) {
++            noc_async_read(blk.get_noc_addr(hv * 10 + t), pk + t * tf, tf);
++        }
++        for (uint32_t j = 0; j < NC; j++) {
++            noc_async_read(blk.get_noc_addr(hv * 10 + 4 + c0 + j), pu + j * tf, tf);
++        }
++        noc_async_read(blk.get_noc_addr(hv * 10 + 8), pw, tf);  // R (staged in the W page)
++        noc_async_read(blk.get_noc_addr(hv * 10 + 9), pg, tf);  // gamma rows (staged in the gamma page)
++        noc.async_read_barrier();
++        uint32_t wv[16];
++        for (uint32_t j = 0; j < NT; j++) {
++            wv[j] = j <= a ? f32(pw)[eidx(a, j)] : 0u;
++        }
++        const uint32_t ga = f32(pg)[eidx(a, 0)];
++        zfill(pw, tf);
++        noc.async_read_barrier();
++        for (uint32_t j = 0; j < NT; j++) {
++            for (uint32_t c = 0; c < 32; c++) {
++                f32(pw)[eidx(j, c)] = wv[j];
++            }
++        }
++        for (uint32_t e = 0; e < 1024; e++) {
++            f32(pg)[e] = ga;
++        }
++    } else {
++        zfill(pk, 4 * tf);
++        zfill(pu, NC * tf);
++        zfill(pw, tf);
++        noc.async_read_barrier();
++        for (uint32_t e = 0; e < 1024; e++) {
++            f32(pg)[e] = ONEF;
++        }
++    }
++    ck.push_back(4);
++    cu.push_back(NC);
++    cw.push_back(1);
++    cg.push_back(1);
++#ifndef GDNWY_COMMIT
++    // ---- constants (eltwise, unpack to dest): cb_cel = [Ms (j < i < NT), Mi (j <= i < NT), RowMask (i < NT), I (32x32)]
++    {
++        CircularBuffer ce(cb_cel);
++        ce.reserve_back(4);
++        const uint32_t pe = ce.get_write_ptr();
++        zfill(pe, 4 * tf);
++        noc.async_read_barrier();
++        for (uint32_t r = 0; r < NT; r++) {
++            for (uint32_t c = 0; c <= r; c++) {
++                f32(pe + tf)[eidx(r, c)] = ONEF;
++                if (c < r) {
++                    f32(pe)[eidx(r, c)] = ONEF;
++                }
++            }
++            for (uint32_t c = 0; c < 32; c++) {
++                f32(pe + 2 * tf)[eidx(r, c)] = ONEF;
++            }
++        }
++        for (uint32_t c = 0; c < 32; c++) {
++            f32(pe + 3 * tf)[eidx(c, c)] = ONEF;
++        }
++        ce.push_back(4);
++    }
++    // ---- GDNQ_PRO prologue inputs (as gdnq4c_reader.cpp): A[k][t] rows s = conv input rows of slot s (k = 0..2:
++    // window rows s + k, k = 3: in-projection row s), W[k][t] rows s = tap k of channel tile t. Rows NT .. 31 of every
++    // A / W page are zero (the 8-page rings are zeroed first): the conv / norm rows of the unused slots are exactly 0.
++    const auto xq = TensorAccessor(xa, x_addr, tb);
++    const auto xl = TensorAccessor(xla, xl_addr, tb);
++    const auto wp = TensorAccessor(wpa, wp_addr, tb);
++    const auto onw = TensorAccessor(onwa, onw_addr, tb);
++    auto chan = [&](uint32_t t) -> uint32_t {
++        return t < 4 ? 4 * hk + t : (t < 8 ? KT0 + 4 * hk + (t - 4) : VT0 + 4 * hv + (t - 8));
++    };
++    constexpr uint32_t NT9 = 8 + NC;
++    {
++        CircularBuffer cpa(37), cpw(38);
++        zfill(cpa.get_write_ptr(), 8 * tb);
++        zfill(cpw.get_write_ptr(), 8 * tb);
++        noc.async_read_barrier();
++        for (uint32_t t = 0; t < NT9; t++) {
++            const uint32_t tt = t < 8 ? t : 8 + c0 + (t - 8);
++            const uint32_t c = chan(tt);
++            cpa.reserve_back(4);
++            cpw.reserve_back(4);
++            const uint32_t pa = cpa.get_write_ptr(), pwt = cpw.get_write_ptr();
++            for (uint32_t f = 0; f < 2; f++) {
++                noc_async_read(xl.get_noc_addr(c, f * 512), pa + 0 * tb + f * 512, NT * 32);
++                noc_async_read(xl.get_noc_addr(c, f * 512 + 32), pa + 1 * tb + f * 512, NT * 32);
++                noc_async_read(xl.get_noc_addr(c, f * 512 + 64), pa + 2 * tb + f * 512, NT * 32);
++                noc_async_read(xq.get_noc_addr(c, XOFF(f, 0)), pa + 3 * tb + f * 512, NT * 32);
++                for (uint32_t k = 0; k < 4; k++) {
++                    noc_async_read(wp.get_noc_addr((hv * 4 + k) * 12 + tt, f * 512), pwt + k * tb + f * 512, NT * 32);
++                }
++            }
++            noc.async_read_barrier();
++            cpa.push_back(4);
++            cpw.push_back(4);
++        }
++        // ---- Gfull (row t = Gc_t = g_0 + .. + g_t), D (D[t, j] = g_{j+1} + .. + g_t, j <= t), betam (row t = beta_t),
++        // all on every column of rows < NT, zero elsewhere: fp32 sums here (a tf32 matmul cumsum loses ~1e-3 of Gc)
++        {
++            CircularBuffer cgg(35), cbe(36), cgf(56), cdd(63), cbm(57);
++            cgg.wait_front(1);
++            cbe.wait_front(1);
++            cgf.reserve_back(1);
++            cdd.reserve_back(1);
++            cbm.reserve_back(1);
++            const uint32_t pgf = cgf.get_write_ptr(), pdd = cdd.get_write_ptr(), pbm = cbm.get_write_ptr();
++            zfill(pgf, tf);
++            zfill(pdd, tf);
++            zfill(pbm, tf);
++            noc.async_read_barrier();
++            union FU { uint32_t u; float f; };
++            float g[16], gc[16];
++            float acc = 0.0f;
++            for (uint32_t r = 0; r < NT; r++) {
++                FU v;
++                v.u = f32(cgg.get_read_ptr())[eidx(r, 0)];
++                g[r] = v.f;
++                acc = acc + v.f;
++                gc[r] = acc;
++            }
++            for (uint32_t r = 0; r < NT; r++) {
++                FU gv, bv;
++                gv.f = gc[r];
++                bv.u = f32(cbe.get_read_ptr())[eidx(r, 0)];
++                for (uint32_t c = 0; c < 32; c++) {
++                    f32(pgf)[eidx(r, c)] = gv.u;
++                    f32(pbm)[eidx(r, c)] = bv.u;
++                }
++                float d = 0.0f;
++                for (int32_t j = (int32_t)r; j >= 0; j--) {  // D[r, j] = g_{j+1} + .. + g_r
++                    FU dv;
++                    dv.f = d;
++                    f32(pdd)[eidx(r, (uint32_t)j)] = dv.u;
++                    d = d + g[j];
++                }
++            }
++            cgf.push_back(1);
++            cdd.push_back(1);
++            cbm.push_back(1);
++            cgg.pop_front(1);
++            cbe.pop_front(1);
++        }
++        // the q / k norm scale of every slot: element (r, r) of the rsqrt'd gram -> row r of a full-row tile
++        CircularBuffer c39(39), c40(40);
++        for (uint32_t h = 0; h < 2; h++) {
++            c39.wait_front(1);
++            c40.reserve_back(1);
++            const uint32_t src = c39.get_read_ptr(), dst = c40.get_write_ptr();
++            zfill(dst, tf);
++            noc.async_read_barrier();
++            for (uint32_t r = 0; r < NT; r++) {
++                const uint32_t v = f32(src)[r * 16 + r];
++                for (uint32_t cc = 0; cc < 16; cc++) {
++                    f32(dst)[r * 16 + cc] = v;
++                    f32(dst)[256 + r * 16 + cc] = v;
++                }
++            }
++            c40.push_back(1);
++            c39.pop_front(1);
++        }
++    }
++    // ---- z rows (rows = slots), the norm weight on every slot row, then the rms scale of every slot (gdnq4c RMSALL)
++    {
++        CircularBuffer cz(cb_z), conw(cb_onw);
++        cz.reserve_back(NC);
++        conw.reserve_back(NC);
++        const uint32_t pz = cz.get_write_ptr(), pw2 = conw.get_write_ptr();
++        for (uint32_t k = 0; k < NC; k++) {
++            for (uint32_t f = 0; f < 2; f++) {
++                noc_async_read(xq.get_noc_addr(ZT0 + 4 * hv + c0 + k, XOFF(f, 0)), pz + k * tb + f * 512, NT * 32);
++            }
++            noc.async_read(onw, conw, tb, {.page_id = c0 + k}, {.offset_bytes = k * tb});
++        }
++        noc.async_read_barrier();
++        for (uint32_t k = 0; k < NC; k++) {
++            for (uint32_t f = 0; f < 2; f++) {
++                for (uint32_t r = 1; r < NT; r++) {
++                    noc_async_read(get_noc_addr(pw2 + k * tb + f * 512), pw2 + k * tb + f * 512 + r * 32, 32);
++                }
++            }
++        }
++        noc.async_read_barrier();
++        cz.push_back(NC);
++        conw.push_back(NC);
++        CircularBuffer c39(39), c40(40);
++        c39.wait_front(1);
++        c40.reserve_back(1);
++        const uint32_t src = c39.get_read_ptr(), dst = c40.get_write_ptr();
++        zfill(dst, tf);
++        noc.async_read_barrier();
++        for (uint32_t r = 0; r < NT; r++) {
++            const uint32_t v = f32(src)[r * 16 + r];
++            for (uint32_t cc = 0; cc < 16; cc++) {
++                f32(dst)[r * 16 + cc] = v;
++                f32(dst)[256 + r * 16 + cc] = v;
++            }
++        }
++        c40.push_back(1);
++        c39.pop_front(1);
++    }
++#endif
++    noc_async_write_barrier();
++}
+diff --git a/models/demos/blackhole/qwen36/kernels/gdnwy_writer.cpp b/models/demos/blackhole/qwen36/kernels/gdnwy_writer.cpp
+new file mode 100644
+index 0000000..3266e59
+--- /dev/null
++++ b/models/demos/blackhole/qwen36/kernels/gdnwy_writer.cpp
+@@ -0,0 +1,201 @@
++// SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
++// SPDX-License-Identifier: Apache-2.0
++//
++// ms4: the WY block GDN verify, writer (see gdnwy_reader.cpp). dt_bias / A_neg, the gate inputs of all slots (rows =
++// slots, as gdnq4c GDNQ_GATES_ALL), S0 -> base, this block K / U / R / gamma -> blk (page hv * 10 + 0..3 K, 4..7 U column
++// tiles, 8 R, 9 gamma), the o column tiles to o_all on every core of the head, the gated output rows.
++// GDNWY_COMMIT: S0 -> base only.
++
++#include "api/dataflow/dataflow_api.h"
++#include "api/dataflow/noc.h"
++#include "api/dataflow/circular_buffer.h"
++#include "api/tensor/noc_traits.h"
++
++#define XOFF(f, r) (((xrow0_ + (r)) / 16) * 1024 + (f) * 512 + ((xrow0_ + (r)) % 16) * 32)
++#define OOFF(f, r) (((orow0_ + (r)) / 16) * 1024 + (f) * 512 + ((orow0_ + (r)) % 16) * 32)
++
++constexpr uint32_t cb_a = 4, cb_b = 5, cb_dtb = 6, cb_aneg = 7, cb_scr = 10, cb_out = 16, cb_state = 17, cb_u = 26,
++                   cb_o = 28, cb_orecv = 33, cb_kn = 43, cb_rm = 47, cb_gam = 48;
++
++void kernel_main() {
++    constexpr uint32_t NV = get_compile_time_arg_val(0);
++    constexpr uint32_t CS = get_compile_time_arg_val(1);
++    constexpr uint32_t SEMO = get_compile_time_arg_val(2);
++    constexpr uint32_t ACOL = get_compile_time_arg_val(3);
++    constexpr uint32_t BCOL = get_compile_time_arg_val(4);
++    constexpr uint32_t NC = 4 / CS;
++    constexpr uint32_t NT = GDNQ_CHAIN;
++    constexpr auto basea = TensorAccessorArgs<5>();
++    constexpr auto outa = TensorAccessorArgs<basea.next_compile_time_args_offset()>();
++    constexpr auto xa = TensorAccessorArgs<outa.next_compile_time_args_offset()>();
++    constexpr auto dtba = TensorAccessorArgs<xa.next_compile_time_args_offset()>();
++    constexpr auto anega = TensorAccessorArgs<dtba.next_compile_time_args_offset()>();
++    constexpr auto blka = TensorAccessorArgs<anega.next_compile_time_args_offset()>();
++
++    uint32_t i = 0;
++    const uint32_t hv = get_arg_val<uint32_t>(i++);
++    const uint32_t ci = get_arg_val<uint32_t>(i++);
++    const uint32_t out_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t x_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t dtb_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t aneg_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t base_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t blk_addr = get_arg_val<uint32_t>(i++);
++    const uint32_t xrow0_ = get_arg_val<uint32_t>(i++);
++    const uint32_t orow0_ = get_arg_val<uint32_t>(i++);
++    const uint32_t oz0_ = get_arg_val<uint32_t>(i++);
++    uint32_t peer[2 * (CS > 1 ? CS - 1 : 1)];
++    for (uint32_t k = 0; k < 2 * (CS - 1); k++) {
++        peer[k] = get_arg_val<uint32_t>(i++);
++    }
++    (void)out_addr;
++    (void)x_addr;
++    (void)dtb_addr;
++    (void)aneg_addr;
++    (void)xrow0_;
++    (void)orow0_;
++    (void)oz0_;
++    const uint32_t c0 = ci * NC;
++    constexpr uint32_t tb = 2048, tf = 4096;
++    const auto base = TensorAccessor(basea, base_addr, tf);
++    const auto blk = TensorAccessor(blka, blk_addr, tf);
++    Noc noc;
++
++#ifndef GDNWY_COMMIT
++    const auto out = TensorAccessor(outa, out_addr, tb);
++    const auto xq = TensorAccessor(xa, x_addr, tb);
++    CircularBuffer cdt(cb_dtb), can(cb_aneg), scr(cb_scr), cav(cb_a), cbv(cb_b);
++    {
++        const auto dtb = TensorAccessor(dtba, dtb_addr, tb);
++        const auto aneg = TensorAccessor(anega, aneg_addr, tb);
++        cdt.reserve_back(1);
++        can.reserve_back(1);
++        noc.async_read(dtb, cdt, tb, {.page_id = hv}, {.offset_bytes = 0});
++        noc.async_read(aneg, can, tb, {.page_id = hv}, {.offset_bytes = 0});
++        noc.async_read_barrier();
++        cdt.push_back(1);
++        can.push_back(1);
++    }
++    // the gate inputs of all slots: slot r value in row r (face 0, columns 0..15) of one a / b tile, zeros elsewhere
++    scr.reserve_back(1);
++    const uint32_t ps = scr.get_write_ptr();
++    const uint32_t ca_ = ACOL + hv, cbb = BCOL + hv;
++    {
++        cav.reserve_back(1);
++        cbv.reserve_back(1);
++        const uint32_t ta0 = cav.get_write_ptr(), tb0 = cbv.get_write_ptr();
++        for (uint32_t o = 0; o < tb; o += 512) {
++            noc_async_read(get_noc_addr(MEM_ZEROS_BASE), ta0 + o, 512);
++            noc_async_read(get_noc_addr(MEM_ZEROS_BASE), tb0 + o, 512);
++        }
++        for (uint32_t tk = 0; tk < NT; tk++) {
++            noc_async_read(xq.get_noc_addr(ca_ / 32, XOFF((ca_ % 32) / 16, tk)), ps + tk * 128, 32);
++            noc_async_read(xq.get_noc_addr(cbb / 32, XOFF((cbb % 32) / 16, tk)), ps + tk * 128 + 64, 32);
++        }
++        noc.async_read_barrier();
++        for (uint32_t tk = 0; tk < NT; tk++) {
++            volatile tt_l1_ptr uint16_t* row = reinterpret_cast<volatile tt_l1_ptr uint16_t*>(ps + tk * 128);
++            const uint32_t va = row[ca_ % 16], vb = row[32 + cbb % 16];
++            volatile tt_l1_ptr uint32_t* ta = reinterpret_cast<volatile tt_l1_ptr uint32_t*>(ta0 + tk * 32);
++            volatile tt_l1_ptr uint32_t* tbp = reinterpret_cast<volatile tt_l1_ptr uint32_t*>(tb0 + tk * 32);
++            const uint32_t wa = va | (va << 16), wb = vb | (vb << 16);
++            for (uint32_t w = 0; w < 8; w++) {
++                ta[w] = wa;
++                tbp[w] = wb;
++            }
++        }
++        cav.push_back(1);
++        cbv.push_back(1);
++    }
++    // output tile rows oz0 .. 31: zeros (nothing depends on them)
++    for (uint32_t k = 0; k < NC; k++) {
++        const uint32_t pg = 4 * hv + c0 + k;
++        const uint32_t oz = oz0_;
++        if (oz < 16) {
++            for (uint32_t f = 0; f < 2; f++) {
++                noc_async_write(MEM_ZEROS_BASE, out.get_noc_addr(pg, f * 512 + oz * 32), (16 - oz) * 32);
++            }
++            noc_async_write(MEM_ZEROS_BASE, out.get_noc_addr(pg, 1024), 512);
++            noc_async_write(MEM_ZEROS_BASE, out.get_noc_addr(pg, 1536), 512);
++        } else if (oz < 32) {
++            for (uint32_t f = 2; f < 4; f++) {
++                noc_async_write(MEM_ZEROS_BASE, out.get_noc_addr(pg, f * 512 + (oz - 16) * 32), (32 - oz) * 32);
++            }
++        }
++    }
++    CircularBuffer coall(46);
++    coall.reserve_back(4);
++    const uint32_t pall = coall.get_write_ptr();  // o_all: the same L1 address on every core of the program
++#endif
++    // ---- S0 -> base (own columns)
++    {
++        CircularBuffer cst(cb_state);
++        cst.wait_front(4 * NC);
++        const uint32_t pst = cst.get_read_ptr();
++        for (uint32_t ki = 0; ki < 4; ki++) {
++            for (uint32_t j = 0; j < NC; j++) {
++                noc_async_write(pst + (ki * NC + j) * tf, base.get_noc_addr(hv * 16 + ki * 4 + c0 + j), tf);
++            }
++        }
++        noc_async_write_barrier();
++        cst.pop_front(4 * NC);
++    }
++#ifndef GDNWY_COMMIT
++    // ---- this block for the next step: K, R, gamma (core ci = 0 of the head), U (own columns)
++    {
++        CircularBuffer ckn(cb_kn), crm(cb_rm), cgm(cb_gam), cuu(cb_u);
++        if (ci == 0) {
++            ckn.wait_front(4);
++            crm.wait_front(1);
++            cgm.wait_front(1);
++            for (uint32_t t = 0; t < 4; t++) {
++                noc_async_write(ckn.get_read_ptr() + t * tf, blk.get_noc_addr(hv * 10 + t), tf);
++            }
++            noc_async_write(crm.get_read_ptr(), blk.get_noc_addr(hv * 10 + 8), tf);
++            noc_async_write(cgm.get_read_ptr(), blk.get_noc_addr(hv * 10 + 9), tf);
++        }
++        cuu.wait_front(NC);
++        for (uint32_t j = 0; j < NC; j++) {
++            noc_async_write(cuu.get_read_ptr() + j * tf, blk.get_noc_addr(hv * 10 + 4 + c0 + j), tf);
++        }
++        noc_async_write_barrier();
++    }
++    // ---- o column tiles -> o_all (this core and the other CS - 1 cores of the head), then release the compute
++    {
++        CircularBuffer co(cb_o), cor(cb_orecv);
++        co.wait_front(NC);
++        const uint32_t po = co.get_read_ptr();
++        for (uint32_t j = 0; j < NC; j++) {
++            const uint32_t d = pall + (c0 + j) * tf;
++            noc_async_write(po + j * tf, get_noc_addr(d), tf);
++            for (uint32_t k = 0; k < CS - 1; k++) {
++                noc_async_write(po + j * tf, get_noc_addr(peer[2 * k], peer[2 * k + 1], d), tf);
++            }
++        }
++        noc_async_write_barrier();
++        co.pop_front(NC);
++        volatile tt_l1_ptr uint32_t* semo = reinterpret_cast<volatile tt_l1_ptr uint32_t*>(get_semaphore(SEMO));
++        for (uint32_t k = 0; k < CS - 1; k++) {
++            noc_semaphore_inc(get_noc_addr(peer[2 * k], peer[2 * k + 1], get_semaphore(SEMO)), 1);
++        }
++        noc_semaphore_wait_min(semo, CS - 1);
++        coall.push_back(4);
++        cor.reserve_back(1);
++        cor.push_back(1);
++    }
++    // ---- the gated output rows 0 .. NT-1 (rows = slots)
++    {
++        CircularBuffer cout(cb_out);
++        cout.wait_front(NC);
++        const uint32_t po = cout.get_read_ptr();
++        for (uint32_t k = 0; k < NC; k++) {
++            for (uint32_t f = 0; f < 2; f++) {
++                noc_async_write(po + k * tb + f * 512, out.get_noc_addr(4 * hv + c0 + k, OOFF(f, 0)), NT * 32);
++            }
++        }
++        noc_async_write_barrier();
++        cout.pop_front(NC);
++    }
++#endif
++    noc_async_write_barrier();
++}
+diff --git a/models/demos/blackhole/qwen36/tt/gdn/fused_wy.py b/models/demos/blackhole/qwen36/tt/gdn/fused_wy.py
+new file mode 100644
+index 0000000..d046ab7
+--- /dev/null
++++ b/models/demos/blackhole/qwen36/tt/gdn/fused_wy.py
+@@ -0,0 +1,157 @@
++# SPDX-FileCopyrightText: © 2026 Tenstorrent USA, Inc.
++# SPDX-License-Identifier: Apache-2.0
++"""ms4 (Exit the Moat, Episode 2, 12 Nov): the DFlash2 verify GDN chain in block (WY) form, DF_GDN_WY=1 (default off).
++
++kernels/gdnwy_{reader,writer,compute}.cpp: one program per GDN layer for every live stream of a k = 8 verifier (a core
++group per stream, CS cores per value head). Instead of 8 chained slots that each write their state (bufs[0..7]), the
++block is solved in closed form from S0, and only S0 (-> base) and the block's K / U / R / gamma (-> blk, 10 fp32 tiles
++per value head) are stored; the next step recomputes the state at its accepted slot from them. Needs the preset's
++DF_GDN_PRO=1 (prebuilt tap tiles), QWEN36_GDN_FAST >= 4 (CS), fp32 state.
++
++  multi[s] = dict(Xl, base, blk, kvm, xrow0, orow0, oz0)  (as FusedGDNDecodeTP.chain_multi, blk instead of bufs)
++"""
++import os
++
++import torch
++
++import ttnn
++
++from models.demos.blackhole.qwen36.tt.gdn.fused_decode import KDIR, BF16_TILE, FP32_TILE
++
++# CB index -> (tiles (int, or "NC" / "4NC" / "NT9"), fp32, unpack to dest)
++_CBS = {
++    3: ("NC", 0, 0), 4: (1, 0, 0), 5: (1, 0, 0), 6: (1, 0, 0), 7: (1, 0, 0), 9: ("NC", 0, 0), 10: (1, 0, 0),
++    16: ("NC", 0, 0), 33: (1, 0, 0), 37: (8, 0, 0), 38: (8, 0, 0), 41: ("NT9", 0, 0),
++    8: ("4NC", 1, 1), 14: ("NC", 1, 1), 17: ("4NC", 1, 0), 21: ("4NC", 1, 0), 24: ("NC", 1, 0), 25: ("NC", 1, 1),
++    26: ("NC", 1, 0), 28: ("NC", 1, 0), 29: (1, 1, 0), 35: (1, 1, 0), 36: (1, 1, 0), 39: (1, 1, 0), 40: (1, 1, 0),
++    42: (4, 1, 0), 43: (4, 1, 0), 46: (4, 1, 0), 47: (1, 1, 1), 48: (1, 1, 1), 50: (4, 1, 0), 51: ("NC", 1, 0),
++    52: (1, 1, 0), 53: (1, 1, 1), 54: (4, 1, 0), 55: ("NC", 1, 0), 56: (1, 1, 1), 57: (1, 1, 1), 58: (1, 1, 0),
++    59: (1, 1, 0), 60: ("NC", 1, 0), 61: (1, 1, 0), 62: (4, 1, 1), 63: (1, 1, 1), 0: (1, 1, 1), 1: (1, 1, 1),
++    2: (1, 1, 0), 11: (1, 1, 1), 12: (1, 1, 0), 13: (1, 1, 0), 15: (1, 1, 0), 18: (1, 1, 0), 19: (1, 1, 1),
++    20: (1, 1, 1),
++}
++
++
++KSUF = ""  # kernel file suffix (dev iterations in a live server: a new file name = a fresh JIT build)
++
++
++def enabled():
++    return os.environ.get("DF_GDN_WY", "0") == "1"
++
++
++def alloc_blk(fd, mesh):
++    """One stream's per-layer block store: [1, Nv * 10 * 32, 32] fp32 TILE (page hv * 10 + t), per device."""
++    return ttnn.from_torch(torch.zeros(1, fd.Nv * 10 * 32, 32, dtype=torch.float32), dtype=ttnn.float32,
++                           layout=ttnn.TILE_LAYOUT, device=mesh, memory_config=ttnn.DRAM_MEMORY_CONFIG,
++                           mesh_mapper=ttnn.ReplicateTensorToMesh(mesh))
++
++
++def _program(fd, qkvzab, out, multi, NT, commit=False):
++    Nv, Nk = fd.Nv, fd.Nk
++    ZT0, ACOL, BCOL, CMODE, STF32 = fd.layout
++    assert STF32 == 1 and CMODE == 1, (STF32, CMODE)
++    assert getattr(fd, "wbat", None) is not None, "DF_GDN_WY needs DF_GDN_PRO=1 at model build (prebuilt tap tiles)"
++    npg = len(multi)
++    CS = fd._cs(npg)
++    assert CS in (1, 2, 4), CS
++    NC = 4 // CS
++    n = npg * Nv * CS
++    grid = fd.grid
++    assert n <= grid.x * grid.y, (n, grid)
++    cores = [ttnn.CoreCoord(i % grid.x, i // grid.x) for i in range(n)]
++    noc = [fd.mesh.worker_core_from_logical_core(c) for c in cores]
++    crs = ttnn.num_cores_to_corerangeset(n, grid, True)
++    m0 = multi[0]
++    xq = qkvzab if qkvzab is not None else m0["base"]
++    o_ = out if out is not None else m0["base"]
++    xl0 = m0["Xl"] if m0.get("Xl") is not None else m0["base"]
++    rct = [Nk, Nv, ZT0, CS]
++    for t in (xq, xl0, fd.wbat, m0["base"], fd.onw, m0["kvm"], m0["blk"]):
++        rct.extend(ttnn.TensorAccessorArgs(t).get_compile_time_args())
++    wct = [Nv, CS, 1, ACOL, BCOL]
++    for t in (m0["base"], o_, xq, fd.dtbf, fd.anegf, m0["blk"]):
++        wct.extend(ttnn.TensorAccessorArgs(t).get_compile_time_args())
++    rrt, wrt, crt = ttnn.RuntimeArgs(), ttnn.RuntimeArgs(), ttnn.RuntimeArgs()
++    for i, c in enumerate(cores):
++        pl, hv, ci = i // (Nv * CS), (i // CS) % Nv, i % CS
++        m_ = multi[pl]
++        xl = m_["Xl"] if m_.get("Xl") is not None else m_["base"]
++        peers = []
++        for cj in range(CS):
++            if cj != ci:
++                pc = noc[(pl * Nv + hv) * CS + cj]
++                peers += [pc.x, pc.y]
++        rrt[c.x][c.y] = [hv, ci, xq.buffer_address(), xl.buffer_address(), fd.wbat.buffer_address(),
++                         m_["base"].buffer_address(), fd.onw.buffer_address(), m_["kvm"].buffer_address(),
++                         m_["blk"].buffer_address(), int(m_.get("xrow0", 0))]
++        wrt[c.x][c.y] = [hv, ci, o_.buffer_address(), xq.buffer_address(), fd.dtbf.buffer_address(),
++                         fd.anegf.buffer_address(), m_["base"].buffer_address(), m_["blk"].buffer_address(),
++                         int(m_.get("xrow0", 0)), int(m_.get("orow0", 0)), int(m_.get("oz0", 32))] + peers
++        crt[c.x][c.y] = [ci * NC]
++    defs = [("GDNQ_CHAIN", str(int(NT)))] + ([("GDNWY_COMMIT", "1")] if commit else [])
++
++    def kd(src, ct, rt, cfg):
++        k = ttnn.KernelDescriptor(kernel_source=f"{KDIR}/{src}", source_type=ttnn.KernelDescriptor.SourceType.FILE_PATH,
++                                  core_ranges=crs, compile_time_args=ct, runtime_args=rt, config=cfg)
++        k.defines = list(k.defines) + defs
++        return k
++
++    cc = ttnn.ComputeConfigDescriptor(math_fidelity=ttnn.MathFidelity.HiFi4, fp32_dest_acc_en=True,
++                                      math_approx_mode=False)
++    utd = [ttnn.UnpackToDestMode.Default] * 64
++    cbs = []
++    sz = {"NC": NC, "4NC": 4 * NC, "NT9": 8 + NC}
++    for idx, (nt, f32, u) in _CBS.items():
++        nt = sz.get(nt, nt)
++        if u:
++            utd[idx] = ttnn.UnpackToDestMode.UnpackToDestFp32
++        ps = FP32_TILE if f32 else BF16_TILE
++        fmt = ttnn.float32 if f32 else ttnn.bfloat16
++        cbs.append(ttnn.CBDescriptor(total_size=ps * nt, core_ranges=crs, format_descriptors=[
++            ttnn.CBFormatDescriptor(buffer_index=idx, data_format=fmt, page_size=ps)]))
++    cc.unpack_to_dest_mode = utd
++    kernels = [kd(f"gdnwy_reader{KSUF}.cpp", rct, rrt, ttnn.ReaderConfigDescriptor()),
++               kd(f"gdnwy_writer{KSUF}.cpp", wct, wrt, ttnn.WriterConfigDescriptor()),
++               kd(f"gdnwy_compute{KSUF}.cpp", list(fd.ct) + [CS], crt, cc)]
++    sems = [ttnn.SemaphoreDescriptor(id=0, core_ranges=crs, initial_value=0),
++            ttnn.SemaphoreDescriptor(id=1, core_ranges=crs, initial_value=0)]
++    io = [xq, fd.wbat, fd.dtbf, fd.anegf, fd.onw]
++    for m_ in multi:
++        io += [m_["Xl"] if m_.get("Xl") is not None else m_["base"], m_["base"], m_["kvm"], m_["blk"]]
++    io += [o_]
++    return ttnn.ProgramDescriptor(kernels=kernels, semaphores=sems, cbs=cbs), io
++
++
++def _cached(fd, key, build):
++    pc = fd.__dict__.setdefault("_pcache_wy", {})
++    ck = key[:3]
++    hit = pc.get(ck)
++    if hit is None or hit[0] != key:
++        hit = (key,) + build()
++        pc[ck] = hit
++    return hit
++
++
++def chain_wy(fd, qkvzab, out, multi, NT):
++    """The WY verify of all streams in `multi` (one core group each): gated rows -> out, S0 -> base, block -> blk."""
++    key = ("v" + KSUF, len(multi), int(multi[0]["xrow0"]), int(NT), qkvzab.buffer_address(), out.buffer_address())
++    for m_ in multi:
++        key += tuple(t.buffer_address() for t in (m_["Xl"], m_["base"], m_["kvm"], m_["blk"]))
++        key += (int(m_["xrow0"]), int(m_["orow0"]), int(m_["oz0"]))
++    hit = _cached(fd, key, lambda: _program(fd, qkvzab, out, multi, NT))
++    io = [qkvzab, fd.wbat, fd.dtbf, fd.anegf, fd.onw]
++    for m_ in multi:
++        io += [m_["Xl"], m_["base"], m_["kvm"], m_["blk"]]
++    io += [out]
++    assert len(io) == len(hit[2])
++    return ttnn.generic_op(io, hit[1])
++
++
++def commit(fd, base, blk, kvm, NT):
++    """S0 (the state at the accepted slot a in kvm, recomputed from base + blk) -> base. a >= NT: no change."""
++    m_ = dict(base=base, blk=blk, kvm=kvm)
++    key = ("c" + KSUF, 1, 0, int(NT), base.buffer_address(), blk.buffer_address(), kvm.buffer_address())
++    hit = _cached(fd, key, lambda: _program(fd, None, None, [m_], NT, commit=True))
++    io = [base, fd.wbat, fd.dtbf, fd.anegf, fd.onw, base, base, kvm, blk, base]
++    assert len(io) == len(hit[2])
++    return ttnn.generic_op(io, hit[1])
+-- 
+2.54.0
+

@@ -1,0 +1,27 @@
+{
+ "about": "Haiku content judge (Claude Haiku as a blind judge) of greedy outputs: pin = the Episode 2 multi-stream config with the batching switches (no WY), WY = + DF_GDN_WY, plain = the plain (non-speculative) vLLM preset of Episode 2. Long prompts = code reviews of slices of tt-metal source, 2k-8.5k tokens. 'both orders' = every pair judged twice with A/B swapped; counts are summed over both orders. 'better' and 'contradictions' list (other, pin). Tallied from the judge transcripts (one line per pair).",
+ "256_tokens_first_check": {"prompts": "5 exact + 9 long, single order, every text cut at 256 tokens (ignore_eos)", "pin_vs_wy_equivalent": "11/14"},
+ "256_tokens_noise_floor": {
+  "prompts": "5 exact + 30 long, both orders, every long text cut at 256 tokens",
+  "pin_vs_plain": {"equivalent": "52/70", "better_other_pin_tie": [11, 8, 51], "contradictions_other_pin": [10, 14]},
+  "pin_vs_wy": {"equivalent": "53/70", "better_other_pin_tie": [15, 7, 48], "contradictions_other_pin": [8, 14]}
+ },
+ "1536_tokens": {
+  "prompts": "30 long, both orders, natural EOS with a 1536 cap: all 90 texts hit the cap (marked cut for the judge)",
+  "pin_vs_plain": {"equivalent": "50/60", "better_other_pin_tie": [15, 11, 34], "contradictions_other_pin": [34, 42], "loops_other_pin": [0, 0]},
+  "pin_vs_wy": {"equivalent": "43/60", "better_other_pin_tie": [17, 6, 37], "contradictions_other_pin": [14, 27], "loops_other_pin": [0, 1]}
+ },
+ "4096_tokens": {
+  "prompts": "30 long, both orders, natural EOS with a 4096 cap",
+  "complete_cut": {"pin": [13, 17], "wy": [14, 16], "plain": [13, 17]},
+  "both_complete": {
+   "pin_vs_plain": {"pairs": 7, "equivalent": "11/14", "better_other_pin_tie": [4, 6, 4], "contradictions_other_pin": [4, 7], "loops_other_pin": [0, 0]},
+   "pin_vs_wy": {"pairs": 9, "equivalent": "14/18", "better_other_pin_tie": [8, 1, 9], "contradictions_other_pin": [5, 12], "loops_other_pin": [0, 0]}
+  },
+  "all_30": {
+   "pin_vs_plain": {"equivalent": "28/60", "better_other_pin_tie": [24, 19, 17], "contradictions_other_pin": [26, 38], "loops_other_pin": [3, 8]},
+   "pin_vs_wy": {"equivalent": "22/60", "better_other_pin_tie": [29, 14, 17], "contradictions_other_pin": [27, 40], "loops_other_pin": [5, 9]}
+  }
+ },
+ "width_check": "the same 30 long prompts at 1 live and inside 4-live bursts: identical texts 30/30 on the pin and on WY (1536 cap; WY also at 4096)"
+}

@@ -1,0 +1,5 @@
+GSM8K w6 texts b3 vs b2: 9/60 identical; correct 59 / 59
+mc 4 live b3-a vs b2-a: 4/4 identical
+mc 4 live b3-b vs b2-a: 4/4 identical
+mc 6 live b3-a vs b2-a: 3/6 identical
+mc 6 live b3-b vs b2-a: 3/6 identical

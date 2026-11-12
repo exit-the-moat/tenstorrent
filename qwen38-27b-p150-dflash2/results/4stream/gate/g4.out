@@ -1,0 +1,42 @@
+=== ms4 gate2 g4 07:34:45 steps exact,gsm2,gsm4,gsm6,gsm8,niah,mix,binv,det,speed
+=== exact 1 live (spec k=8, width 1x8) 07:34:45
+captured 5 prompts -> ep2-ms4-g4-e.json
+prompt 0: identical (128 tokens)
+prompt 1: identical (128 tokens)
+prompt 2: identical (128 tokens)
+prompt 3: identical (128 tokens)
+prompt 4: identical (128 tokens)
+EXACT 5/5
+=== gsm8k w8 (8 live -> plain lane R=8) 07:34:52
+DONE 59/60 correct (98.3 %), 1 cut by length
+=== gsm8k w2 (spec k=8, width 2x8) 07:36:37
+DONE 59/60 correct (98.3 %), 1 cut by length
+=== gsm8k w4 (spec k=8, width 4x8) 07:38:11
+DONE 59/60 correct (98.3 %), 1 cut by length
+=== gsm8k w6 (6 live -> spec k=5) 07:39:17
+DONE 59/60 correct (98.3 %), 0 cut by length
+=== niah 8k+32k (6 live) 07:40:41
+NIAH 6/6
+=== mixed live: 6 long (spec) + 2 short join after 2 s (-> 8 live, plain lane), drain, then 3 (spec again) 07:41:10
+MIX wall 11.2 ok 8 errors 0 long {'n': 6, 'ttft': 0.99, 'decode_tps': 25.36, 'tokens': [256, 256, 256, 256, 256, 256], 'fence': 6, 'def_test': 6, 'uuid_leak': 0} short {'n': 2, 'ttft': 0.48, 'decode_tps': 17.84, 'tokens': [48, 48], 'fence': 2, 'def_test': 0, 'uuid_leak': 0} phase2 {'n': 3, 'tokens': [128, 128, 128], 'fence': 3, 'def_test': 3, 'decode_tps': 72.69, 'ttft': 0.61}
+06:41:14 [ms] engine -> PLAIN (8 live, 8 in the lane)
+06:41:22 [ms] engine -> SPEC (plain lane drained)
+=== batch invariance: exact prompts at 4 live vs the 1-live capture ep2-ms4-g4-e 07:41:24
+prompt 3: DIFFERS at char 12: 'Elias lived at the edge of the w' vs 'Elias lived on the edge of the w'
+prompt 4: DIFFERS at char 28: 'To solve the expression $17 \\times 23 + 144 / 12' vs 'To solve the expression $17 * 23 + 17 * 23 + 144'
+BATCHINV4 together 0/5 (5.1 s, 4 requests)
+=== batch invariance: exact prompts at 8 live vs the 1-live capture ep2-ms4-g4-e 07:41:29
+prompt 3: identical
+prompt 4: identical
+BATCHINV8 together 5/5 (6.2 s, 8 requests)
+=== determinism: two 4-live bursts of the corpus, token for token (same width) 07:41:35
+DETERMINISM 4/4
+=== determinism: two 6-live bursts of the corpus, token for token (same width) 07:41:44
+DETERMINISM 4/6
+=== speed 1 live 07:41:59
+=== speed 2 live 07:42:08
+=== speed 3 live 07:42:19
+=== speed 4 live 07:42:31
+=== speed 5 live 07:42:46
+=== speed 6 live 07:43:08
+GATE_DONE g4 07:43:34
