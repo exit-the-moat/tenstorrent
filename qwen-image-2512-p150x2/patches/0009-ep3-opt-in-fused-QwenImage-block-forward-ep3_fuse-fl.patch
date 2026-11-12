@@ -1,0 +1,157 @@
+From 133308a018628b1a1c6583e0b28c0bce119b82a8 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 15:03:42 +0100
+Subject: [PATCH 09/22] ep3: opt-in fused QwenImage block forward (ep3_fuse
+ flags: addcmul, attn_out, qkv, ff1, rope), default path unchanged
+
+---
+ .../transformers/transformer_qwenimage.py     | 125 ++++++++++++++++++
+ 1 file changed, 125 insertions(+)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index f06b9179f..9609aef09 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -13,7 +13,10 @@ from diffusers.models.transformers.transformer_qwenimage import QwenEmbedRope
+ 
+ import ttnn
+ 
++from ...blocks.attention import _apply_rope
+ from ...blocks.transformer_block import TransformerBlock
++from ...utils.matmul import get_matmul_config
++from ...utils.mochi import get_rot_transformation_mat
+ from ...layers.embeddings import SD35CombinedTimestepTextProjEmbeddings
+ from ...layers.linear import ColParallelLinear, Linear, weight_dtype_override
+ from ...layers.module import Module, ModuleList
+@@ -40,6 +43,128 @@ class QwenImageTransformerBlock(TransformerBlock):
+ 
+         super()._prepare_torch_state(state)
+ 
++    # ep3 (img2): opt-in fused forward. Default (no ep3_fuse attribute, or the Edit zero_cond_t split) = stock path.
++    def forward(self, spatial, prompt, time_embed, spatial_sequence_length, *, spatial_rope=None, prompt_rope=None,
++                skip_time_embed_activation_fn=False, time_embed_cond=None, spatial_split=None):
++        F = getattr(self, "ep3_fuse", None)
++        if not F or spatial_split is not None or self.context_pre_only or not self.add_attention_to_output \
++                or self.parallel_config.sequence_parallel.factor > 1:
++            return super().forward(spatial, prompt, time_embed, spatial_sequence_length, spatial_rope=spatial_rope,
++                                   prompt_rope=prompt_rope, skip_time_embed_activation_fn=skip_time_embed_activation_fn,
++                                   time_embed_cond=time_embed_cond, spatial_split=spatial_split)
++        return self._ep3_forward(F, spatial, prompt, time_embed, spatial_sequence_length, spatial_rope, prompt_rope,
++                                 skip_time_embed_activation_fn)
++
++    def _ep3_ag(self, x4):
++        return self.ccl_manager.all_gather_persistent_buffer(
++            x4, dim=3, mesh_axis=self.parallel_config.tensor_parallel.mesh_axis, use_hyperparams=True)
++
++    def _ep3_agmm(self, lin, x4, residual=None, gate=None):
++        """all-gather(x) @ W + b (+ fused activation) on the tensor split, output column-sharded;
++        with residual/gate: residual + out * gate in the matmul epilogue."""
++        pc = self.parallel_config
++        if pc.tensor_parallel.factor == 1:
++            y = lin(x4)
++            return y if residual is None else ttnn.addcmul(residual, y, gate)
++        weight = lin.weight.data
++        M, K, N = x4.padded_shape[-2], weight.padded_shape[-2], weight.padded_shape[-1]
++        full_grid = self.mesh_device.compute_with_storage_grid_size()
++        core_grid = ttnn.CoreCoord(full_grid.x, full_grid.y - 1)
++        mgr = self.ccl_manager
++        kw = dict(scalar=1.0, addcmul_input_tensor1=residual, addcmul_input_tensor2=gate) if residual is not None else {}
++        return ttnn.experimental.all_gather_minimal_matmul_async(
++            input_tensor=x4,
++            weight_tensor=weight,
++            bias_tensor=lin.bias.data if lin.bias is not None else None,
++            config=get_matmul_config(M, K, N, core_grid),
++            fused_activation=lin.fused_activation_fn,
++            compute_kernel_config=lin.compute_config,
++            persistent_output_buffer=mgr.get_ag_ping_pong_buffer(x4.shape, 3, pc.tensor_parallel.mesh_axis, dtype=x4.get_dtype()),
++            multi_device_global_semaphore=mgr.get_ag_ping_pong_semaphore(pc.tensor_parallel.mesh_axis),
++            num_links=mgr.num_links,
++            topology=mgr.topology,
++            cluster_axis=pc.tensor_parallel.mesh_axis,
++            barrier_semaphore=None,
++            force_transpose=True,
++            num_workers_per_link=-(-full_grid.x // mgr.num_links),
++            num_buffers_per_channel=24,
++            **kw,
++        )[0]
++
++    def _ep3_gated(self, F, residual, y, gate):
++        if "addcmul" in F:
++            if gate.get_dtype() != residual.get_dtype():
++                gate = ttnn.typecast(gate, residual.get_dtype())
++            return ttnn.addcmul(residual, y, gate)
++        return residual + y * gate
++
++    def _ep3_rope(self, F, x, rope):
++        if "rope" not in F:
++            return _apply_rope(x, rope)
++        cos, sin = rope
++        if getattr(self, "_ep3_tm", None) is None:
++            self._ep3_tm = ttnn.from_torch(get_rot_transformation_mat(), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT,
++                                           device=self.mesh_device, mesh_mapper=ttnn.ReplicateTensorToMesh(self.mesh_device))
++            self._ep3_rcc = ttnn.init_device_compute_kernel_config(self.mesh_device.arch(), math_fidelity=ttnn.MathFidelity.HiFi4,
++                                                                   math_approx_mode=False, fp32_dest_acc_en=True, packer_l1_acc=True)
++        return ttnn.experimental.rotary_embedding_llama(x, cos.reshape([1, 1, *cos.shape]), sin.reshape([1, 1, *sin.shape]),
++                                                        self._ep3_tm, compute_kernel_config=self._ep3_rcc)
++
++    def _ep3_forward(self, F, spatial, prompt, time_embed, spatial_sequence_length, spatial_rope, prompt_rope, skip_act):
++        u = lambda t: ttnn.unsqueeze(t, 0)
++        sq = lambda t: ttnn.squeeze(t, 0)
++        if not skip_act:
++            time_embed = ttnn.silu(time_embed, memory_config=ttnn.DRAM_MEMORY_CONFIG)
++        s_shift_a, s_scale_a, s_gate_a, s_shift_f, s_scale_f, s_gate_f = _chunk_time3d(self.norm1_linear(time_embed), 6)
++        p_shift_a, p_scale_a, p_gate_a, p_shift_f, p_scale_f, p_gate_f = _chunk_time3d(self.norm1_context_linear(time_embed), 6)
++        s4, p4 = u(spatial), u(prompt)
++
++        s_n = self.norm1_norm(s4, dynamic_weight=(1 + s_scale_a), dynamic_bias=s_shift_a)
++        p_n = self.norm1_context_norm(p4, dynamic_weight=(1 + p_scale_a), dynamic_bias=p_shift_a)
++
++        at = self.attn
++        if "qkv" in F:
++            qkv = sq(self._ep3_agmm(at.to_qkv, s_n))
++            add_qkv = sq(self._ep3_agmm(at.add_qkv_proj, p_n))
++        else:
++            qkv = at.to_qkv(sq(self._ep3_ag(s_n)))
++            add_qkv = at.add_qkv_proj(sq(self._ep3_ag(p_n)))
++        heads = at.n_local_heads
++        q, k, v = ttnn.transformer.split_query_key_value_and_split_heads(
++            qkv, num_heads=heads, transpose_key=False, memory_config=qkv.memory_config())
++        q, k = at.norm_q(q), at.norm_k(k)
++        if spatial_rope is not None:
++            q, k = self._ep3_rope(F, q, spatial_rope), self._ep3_rope(F, k, spatial_rope)
++        aq, ak, av = ttnn.transformer.split_query_key_value_and_split_heads(
++            add_qkv, num_heads=heads, transpose_key=False, memory_config=add_qkv.memory_config())
++        aq, ak = at.norm_added_q(aq), at.norm_added_k(ak)
++        if prompt_rope is not None:
++            aq, ak = self._ep3_rope(F, aq, prompt_rope), self._ep3_rope(F, ak, prompt_rope)
++        if at.context_head_factors is not None:
++            aq = aq * at.context_head_factors.data
++        assert spatial_sequence_length == spatial.shape[1]
++        s_att, p_att = ttnn.transformer.joint_scaled_dot_product_attention(
++            q, k, v, aq, ak, av, joint_strategy="rear",
++            program_config=at.sdpa_program_config, compute_kernel_config=at.sdpa_compute_kernel_config)
++        s_att = u(ttnn.transformer.concatenate_heads(s_att))
++        p_att = u(ttnn.transformer.concatenate_heads(p_att))
++
++        if "attn_out" in F:
++            s4 = self._ep3_agmm(at.to_out, s_att, residual=s4, gate=u(s_gate_a))
++            p4 = self._ep3_agmm(at.to_add_out, p_att, residual=p4, gate=u(p_gate_a))
++        else:
++            s4 = self._ep3_gated(F, s4, at.to_out(self._ep3_ag(s_att)), u(s_gate_a))
++            p4 = self._ep3_gated(F, p4, at.to_add_out(self._ep3_ag(p_att)), u(p_gate_a))
++
++        s4 = self._ep3_ff(F, self.ff, self.norm2, s4, s_scale_f, s_shift_f, s_gate_f)
++        p4 = self._ep3_ff(F, self.ff_context, self.norm2_context, p4, p_scale_f, p_shift_f, p_gate_f)
++        return sq(s4), sq(p4)
++
++    def _ep3_ff(self, F, ff, norm, x4, scale, shift, gate):
++        n = norm(x4, dynamic_weight=(1 + scale), dynamic_bias=shift)
++        h = self._ep3_agmm(ff.ff1, n) if "ff1" in F else ff.ff1(self._ep3_ag(n))
++        return self._ep3_gated(F, x4, ff.ff2(h), ttnn.unsqueeze(gate, 0))
++
+ 
+ # adapted from https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/transformers/transformer_qwenimage.py
+ class QwenImageTransformer(Module):
+-- 
+2.54.0
+

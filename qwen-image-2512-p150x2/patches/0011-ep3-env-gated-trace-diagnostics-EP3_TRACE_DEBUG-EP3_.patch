@@ -1,0 +1,114 @@
+From 5464497089b3dbfa03e4df7d5151ab060199fbab Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 15:52:22 +0100
+Subject: [PATCH 11/22] ep3: env-gated trace diagnostics (EP3_TRACE_DEBUG,
+ EP3_TRACE_PERSIST, EP3_TRACE_RESET_SEM, EP3_TRACE_CLEAR_CACHE), defaults
+ unchanged
+
+---
+ models/tt_dit/parallel/manager.py             |  6 +++
+ .../pipelines/qwenimage/pipeline_qwenimage.py | 43 ++++++++++++++++++-
+ 2 files changed, 48 insertions(+), 1 deletion(-)
+
+diff --git a/models/tt_dit/parallel/manager.py b/models/tt_dit/parallel/manager.py
+index a05bcdbe2..9ab69569d 100644
+--- a/models/tt_dit/parallel/manager.py
++++ b/models/tt_dit/parallel/manager.py
+@@ -41,6 +41,7 @@ class CCLManager:
+ 
+         # Initialize semaphores for reduce scatter and all gather and neighbor pad
+         self._init_semaphores()
++        self._ep3_register()
+         # Barrier: GlobalSemaphores are created + zeroed with per-device work; without a
+         # sync here a fast device can start an op and fire a cross-device atomic-inc at a
+         # peer whose semaphore isn't created/zeroed yet -> the inc is lost (ops that read
+@@ -55,6 +56,11 @@ class CCLManager:
+         self.sr_ping_pong_idx = [0, 0]
+         self.barrier_idx = [0, 0]
+ 
++    def _ep3_register(self):
++        # ep3 (img2): every manager, so the traced pipeline can reset all global semaphores (EP3_TRACE_RESET_SEM)
++        type(self).__dict__.get("_ep3_all") is None and setattr(type(self), "_ep3_all", [])
++        type(self)._ep3_all.append(self)
++
+     def _init_subdevice(self):
+         compute_grid_size = self.mesh_device.compute_with_storage_grid_size()
+         self.ccl_cores = ttnn.CoreRangeSet(
+diff --git a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+index a4989a9fb..f5c4706fd 100644
+--- a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
++++ b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+@@ -557,6 +557,7 @@ class QwenImagePipeline(PipelineAPIMixin):
+         logger.info("denoising...")
+ 
+         on_event(SectionStart("denoising"))
++        step_tracer = None
+         for i, t in enumerate(tqdm.tqdm(timesteps)):
+             on_event(SectionStart(f"denoising_step_{i}"))
+ 
+@@ -578,7 +579,26 @@ class QwenImagePipeline(PipelineAPIMixin):
+                     len1=branch_lens[1],
+                     cfg_scale=float(cfg_scale),
+                 )
+-                if i == 0 or not traced:
++                if os.environ.get("EP3_TRACE_PERSIST") == "1":
++                    # ep3 (img2): one timestep / dt device tensor for the whole process, values copied in place, so the
++                    # untraced step 0, the capture and every later image use the same buffers (stale cached-program
++                    # addresses after a released trace broke image 2+ of a process)
++                    if getattr(self, "_ep3_ts", None) is None:
++                        self._ep3_ts = ts_host.to(self._submesh_devices[0])
++                        self._ep3_dt = dt_host.to(self._submesh_devices[0])
++                    ttnn.copy_host_to_device_tensor(ts_host, self._ep3_ts)
++                    ttnn.copy_host_to_device_tensor(dt_host, self._ep3_dt)
++                    step_kwargs["timestep"] = self._ep3_ts
++                    step_kwargs["dt"] = self._ep3_dt
++                    if i == 0 or not traced:
++                        self._trim_full_step(**step_kwargs)
++                        if traced and i == 0:
++                            step_tracer = Tracer(self._trim_full_step, device=self._submesh_devices[0], prep_run=False)
++                    else:
++                        step_tracer(**step_kwargs, traced=True, tracer_blocking_execution=False)
++                        if i == 1:
++                            latents = [step_tracer.inputs["latents"]]
++                elif i == 0 or not traced:
+                     step_kwargs["timestep"] = ts_host.to(self._submesh_devices[0])
+                     step_kwargs["dt"] = dt_host.to(self._submesh_devices[0])
+                     self._trim_full_step(**step_kwargs)
+@@ -591,6 +611,11 @@ class QwenImagePipeline(PipelineAPIMixin):
+                     if i == 1:
+                         latents = [step_tracer.inputs["latents"]]
+                 self.synchronize_devices()
++                if os.environ.get("EP3_TRACE_DEBUG"):
++                    _l = ttnn.to_torch(ttnn.get_device_tensors(latents[0])[0]).float()
++                    _ti = step_tracer.inputs["latents"] if step_tracer is not None and step_tracer._trace_ids is not None else None
++                    _tn = ttnn.to_torch(ttnn.get_device_tensors(_ti)[0]).float().norm().item() if _ti is not None else -1
++                    logger.info(f"EP3_TRACE_DEBUG seed {seed} step {i} latents norm {_l.norm().item():.3f} mean {_l.mean().item():.4f} tracer-input norm {_tn:.3f} same-object {_ti is latents[0]}")
+                 if os.environ.get("EP3_DUMP_LAT") and i == int(os.environ.get("EP3_DUMP_STEP", "25")):
+                     dump = ttnn.to_torch(ttnn.get_device_tensors(latents[0])[0])
+                     torch.save({"latents": dump, "step": i, "t": float(t), "seed": seed}, os.environ["EP3_DUMP_LAT"] + f"_s{seed}_i{i}.pt")
+@@ -669,6 +694,22 @@ class QwenImagePipeline(PipelineAPIMixin):
+         if trim and traced and cp_factor == 1:
+             step_tracer.release_trace()
+             step_tracer.release_function()
++            if os.environ.get("EP3_TRACE_CLEAR_CACHE") == "1":
++                # ep3 (img2) diagnostic: drop all cached programs after a released trace
++                import time as _t
++                _t0 = _t.time()
++                self.synchronize_devices()
++                for _d in self._submesh_devices:
++                    _d.disable_and_clear_program_cache()
++                    _d.enable_program_cache()
++                logger.info(f"EP3 program cache cleared after trace release in {_t.time() - _t0:.2f} s")
++            if os.environ.get("EP3_TRACE_RESET_SEM") == "1":
++                # ep3 (img2): replays leave CCL global semaphores in a state the next untraced ops do not expect
++                from models.tt_dit.parallel.manager import CCLManager as _CM
++                self.synchronize_devices()
++                for _m in getattr(_CM, "_ep3_all", []):
++                    _m.reset_global_semaphores()
++                self.synchronize_devices()
+ 
+         logger.info("decoding image...")
+ 
+-- 
+2.54.0
+

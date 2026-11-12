@@ -1,0 +1,26 @@
+From d36d939d3fad878e2924585399f9c0c6d98abe4c Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 21:38:43 +0100
+Subject: [PATCH 22/22] ep3 (img4): a8o on the one-card path (attention output
+ matmul back to the residual dtype)
+
+---
+ models/tt_dit/models/transformers/transformer_qwenimage.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index fca7dab43..c53d15587 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -64,6 +64,8 @@ class QwenImageTransformerBlock(TransformerBlock):
+         with residual/gate: residual + out * gate in the matmul epilogue."""
+         pc = self.parallel_config
+         if pc.tensor_parallel.factor == 1:
++            if residual is not None and out_dtype is None and x4.get_dtype() != residual.get_dtype():
++                out_dtype = residual.get_dtype()  # img4: a8o on one card keeps the residual stream dtype
+             y = lin(x4, dtype=out_dtype) if out_dtype is not None else lin(x4)
+             return y if residual is None else self._ep3_gated({"addcmul"}, residual, y, gate)
+         weight = lin.weight.data
+-- 
+2.54.0
+

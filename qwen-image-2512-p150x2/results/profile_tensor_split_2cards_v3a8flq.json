@@ -1,0 +1,115 @@
+{
+ "config": "tensor_split_2cards_v3a8flq",
+ "source_csv": "prof/prof_final/reports/2026_11_12_00_51_23/ops_perf_results_2026_11_12_00_51_23.csv",
+ "segment": [
+  "fwd_step0_start",
+  "fwd_step0_end"
+ ],
+ "device": 0,
+ "ops": 3560,
+ "device_busy_s": 0.5984,
+ "op_to_op_gaps_s": 3.9845,
+ "measured_step_s": 0.6525,
+ "not_on_device_s": 0.0541,
+ "families": [
+  {
+   "family": "matmul + fused all-gather",
+   "seconds": 0.181,
+   "calls": 360,
+   "share_busy": 0.3025,
+   "share_step": 0.2774
+  },
+  {
+   "family": "attention (joint SDPA)",
+   "seconds": 0.1294,
+   "calls": 60,
+   "share_busy": 0.2162,
+   "share_step": 0.1983
+  },
+  {
+   "family": "matmul (linear layers)",
+   "seconds": 0.0977,
+   "calls": 246,
+   "share_busy": 0.1632,
+   "share_step": 0.1497
+  },
+  {
+   "family": "head split / concat",
+   "seconds": 0.0313,
+   "calls": 180,
+   "share_busy": 0.0523,
+   "share_step": 0.048
+  },
+  {
+   "family": "adaLN norm (fused, distributed)",
+   "seconds": 0.0305,
+   "calls": 241,
+   "share_busy": 0.0509,
+   "share_step": 0.0467
+  },
+  {
+   "family": "other (RotaryEmbeddingLlama)",
+   "seconds": 0.0301,
+   "calls": 240,
+   "share_busy": 0.0503,
+   "share_step": 0.0461
+  },
+  {
+   "family": "reduce-scatter (card to card)",
+   "seconds": 0.0225,
+   "calls": 120,
+   "share_busy": 0.0375,
+   "share_step": 0.0344
+  },
+  {
+   "family": "modulation glue (gate multiply, residual add)",
+   "seconds": 0.02,
+   "calls": 122,
+   "share_busy": 0.0334,
+   "share_step": 0.0307
+  },
+  {
+   "family": "q/k RMS norm",
+   "seconds": 0.0196,
+   "calls": 241,
+   "share_busy": 0.0328,
+   "share_step": 0.0301
+  },
+  {
+   "family": "other (Typecast)",
+   "seconds": 0.0171,
+   "calls": 480,
+   "share_busy": 0.0287,
+   "share_step": 0.0263
+  },
+  {
+   "family": "other (Concat)",
+   "seconds": 0.0122,
+   "calls": 181,
+   "share_busy": 0.0204,
+   "share_step": 0.0187
+  },
+  {
+   "family": "other (Slice)",
+   "seconds": 0.0056,
+   "calls": 842,
+   "share_busy": 0.0094,
+   "share_step": 0.0086
+  },
+  {
+   "family": "small eltwise (timestep path)",
+   "seconds": 0.0011,
+   "calls": 246,
+   "share_busy": 0.0018,
+   "share_step": 0.0017
+  },
+  {
+   "family": "all-gather (card to card)",
+   "seconds": 0.0003,
+   "calls": 1,
+   "share_busy": 0.0006,
+   "share_step": 0.0005
+  }
+ ],
+ "method": "tracy device profiler (DEVICE KERNEL DURATION per op), one denoising step between signposts; step time from the unprofiled queue runs"
+}

@@ -1,0 +1,26 @@
+From c774c7fb13d5defb935b3cd13bd2155f1d0b99e8 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 15:09:58 +0100
+Subject: [PATCH 10/22] ep3: fused block on one card: gate cast for addcmul
+ (tp=1 path only)
+
+---
+ models/tt_dit/models/transformers/transformer_qwenimage.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index 9609aef09..6ebf31620 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -65,7 +65,7 @@ class QwenImageTransformerBlock(TransformerBlock):
+         pc = self.parallel_config
+         if pc.tensor_parallel.factor == 1:
+             y = lin(x4)
+-            return y if residual is None else ttnn.addcmul(residual, y, gate)
++            return y if residual is None else self._ep3_gated({"addcmul"}, residual, y, gate)
+         weight = lin.weight.data
+         M, K, N = x4.padded_shape[-2], weight.padded_shape[-2], weight.padded_shape[-1]
+         full_grid = self.mesh_device.compute_with_storage_grid_size()
+-- 
+2.54.0
+

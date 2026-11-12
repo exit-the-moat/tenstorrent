@@ -1,0 +1,29 @@
+From 5834c62b03cb7cc3635354750dbd5ee2473e8730 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 00:17:21 +0100
+Subject: [PATCH 14/22] ep3 (img3): modcache keeps the attn_out gates uncast
+ (numerically identical to no cache)
+
+---
+ models/tt_dit/models/transformers/transformer_qwenimage.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index cc71058e4..106cf2a23 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -126,7 +126,10 @@ class QwenImageTransformerBlock(TransformerBlock):
+             s_w_a, s_w_f, p_w_a, p_w_f = (1 + s_scale_a), (1 + s_scale_f), (1 + p_scale_a), (1 + p_scale_f)
+             if key is not None:
+                 cast = lambda g, r: ttnn.typecast(g, r.get_dtype()) if ("addcmul" in F and g.get_dtype() != r.get_dtype()) else g
+-                s_gate_a, s_gate_f, p_gate_a, p_gate_f = cast(s_gate_a, s4), cast(s_gate_f, s4), cast(p_gate_a, p4), cast(p_gate_f, p4)
++                # only the feed-forward gates (the stock path casts those in _ep3_gated; the fused attn_out epilogue takes them uncast)
++                s_gate_f, p_gate_f = cast(s_gate_f, s4), cast(p_gate_f, p4)
++                if "attn_out" not in F:
++                    s_gate_a, p_gate_a = cast(s_gate_a, s4), cast(p_gate_a, p4)
+                 # materialise the chunk views so the cache owns plain tensors
+                 cl = lambda t: ttnn.clone(t)
+                 ent = tuple(cl(t) for t in (s_shift_a, s_w_a, s_gate_a, s_shift_f, s_w_f, s_gate_f, p_shift_a, p_w_a, p_gate_a, p_shift_f, p_w_f, p_gate_f))
+-- 
+2.54.0
+

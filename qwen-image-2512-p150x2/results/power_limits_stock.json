@@ -1,0 +1,56 @@
+{
+ "source": "tt-smi -s snapshot, 11 Nov 2026, read only (serials removed)",
+ "cards": [
+  {
+   "board": "card0",
+   "limits": {
+    "vdd_min": "0.70",
+    "vdd_max": "0.90",
+    "tdp_limit": "150",
+    "tdc_limit": "200",
+    "asic_fmax": "1350",
+    "therm_trip_l1_limit": "90",
+    "thm_limit": "110",
+    "bus_peak_limit": 0,
+    "fan_rpm_limit": 0,
+    "board_power_limit": "300"
+   },
+   "fw": {
+    "fw_bundle_version": "19.15.0.0",
+    "tt_flash_version": "N/A",
+    "cm_fw": "0.37.0.0",
+    "cm_fw_date": "2020-00-37",
+    "eth_fw": "1.12.2",
+    "dm_bl_fw": "0.0.0.0",
+    "dm_app_fw": "0.31.0.0",
+    "gddr_fw": "2.16"
+   }
+  },
+  {
+   "board": "card1",
+   "limits": {
+    "vdd_min": "0.70",
+    "vdd_max": "0.90",
+    "tdp_limit": "150",
+    "tdc_limit": "200",
+    "asic_fmax": "1350",
+    "therm_trip_l1_limit": "90",
+    "thm_limit": "110",
+    "bus_peak_limit": 0,
+    "fan_rpm_limit": 0,
+    "board_power_limit": "300"
+   },
+   "fw": {
+    "fw_bundle_version": "19.15.0.0",
+    "tt_flash_version": "N/A",
+    "cm_fw": "0.37.0.0",
+    "cm_fw_date": "2020-00-37",
+    "eth_fw": "1.12.2",
+    "dm_bl_fw": "0.0.0.0",
+    "dm_app_fw": "0.31.0.0",
+    "gddr_fw": "2.16"
+   }
+  }
+ ],
+ "where_set": "tdp_limit / tdc_limit / max_tdp_limit / asic_fmax live in the chip_limits block of the firmware table (FwTable) in the card SPI ROM (pyluwen spirom_tables.rs: struct ChipLimits). tt-smi 6.6.0 has no option to set them; hwmon power1_max / curr1_max are read-only (r--r--r--); no runtime ARC message for a TDP override found in tt-smi / pyluwen. Changing them = writing the SPI ROM firmware table = firmware change. We did not change them."
+}

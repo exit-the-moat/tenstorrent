@@ -10,6 +10,33 @@ Every number in a video comes from the code and the `results/` data in this repo
 - Hugging Face: [exit-the-moat](https://huggingface.co/exit-the-moat) (converted weights)
 - Patreon: [Exit the Moat](https://patreon.com/Exitthemoat) (support the channel)
 
+## Episode 3 in numbers: Qwen-Image-2512 on 1 and 2 Tenstorrent p150a
+
+Text-to-image with the full base model (no turbo version), 8-bit (BF8) weights, 50 steps, guidance 4, full HD (made at
+1920x1088, cropped to 1920x1080), text encoder, transformer and VAE all on the cards, 2026-11-12. Pictures per hour =
+a counted queue of 20 pictures (5 prompts x 4 seeds) after a warm-up, two separate starts per setup. Details, method,
+patches and the commands: [`qwen-image-2512-p150x2/`](qwen-image-2512-p150x2) (`results/table.py` prints these numbers
+from its result files).
+
+| setup | pictures/h, start 1 / start 2 | s per picture |
+|---|---|---|
+| one model split over both cards (tensor split) | **53.68 / 53.54** | **67.06** |
+| one whole model per card, two pictures at a time | **55.84 / 55.77** | 127.8 |
+| each card computes one guidance branch | 38.00 / 38.00 | 94.74 |
+| one card alone | 29.07 / 29.09 | 123.82 |
+| tensor split, 1024x1024 | 105.45 / 105.37 | 34.08 |
+| two copies, 1024x1024 | 109.93 / 110.01 | 64.37 |
+| energy per full-HD picture (tensor split) | 4.35 Wh on the two cards, 11.57 Wh at the PSU (whole box) | |
+| against stock diffusers on an RTX 4080 SUPER, same seed and start noise (5 pictures) | PSNR 19.09 dB, SSIM 0.7225, CLIP 0.9338 | |
+
+Same layout and subject as the RTX pictures; 50 denoising steps amplify tiny numerical differences, so 25-29 dB is
+already the noise floor of "the same picture" (see the package README). At the start of the work (config v2) the
+tensor split made 34.88-39.44 pictures an hour (four starts).
+
+For comparison, a forum post reports 61.0 s per picture for Qwen-Image-2512 at 1024x1024 and 50 steps on a GB10 box
+(published, not our run:
+[forums.developer.nvidia.com](https://forums.developer.nvidia.com/t/image-diffusion-speeds/369095)).
+
 ## Episode 2 in numbers: Qwen 3.8 27B with DFlash2 on 1 and 2 Tenstorrent p150a
 
 Lossless speculative decoding, one switch per setup, 2026-11-09. Decode = mean over the same 8 coding prompts (about 580 tokens each), one request at a
@@ -71,6 +98,7 @@ optimization.
 
 | # | Topic | Folder |
 |---|---|---|
+| 3 | Episode 3 · Qwen-Image-2512 on 2 Tenstorrent Blackholes: THE RENDER SPRINT (full-HD pictures on 1 and 2 p150a, four ways to split the work, the music-video prompts) | [`qwen-image-2512-p150x2/`](qwen-image-2512-p150x2) · video: [YouTube](https://youtu.be/pllVxuibc_g) |
 | 2 | Qwen 3.8 27B on 2 Tenstorrent p150: optimization results (DFlash2 on 1 and 2 cards, one switch per setup) | [`qwen38-27b-p150-dflash2/`](qwen38-27b-p150-dflash2) · video: [YouTube](https://youtu.be/TFR_2J9H__Q) |
 | 1 | Qwen 3.8 27B on 2 Tenstorrent p150: getting started (vLLM-TT on 1 and 2 cards, the team benchmark, the patches) | [`qwen38-27b-p150x2/`](qwen38-27b-p150x2) · video: [YouTube](https://youtu.be/3AvhL99p77M) |
 | 0 | I almost returned two Tenstorrent AI cards. It was the cable. (Fish Audio Drama 3 on one p150) | [`fish-drama3-p150/`](fish-drama3-p150) · weights: [Hugging Face](https://huggingface.co/exit-the-moat/drama-3-exit-the-moat-tenstorrent-p150) · video: [YouTube](https://youtu.be/mpleglhA_Dg) |
@@ -80,4 +108,5 @@ New episodes are added here when they are published.
 ## License
 
 Apache-2.0, see [LICENSE](LICENSE). Model weights follow their own licences (Drama 3: Fish Audio Community License,
-see [`fish-drama3-p150/`](fish-drama3-p150)).
+see [`fish-drama3-p150/`](fish-drama3-p150)). No Qwen-Image weights are in this repo; the 8-bit conversion happens in
+your own cache.

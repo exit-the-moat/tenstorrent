@@ -1,0 +1,187 @@
+From 2f5a4a3c7f6c0a50d4fe39ec4829974d7cf55678 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 00:06:10 +0100
+Subject: [PATCH 13/22] ep3 (img3): opt-in plain streaming SDPA over
+ [spatial;prompt] (psdpa), modulation cache per timestep (modcache,
+ EP3_MODCACHE), matmul blocking env override (EP3_MM_OVERRIDE); defaults
+ unchanged
+
+---
+ .../transformers/transformer_qwenimage.py     | 83 +++++++++++++++----
+ .../pipelines/qwenimage/pipeline_qwenimage.py |  4 +
+ models/tt_dit/utils/matmul.py                 | 19 +++++
+ 3 files changed, 92 insertions(+), 14 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index ec47f57fb..cc71058e4 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -115,12 +115,31 @@ class QwenImageTransformerBlock(TransformerBlock):
+         sq = lambda t: ttnn.squeeze(t, 0)
+         if not skip_act:
+             time_embed = ttnn.silu(time_embed, memory_config=ttnn.DRAM_MEMORY_CONFIG)
+-        s_shift_a, s_scale_a, s_gate_a, s_shift_f, s_scale_f, s_gate_f = _chunk_time3d(self.norm1_linear(time_embed), 6)
+-        p_shift_a, p_scale_a, p_gate_a, p_shift_f, p_scale_f, p_gate_f = _chunk_time3d(self.norm1_context_linear(time_embed), 6)
+         s4, p4 = u(spatial), u(prompt)
+-
+-        s_n = self.norm1_norm(s4, dynamic_weight=(1 + s_scale_a), dynamic_bias=s_shift_a)
+-        p_n = self.norm1_context_norm(p4, dynamic_weight=(1 + p_scale_a), dynamic_bias=p_shift_a)
++        key = _EP3_TKEY if "modcache" in F else None
++        mc = self.__dict__.setdefault("_ep3_mc", {})
++        if key is not None and key in mc:
++            s_shift_a, s_w_a, s_gate_a, s_shift_f, s_w_f, s_gate_f, p_shift_a, p_w_a, p_gate_a, p_shift_f, p_w_f, p_gate_f = mc[key]
++        else:
++            s_shift_a, s_scale_a, s_gate_a, s_shift_f, s_scale_f, s_gate_f = _chunk_time3d(self.norm1_linear(time_embed), 6)
++            p_shift_a, p_scale_a, p_gate_a, p_shift_f, p_scale_f, p_gate_f = _chunk_time3d(self.norm1_context_linear(time_embed), 6)
++            s_w_a, s_w_f, p_w_a, p_w_f = (1 + s_scale_a), (1 + s_scale_f), (1 + p_scale_a), (1 + p_scale_f)
++            if key is not None:
++                cast = lambda g, r: ttnn.typecast(g, r.get_dtype()) if ("addcmul" in F and g.get_dtype() != r.get_dtype()) else g
++                s_gate_a, s_gate_f, p_gate_a, p_gate_f = cast(s_gate_a, s4), cast(s_gate_f, s4), cast(p_gate_a, p4), cast(p_gate_f, p4)
++                # materialise the chunk views so the cache owns plain tensors
++                cl = lambda t: ttnn.clone(t)
++                ent = tuple(cl(t) for t in (s_shift_a, s_w_a, s_gate_a, s_shift_f, s_w_f, s_gate_f, p_shift_a, p_w_a, p_gate_a, p_shift_f, p_w_f, p_gate_f))
++                if __import__("os").environ.get("EP3_MODCACHE", "step") != "all":
++                    for old_ent in mc.values():
++                        for t_ in old_ent:
++                            ttnn.deallocate(t_)
++                    mc.clear()
++                mc[key] = ent
++                s_shift_a, s_w_a, s_gate_a, s_shift_f, s_w_f, s_gate_f, p_shift_a, p_w_a, p_gate_a, p_shift_f, p_w_f, p_gate_f = ent
++
++        s_n = self.norm1_norm(s4, dynamic_weight=s_w_a, dynamic_bias=s_shift_a)
++        p_n = self.norm1_context_norm(p4, dynamic_weight=p_w_a, dynamic_bias=p_shift_a)
+ 
+         at = self.attn
+         if "qkv" in F:
+@@ -146,11 +165,14 @@ class QwenImageTransformerBlock(TransformerBlock):
+         if __import__("os").environ.get("EP3_DUMP_QKV") and getattr(self, "_ep3_idx", -1) == int(__import__("os").environ.get("EP3_DUMP_BLOCK", "30")):
+             _g = lambda t: ttnn.to_torch(ttnn.get_device_tensors(t)[0]).float()
+             torch.save(dict(q=_g(q), k=_g(k), v=_g(v), jq=_g(aq), jk=_g(ak), jv=_g(av)), __import__("os").environ["EP3_DUMP_QKV"])
+-        s_att, p_att = ttnn.transformer.joint_scaled_dot_product_attention(
+-            q, k, v, aq, ak, av, joint_strategy="rear",
+-            program_config=at.sdpa_program_config, compute_kernel_config=at.sdpa_compute_kernel_config)
+-        s_att = u(ttnn.transformer.concatenate_heads(s_att))
+-        p_att = u(ttnn.transformer.concatenate_heads(p_att))
++        if "psdpa" in F:
++            s_att, p_att = self._ep3_plain_sdpa(at, q, k, v, aq, ak, av)
++        else:
++            s_att, p_att = ttnn.transformer.joint_scaled_dot_product_attention(
++                q, k, v, aq, ak, av, joint_strategy="rear",
++                program_config=at.sdpa_program_config, compute_kernel_config=at.sdpa_compute_kernel_config)
++            s_att = u(ttnn.transformer.concatenate_heads(s_att))
++            p_att = u(ttnn.transformer.concatenate_heads(p_att))
+ 
+         if "attn_out" in F:
+             s4 = self._ep3_agmm(at.to_out, s_att, residual=s4, gate=u(s_gate_a))
+@@ -159,12 +181,42 @@ class QwenImageTransformerBlock(TransformerBlock):
+             s4 = self._ep3_gated(F, s4, at.to_out(self._ep3_ag(s_att)), u(s_gate_a))
+             p4 = self._ep3_gated(F, p4, at.to_add_out(self._ep3_ag(p_att)), u(p_gate_a))
+ 
+-        s4 = self._ep3_ff(F, self.ff, self.norm2, s4, s_scale_f, s_shift_f, s_gate_f)
+-        p4 = self._ep3_ff(F, self.ff_context, self.norm2_context, p4, p_scale_f, p_shift_f, p_gate_f)
++        s4 = self._ep3_ff(F, self.ff, self.norm2, s4, None, s_shift_f, s_gate_f, w=s_w_f)
++        p4 = self._ep3_ff(F, self.ff_context, self.norm2_context, p4, None, p_shift_f, p_gate_f, w=p_w_f)
+         return sq(s4), sq(p4)
+ 
+-    def _ep3_ff(self, F, ff, norm, x4, scale, shift, gate):
+-        n = norm(x4, dynamic_weight=(1 + scale), dynamic_bias=shift)
++    def _ep3_plain_sdpa(self, at, q, k, v, aq, ak, av):
++        """img3: plain streaming SDPA over [spatial ; prompt] (rear), split after concatenate_heads."""
++        B, H, N, D = q.shape[0], q.shape[1], q.shape[2], q.shape[3]
++        L, Lp = aq.shape[2], aq.padded_shape[2]
++        assert N % 32 == 0, "spatial length must be tile aligned"
++        pc = getattr(at, "ep3_psdpa_pc", None)
++        if pc is None:
++            g = self.mesh_device.compute_with_storage_grid_size()
++            qc, kc = [int(x) for x in __import__("os").environ.get("EP3_PSDPA_CHUNKS", "256x512").split("x")]
++            pc = at.ep3_psdpa_pc = ttnn.SDPAProgramConfig(compute_with_storage_grid_size=(g.x, g.y), q_chunk_size=qc,
++                                                           k_chunk_size=kc, exp_approx_mode=False)
++
++        def cat(x, y):
++            if L != Lp:
++                y = ttnn.reshape(y, ttnn.Shape([B, H, Lp, D]), ttnn.Shape([B, H, Lp, D]))
++            c = ttnn.concat([x, y], dim=2)
++            return ttnn.reshape(c, ttnn.Shape([B, H, N + L, D]), ttnn.Shape([B, H, N + Lp, D])) if L != Lp else c
++
++        Q, K, V = cat(q, aq), cat(k, ak), cat(v, av)
++        o = ttnn.transformer.scaled_dot_product_attention(Q, K, V, is_causal=False, program_config=pc,
++                                                          compute_kernel_config=at.sdpa_compute_kernel_config)
++        ttnn.deallocate(Q); ttnn.deallocate(K); ttnn.deallocate(V)
++        oc = ttnn.transformer.concatenate_heads(o)
++        ttnn.deallocate(o)
++        HD = oc.shape[-1]
++        s_att = ttnn.slice(oc, [0, 0, 0], [B, N, HD])
++        p_att = ttnn.slice(oc, [0, N, 0], [B, N + L, HD])
++        ttnn.deallocate(oc)
++        return ttnn.unsqueeze(s_att, 0), ttnn.unsqueeze(p_att, 0)
++
++    def _ep3_ff(self, F, ff, norm, x4, scale, shift, gate, w=None):
++        n = norm(x4, dynamic_weight=(w if w is not None else (1 + scale)), dynamic_bias=shift)
+         h = self._ep3_agmm(ff.ff1, n) if "ff1" in F else ff.ff1(self._ep3_ag(n))
+         return self._ep3_gated(F, x4, ff.ff2(h), ttnn.unsqueeze(gate, 0))
+ 
+@@ -357,6 +409,9 @@ class QwenImageTransformer(Module):
+         return spatial.permute(0, 1, 4, 2, 5, 3).flatten(3, 4).flatten(1, 2)
+ 
+ 
++_EP3_TKEY = None  # img3: modulation cache key (float timestep), set by the pipeline when EP3_MODCACHE is set
++
++
+ def _chunk_time3d(t: ttnn.Tensor, count: int) -> list[ttnn.Tensor]:
+     size = t.shape[-1] // count
+     return [t[:, :, i * size : (i + 1) * size] for i in range(count)]
+diff --git a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+index f5c4706fd..4ab6db45c 100644
+--- a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
++++ b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+@@ -562,6 +562,10 @@ class QwenImagePipeline(PipelineAPIMixin):
+             on_event(SectionStart(f"denoising_step_{i}"))
+ 
+             velocity_preds = []
++            if os.environ.get("EP3_MODCACHE"):
++                # img3: modulation cache key for the opt-in modcache block flag
++                from ...models.transformers import transformer_qwenimage as _tq
++                _tq._EP3_TKEY = float(t)
+             if trim and cp_factor == 1 and (traced or os.environ.get("EP3_TRACE_SAME_DT") == "1"):
+                 # ep3: whole step as one function (both branches, combine, Euler update in place); traced from step 1.
+                 dt_value = sigmas[i + 1] - sigmas[i]
+diff --git a/models/tt_dit/utils/matmul.py b/models/tt_dit/utils/matmul.py
+index 65c950626..e2620114c 100644
+--- a/models/tt_dit/utils/matmul.py
++++ b/models/tt_dit/utils/matmul.py
+@@ -186,6 +186,21 @@ grid_12_9_configs = {
+ }
+ 
+ 
++_EP3_MM = None
++
++
++def _ep3_mm_override():
++    """img3: blockings from EP3_MM_OVERRIDE ("GXxGY:M,K,N:mb,kb,nb,sh,sw;..."), parsed once; empty = none."""
++    global _EP3_MM
++    if _EP3_MM is None:
++        _EP3_MM = {}
++        for e in filter(None, __import__("os").environ.get("EP3_MM_OVERRIDE", "").split(";")):
++            g, shp, blk = e.split(":")
++            gx, gy = [int(v) for v in g.split("x")]
++            _EP3_MM[(gx, gy, *[int(v) for v in shp.split(",")])] = tuple(int(v) for v in blk.split(","))
++    return _EP3_MM
++
++
+ def get_matmul_config(M, K, N, core_grid, default_block_size=None):
+     # Default to 8x8x8 with subblock 2x2 when unknown
+     subblock_h = 2
+@@ -198,6 +213,10 @@ def get_matmul_config(M, K, N, core_grid, default_block_size=None):
+     config_tuple = None
+     grid_x = getattr(core_grid, "x", None)
+     grid_y = getattr(core_grid, "y", None)
++    _ov = _ep3_mm_override().get((grid_x, grid_y, M, K, N))
++    if _ov is not None:
++        return ttnn.MinimalMatmulConfig(M_block_size=_ov[0], K_block_size=_ov[1], N_block_size=_ov[2], subblock_h=_ov[3],
++                                        subblock_w=_ov[4], compute_with_storage_grid_size=core_grid)
+     grid_lookup = {
+         (8, 8): grid_88_configs,
+         (8, 9): grid_89_configs,
+-- 
+2.54.0
+

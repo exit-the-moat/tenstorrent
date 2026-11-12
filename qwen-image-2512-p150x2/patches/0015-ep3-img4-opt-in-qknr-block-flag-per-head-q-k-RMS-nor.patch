@@ -1,0 +1,103 @@
+From f4de9628ae58e50cecbcf96a9521e01e9eccc691 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 07:30:14 +0100
+Subject: [PATCH 15/22] ep3 (img4): opt-in qknr block flag: per-head q/k RMS
+ norm + RoPE fused (dit_fused_distributed_rmsnorm per_head_norm), default path
+ unchanged
+
+---
+ .../transformers/transformer_qwenimage.py     | 71 ++++++++++++++++---
+ 1 file changed, 61 insertions(+), 10 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index 106cf2a23..745c2ed3e 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -152,16 +152,20 @@ class QwenImageTransformerBlock(TransformerBlock):
+             qkv = at.to_qkv(sq(self._ep3_ag(s_n)))
+             add_qkv = at.add_qkv_proj(sq(self._ep3_ag(p_n)))
+         heads = at.n_local_heads
+-        q, k, v = ttnn.transformer.split_query_key_value_and_split_heads(
+-            qkv, num_heads=heads, transpose_key=False, memory_config=qkv.memory_config())
+-        q, k = at.norm_q(q), at.norm_k(k)
+-        if spatial_rope is not None:
+-            q, k = self._ep3_rope(F, q, spatial_rope), self._ep3_rope(F, k, spatial_rope)
+-        aq, ak, av = ttnn.transformer.split_query_key_value_and_split_heads(
+-            add_qkv, num_heads=heads, transpose_key=False, memory_config=add_qkv.memory_config())
+-        aq, ak = at.norm_added_q(aq), at.norm_added_k(ak)
+-        if prompt_rope is not None:
+-            aq, ak = self._ep3_rope(F, aq, prompt_rope), self._ep3_rope(F, ak, prompt_rope)
++        if "qknr" in F and spatial_rope is not None and prompt_rope is not None:
++            q, k, v = self._ep3_qknr(at, qkv, spatial_rope, at.norm_q, at.norm_k, "s")
++            aq, ak, av = self._ep3_qknr(at, add_qkv, prompt_rope, at.norm_added_q, at.norm_added_k, "p")
++        else:
++            q, k, v = ttnn.transformer.split_query_key_value_and_split_heads(
++                qkv, num_heads=heads, transpose_key=False, memory_config=qkv.memory_config())
++            q, k = at.norm_q(q), at.norm_k(k)
++            if spatial_rope is not None:
++                q, k = self._ep3_rope(F, q, spatial_rope), self._ep3_rope(F, k, spatial_rope)
++            aq, ak, av = ttnn.transformer.split_query_key_value_and_split_heads(
++                add_qkv, num_heads=heads, transpose_key=False, memory_config=add_qkv.memory_config())
++            aq, ak = at.norm_added_q(aq), at.norm_added_k(ak)
++            if prompt_rope is not None:
++                aq, ak = self._ep3_rope(F, aq, prompt_rope), self._ep3_rope(F, ak, prompt_rope)
+         if at.context_head_factors is not None:
+             aq = aq * at.context_head_factors.data
+         assert spatial_sequence_length == spatial.shape[1]
+@@ -188,6 +192,53 @@ class QwenImageTransformerBlock(TransformerBlock):
+         p4 = self._ep3_ff(F, self.ff_context, self.norm2_context, p4, None, p_shift_f, p_gate_f, w=p_w_f)
+         return sq(s4), sq(p4)
+ 
++    def _ep3_qknr(self, at, qkv, rope, norm_q, norm_k, tag):
++        """img4: qkv [B, N, 3*H*D] (per card [q|k|v]) -> head-split q, k (per-head RMS norm + RoPE in one fused op), v."""
++        from ...layers.normalization import DistributedRMSNorm
++        heads = at.n_local_heads
++        B, N, F3 = qkv.shape[0], qkv.shape[1], qkv.shape[2]
++        HD = F3 // 3
++        st = self.__dict__.setdefault("_ep3_qknr_mods", {})
++        if tag not in st:
++            if getattr(self, "_ep3_tm", None) is None:
++                self._ep3_tm = ttnn.from_torch(get_rot_transformation_mat(), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT,
++                                               device=self.mesh_device, mesh_mapper=ttnn.ReplicateTensorToMesh(self.mesh_device))
++            mods = []
++            for nm in (norm_q, norm_k):
++                w = ttnn.to_torch(ttnn.get_device_tensors(nm.weight.data)[0]).float().reshape(1, -1)
++                D = w.shape[-1]
++                assert D * heads == HD, (D, heads, HD)
++                m = DistributedRMSNorm(HD * self.parallel_config.tensor_parallel.factor, norm_eps=nm.norm_eps,
++                                       norm_elementwise_affine=False, mesh_axis=self.parallel_config.tensor_parallel.mesh_axis,
++                                       mesh_device=self.mesh_device, ccl_manager=self.ccl_manager)
++                m.weight = SimpleNamespace(data=ttnn.from_torch(w.repeat(1, heads).to(torch.bfloat16), dtype=ttnn.bfloat16,
++                                                                layout=ttnn.TILE_LAYOUT, device=self.mesh_device,
++                                                                mesh_mapper=ttnn.ReplicateTensorToMesh(self.mesh_device)))
++                m._ep3_base_cc = m.compute_kernel_config
++                mods.append(m)
++            st[tag] = mods
++        mq, mk = st[tag]
++        ncc = getattr(self, "_ep3_norm_cc", None)
++        if ncc != getattr(mq, "_ep3_cc_key", "unset"):
++            cc = mq._ep3_base_cc if ncc is None else ttnn.init_device_compute_kernel_config(
++                self.mesh_device.arch(), math_fidelity=getattr(ttnn.MathFidelity, ncc[0]), math_approx_mode=False,
++                fp32_dest_acc_en=ncc[1], packer_l1_acc=False)
++            for mm_ in (mq, mk):
++                mm_.compute_kernel_config = cc
++            mq._ep3_cc_key = ncc
++        cos, sin = rope
++        cos4, sin4 = cos.reshape([1, 1, *cos.shape]), sin.reshape([1, 1, *sin.shape])
++        x4 = ttnn.unsqueeze(qkv, 0)
++        q_f = ttnn.slice(x4, [0, 0, 0, 0], [1, B, N, HD])
++        k_f = ttnn.slice(x4, [0, 0, 0, HD], [1, B, N, 2 * HD])
++        v_f = ttnn.slice(x4, [0, 0, 0, 2 * HD], [1, B, N, 3 * HD])
++        q = mq(q_f, num_heads_per_device=heads, rope_cos=cos4, rope_sin=sin4, trans_mat=self._ep3_tm, per_head_norm=True)
++        k = mk(k_f, num_heads_per_device=heads, rope_cos=cos4, rope_sin=sin4, trans_mat=self._ep3_tm, per_head_norm=True)
++        ttnn.deallocate(q_f); ttnn.deallocate(k_f)
++        v, _, _ = ttnn.experimental.nlp_create_qkv_heads(v_f, num_heads=heads, num_kv_heads=0, transpose_k_heads=False)
++        ttnn.deallocate(v_f)
++        return q, k, v
++
+     def _ep3_plain_sdpa(self, at, q, k, v, aq, ak, av):
+         """img3: plain streaming SDPA over [spatial ; prompt] (rear), split after concatenate_heads."""
+         B, H, N, D = q.shape[0], q.shape[1], q.shape[2], q.shape[3]
+-- 
+2.54.0
+

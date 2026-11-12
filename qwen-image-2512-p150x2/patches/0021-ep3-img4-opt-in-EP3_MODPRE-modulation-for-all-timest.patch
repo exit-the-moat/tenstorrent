@@ -1,0 +1,134 @@
+From 8bfa413687d9c9dd2539e19d669eff05c189818d Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 21:38:12 +0100
+Subject: [PATCH 21/22] ep3 (img4): opt-in EP3_MODPRE (modulation for all
+ timesteps precomputed, byte-identical, no gain); a8o with a8att keeps the BF8
+ attention output for to_out (final config v3a8flq); defaults unchanged
+
+---
+ .../transformers/transformer_qwenimage.py     | 56 ++++++++++++++++++-
+ .../pipelines/qwenimage/pipeline_qwenimage.py |  4 ++
+ 2 files changed, 59 insertions(+), 1 deletion(-)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index 2935035a3..fca7dab43 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -132,8 +132,18 @@ class QwenImageTransformerBlock(TransformerBlock):
+         s4, p4 = u(spatial), u(prompt)
+         key = _EP3_TKEY if "modcache" in F else None
+         mc = self.__dict__.setdefault("_ep3_mc", {})
++        pre = getattr(self, "_ep3_pre", None) if key is not None else None
+         if key is not None and key in mc:
+             s_shift_a, s_w_a, s_gate_a, s_shift_f, s_w_f, s_gate_f, p_shift_a, p_w_a, p_gate_a, p_shift_f, p_w_f, p_gate_f = mc[key]
++        elif pre is not None and key in pre[1]:
++            r_ = pre[1][key]
++            ent = tuple(ttnn.slice(t_, [0, r_, 0], [1, r_ + 1, t_.shape[-1]]) for t_ in pre[0])
++            for old_ent in mc.values():
++                for t_ in old_ent:
++                    ttnn.deallocate(t_)
++            mc.clear()
++            mc[key] = ent
++            s_shift_a, s_w_a, s_gate_a, s_shift_f, s_w_f, s_gate_f, p_shift_a, p_w_a, p_gate_a, p_shift_f, p_w_f, p_gate_f = ent
+         else:
+             s_shift_a, s_scale_a, s_gate_a, s_shift_f, s_scale_f, s_gate_f = _chunk_time3d(self.norm1_linear(time_embed), 6)
+             p_shift_a, p_scale_a, p_gate_a, p_shift_f, p_scale_f, p_gate_f = _chunk_time3d(self.norm1_context_linear(time_embed), 6)
+@@ -200,7 +210,7 @@ class QwenImageTransformerBlock(TransformerBlock):
+             s_att = u(ttnn.transformer.concatenate_heads(s_att))
+             p_att = u(ttnn.transformer.concatenate_heads(p_att))
+ 
+-        if ("a8qkv" in F or "a8att" in F) and s_att.get_dtype() != s4.get_dtype():
++        if ("a8qkv" in F or "a8att" in F) and "a8o" not in F and s_att.get_dtype() != s4.get_dtype():  # img4: with a8o the BF8 attention output goes straight to to_out
+             s_att, p_att = ttnn.typecast(s_att, s4.get_dtype()), ttnn.typecast(p_att, p4.get_dtype())
+         if "a8o" in F and s_att.get_dtype() != ttnn.bfloat8_b:
+             s_att, p_att = ttnn.typecast(s_att, ttnn.bfloat8_b), ttnn.typecast(p_att, ttnn.bfloat8_b)
+@@ -262,6 +272,27 @@ class QwenImageTransformerBlock(TransformerBlock):
+         ttnn.deallocate(v_f)
+         return q, k, v
+ 
++    def _ep3_build_pre(self, te, rowmap):
++        """img4: modulation for all timesteps (rows of te) in one matmul per stream; 12 tensors [1, rows, D]."""
++        F = getattr(self, "ep3_fuse", set())
++        old = getattr(self, "_ep3_pre", None)
++        if old is not None:
++            for t_ in old[0]:
++                ttnn.deallocate(t_)
++        s6 = _chunk_time3d(self.norm1_linear(te), 6)
++        p6 = _chunk_time3d(self.norm1_context_linear(te), 6)
++        out = []
++        for c6 in (s6, p6):
++            shift_a, scale_a, gate_a, shift_f, scale_f, gate_f = c6
++            w_a, w_f = scale_a + 1, scale_f + 1
++            cast = lambda g: ttnn.typecast(g, ttnn.bfloat16) if ("addcmul" in F and g.get_dtype() != ttnn.bfloat16) else g
++            gate_f = cast(gate_f)
++            if "attn_out" not in F:
++                gate_a = cast(gate_a)
++            out += [ttnn.clone(t_) for t_ in (shift_a, w_a, gate_a, shift_f, w_f, gate_f)]
++        self._ep3_pre = (tuple(out), dict(rowmap))
++        self.__dict__.setdefault("_ep3_mc", {})
++
+     def _ep3_plain_sdpa(self, at, q, k, v, aq, ak, av):
+         """img3: plain streaming SDPA over [spatial ; prompt] (rear), split after concatenate_heads."""
+         B, H, N, D = q.shape[0], q.shape[1], q.shape[2], q.shape[3]
+@@ -456,6 +487,26 @@ class QwenImageTransformer(Module):
+         self._tp_axis = parallel_config.tensor_parallel.mesh_axis
+         self._ccl_manager = ccl_manager
+ 
++    def _ep3_modpre(self, timestep):
++        """img4: time embeddings of every timestep of the schedule as rows of one tensor -> per-block precompute."""
++        ts = list(_EP3_TSTEPS)
++        n = len(ts)
++        npad = -(-n // 32) * 32
++        dev = timestep.device()
++        tt = torch.tensor(ts + [ts[-1]] * (npad - n), dtype=torch.float32).reshape(npad, 1)
++        T = ttnn.from_torch(tt, dtype=timestep.get_dtype(), layout=ttnn.TILE_LAYOUT, device=dev,
++                            mesh_mapper=ttnn.ReplicateTensorToMesh(dev))
++        te = self.time_text_embed(timestep=T)
++        te = ttnn.silu(te)
++        te = te.reshape([1, npad, te.shape[-1]])
++        rowmap = {t: r for r, t in enumerate(ts)}
++        for blk in self.transformer_blocks:
++            if hasattr(blk, "_ep3_build_pre"):
++                blk._ep3_build_pre(te, rowmap)
++        ttnn.deallocate(te); ttnn.deallocate(T)
++        self._ep3_pre_key = tuple(ts)
++        print(f"img4 modpre: built {n} timesteps ({npad} rows) for {len(self.transformer_blocks)} blocks", flush=True)
++
+     def _prepare_torch_state(self, state: dict[str, torch.Tensor]) -> None:
+         rename_substate(state, "norm_out.linear", "time_embed_out")
+         rename_substate(state, "norm_out.norm", "norm_out")
+@@ -486,6 +537,8 @@ class QwenImageTransformer(Module):
+             spatial_rope: Tuple of two tensors with shape [spatial_sequence_length / sp_factor, head_dim].
+             prompt_rope: Tuple of two tensors with shape [prompt_sequence_length, head_dim] (sequence is not sharded!).
+         """
++        if __import__("os").environ.get("EP3_MODPRE") == "1" and _EP3_TSTEPS and getattr(self, "_ep3_pre_key", None) != tuple(_EP3_TSTEPS):
++            self._ep3_modpre(timestep)
+         time_embed = self.time_text_embed(timestep=timestep)
+         ttnn.silu(time_embed, output_tensor=time_embed)
+         time_embed = time_embed.reshape([time_embed.shape[-2], 1, time_embed.shape[-1]])
+@@ -556,6 +609,7 @@ class QwenImageTransformer(Module):
+         return spatial.permute(0, 1, 4, 2, 5, 3).flatten(3, 4).flatten(1, 2)
+ 
+ 
++_EP3_TSTEPS = None  # img4: the schedule's timesteps (floats), set by the pipeline when EP3_MODPRE=1
+ _EP3_TKEY = None  # img3: modulation cache key (float timestep), set by the pipeline when EP3_MODCACHE is set
+ 
+ 
+diff --git a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+index 4ab6db45c..4fdf3fdb8 100644
+--- a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
++++ b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+@@ -558,6 +558,10 @@ class QwenImagePipeline(PipelineAPIMixin):
+ 
+         on_event(SectionStart("denoising"))
+         step_tracer = None
++        if os.environ.get("EP3_MODPRE") == "1":
++            # img4: whole schedule for the opt-in modulation precompute (EP3_MODPRE + modcache)
++            from ...models.transformers import transformer_qwenimage as _tq
++            _tq._EP3_TSTEPS = [float(x) for x in timesteps]
+         for i, t in enumerate(tqdm.tqdm(timesteps)):
+             on_event(SectionStart(f"denoising_step_{i}"))
+ 
+-- 
+2.54.0
+

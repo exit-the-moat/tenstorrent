@@ -1,0 +1,155 @@
+From 3773fdd18a8b4a371149e1b04c36f4ff7d3825e3 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 12:02:42 +0100
+Subject: [PATCH 08/22] ep3: zero_cond_t for Qwen-Image-Edit-2511 (forward
+ cond_split/timestep_cond, default path unchanged)
+
+---
+ models/tt_dit/blocks/transformer_block.py     | 69 ++++++++++++++-----
+ .../transformers/transformer_qwenimage.py     | 10 +++
+ 2 files changed, 61 insertions(+), 18 deletions(-)
+
+diff --git a/models/tt_dit/blocks/transformer_block.py b/models/tt_dit/blocks/transformer_block.py
+index 9c76d2b8c..4a03b25c8 100644
+--- a/models/tt_dit/blocks/transformer_block.py
++++ b/models/tt_dit/blocks/transformer_block.py
+@@ -199,6 +199,8 @@ class TransformerBlock(Module):
+         spatial_rope: tuple[ttnn.Tensor, ttnn.Tensor] | None = None,
+         prompt_rope: tuple[ttnn.Tensor, ttnn.Tensor] | None = None,
+         skip_time_embed_activation_fn: bool = False,
++        time_embed_cond: ttnn.Tensor | None = None,
++        spatial_split: int | None = None,
+     ) -> tuple[ttnn.Tensor, ttnn.Tensor | None]:
+         """Run the model forward.
+ 
+@@ -229,14 +231,42 @@ class TransformerBlock(Module):
+             spatial_gate_ff,
+         ) = _chunk_time3d(spatial_time, 6)
+ 
+-        spatial_normed = ttnn.squeeze(
+-            self.norm1_norm(
+-                ttnn.unsqueeze(spatial, 0),
+-                dynamic_weight=(1 + spatial_scale_attn),
+-                dynamic_bias=spatial_shift_attn,
+-            ),
+-            0,
+-        )
++        split = spatial_split is not None
++        if split:
++            # ep3 zero_cond_t: reference-image tokens (after spatial_split) use the timestep-0 modulation.
++            if not skip_time_embed_activation_fn:
++                time_embed_cond = ttnn.silu(time_embed_cond, memory_config=ttnn.DRAM_MEMORY_CONFIG)
++            (
++                c_shift_attn,
++                c_scale_attn,
++                c_gate_attn,
++                c_shift_ff,
++                c_scale_ff,
++                c_gate_ff,
++            ) = _chunk_time3d(self.norm1_linear(time_embed_cond), 6)
++            n = spatial_split
++
++            def _seg_norm(norm, x, scale_a, shift_a, scale_b, shift_b):
++                xa, xb = x[:, :n, :], x[:, n:, :]
++                ya = ttnn.squeeze(norm(ttnn.unsqueeze(xa, 0), dynamic_weight=(1 + scale_a), dynamic_bias=shift_a), 0)
++                yb = ttnn.squeeze(norm(ttnn.unsqueeze(xb, 0), dynamic_weight=(1 + scale_b), dynamic_bias=shift_b), 0)
++                return ttnn.concat([ya, yb], dim=1)
++
++            def _seg_gate(x, gate_a, gate_b):
++                return ttnn.concat([x[:, :n, :] * gate_a, x[:, n:, :] * gate_b], dim=1)
++
++            spatial_normed = _seg_norm(
++                self.norm1_norm, spatial, spatial_scale_attn, spatial_shift_attn, c_scale_attn, c_shift_attn
++            )
++        else:
++            spatial_normed = ttnn.squeeze(
++                self.norm1_norm(
++                    ttnn.unsqueeze(spatial, 0),
++                    dynamic_weight=(1 + spatial_scale_attn),
++                    dynamic_bias=spatial_shift_attn,
++                ),
++                0,
++            )
+ 
+         if self.context_pre_only:
+             prompt_scale_attn, prompt_shift_attn = _chunk_time3d(prompt_time, 2)
+@@ -278,28 +308,31 @@ class TransformerBlock(Module):
+             prompt_rope=prompt_rope,
+             spatial_sequence_length=spatial_sequence_length,
+         )
+-        spatial_attn = spatial_attn * spatial_gate_attn
++        spatial_attn = _seg_gate(spatial_attn, spatial_gate_attn, c_gate_attn) if split else spatial_attn * spatial_gate_attn
+         prompt_attn = prompt_attn * prompt_gate_attn if prompt_gate_attn is not None else None
+ 
+         spatial_plus_attn = spatial + spatial_attn
+         if self.add_attention_to_output:
+             spatial = spatial_plus_attn
+ 
+-        spatial_normed = ttnn.squeeze(
+-            self.norm2(
+-                ttnn.unsqueeze(spatial_plus_attn, 0),
+-                dynamic_weight=(1 + spatial_scale_ff),
+-                dynamic_bias=spatial_shift_ff,
+-            ),
+-            0,
+-        )
++        if split:
++            spatial_normed = _seg_norm(self.norm2, spatial_plus_attn, spatial_scale_ff, spatial_shift_ff, c_scale_ff, c_shift_ff)
++        else:
++            spatial_normed = ttnn.squeeze(
++                self.norm2(
++                    ttnn.unsqueeze(spatial_plus_attn, 0),
++                    dynamic_weight=(1 + spatial_scale_ff),
++                    dynamic_bias=spatial_shift_ff,
++                ),
++                0,
++            )
+ 
+         spatial_normed = self.ccl_manager.all_gather_persistent_buffer(
+             spatial_normed, dim=2, mesh_axis=tp_axis, use_hyperparams=True
+         )
+ 
+         spatial_ff = ttnn.squeeze(self.ff(ttnn.unsqueeze(spatial_normed, 0)), 0)
+-        spatial_ff = spatial_ff * spatial_gate_ff
++        spatial_ff = _seg_gate(spatial_ff, spatial_gate_ff, c_gate_ff) if split else spatial_ff * spatial_gate_ff
+ 
+         spatial = spatial + spatial_ff
+ 
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index c7a4a18c4..f06b9179f 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -146,6 +146,8 @@ class QwenImageTransformer(Module):
+         prompt_rope: tuple[ttnn.Tensor, ttnn.Tensor],
+         spatial_sequence_length: int,
+         prompt_sequence_length: int,
++        cond_split: int | None = None,
++        timestep_cond: ttnn.Tensor | None = None,
+     ) -> ttnn.Tensor:
+         """Run the model forward.
+ 
+@@ -160,6 +162,12 @@ class QwenImageTransformer(Module):
+         time_embed = self.time_text_embed(timestep=timestep)
+         ttnn.silu(time_embed, output_tensor=time_embed)
+         time_embed = time_embed.reshape([time_embed.shape[-2], 1, time_embed.shape[-1]])
++        if cond_split is not None:  # ep3 zero_cond_t (Qwen-Image-Edit-2511)
++            time_embed_cond = self.time_text_embed(timestep=timestep_cond)
++            ttnn.silu(time_embed_cond, output_tensor=time_embed_cond)
++            time_embed_cond = time_embed_cond.reshape([time_embed_cond.shape[-2], 1, time_embed_cond.shape[-1]])
++        else:
++            time_embed_cond = None
+ 
+         spatial = self.img_in(spatial)
+ 
+@@ -175,6 +183,8 @@ class QwenImageTransformer(Module):
+                 prompt_rope=prompt_rope,
+                 spatial_sequence_length=spatial_sequence_length,
+                 skip_time_embed_activation_fn=True,
++                time_embed_cond=time_embed_cond,
++                spatial_split=cond_split,
+             )
+ 
+             if i % 6 == 0:
+-- 
+2.54.0
+

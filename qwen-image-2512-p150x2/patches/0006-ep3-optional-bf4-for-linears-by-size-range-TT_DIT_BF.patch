@@ -1,0 +1,30 @@
+From 42182851b7bff57ef2a4af58f8ecef5f0e49c4f8 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 04:37:06 +0100
+Subject: [PATCH 06/22] ep3: optional bf4 for linears by size range
+ (TT_DIT_BF4_RANGE, TT_DIT_BIG_LINEAR_BF4_MIN), default off
+
+---
+ models/tt_dit/layers/linear.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/models/tt_dit/layers/linear.py b/models/tt_dit/layers/linear.py
+index 160c632ce..74be9a366 100644
+--- a/models/tt_dit/layers/linear.py
++++ b/models/tt_dit/layers/linear.py
+@@ -39,6 +39,12 @@ def _resolve_weight_dtype(dtype, in_features, out_features):
+     override = _WEIGHT_DTYPE_OVERRIDE.get()
+     if override is None or dtype != ttnn.bfloat16 or in_features * out_features < _WEIGHT_OVERRIDE_MIN_ELEMENTS:
+         return dtype
++    big_min = int(__import__("os").environ.get("TT_DIT_BIG_LINEAR_BF4_MIN", "0"))  # ep3 switch, default off
++    if big_min and in_features * out_features >= big_min:
++        return ttnn.bfloat4_b
++    rng = __import__("os").environ.get("TT_DIT_BF4_RANGE", "")  # ep3 switch "lo,hi" elements, default off
++    if rng and int(rng.split(",")[0]) <= in_features * out_features < int(rng.split(",")[1]):
++        return ttnn.bfloat4_b
+     return override
+ 
+ 
+-- 
+2.54.0
+

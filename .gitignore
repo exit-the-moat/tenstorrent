@@ -12,3 +12,7 @@ __pycache__/
 .venv/
 .idea/
 *.iml
+# Episode 3 package: set-up copy, pictures, logs
+qwen-image-2512-p150x2/work/
+qwen-image-2512-p150x2/out/
+qwen-image-2512-p150x2/runs/

@@ -1,0 +1,109 @@
+From f7322f739dfb307260686270ddf34cb64144bb54 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 10:55:25 +0100
+Subject: [PATCH 17/22] ep3 (img4): opt-in 8-bit activation flags a8n (adaLN
+ norm outputs BF8), a8h (ff1 out BF8), a8att (q/k/v BF8 after RoPE), a8qkv
+ (blocked by RoPE bf16-only); defaults unchanged
+
+---
+ .../transformers/transformer_qwenimage.py     | 37 ++++++++++++++-----
+ 1 file changed, 27 insertions(+), 10 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index 80750f2f9..ec32d3a17 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -59,7 +59,7 @@ class QwenImageTransformerBlock(TransformerBlock):
+         return self.ccl_manager.all_gather_persistent_buffer(
+             x4, dim=3, mesh_axis=self.parallel_config.tensor_parallel.mesh_axis, use_hyperparams=True)
+ 
+-    def _ep3_agmm(self, lin, x4, residual=None, gate=None):
++    def _ep3_agmm(self, lin, x4, residual=None, gate=None, out_dtype=None):
+         """all-gather(x) @ W + b (+ fused activation) on the tensor split, output column-sharded;
+         with residual/gate: residual + out * gate in the matmul epilogue."""
+         pc = self.parallel_config
+@@ -79,6 +79,7 @@ class QwenImageTransformerBlock(TransformerBlock):
+             config=get_matmul_config(M, K, N, core_grid),
+             fused_activation=lin.fused_activation_fn,
+             compute_kernel_config=lin.compute_config,
++            dtype=out_dtype,
+             persistent_output_buffer=mgr.get_ag_ping_pong_buffer(x4.shape, 3, pc.tensor_parallel.mesh_axis, dtype=x4.get_dtype()),
+             multi_device_global_semaphore=mgr.get_ag_ping_pong_semaphore(pc.tensor_parallel.mesh_axis),
+             num_links=mgr.num_links,
+@@ -107,8 +108,16 @@ class QwenImageTransformerBlock(TransformerBlock):
+                                            device=self.mesh_device, mesh_mapper=ttnn.ReplicateTensorToMesh(self.mesh_device))
+             self._ep3_rcc = ttnn.init_device_compute_kernel_config(self.mesh_device.arch(), math_fidelity=ttnn.MathFidelity.HiFi4,
+                                                                    math_approx_mode=False, fp32_dest_acc_en=True, packer_l1_acc=True)
+-        return ttnn.experimental.rotary_embedding_llama(x, cos.reshape([1, 1, *cos.shape]), sin.reshape([1, 1, *sin.shape]),
+-                                                        self._ep3_tm, compute_kernel_config=self._ep3_rcc)
++        cos4, sin4, tm = cos.reshape([1, 1, *cos.shape]), sin.reshape([1, 1, *sin.shape]), self._ep3_tm
++        if x.get_dtype() != cos.get_dtype():
++            g = globals().setdefault("_EP3_ROPE8", {})
++            key = (id(cos), x.get_dtype())
++            if key not in g:
++                if len(g) > 8:
++                    g.clear()
++                g[key] = (cos, ttnn.typecast(cos4, x.get_dtype()), ttnn.typecast(sin4, x.get_dtype()), ttnn.typecast(tm, x.get_dtype()))
++            _, cos4, sin4, tm = g[key]
++        return ttnn.experimental.rotary_embedding_llama(x, cos4, sin4, tm, compute_kernel_config=self._ep3_rcc)
+ 
+     def _ep3_forward(self, F, spatial, prompt, time_embed, spatial_sequence_length, spatial_rope, prompt_rope, skip_act):
+         u = lambda t: ttnn.unsqueeze(t, 0)
+@@ -141,13 +150,15 @@ class QwenImageTransformerBlock(TransformerBlock):
+                 mc[key] = ent
+                 s_shift_a, s_w_a, s_gate_a, s_shift_f, s_w_f, s_gate_f, p_shift_a, p_w_a, p_gate_a, p_shift_f, p_w_f, p_gate_f = ent
+ 
+-        s_n = self.norm1_norm(s4, dynamic_weight=s_w_a, dynamic_bias=s_shift_a)
+-        p_n = self.norm1_context_norm(p4, dynamic_weight=p_w_a, dynamic_bias=p_shift_a)
++        _nd = ttnn.bfloat8_b if "a8n" in F else None
++        s_n = self.norm1_norm(s4, dynamic_weight=s_w_a, dynamic_bias=s_shift_a, dtype=_nd)
++        p_n = self.norm1_context_norm(p4, dynamic_weight=p_w_a, dynamic_bias=p_shift_a, dtype=_nd)
+ 
+         at = self.attn
+         if "qkv" in F:
+-            qkv = sq(self._ep3_agmm(at.to_qkv, s_n))
+-            add_qkv = sq(self._ep3_agmm(at.add_qkv_proj, p_n))
++            _qd = ttnn.bfloat8_b if "a8qkv" in F else (ttnn.bfloat16 if "a8n" in F else None)
++            qkv = sq(self._ep3_agmm(at.to_qkv, s_n, out_dtype=_qd))
++            add_qkv = sq(self._ep3_agmm(at.add_qkv_proj, p_n, out_dtype=_qd))
+         else:
+             qkv = at.to_qkv(sq(self._ep3_ag(s_n)))
+             add_qkv = at.add_qkv_proj(sq(self._ep3_ag(p_n)))
+@@ -172,6 +183,8 @@ class QwenImageTransformerBlock(TransformerBlock):
+         if __import__("os").environ.get("EP3_DUMP_QKV") and getattr(self, "_ep3_idx", -1) == int(__import__("os").environ.get("EP3_DUMP_BLOCK", "30")):
+             _g = lambda t: ttnn.to_torch(ttnn.get_device_tensors(t)[0]).float()
+             torch.save(dict(q=_g(q), k=_g(k), v=_g(v), jq=_g(aq), jk=_g(ak), jv=_g(av)), __import__("os").environ["EP3_DUMP_QKV"])
++        if "a8att" in F and q.get_dtype() != ttnn.bfloat8_b:
++            q, k, v, aq, ak, av = (ttnn.typecast(t_, ttnn.bfloat8_b) for t_ in (q, k, v, aq, ak, av))
+         if "psdpa" in F:
+             s_att, p_att = self._ep3_plain_sdpa(at, q, k, v, aq, ak, av)
+         else:
+@@ -181,6 +194,8 @@ class QwenImageTransformerBlock(TransformerBlock):
+             s_att = u(ttnn.transformer.concatenate_heads(s_att))
+             p_att = u(ttnn.transformer.concatenate_heads(p_att))
+ 
++        if ("a8qkv" in F or "a8att" in F) and s_att.get_dtype() != s4.get_dtype():
++            s_att, p_att = ttnn.typecast(s_att, s4.get_dtype()), ttnn.typecast(p_att, p4.get_dtype())
+         if "attn_out" in F:
+             s4 = self._ep3_agmm(at.to_out, s_att, residual=s4, gate=u(s_gate_a))
+             p4 = self._ep3_agmm(at.to_add_out, p_att, residual=p4, gate=u(p_gate_a))
+@@ -288,11 +303,13 @@ class QwenImageTransformerBlock(TransformerBlock):
+         return ttnn.unsqueeze(s_att, 0), ttnn.unsqueeze(p_att, 0)
+ 
+     def _ep3_ff(self, F, ff, norm, x4, scale, shift, gate, w=None):
+-        n = norm(x4, dynamic_weight=(w if w is not None else (1 + scale)), dynamic_bias=shift)
+-        h = self._ep3_agmm(ff.ff1, n) if "ff1" in F else ff.ff1(self._ep3_ag(n))
++        n = norm(x4, dynamic_weight=(w if w is not None else (1 + scale)), dynamic_bias=shift,
++                 dtype=(ttnn.bfloat8_b if "a8n" in F else None))
++        h = self._ep3_agmm(ff.ff1, n, out_dtype=(ttnn.bfloat8_b if "a8h" in F else None)) if "ff1" in F else ff.ff1(self._ep3_ag(n))
+         if "ffrs" in F and self.parallel_config.tensor_parallel.factor > 1 and x4.shape[-2] == x4.padded_shape[-2]:
+             return self._ep3_ffrs(ff.ff2, h, x4, ttnn.unsqueeze(gate, 0))
+-        return self._ep3_gated(F, x4, ff.ff2(h), ttnn.unsqueeze(gate, 0))
++        y = ff.ff2(h, dtype=x4.get_dtype()) if ("a8h" in F or "a8n" in F) else ff.ff2(h)
++        return self._ep3_gated(F, x4, y, ttnn.unsqueeze(gate, 0))
+ 
+     def _ep3_ffrs(self, lin, h, x4, gate4):
+         """img4: x4 + RS(h @ W2 + b) * gate in one fused op (RowParallel ff2)."""
+-- 
+2.54.0
+

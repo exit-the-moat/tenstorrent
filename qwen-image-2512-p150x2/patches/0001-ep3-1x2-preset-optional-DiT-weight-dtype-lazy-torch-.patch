@@ -1,0 +1,303 @@
+From 8c91a97e3ea66de8545cc5d045ecae483607b197 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Mon, 9 Nov 2026 21:54:59 +0100
+Subject: [PATCH 01/22] ep3: 1x2 preset, optional DiT weight dtype, lazy torch
+ state, optional allocation run (defaults unchanged)
+
+---
+ models/tt_dit/layers/linear.py                | 34 +++++++++-
+ .../transformers/transformer_qwenimage.py     | 63 ++++++++++++-------
+ .../pipelines/qwenimage/pipeline_qwenimage.py | 32 +++++++++-
+ 3 files changed, 103 insertions(+), 26 deletions(-)
+
+diff --git a/models/tt_dit/layers/linear.py b/models/tt_dit/layers/linear.py
+index 27d1de621..160c632ce 100644
+--- a/models/tt_dit/layers/linear.py
++++ b/models/tt_dit/layers/linear.py
+@@ -2,6 +2,8 @@
+ 
+ # SPDX-License-Identifier: Apache-2.0
+ 
++import contextlib
++import contextvars
+ import math
+ 
+ import torch
+@@ -18,6 +20,28 @@ MATH_FIDELITY = {
+     ttnn.float32: ttnn.MathFidelity.HiFi4,
+ }
+ 
++# Optional weight format override for big layers (ep3), opt-in via weight_dtype_override(); default off.
++_WEIGHT_DTYPE_OVERRIDE = contextvars.ContextVar("tt_dit_weight_dtype", default=None)
++_WEIGHT_OVERRIDE_MIN_ELEMENTS = 1 << 20
++
++
++@contextlib.contextmanager
++def weight_dtype_override(dtype):
++    """While active, Linear-style weights of at least 2**20 elements are created with `dtype` (bias stays bf16)."""
++    token = _WEIGHT_DTYPE_OVERRIDE.set(dtype)
++    try:
++        yield
++    finally:
++        _WEIGHT_DTYPE_OVERRIDE.reset(token)
++
++
++def _resolve_weight_dtype(dtype, in_features, out_features):
++    override = _WEIGHT_DTYPE_OVERRIDE.get()
++    if override is None or dtype != ttnn.bfloat16 or in_features * out_features < _WEIGHT_OVERRIDE_MIN_ELEMENTS:
++        return dtype
++    return override
++
++
+ # Activation strings accepted by Linear / ColParallelLinear `activation_fn`,
+ # mapped to the values the matmul fused-activation path expects. Each value is
+ # either a bare ttnn.UnaryOpType (no parameter) or a (UnaryOpType, param0)
+@@ -76,7 +100,11 @@ class Linear(Module):
+             packer_l1_acc=True,
+         )
+ 
+-        self.weight = Parameter(total_shape=[self.in_features, self.out_features], device=mesh_device, dtype=dtype)
++        self.weight = Parameter(
++            total_shape=[self.in_features, self.out_features],
++            device=mesh_device,
++            dtype=_resolve_weight_dtype(dtype, self.in_features, self.out_features),
++        )
+         self.bias = Parameter(total_shape=[1, self.out_features], device=mesh_device, dtype=dtype) if bias else None
+ 
+     def _prepare_torch_state(self, state: dict[str, torch.Tensor]) -> None:
+@@ -179,7 +207,7 @@ class ColParallelLinear(Module):
+             total_shape=[self.in_features, self.out_features],
+             mesh_axes=[fsdp_mesh_axis, mesh_axis],
+             device=mesh_device,
+-            dtype=dtype,
++            dtype=_resolve_weight_dtype(dtype, self.in_features, self.out_features),
+         )
+         self.bias = (
+             Parameter(total_shape=[1, self.out_features], mesh_axes=[None, mesh_axis], device=mesh_device, dtype=dtype)
+@@ -349,7 +377,7 @@ class RowParallelLinear(Module):
+             total_shape=[self.in_features, self.out_features],
+             mesh_axes=[mesh_axis, fsdp_mesh_axis],
+             device=mesh_device,
+-            dtype=dtype,
++            dtype=_resolve_weight_dtype(dtype, self.in_features, self.out_features),
+         )
+         self.bias = (
+             Parameter(
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index a781387d5..c7a4a18c4 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -4,16 +4,18 @@
+ 
+ from __future__ import annotations
+ 
++from types import SimpleNamespace
+ from typing import TYPE_CHECKING
+ 
+ import diffusers
+ import torch
++from diffusers.models.transformers.transformer_qwenimage import QwenEmbedRope
+ 
+ import ttnn
+ 
+ from ...blocks.transformer_block import TransformerBlock
+ from ...layers.embeddings import SD35CombinedTimestepTextProjEmbeddings
+-from ...layers.linear import ColParallelLinear, Linear
++from ...layers.linear import ColParallelLinear, Linear, weight_dtype_override
+ from ...layers.module import Module, ModuleList
+ from ...layers.normalization import DistributedLayerNorm, RMSNorm
+ from ...utils import cache
+@@ -227,18 +229,33 @@ class QwenImageCheckpoint:
+ 
+     def __init__(self, name: str) -> None:
+         self._name = name
++        self._state_dict_cached = None
++        self._config = SimpleNamespace(
++            **diffusers.QwenImageTransformer2DModel.load_config(name, subfolder="transformer")
++        )
++
++        # The torch pos embedding is reused on CPU at call time.
++        if getattr(self._config, "use_layer3d_rope", False):
++            self.pos_embed = self._state_module().pos_embed
++        else:
++            self.pos_embed = QwenEmbedRope(theta=10000, axes_dim=list(self._config.axes_dims_rope), scale_rope=True)
++        self.patch_size: int = self._config.patch_size
++
++    def _state_module(self) -> diffusers.QwenImageTransformer2DModel:
+         torch_transformer = diffusers.QwenImageTransformer2DModel.from_pretrained(
+-            name,
++            self._name,
+             subfolder="transformer",
+             torch_dtype=torch.bfloat16,
+         )
+         torch_transformer.eval()
+-        self._config = torch_transformer.config
+-        self._state_dict = torch_transformer.state_dict()
++        return torch_transformer
+ 
+-        # The torch pos embedding is reused on CPU at call time; keep the reference.
+-        self.pos_embed = torch_transformer.pos_embed
+-        self.patch_size: int = self._config.patch_size
++    @property
++    def _state_dict(self) -> dict[str, torch.Tensor]:
++        # Only built when the weight cache misses (41 GB of RAM at bf16).
++        if self._state_dict_cached is None:
++            self._state_dict_cached = self._state_module().state_dict()
++        return self._state_dict_cached
+ 
+     def build(
+         self,
+@@ -246,6 +263,7 @@ class QwenImageCheckpoint:
+         ccl_manager: CCLManager,
+         parallel_config: DiTParallelConfig,
+         is_fsdp: bool,
++        weight_dtype: ttnn.DataType | None = None,
+     ) -> QwenImageTransformer:
+         """Construct a ``QwenImageTransformer`` for this checkpoint (weights NOT loaded).
+ 
+@@ -263,20 +281,21 @@ class QwenImageCheckpoint:
+         else:
+             padding_config = None
+ 
+-        return QwenImageTransformer(
+-            patch_size=c.patch_size,
+-            in_channels=c.in_channels,
+-            num_layers=c.num_layers,
+-            attention_head_dim=c.attention_head_dim,
+-            num_attention_heads=c.num_attention_heads,
+-            joint_attention_dim=c.joint_attention_dim,
+-            out_channels=c.out_channels,
+-            device=device,
+-            ccl_manager=ccl_manager,
+-            parallel_config=parallel_config,
+-            padding_config=padding_config,
+-            is_fsdp=is_fsdp,
+-        )
++        with weight_dtype_override(weight_dtype):
++            return QwenImageTransformer(
++                patch_size=c.patch_size,
++                in_channels=c.in_channels,
++                num_layers=c.num_layers,
++                attention_head_dim=c.attention_head_dim,
++                num_attention_heads=c.num_attention_heads,
++                joint_attention_dim=c.joint_attention_dim,
++                out_channels=c.out_channels,
++                device=device,
++                ccl_manager=ccl_manager,
++                parallel_config=parallel_config,
++                padding_config=padding_config,
++                is_fsdp=is_fsdp,
++            )
+ 
+     def load(
+         self,
+@@ -285,6 +304,7 @@ class QwenImageCheckpoint:
+         mesh_device: ttnn.MeshDevice,
+         parallel_config: DiTParallelConfig,
+         is_fsdp: bool,
++        dtype: str = "bf16",
+     ) -> None:
+         """Load (or reload) weights for a previously-built transformer."""
+         cache.load_model(
+@@ -295,5 +315,6 @@ class QwenImageCheckpoint:
+             parallel_config=parallel_config,
+             mesh_shape=tuple(mesh_device.shape),
+             mesh_device=mesh_device,
++            dtype=dtype,
+             is_fsdp=is_fsdp,
+         )
+diff --git a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+index f3c86ed05..6f67c7a08 100644
+--- a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
++++ b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+@@ -71,6 +71,18 @@ _PRESETS_WH: dict[tuple[int, ...], dict] = {
+ }
+ 
+ _PRESETS_BH: dict[tuple[int, ...], dict] = {
++    # ep3: two p150a joined by two QSFP-DD cables. Default = tensor split across both cards, CFG in the batch.
++    (1, 2): {
++        "cfg": (1, 0),
++        "sp": (1, 0),
++        "tp": (2, 1),
++        "encoder_tp": (2, 1),
++        "vae_tp": (2, 1),
++        "num_links": 2,
++        "is_fsdp": False,
++        "dynamic_load_encoder": True,
++        "dynamic_load_vae": True,
++    },
+     (2, 4): {
+         "cfg": (2, 0),
+         "sp": (1, 0),
+@@ -118,6 +130,11 @@ class QwenImagePipelineConfig:
+ 
+     checkpoint_name: str
+ 
++    # ep3 switches; the defaults keep the behaviour of the presets above.
++    dit_weight_dtype: ttnn.DataType | None = None
++    dit_weight_dtype_name: str = "bf16"
++    allocation_run: bool = True
++
+     @classmethod
+     def default(
+         cls,
+@@ -137,6 +154,9 @@ class QwenImagePipelineConfig:
+         dynamic_load_encoder: bool | None = None,
+         dynamic_load_vae: bool | None = None,
+         checkpoint_name: str = _DEFAULT_CHECKPOINT,
++        dit_weight_dtype: ttnn.DataType | None = None,
++        dit_weight_dtype_name: str = "bf16",
++        allocation_run: bool = True,
+     ) -> QwenImagePipelineConfig:
+         preset_dict = _PRESETS_BH if ttnn.device.is_blackhole() else _PRESETS_WH
+         preset = preset_dict.get(tuple(mesh_shape), {})
+@@ -167,6 +187,9 @@ class QwenImagePipelineConfig:
+             ),
+             dynamic_load_vae=dynamic_load_vae if dynamic_load_vae is not None else preset["dynamic_load_vae"],
+             checkpoint_name=checkpoint_name,
++            dit_weight_dtype=dit_weight_dtype,
++            dit_weight_dtype_name=dit_weight_dtype_name,
++            allocation_run=allocation_run,
+         )
+ 
+ 
+@@ -218,6 +241,8 @@ class QwenImagePipeline(PipelineAPIMixin):
+         self._cfg_enabled = config.cfg_enabled
+         self._is_fsdp = config.is_fsdp
+         self._checkpoint_name = config.checkpoint_name
++        self._dit_weight_dtype = config.dit_weight_dtype
++        self._dit_weight_dtype_name = config.dit_weight_dtype_name
+ 
+         logger.info(f"Parallel config: {config.dit_parallel_config}")
+         logger.info(f"Original mesh shape: {device.shape}")
+@@ -258,6 +283,7 @@ class QwenImagePipeline(PipelineAPIMixin):
+                 ccl_manager=mgr,
+                 parallel_config=self._parallel_config,
+                 is_fsdp=self._is_fsdp,
++                weight_dtype=config.dit_weight_dtype,
+             )
+             for mgr in self._ccl_managers
+         ]
+@@ -306,8 +332,9 @@ class QwenImagePipeline(PipelineAPIMixin):
+         if not config.use_torch_vae_decoder and not config.dynamic_load_vae:
+             self._vae.reload_weights()
+ 
+-        logger.info("Pipeline allocation run...")
+-        self(prompts=[""], num_inference_steps=2, cfg_scale=2 if config.cfg_enabled else 1, traced=False)
++        if config.allocation_run:
++            logger.info("Pipeline allocation run...")
++            self(prompts=[""], num_inference_steps=2, cfg_scale=2 if config.cfg_enabled else 1, traced=False)
+ 
+     def _load_transformers(self, idx: int) -> None:
+         """Load transformer weights to device. Called lazily for device encoder path."""
+@@ -319,6 +346,7 @@ class QwenImagePipeline(PipelineAPIMixin):
+             mesh_device=self._submesh_devices[idx],
+             parallel_config=self._parallel_config,
+             is_fsdp=self._is_fsdp,
++            dtype=self._dit_weight_dtype_name,
+         )
+ 
+         ttnn.synchronize_device(self._submesh_devices[idx])
+-- 
+2.54.0
+

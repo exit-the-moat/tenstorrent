@@ -1,0 +1,42 @@
+{
+ "a": "out/set_v3p",
+ "b": "out/set_v2a",
+ "label": "set_v3p_vs_set_v2a",
+ "rows": [
+  {
+   "image": "detail-s13.png",
+   "psnr": 17.0,
+   "ssim": 0.6199,
+   "clip": 0.962
+  },
+  {
+   "image": "keyart-s2.png",
+   "psnr": 19.78,
+   "ssim": 0.7072,
+   "clip": 0.9263
+  },
+  {
+   "image": "moat-s2.png",
+   "psnr": 25.19,
+   "ssim": 0.8605,
+   "clip": 0.9783
+  },
+  {
+   "image": "portrait-s12.png",
+   "psnr": 24.17,
+   "ssim": 0.9108,
+   "clip": 0.9761
+  },
+  {
+   "image": "text-s11.png",
+   "psnr": 13.86,
+   "ssim": 0.6355,
+   "clip": 0.9288
+  }
+ ],
+ "mean": {
+  "psnr": 20.0,
+  "ssim": 0.7468,
+  "clip": 0.9543
+ }
+}

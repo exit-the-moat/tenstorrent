@@ -1,0 +1,37 @@
+From f7511b9d8097b550adaee146c28d592145f5a1bd Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 02:57:57 +0100
+Subject: [PATCH 04/22] ep3: optional key centring in the Qwen2.5-VL encoder
+ attention (TT_DIT_QWEN25VL_CENTER_K=1): fixes the layer-0 score precision
+ loss
+
+---
+ models/tt_dit/encoders/qwen25vl/model_qwen25vl.py | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/models/tt_dit/encoders/qwen25vl/model_qwen25vl.py b/models/tt_dit/encoders/qwen25vl/model_qwen25vl.py
+index 6e737fb9f..b17b9cdab 100644
+--- a/models/tt_dit/encoders/qwen25vl/model_qwen25vl.py
++++ b/models/tt_dit/encoders/qwen25vl/model_qwen25vl.py
+@@ -24,6 +24,7 @@ if TYPE_CHECKING:
+     from collections.abc import Sequence
+ 
+ MAX_CHUNK_SIZE = 128
++_CENTER_K = __import__("os").environ.get("TT_DIT_QWEN25VL_CENTER_K", "0") == "1"  # ep3 switch, default off
+ 
+ 
+ @dataclass
+@@ -361,6 +362,10 @@ class Qwen25VlAttention(Module):
+         q = _apply_rope(q, cos, sin)
+         k = _apply_rope(k, cos, sin)
+ 
++        if _CENTER_K:
++            # ep3: k - mean_j(k_j) per head; softmax-invariant, keeps the attention scores small.
++            k = ttnn.subtract(k, ttnn.mean(k, dim=2, keepdim=True))
++
+         x = ttnn.transformer.scaled_dot_product_attention(
+             q,
+             k,
+-- 
+2.54.0
+

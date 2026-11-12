@@ -1,0 +1,312 @@
+From ab7871851384ca7e485c26a15c617e828d30b077 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 01:48:34 +0100
+Subject: [PATCH 02/22] ep3: diffusers-matching CFG norm rescale and
+ real-length prompts (switches, default off); per-prompt embedding cache;
+ optional latent dump
+
+---
+ models/tt_dit/pipelines/cfg.py                | 33 ++++++++-
+ .../pipelines/qwenimage/pipeline_qwenimage.py | 73 +++++++++++++++++--
+ .../pipelines/qwenimage/text_encoder.py       | 19 ++++-
+ 3 files changed, 113 insertions(+), 12 deletions(-)
+
+diff --git a/models/tt_dit/pipelines/cfg.py b/models/tt_dit/pipelines/cfg.py
+index 022ee7e38..3e9d017ae 100644
+--- a/models/tt_dit/pipelines/cfg.py
++++ b/models/tt_dit/pipelines/cfg.py
+@@ -29,13 +29,15 @@ class CFGCombiner:
+         devices: tuple[ttnn.MeshDevice] | tuple[ttnn.MeshDevice, ttnn.MeshDevice],
+         *,
+         via_host: bool = True,
++        rescale: bool = False,
+     ) -> None:
++        # ep3: rescale=True matches diffusers' Qwen-Image true CFG: comb * (|cond| / |comb|) per token.
+         match devices:
+             case (_,):
+-                self._inner = _SingleCombiner()
++                self._inner = _SingleCombiner(rescale=rescale)
+             case (uncond_device, cond_device):
+                 if via_host:
+-                    self._inner = _HostCombiner(uncond_device, cond_device)
++                    self._inner = _HostCombiner(uncond_device, cond_device, rescale=rescale)
+                 else:
+                     self._inner = _SocketCombiner(uncond_device, cond_device)
+             case _:
+@@ -47,8 +49,26 @@ class CFGCombiner:
+         return self._inner.combine(predictions, cfg_scale)
+ 
+ 
++def _norm_rescale(combined: ttnn.Tensor, cond: ttnn.Tensor) -> ttnn.Tensor:
++    """ep3: per-token rescale as in diffusers' QwenImagePipeline: comb * (norm(cond, -1) / norm(comb, -1))."""
++    ck = ttnn.init_device_compute_kernel_config(
++        combined.device().arch(), math_fidelity=ttnn.MathFidelity.HiFi4, math_approx_mode=False, fp32_dest_acc_en=True
++    )
++    cond_sq = ttnn.sum(ttnn.multiply(cond, cond), dim=-1, keepdim=True, compute_kernel_config=ck)
++    comb_sq = ttnn.sum(ttnn.multiply(combined, combined), dim=-1, keepdim=True, compute_kernel_config=ck)
++    return ttnn.multiply(combined, ttnn.sqrt(ttnn.divide(cond_sq, comb_sq)))
++
++
+ class _SingleCombiner:
++    def __init__(self, *, rescale: bool = False) -> None:
++        self._rescale = rescale
++
+     def combine(self, predictions: Sequence[ttnn.Tensor], cfg_scale: float) -> tuple[ttnn.Tensor]:
++        if len(predictions) == 2:  # ep3: separate forward per branch (real-length prompts)
++            uncond, cond = predictions
++            combined = ttnn.lerp(uncond, cond, cfg_scale)
++            return (_norm_rescale(combined, cond) if self._rescale else combined,)
++
+         if len(predictions) != 1:
+             msg = f"expected 1 prediction tensor for single-device combiner, got {len(predictions)}"
+             raise ValueError(msg)
+@@ -65,13 +85,14 @@ class _SingleCombiner:
+         cond = prediction[split_pos:]
+         combined = ttnn.lerp(uncond, cond, cfg_scale)
+ 
+-        return (combined,)
++        return (_norm_rescale(combined, cond) if self._rescale else combined,)
+ 
+ 
+ class _HostCombiner:
+-    def __init__(self, uncond_device: ttnn.MeshDevice, cond_device: ttnn.MeshDevice) -> None:
++    def __init__(self, uncond_device: ttnn.MeshDevice, cond_device: ttnn.MeshDevice, *, rescale: bool = False) -> None:
+         self._uncond_device = uncond_device
+         self._cond_device = cond_device
++        self._rescale = rescale
+ 
+     def combine(self, predictions: Sequence[ttnn.Tensor], cfg_scale: float) -> tuple[ttnn.Tensor, ttnn.Tensor]:
+         if len(predictions) != 2:
+@@ -92,6 +113,10 @@ class _HostCombiner:
+         combined0 = ttnn.lerp(uncond, received_cond, cfg_scale)
+         combined1 = ttnn.lerp(received_uncond, cond, cfg_scale)
+ 
++        if self._rescale:
++            combined0 = _norm_rescale(combined0, received_cond)
++            combined1 = _norm_rescale(combined1, cond)
++
+         return combined0, combined1
+ 
+ 
+diff --git a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+index 6f67c7a08..7f0980971 100644
+--- a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
++++ b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+@@ -4,6 +4,7 @@
+ 
+ from __future__ import annotations
+ 
++import os
+ from dataclasses import dataclass
+ from typing import TYPE_CHECKING, Any
+ 
+@@ -32,6 +33,7 @@ from models.tt_dit.pipelines.qwenimage.text_encoder import TextEncoder
+ from models.tt_dit.solvers import EulerSolver
+ from models.tt_dit.utils import cache
+ from models.tt_dit.utils.mesh import reshape_device
++from models.tt_dit.utils.tensor import from_torch as tensor_from_torch
+ from models.tt_dit.utils.tensor import from_torch_to_devices
+ from models.tt_dit.utils.tracing import Tracer
+ 
+@@ -134,6 +136,9 @@ class QwenImagePipelineConfig:
+     dit_weight_dtype: ttnn.DataType | None = None
+     dit_weight_dtype_name: str = "bf16"
+     allocation_run: bool = True
++    cfg_rescale: bool = False  # ep3: diffusers' per-token norm rescale after CFG
++    trim_prompt: bool = False  # ep3: each CFG branch uses only its real tokens (as diffusers), one forward per branch
++    embed_cache_dir: str | None = None  # ep3: reuse CPU encoder embeddings per prompt pair
+ 
+     @classmethod
+     def default(
+@@ -157,6 +162,9 @@ class QwenImagePipelineConfig:
+         dit_weight_dtype: ttnn.DataType | None = None,
+         dit_weight_dtype_name: str = "bf16",
+         allocation_run: bool = True,
++        cfg_rescale: bool = False,
++        trim_prompt: bool = False,
++        embed_cache_dir: str | None = None,
+     ) -> QwenImagePipelineConfig:
+         preset_dict = _PRESETS_BH if ttnn.device.is_blackhole() else _PRESETS_WH
+         preset = preset_dict.get(tuple(mesh_shape), {})
+@@ -190,6 +198,9 @@ class QwenImagePipelineConfig:
+             dit_weight_dtype=dit_weight_dtype,
+             dit_weight_dtype_name=dit_weight_dtype_name,
+             allocation_run=allocation_run,
++            cfg_rescale=cfg_rescale,
++            trim_prompt=trim_prompt,
++            embed_cache_dir=embed_cache_dir,
+         )
+ 
+ 
+@@ -253,7 +264,9 @@ class QwenImagePipeline(PipelineAPIMixin):
+             CCLManager(submesh_device, num_links=config.num_links, topology=config.topology)
+             for submesh_device in self._submesh_devices
+         ]
+-        self._cfg_combiner = CFGCombiner(self._submesh_devices)
++        self._cfg_combiner = CFGCombiner(self._submesh_devices, rescale=config.cfg_rescale)
++        self._trim_prompt = config.trim_prompt
++        self._embed_cache_dir = config.embed_cache_dir
+ 
+         self.encoder_submesh_idx = 0  # Use submesh 0 for encoder
+         self.vae_submesh_idx = len(self._submesh_devices) - self.encoder_submesh_idx - 1  # Use other submesh for VAE. 0
+@@ -462,9 +475,17 @@ class QwenImagePipeline(PipelineAPIMixin):
+                 cfg_enabled=self._cfg_enabled,
+                 on_event=on_event,
+                 traced=encoder_traced,
++                cache_dir=self._embed_cache_dir,
+             )
+         on_event(SectionEnd("encoder"))
+         _, prompt_sequence_length, _ = torch_context.shape
++        trim = self._trim_prompt
++        branch_lens = [int(n) for n in _prompt_mask.sum(dim=1).tolist()] if trim else None
++        cp_factor = self._parallel_config.cfg_parallel.factor
++        if trim:
++            assert not traced, "ep3: trim_prompt with tracing is not implemented"
++            assert self._cfg_enabled, "ep3: trim_prompt needs CFG branches"
++            logger.info(f"real-length prompts: branch lengths {branch_lens} (uncond, cond)")
+ 
+         self.prepare_transformers()
+ 
+@@ -491,7 +512,20 @@ class QwenImagePipeline(PipelineAPIMixin):
+         torch_prompt_rope_cos = torch_prompt_rope.real.repeat_interleave(2, dim=-1)
+         torch_prompt_rope_sin = torch_prompt_rope.imag.repeat_interleave(2, dim=-1)
+ 
+-        context = distribute_cfg(torch_context, devices=self._submesh_devices)
++        if trim:
++            # One [1, n, D] tensor per branch (logical length n: the joint SDPA op masks the tile padding).
++            branch_devices = [self._submesh_devices[b if cp_factor == 2 else 0] for b in range(2)]
++            branch_context = [tensor_from_torch(torch_context[b : b + 1, : branch_lens[b]], device=branch_devices[b]) for b in range(2)]
++            branch_rope = [
++                (
++                    tensor_from_torch(torch_prompt_rope_cos[: branch_lens[b]], device=branch_devices[b]),
++                    tensor_from_torch(torch_prompt_rope_sin[: branch_lens[b]], device=branch_devices[b]),
++                )
++                for b in range(2)
++            ]
++            context = None
++        else:
++            context = distribute_cfg(torch_context, devices=self._submesh_devices)
+         latents = self._random_latents(batch_size=transformer_batch_size, seed=seed)
+         latents_rope_cos = from_torch_to_devices(
+             torch_latents_rope_cos, devices=self._submesh_devices, mesh_axes=[sp_axis, None]
+@@ -499,8 +533,8 @@ class QwenImagePipeline(PipelineAPIMixin):
+         latents_rope_sin = from_torch_to_devices(
+             torch_latents_rope_sin, devices=self._submesh_devices, mesh_axes=[sp_axis, None]
+         )
+-        prompt_rope_cos = from_torch_to_devices(torch_prompt_rope_cos, devices=self._submesh_devices)
+-        prompt_rope_sin = from_torch_to_devices(torch_prompt_rope_sin, devices=self._submesh_devices)
++        prompt_rope_cos = None if trim else from_torch_to_devices(torch_prompt_rope_cos, devices=self._submesh_devices)
++        prompt_rope_sin = None if trim else from_torch_to_devices(torch_prompt_rope_sin, devices=self._submesh_devices)
+ 
+         logger.info("denoising...")
+ 
+@@ -509,7 +543,27 @@ class QwenImagePipeline(PipelineAPIMixin):
+             on_event(SectionStart(f"denoising_step_{i}"))
+ 
+             velocity_preds = []
++            if trim and cp_factor == 1:
++                # ep3: one submesh, one forward per CFG branch at its own real prompt length.
++                timestep = ttnn.full([1, 1], fill_value=t, layout=ttnn.TILE_LAYOUT, dtype=ttnn.float32, device=self._submesh_devices[0])
++                for b in range(2):
++                    velocity_preds.append(
++                        self._traced_step(
++                            cfg_enabled=False,
++                            submesh_idx=0,
++                            latents=latents[0],
++                            prompt=branch_context[b],
++                            timestep=timestep,
++                            spatial_rope=(latents_rope_cos[0], latents_rope_sin[0]),
++                            prompt_rope=branch_rope[b],
++                            spatial_sequence_length=latents_sequence_length,
++                            prompt_sequence_length=branch_lens[b],
++                        )
++                    )
++
+             for idx, tracer in enumerate(self._tracers):
++                if trim and cp_factor == 1:
++                    break
+                 timestep = ttnn.full(
+                     [1, 1],
+                     fill_value=t,
+@@ -523,16 +577,16 @@ class QwenImagePipeline(PipelineAPIMixin):
+                         cfg_enabled=self._cfg_enabled,
+                         submesh_idx=idx,
+                         latents=latents[idx],
+-                        prompt=context[idx] if i == 0 else tracer.inputs["prompt"],
++                        prompt=(branch_context[idx] if trim else context[idx]) if i == 0 else tracer.inputs["prompt"],
+                         timestep=timestep,
+                         spatial_rope=(latents_rope_cos[idx], latents_rope_sin[idx])
+                         if i == 0
+                         else tracer.inputs["spatial_rope"],
+-                        prompt_rope=(prompt_rope_cos[idx], prompt_rope_sin[idx])
++                        prompt_rope=(branch_rope[idx] if trim else (prompt_rope_cos[idx], prompt_rope_sin[idx]))
+                         if i == 0
+                         else tracer.inputs["prompt_rope"],
+                         spatial_sequence_length=latents_sequence_length,
+-                        prompt_sequence_length=prompt_sequence_length,
++                        prompt_sequence_length=branch_lens[idx] if trim else prompt_sequence_length,
+                         traced=traced,
+                         tracer_blocking_execution=False,
+                     )
+@@ -552,6 +606,11 @@ class QwenImagePipeline(PipelineAPIMixin):
+ 
+             self.synchronize_devices()
+ 
++            if os.environ.get("EP3_DUMP_LAT") and i == int(os.environ.get("EP3_DUMP_STEP", "25")):
++                # ep3: latents after step i, for the mid-schedule DiT reference (host read, not for timed runs).
++                dump = ttnn.to_torch(ttnn.get_device_tensors(latents[0])[0])
++                torch.save({"latents": dump, "step": i, "t": float(t), "seed": seed}, os.environ["EP3_DUMP_LAT"] + f"_s{seed}_i{i}.pt")
++
+             on_event(SectionEnd(f"denoising_step_{i}"))
+         on_event(SectionEnd("denoising"))
+ 
+diff --git a/models/tt_dit/pipelines/qwenimage/text_encoder.py b/models/tt_dit/pipelines/qwenimage/text_encoder.py
+index 119fe58e4..e7af68df0 100644
+--- a/models/tt_dit/pipelines/qwenimage/text_encoder.py
++++ b/models/tt_dit/pipelines/qwenimage/text_encoder.py
+@@ -4,6 +4,8 @@
+ 
+ from __future__ import annotations
+ 
++import hashlib
++import os
+ from typing import TYPE_CHECKING
+ 
+ import torch
+@@ -62,12 +64,23 @@ class TextEncoder:
+         cfg_enabled: bool,
+         traced: bool,
+         on_event: PipelineEventCallback = null_callback,
++        cache_dir: str | None = None,
+     ) -> tuple[torch.Tensor, torch.Tensor]:
+         assert len(prompts) == len(negative_prompts), "prompts and negative_prompts must have the same length"
+ 
+         all_prompts = [*negative_prompts, *prompts] if cfg_enabled else list(prompts)
+         all_prompts = [PROMPT_TEMPLATE.format(e) for e in all_prompts]
+ 
++        # ep3: optional per-prompt-pair embedding cache (CPU encoder runs once, then reuses the result).
++        cache_file = None
++        if cache_dir is not None:
++            label = "torch" if self._encoder._use_torch else "device"
++            key = hashlib.sha1(("|".join(all_prompts) + label).encode()).hexdigest()
++            cache_file = os.path.join(cache_dir, f"{key}.pt")
++            if os.path.exists(cache_file):
++                data = torch.load(cache_file)
++                return data["embeds"], data["mask"]
++
+         on_event(SectionStart("qwen_encoding"))
+         embeds, mask = self._encoder.encode(
+             all_prompts,
+@@ -79,4 +92,8 @@ class TextEncoder:
+ 
+         embeds[torch.logical_not(mask)] = 0.0
+ 
+-        return embeds[:, PROMPT_DROP_IDX:], mask[:, PROMPT_DROP_IDX:]
++        embeds, mask = embeds[:, PROMPT_DROP_IDX:], mask[:, PROMPT_DROP_IDX:]
++        if cache_file is not None:
++            os.makedirs(cache_dir, exist_ok=True)
++            torch.save({"embeds": embeds, "mask": mask}, cache_file)
++        return embeds, mask
+-- 
+2.54.0
+

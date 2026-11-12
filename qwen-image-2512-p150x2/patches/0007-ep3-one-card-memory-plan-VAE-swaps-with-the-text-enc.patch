@@ -1,0 +1,54 @@
+From fd43f224bdb6a5d1075bd68cbd9054b66e658925 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 04:45:59 +0100
+Subject: [PATCH 07/22] ep3: one-card memory plan: VAE swaps with the text
+ encoder instead of the DiT (EP3_VAE_EVICTS_ENCODER=1, default off)
+
+---
+ .../pipelines/qwenimage/pipeline_qwenimage.py | 20 ++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+index e774df9e4..a4989a9fb 100644
+--- a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
++++ b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+@@ -393,9 +393,24 @@ class QwenImagePipeline(PipelineAPIMixin):
+             ),
+         )
+ 
++    def _vae_evicts_encoder(self) -> bool:
++        return (
++            os.environ.get("EP3_VAE_EVICTS_ENCODER") == "1"
++            and not self._use_torch_text_encoder
++            and not self._use_torch_vae_decoder
++            and self.encoder_submesh_idx == self.vae_submesh_idx
++        )
++
+     def prepare_encoder(self) -> None:
+         """Prepare encoder for inference."""
+         if not self._text_encoder.encoder_loaded():
++            if self._vae_evicts_encoder():
++                if self._vae.is_loaded():
++                    self._vae.deallocate_weights()
++                    ttnn.synchronize_device(self.vae_device)
++                with self._reshape_encoder():
++                    self._text_encoder.reload_encoder_weights()
++                return
+             self._deallocate_transformers(self.encoder_submesh_idx)
+             with self._reshape_encoder():
+                 self._text_encoder.reload_encoder_weights()
+@@ -415,7 +430,10 @@ class QwenImagePipeline(PipelineAPIMixin):
+     def prepare_vae(self) -> None:
+         if self._vae.is_loaded():
+             return
+-        self._deallocate_transformers(self.vae_submesh_idx)
++        if self._vae_evicts_encoder():
++            self._text_encoder.deallocate_encoder_weights()
++        else:
++            self._deallocate_transformers(self.vae_submesh_idx)
+         with self._reshape_vae():
+             logger.info("loading VAE decoder weights to device...")
+             self._vae.reload_weights()
+-- 
+2.54.0
+

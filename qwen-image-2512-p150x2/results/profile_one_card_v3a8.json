@@ -1,0 +1,94 @@
+{
+ "config": "one_card_v3a8",
+ "source_csv": "/tmp/one.csv",
+ "segment": [
+  "fwd_step0_start",
+  "fwd_step0_end"
+ ],
+ "device": 0,
+ "ops": 3319,
+ "device_busy_s": 1.3096,
+ "op_to_op_gaps_s": 2.3264,
+ "measured_step_s": 1.45,
+ "not_on_device_s": 0.1404,
+ "families": [
+  {
+   "family": "matmul (linear layers)",
+   "seconds": 0.6733,
+   "calls": 606,
+   "share_busy": 0.5141,
+   "share_step": 0.4643
+  },
+  {
+   "family": "attention (joint SDPA)",
+   "seconds": 0.2801,
+   "calls": 60,
+   "share_busy": 0.2139,
+   "share_step": 0.1932
+  },
+  {
+   "family": "head split / concat",
+   "seconds": 0.0682,
+   "calls": 180,
+   "share_busy": 0.0521,
+   "share_step": 0.0471
+  },
+  {
+   "family": "modulation glue (gate multiply, residual add)",
+   "seconds": 0.0613,
+   "calls": 242,
+   "share_busy": 0.0468,
+   "share_step": 0.0423
+  },
+  {
+   "family": "adaLN norm (fused, distributed)",
+   "seconds": 0.0601,
+   "calls": 241,
+   "share_busy": 0.0459,
+   "share_step": 0.0414
+  },
+  {
+   "family": "other (RotaryEmbeddingLlama)",
+   "seconds": 0.0588,
+   "calls": 240,
+   "share_busy": 0.0449,
+   "share_step": 0.0406
+  },
+  {
+   "family": "other (Concat)",
+   "seconds": 0.0493,
+   "calls": 181,
+   "share_busy": 0.0377,
+   "share_step": 0.034
+  },
+  {
+   "family": "q/k RMS norm",
+   "seconds": 0.0387,
+   "calls": 241,
+   "share_busy": 0.0295,
+   "share_step": 0.0267
+  },
+  {
+   "family": "other (Slice)",
+   "seconds": 0.018,
+   "calls": 842,
+   "share_busy": 0.0138,
+   "share_step": 0.0124
+  },
+  {
+   "family": "small eltwise (timestep path)",
+   "seconds": 0.0012,
+   "calls": 246,
+   "share_busy": 0.0009,
+   "share_step": 0.0008
+  },
+  {
+   "family": "other (Typecast)",
+   "seconds": 0.0006,
+   "calls": 240,
+   "share_busy": 0.0005,
+   "share_step": 0.0004
+  }
+ ],
+ "method": "tracy device profiler (DEVICE KERNEL DURATION per op), one denoising step between signposts; step time from the unprofiled queue runs"
+}

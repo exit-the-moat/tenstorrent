@@ -1,0 +1,53 @@
+{
+ "queue": "q9_b_r1 tensor split v3a8flq",
+ "window": [
+  "20:51:21",
+  "21:13:42"
+ ],
+ "samples": 1308,
+ "images": 20,
+ "note": "hwmon power1_input sampled at ~1 Hz (instantaneous). card0/card1 = blackhole hwmon order hwmon2/hwmon3. PSU total includes the host and all other services on the box.",
+ "card0_W": {
+  "mean": 118.3,
+  "max": 224.0,
+  "min": 36.0
+ },
+ "card0_temp_C": {
+  "mean": 82.7,
+  "max": 84.9,
+  "min": 72.6
+ },
+ "card1_W": {
+  "mean": 115.2,
+  "max": 216.0,
+  "min": 43.0
+ },
+ "card1_temp_C": {
+  "mean": 74.8,
+  "max": 76.7,
+  "min": 67.4
+ },
+ "psu_power_total_W": {
+  "mean": 620.9,
+  "max": 748.0,
+  "min": 374.0
+ },
+ "psu_power_+12v_W": {
+  "mean": 608.1,
+  "max": 734.0,
+  "min": 356.0
+ },
+ "psu_power_+5v_W": {
+  "mean": 11.2,
+  "max": 12.5,
+  "min": 10.5
+ },
+ "psu_power_+3.3v_W": {
+  "mean": 4.6,
+  "max": 6.5,
+  "min": 4.5
+ },
+ "cards_mean_W": 233.5,
+ "cards_Wh_per_image": 4.35,
+ "psu_Wh_per_image": 11.57
+}

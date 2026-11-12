@@ -1,0 +1,42 @@
+{
+ "a": "out/set_v3n",
+ "b": "ref/rtx_base50",
+ "label": "set_v3n_vs_rtx_base50",
+ "rows": [
+  {
+   "image": "detail-s13.png",
+   "psnr": 16.54,
+   "ssim": 0.5902,
+   "clip": 0.9596
+  },
+  {
+   "image": "keyart-s2.png",
+   "psnr": 19.38,
+   "ssim": 0.6903,
+   "clip": 0.9201
+  },
+  {
+   "image": "moat-s2.png",
+   "psnr": 23.99,
+   "ssim": 0.8287,
+   "clip": 0.9539
+  },
+  {
+   "image": "portrait-s12.png",
+   "psnr": 21.4,
+   "ssim": 0.8758,
+   "clip": 0.9637
+  },
+  {
+   "image": "text-s11.png",
+   "psnr": 14.87,
+   "ssim": 0.7211,
+   "clip": 0.9005
+  }
+ ],
+ "mean": {
+  "psnr": 19.236,
+  "ssim": 0.7412,
+  "clip": 0.9396
+ }
+}

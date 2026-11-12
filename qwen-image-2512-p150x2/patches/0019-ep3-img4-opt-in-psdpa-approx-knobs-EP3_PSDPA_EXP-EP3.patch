@@ -1,0 +1,57 @@
+From 215eba3cf14ad2b0a6f46969b0c01280079825bf Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 15:30:38 +0100
+Subject: [PATCH 19/22] ep3 (img4): opt-in psdpa approx knobs (EP3_PSDPA_EXP,
+ EP3_PSDPA_MATHAPPROX) and a8o (attention output BF8, residual dtype kept);
+ defaults unchanged
+
+---
+ .../models/transformers/transformer_qwenimage.py      | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index 9fd8554e7..4e2940202 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -72,6 +72,8 @@ class QwenImageTransformerBlock(TransformerBlock):
+         core_grid = ttnn.CoreCoord(full_grid.x, full_grid.y - 1)
+         mgr = self.ccl_manager
+         kw = dict(scalar=1.0, addcmul_input_tensor1=residual, addcmul_input_tensor2=gate) if residual is not None else {}
++        if residual is not None and out_dtype is None and x4.get_dtype() != residual.get_dtype():
++            out_dtype = residual.get_dtype()  # img4: a8o keeps the residual stream in its own dtype
+         return ttnn.experimental.all_gather_minimal_matmul_async(
+             input_tensor=x4,
+             weight_tensor=weight,
+@@ -197,6 +199,8 @@ class QwenImageTransformerBlock(TransformerBlock):
+ 
+         if ("a8qkv" in F or "a8att" in F) and s_att.get_dtype() != s4.get_dtype():
+             s_att, p_att = ttnn.typecast(s_att, s4.get_dtype()), ttnn.typecast(p_att, p4.get_dtype())
++        if "a8o" in F and s_att.get_dtype() != ttnn.bfloat8_b:
++            s_att, p_att = ttnn.typecast(s_att, ttnn.bfloat8_b), ttnn.typecast(p_att, ttnn.bfloat8_b)
+         if "attn_out" in F:
+             s4 = self._ep3_agmm(at.to_out, s_att, residual=s4, gate=u(s_gate_a))
+             p4 = self._ep3_agmm(at.to_add_out, p_att, residual=p4, gate=u(p_gate_a))
+@@ -265,7 +269,10 @@ class QwenImageTransformerBlock(TransformerBlock):
+             g = self.mesh_device.compute_with_storage_grid_size()
+             qc, kc = [int(x) for x in __import__("os").environ.get("EP3_PSDPA_CHUNKS", "256x512").split("x")]
+             pc = at.ep3_psdpa_pc = ttnn.SDPAProgramConfig(compute_with_storage_grid_size=(g.x, g.y), q_chunk_size=qc,
+-                                                           k_chunk_size=kc, exp_approx_mode=False)
++                                                           k_chunk_size=kc, exp_approx_mode=__import__("os").environ.get("EP3_PSDPA_EXP") == "1")
++            if __import__("os").environ.get("EP3_PSDPA_MATHAPPROX") == "1":
++                at.ep3_psdpa_cc = ttnn.WormholeComputeKernelConfig(math_fidelity=ttnn.MathFidelity.HiFi2, math_approx_mode=True,
++                                                                   fp32_dest_acc_en=False)
+ 
+         def cat(x, y):
+             if L != Lp:
+@@ -293,7 +300,7 @@ class QwenImageTransformerBlock(TransformerBlock):
+             return ttnn.unsqueeze(s_att, 0), ttnn.unsqueeze(p_att, 0)
+         Q, K, V = cat(q, aq), cat(k, ak), cat(v, av)
+         o = ttnn.transformer.scaled_dot_product_attention(Q, K, V, is_causal=False, program_config=pc,
+-                                                          compute_kernel_config=at.sdpa_compute_kernel_config)
++                                                          compute_kernel_config=getattr(at, "ep3_psdpa_cc", None) or at.sdpa_compute_kernel_config)
+         ttnn.deallocate(Q); ttnn.deallocate(K); ttnn.deallocate(V)
+         oc = ttnn.transformer.concatenate_heads(o)
+         ttnn.deallocate(o)
+-- 
+2.54.0
+

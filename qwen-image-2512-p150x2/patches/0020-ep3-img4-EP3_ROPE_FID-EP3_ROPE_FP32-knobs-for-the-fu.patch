@@ -1,0 +1,31 @@
+From 40650d4723fdc2aac104cbcf8d46a119c13199ba Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 17:25:26 +0100
+Subject: [PATCH 20/22] ep3 (img4): EP3_ROPE_FID / EP3_ROPE_FP32 knobs for the
+ fused-rope compute config; defaults unchanged
+
+---
+ models/tt_dit/models/transformers/transformer_qwenimage.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index 4e2940202..2935035a3 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -108,8 +108,11 @@ class QwenImageTransformerBlock(TransformerBlock):
+         if getattr(self, "_ep3_tm", None) is None:
+             self._ep3_tm = ttnn.from_torch(get_rot_transformation_mat(), dtype=ttnn.bfloat16, layout=ttnn.TILE_LAYOUT,
+                                            device=self.mesh_device, mesh_mapper=ttnn.ReplicateTensorToMesh(self.mesh_device))
+-            self._ep3_rcc = ttnn.init_device_compute_kernel_config(self.mesh_device.arch(), math_fidelity=ttnn.MathFidelity.HiFi4,
+-                                                                   math_approx_mode=False, fp32_dest_acc_en=True, packer_l1_acc=True)
++            _os = __import__("os")  # img4: EP3_ROPE_FID / EP3_ROPE_FP32 knobs (default HiFi4, fp32 acc on = unchanged)
++            self._ep3_rcc = ttnn.init_device_compute_kernel_config(self.mesh_device.arch(),
++                                                                   math_fidelity=getattr(ttnn.MathFidelity, _os.environ.get("EP3_ROPE_FID", "HiFi4")),
++                                                                   math_approx_mode=False, fp32_dest_acc_en=_os.environ.get("EP3_ROPE_FP32", "1") == "1",
++                                                                   packer_l1_acc=True)
+         cos4, sin4, tm = cos.reshape([1, 1, *cos.shape]), sin.reshape([1, 1, *sin.shape]), self._ep3_tm
+         if x.get_dtype() != cos.get_dtype():
+             g = globals().setdefault("_EP3_ROPE8", {})
+-- 
+2.54.0
+

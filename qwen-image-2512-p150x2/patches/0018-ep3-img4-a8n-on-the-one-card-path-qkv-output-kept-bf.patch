@@ -1,0 +1,38 @@
+From 5b081dfd6e8b8d8fcce57e033dd193b64ea0d709 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 10:56:48 +0100
+Subject: [PATCH 18/22] ep3 (img4): a8n on the one-card path (qkv output kept
+ bf16)
+
+---
+ models/tt_dit/models/transformers/transformer_qwenimage.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index ec32d3a17..9fd8554e7 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -64,7 +64,7 @@ class QwenImageTransformerBlock(TransformerBlock):
+         with residual/gate: residual + out * gate in the matmul epilogue."""
+         pc = self.parallel_config
+         if pc.tensor_parallel.factor == 1:
+-            y = lin(x4)
++            y = lin(x4, dtype=out_dtype) if out_dtype is not None else lin(x4)
+             return y if residual is None else self._ep3_gated({"addcmul"}, residual, y, gate)
+         weight = lin.weight.data
+         M, K, N = x4.padded_shape[-2], weight.padded_shape[-2], weight.padded_shape[-1]
+@@ -160,8 +160,9 @@ class QwenImageTransformerBlock(TransformerBlock):
+             qkv = sq(self._ep3_agmm(at.to_qkv, s_n, out_dtype=_qd))
+             add_qkv = sq(self._ep3_agmm(at.add_qkv_proj, p_n, out_dtype=_qd))
+         else:
+-            qkv = at.to_qkv(sq(self._ep3_ag(s_n)))
+-            add_qkv = at.add_qkv_proj(sq(self._ep3_ag(p_n)))
++            _kw = dict(dtype=ttnn.bfloat16) if "a8n" in F else {}
++            qkv = at.to_qkv(sq(self._ep3_ag(s_n)), **_kw)
++            add_qkv = at.add_qkv_proj(sq(self._ep3_ag(p_n)), **_kw)
+         heads = at.n_local_heads
+         if "qknr" in F and spatial_rope is not None and prompt_rope is not None:
+             q, k, v = self._ep3_qknr(at, qkv, spatial_rope, at.norm_q, at.norm_k, "s")
+-- 
+2.54.0
+

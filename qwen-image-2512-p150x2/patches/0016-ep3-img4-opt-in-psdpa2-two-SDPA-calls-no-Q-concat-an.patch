@@ -1,0 +1,99 @@
+From 36a56c86ef3dc12980556e1f1cf8ea8dc2fcf273 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 11 Nov 2026 10:12:34 +0100
+Subject: [PATCH 16/22] ep3 (img4): opt-in psdpa2 (two SDPA calls, no Q concat)
+ and ffrs (fused ff2+RS+gated add, Ring manager via EP3_FFRS_RING); both
+ measured as no gain / hang, defaults unchanged
+
+---
+ .../transformers/transformer_qwenimage.py     | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index 745c2ed3e..80750f2f9 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -257,6 +257,24 @@ class QwenImageTransformerBlock(TransformerBlock):
+             c = ttnn.concat([x, y], dim=2)
+             return ttnn.reshape(c, ttnn.Shape([B, H, N + L, D]), ttnn.Shape([B, H, N + Lp, D])) if L != Lp else c
+ 
++        if "psdpa2" in getattr(self, "ep3_fuse", ()):
++            K, V = cat(k, ak), cat(v, av)
++            pc2 = getattr(at, "ep3_psdpa2_pc", None)
++            if pc2 is None:
++                g = self.mesh_device.compute_with_storage_grid_size()
++                qc2 = int(__import__("os").environ.get("EP3_PSDPA2_QC", "0")) or Lp
++                kc2 = int(__import__("os").environ.get("EP3_PSDPA2_KC", "512"))
++                pc2 = at.ep3_psdpa2_pc = ttnn.SDPAProgramConfig(compute_with_storage_grid_size=(g.x, g.y), q_chunk_size=qc2,
++                                                                 k_chunk_size=kc2, exp_approx_mode=False)
++            o_s = ttnn.transformer.scaled_dot_product_attention(q, K, V, is_causal=False, program_config=pc,
++                                                                compute_kernel_config=at.sdpa_compute_kernel_config)
++            o_p = ttnn.transformer.scaled_dot_product_attention(aq, K, V, is_causal=False, program_config=pc2,
++                                                                compute_kernel_config=at.sdpa_compute_kernel_config)
++            ttnn.deallocate(K); ttnn.deallocate(V)
++            s_att = ttnn.transformer.concatenate_heads(o_s)
++            p_att = ttnn.transformer.concatenate_heads(o_p)
++            ttnn.deallocate(o_s); ttnn.deallocate(o_p)
++            return ttnn.unsqueeze(s_att, 0), ttnn.unsqueeze(p_att, 0)
+         Q, K, V = cat(q, aq), cat(k, ak), cat(v, av)
+         o = ttnn.transformer.scaled_dot_product_attention(Q, K, V, is_causal=False, program_config=pc,
+                                                           compute_kernel_config=at.sdpa_compute_kernel_config)
+@@ -272,8 +290,55 @@ class QwenImageTransformerBlock(TransformerBlock):
+     def _ep3_ff(self, F, ff, norm, x4, scale, shift, gate, w=None):
+         n = norm(x4, dynamic_weight=(w if w is not None else (1 + scale)), dynamic_bias=shift)
+         h = self._ep3_agmm(ff.ff1, n) if "ff1" in F else ff.ff1(self._ep3_ag(n))
++        if "ffrs" in F and self.parallel_config.tensor_parallel.factor > 1 and x4.shape[-2] == x4.padded_shape[-2]:
++            return self._ep3_ffrs(ff.ff2, h, x4, ttnn.unsqueeze(gate, 0))
+         return self._ep3_gated(F, x4, ff.ff2(h), ttnn.unsqueeze(gate, 0))
+ 
++    def _ep3_ffrs(self, lin, h, x4, gate4):
++        """img4: x4 + RS(h @ W2 + b) * gate in one fused op (RowParallel ff2)."""
++        import os
++        v = [int(t) for t in os.environ.get("EP3_FFRS", "11,8,8,8,8,2,2,1").split(",")]
++        gx, gy, mb, kb, nb, sh, sw, ch = v[:8]
++        bufs = v[8] if len(v) > 8 else None
++        mgr = lin.ccl_manager
++        if os.environ.get("EP3_FFRS_RING") == "1":
++            g = globals()
++            if g.get("_EP3_RING_MGR") is None:
++                from ...parallel.manager import CCLManager
++                g["_EP3_RING_MGR"] = CCLManager(self.mesh_device, num_links=int(os.environ.get("EP3_FFRS_LINKS", mgr.num_links)),
++                                                topology=ttnn.Topology.Ring)
++            mgr = g["_EP3_RING_MGR"]
++        full = self.mesh_device.compute_with_storage_grid_size()
++        nl = mgr.num_links
++        rs_zone = (full.y - gy) * full.x
++        if gate4.get_dtype() != x4.get_dtype():
++            gate4 = ttnn.typecast(gate4, x4.get_dtype())
++        h4 = h if len(h.shape) == 4 else ttnn.unsqueeze(h, 0)
++        _, out = ttnn.experimental.minimal_matmul_strided_reduce_scatter_async(
++            input_tensor=h4,
++            weight_tensor=lin.weight.data,
++            dim=3,
++            multi_device_global_semaphore=mgr.get_rs_ping_pong_semaphore(lin.mesh_axis),
++            reduce_scatter_core_grid_offset=ttnn.CoreCoord(0, gy),
++            num_links=nl,
++            config=ttnn.MinimalMatmulConfig(M_block_size=mb, K_block_size=kb, N_block_size=nb, subblock_h=sh, subblock_w=sw,
++                                            compute_with_storage_grid_size=ttnn.CoreCoord(gx, gy)),
++            num_buffers_per_channel=bufs,
++            chunk_width_in_mm_blocks=ch,
++            num_workers_per_link=max(1, rs_zone // (2 * nl) - 1),
++            bias=lin.bias.data if lin.bias is not None else None,
++            memory_config_mm=ttnn.DRAM_MEMORY_CONFIG,
++            rs_output_mem_config=ttnn.DRAM_MEMORY_CONFIG,
++            topology=mgr.topology,
++            cluster_axis=lin.mesh_axis,
++            compute_kernel_config=lin.compute_config,
++            barrier_semaphore=mgr.get_barrier_semaphore(lin.mesh_axis),
++            fused_ternary_scalar=1.0,
++            addcmul_input_tensor1=x4,
++            addcmul_input_tensor2=gate4,
++        )
++        return out
++
+ 
+ # adapted from https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/transformers/transformer_qwenimage.py
+ class QwenImageTransformer(Module):
+-- 
+2.54.0
+

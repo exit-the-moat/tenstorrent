@@ -12,6 +12,7 @@ plans or names of episodes that are not out yet (Sebastian, 2026-10-31).
 | Folder | Episode | Contents |
 |---|---|---|
 | `fish-drama3-p150/` | 0 | Fish Audio Drama 3 on one p150: the port (`drama3/`), tt-metal patch, setup, bench scripts, eval lines + scorer |
+| `qwen-image-2512-p150x2/` | 3 | Qwen-Image-2512 on 1 or 2 p150: `run.sh` (setup / gen / queue / verify), 22 patches on tt-metal `de59f8a658b1` `models/tt_dit`, harness, checks, results |
 | `results/` | 0 | `drama3.csv`, `drama3-runs/` (Episode 0 run directories), `rtx-pro-6000-reference/` (the GPU comparison) |
 
 Weights go to Hugging Face (org https://huggingface.co/exit-the-moat), not into git. Episode 0:
@@ -220,3 +221,27 @@ stream (~0.4 s each, 17–25 % of the wall).
   (~5.3 GB at 1,792 GB/s): **both estimates** from checkpoint shapes × dtypes.
 - Ideas left (estimates): multi-sequence suffix prefill for admission, async codec readback or ping-pong half batches,
   a 160-frame codec window, a multi-row attention pre kernel for B > 27.
+
+## Episode 3: Qwen-Image-2512 on 2 p150 (images)
+
+Final config `v3a8flq`, all flags in `qwen-image-2512-p150x2/run.sh`; numbers and method in its README. Gates used:
+counted queue of 20 (5 prompts x 4 seeds, warm-up first, two starts per setup); quality = the five test pictures against
+stock diffusers on an RTX with the **same start noise** (CPU `randn` after `torch.manual_seed`), PSNR/SSIM/CLIP plus a
+side-by-side page judged by eye (Sebastian); byte-identity (`reference/sha256.txt`) as the regression check for levers
+that should not change numerics (e.g. `modcache`).
+
+- 50 diffusion steps amplify tiny differences: rewriting only the Euler update moved a picture by 28.7 dB, so 25-29 dB
+  PSNR is the noise floor of "the same picture". Don't gate a numerics lever on PSNR alone; compare by eye.
+- Outputs were byte-identical across starts, processes and days on one box, so sha256 is a cheap regression test.
+- Tracing the whole denoising step: the first picture of a process is right, every later one is noise (cause not
+  found; code kept behind a switch, off).
+- Fused distributed norms fail to build on 4 links: `--norm-links 3` while the gathers use 4.
+- `FABRIC_1D_RING` (needed by a fused ff2 + reduce-scatter) hung the cards three times; stay on `FABRIC_1D`.
+- The fused RoPE op takes BF16 only, so 8-bit q/k/v only works after RoPE (`a8att`).
+- Sustained picture work hits the board limits (`tdp_limit` 150 W, `tdc_limit` 200 A; median clock ~1160-1190 of
+  1350 MHz). Short benchmarks run nearer full clock and overstate compute-only gains: count levers on queues.
+- Never let two processes build the same weight cache at once: `run.sh` starts card 1 after card 0 has loaded.
+- Whole model on one card is tight: the VAE swaps with the text encoder (`EP3_VAE_EVICTS_ENCODER=1`).
+- Qwen2.5-VL text encoder: subtracting the mean key in attention (`TT_DIT_QWEN25VL_CENTER_K=1`) fixes a layer-0
+  precision loss; exact in math.
+- Licence: Qwen-Image-2512 is Apache-2.0, but publish code and numbers only, no converted weights.

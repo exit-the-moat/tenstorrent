@@ -1,0 +1,30 @@
+{
+  "note": "Episode 3 test prompts with fixed seeds (no seed search). moat: the channel artwork prompt. keyart: the original prompt of the channel banner, the episode's main test prompt (empty negative prompt).",
+  "prompts": {
+    "moat": {
+      "seed": 2,
+      "prompt": "Looking out from the top of a dark castle wall over a wide glowing turquoise moat at dawn, a ladder leaning against the outer wall glowing with warm amber light, beyond the moat a sunlit green valley and a winding river under a dramatic sky with golden clouds, faint blue circuit lines rising into the dark sky on the left, cinematic digital painting in the style of epic fantasy concept art, high contrast, deep navy and midnight blue shadows, glowing turquoise water, warm golden amber sunrise light, glowing amber circuit-board traces, volumetric light, dramatic golden clouds, highly detailed, no text, no letters, no logos, no watermark",
+      "negative": "text, letters, words, title, typography, logo, watermark, signature, people, graphics card, photograph, blurry, low quality, purple, pink"
+    },
+    "text": {
+      "seed": 11,
+      "prompt": "A chalkboard outside a small cafe. Written on it in white chalk, in large clear handwriting: \"Exit the Moat\" and, below it in smaller letters, \"Fresh coffee, 2 euro\". Natural afternoon light, photorealistic.",
+      "negative": "blurry, low quality, distorted text"
+    },
+    "portrait": {
+      "seed": 12,
+      "prompt": "A portrait photograph of a middle-aged sailor with a weathered face and a grey beard, wearing a dark wool sweater, looking slightly away from the camera, soft window light, sharp focus on the eyes, natural skin texture, 85mm lens, shallow depth of field.",
+      "negative": "cartoon, painting, blurry, low quality, deformed hands, extra fingers, oversaturated, waxy skin"
+    },
+    "detail": {
+      "seed": 13,
+      "prompt": "A detailed illustration of a busy harbour town market at sunset: fishing boats with patched sails in the background, stalls with baskets of fruit and silver fish, lanterns strung between the houses, cobblestones wet from rain, seagulls overhead, dozens of tiny details everywhere, warm evening colours.",
+      "negative": "blurry, low quality, empty scene"
+    },
+    "keyart": {
+      "seed": 2,
+      "prompt": "Create a wide YouTube channel banner for \"Exit the Moat\", a tech channel about escaping the NVIDIA/CUDA moat by running AI locally on open, alternative hardware.\n\nScene: a dark, atmospheric fortress on the far left and right edges, surrounded by a glowing teal moat. In the center, a bridge made of glowing circuit-board traces crosses the moat and leads out into open, bright landscape, with a warm amber light at the far end. Subtle details: server cards, chips and data streams in the background, very low contrast so the center stays clean.\n\nText: write \"EXIT THE MOAT\" in large, bold, clean sans-serif capitals, with a smaller line below: \"Local AI beyond the CUDA lock-in\". Spell the text exactly like this.\n\nLayout (critical): 16:9 aspect ratio, landscape. All text and the bridge must sit inside a centered horizontal band that covers only the middle 60% of the width and the middle 30% of the height. Everything outside that band is decoration only and may be cropped on phones, so place nothing important there.\n\nStyle: modern, cinematic, flat-to-semi-realistic digital illustration. Colors: deep navy and near-black, teal water, one warm amber accent, white text. No border, no frame, no drop shadow around the image edges. Do not use any real company logos or brand marks.",
+      "negative": ""
+    }
+  }
+}

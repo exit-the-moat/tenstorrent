@@ -1,0 +1,737 @@
+{
+  "note": "Episode 3 music videos (\"Render Sprint\", versions 1-3 = s1, s2, s3): the 122 pictures drawn on the two cards with the final setup. Seeds are the ones used (1000 x version + picture number; s1-05 and s1-20 were redrawn with seed + 100). Same format as ../harness/prompts.json.",
+  "prompts": {
+    "s1-01": {
+      "seed": 1001,
+      "section": "intro",
+      "prompt": "A dark basement at night seen from the top of a narrow stone staircase, a single warm lamp below, the faint teal glow of a computer case at the far end of the room, dust in the air. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-02": {
+      "seed": 1002,
+      "section": "intro",
+      "prompt": "Close view of an open computer case on a wooden workbench in a dark basement, two long graphics-card-like accelerator boards with glowing teal edges side by side, golden circuit traces shimmering, cables in soft shadow. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-03": {
+      "seed": 1003,
+      "section": "verse 1",
+      "prompt": "Two accelerator cards standing in a computer case like two lanterns, glowing teal light spilling across a dark basement wall of old stone bricks. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-04": {
+      "seed": 1004,
+      "section": "verse 1",
+      "prompt": "Cooling fans spinning in a dark computer case, motion blur on the fan blades, warm golden light rays cutting through the dust, teal glow behind them. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-05": {
+      "seed": 1105,
+      "section": "verse 1",
+      "prompt": "A field of colourful static noise on a monitor in a dark room, the noise slowly forming the vague shape of a carved marble statue face, stylised and painterly, not a real person, teal and gold light reflected on the desk. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-06": {
+      "seed": 1006,
+      "section": "verse 1",
+      "prompt": "A painted stone statue face emerging out of swirling teal noise particles, half formed, half still made of glowing dust, dramatic golden rim light. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-07": {
+      "seed": 1007,
+      "section": "pre-chorus 1",
+      "prompt": "An old monitor in the dark showing pure television static, teal and grey grain, a faint golden glow at its edges, the rest of the room black. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-08": {
+      "seed": 1008,
+      "section": "pre-chorus 1",
+      "prompt": "A dark stone castle on a rocky island at night, surrounded by a wide glowing teal moat, golden circuit-board traces running through the castle walls like veins of light, a navy starry sky. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-09": {
+      "seed": 1009,
+      "section": "chorus 1",
+      "prompt": "Millions of glowing teal and golden pixels falling from the night sky like rain and snapping into a perfect grid above a dark castle moat. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-10": {
+      "seed": 1010,
+      "section": "chorus 1",
+      "prompt": "Square tiles of light falling into line to form a mosaic picture of a castle, seen from a low angle, teal and gold sparks, deep navy background. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-11": {
+      "seed": 1011,
+      "section": "chorus 1",
+      "prompt": "A lone computer in a stone cellar with no cables leading outside, its two accelerator cards glowing teal, small rain clouds outside the window dissolving. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-12": {
+      "seed": 1012,
+      "section": "chorus 1",
+      "prompt": "Two glowing accelerator cards on a dark workbench painting a picture together with beams of teal and golden light onto a canvas of fog. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-13": {
+      "seed": 1013,
+      "section": "chorus 1",
+      "prompt": "A sprinter made of golden light racing across a bridge of circuit traces over a glowing teal moat at night, long light trails behind it, seen from the side at a distance. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-14": {
+      "seed": 1014,
+      "section": "chorus 1",
+      "prompt": "A burst of light breaking out of a dark cloud of grey noise, the noise dissolving into bright golden rays over a teal moat. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-15": {
+      "seed": 1015,
+      "section": "chorus 1",
+      "prompt": "A wooden ladder leaning against a dark castle wall over a glowing teal moat at night, the first rung lit by warm golden light, stars above. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-16": {
+      "seed": 1016,
+      "section": "post-chorus 1",
+      "prompt": "A quiet aerial view of the dark castle and its glowing teal moat at night, golden circuit traces outlining the fields around it like a map. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-17": {
+      "seed": 1017,
+      "section": "post-chorus 1",
+      "prompt": "Water of the teal moat seen up close at night, small golden circuit patterns reflected and rippling on its surface. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-18": {
+      "seed": 1018,
+      "section": "verse 2",
+      "prompt": "A row of small glowing switches on a dark brass control panel, half of them flipped, golden light, teal indicator lamps, shallow depth of field. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-19": {
+      "seed": 1019,
+      "section": "verse 2",
+      "prompt": "A long wall of framed pictures in a dark stone gallery, each frame lit by a small teal lamp, a magnifying glass on a pedestal in the foreground. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-20": {
+      "seed": 1120,
+      "section": "verse 2",
+      "prompt": "A glowing gauge needle pressed against its red limit zone on an old brass power meter with a plain blank dial face without any numbers or markings, in a dark machine room, heat shimmer, teal and golden light. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-21": {
+      "seed": 1021,
+      "section": "verse 2",
+      "prompt": "A tangle of golden glowing cables being tied into neat knots on a dark workbench, an hourglass with glowing teal sand beside them. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-22": {
+      "seed": 1022,
+      "section": "pre-chorus 2",
+      "prompt": "Hundreds of glowing golden seeds floating in the dark above a teal moat, each seed holding a tiny different picture inside. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-23": {
+      "seed": 1023,
+      "section": "pre-chorus 2",
+      "prompt": "A long cloth banner hanging from the dark castle wall above the glowing teal moat at night, lit by golden torches, with the words \"EXIT THE MOAT\" painted on it in large clean bold capitals. Spell the text exactly like this. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition.",
+      "negative": "logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, misspelled text, extra letters, blurry, low quality, jpeg artifacts"
+    },
+    "s1-24": {
+      "seed": 1024,
+      "section": "chorus 2",
+      "prompt": "Pixels like glowing golden sand pouring from the sky into neat rows over a dark castle courtyard at night, teal moat glowing around it. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-25": {
+      "seed": 1025,
+      "section": "chorus 2",
+      "prompt": "A huge mosaic of light being assembled tile by tile on the castle wall, teal and gold, seen from the moat at night. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-26": {
+      "seed": 1026,
+      "section": "chorus 2",
+      "prompt": "An empty cloud-shaped frame of light breaking apart above a small home computer in a stone cellar, warm golden lamp light, teal glow. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-27": {
+      "seed": 1027,
+      "section": "chorus 2",
+      "prompt": "A painter's easel in a dark cellar, two glowing teal accelerator cards beside it, the canvas showing a golden sunrise over a castle moat. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-28": {
+      "seed": 1028,
+      "section": "chorus 2",
+      "prompt": "Two streaks of teal and golden light racing side by side across the dark moat like comets, reflections on the water. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-29": {
+      "seed": 1029,
+      "section": "chorus 2",
+      "prompt": "Fog of grey static parting to reveal a bright golden light at the end of a stone tunnel, teal water on the tunnel floor. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-30": {
+      "seed": 1030,
+      "section": "chorus 2",
+      "prompt": "A figure seen from behind at a distance, climbing a ladder up the dark castle wall above the glowing teal moat, the top of the wall lit by first golden light of dawn. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-31": {
+      "seed": 1031,
+      "section": "bridge",
+      "prompt": "A closed iron gate in a dark stone wall, a single glowing green keycard slot beside it, everything else in navy shadow, teal moat below. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-32": {
+      "seed": 1032,
+      "section": "bridge",
+      "prompt": "One narrow road winding away from the castle into the dark hills before dawn, a second, unlit staircase cut into the cliff beside it. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-33": {
+      "seed": 1033,
+      "section": "bridge",
+      "prompt": "A long stone staircase cut into a cliff above the teal moat, small lanterns on every landing, the sky turning from navy to violet before sunrise. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-34": {
+      "seed": 1034,
+      "section": "final chorus",
+      "prompt": "The sky at dawn full of falling golden pixels snapping into line above the castle, the teal moat shining, the first sunrays on the horizon. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-35": {
+      "seed": 1035,
+      "section": "final chorus",
+      "prompt": "A mosaic of a sunrise assembled from glowing square tiles, set into the stone of the castle wall, golden morning light. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-36": {
+      "seed": 1036,
+      "section": "final chorus",
+      "prompt": "A small home computer on a windowsill of the castle at sunrise, its two accelerator cards glowing teal, no cables leading out, open sky. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-37": {
+      "seed": 1037,
+      "section": "final chorus",
+      "prompt": "Two glowing accelerator cards on a stone table at sunrise, hundreds of finished paintings stacked around them, warm golden light. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-38": {
+      "seed": 1038,
+      "section": "final chorus",
+      "prompt": "A golden sprinter of light running out of the castle gate across a bridge of circuit traces toward the rising sun. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-39": {
+      "seed": 1039,
+      "section": "final chorus",
+      "prompt": "Darkness and grey noise breaking open into a brilliant golden sunrise over the teal moat, rays of light flooding the castle walls. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-40": {
+      "seed": 1040,
+      "section": "final chorus",
+      "prompt": "A figure seen from behind standing on top of the castle wall at sunrise, arms raised, the teal moat far below, golden open country ahead. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s1-41": {
+      "seed": 1041,
+      "section": "outro",
+      "prompt": "Wide view of the castle and its teal moat in full golden sunrise, a bridge of golden circuit traces leading out into bright open country, calm and quiet. Painterly, cinematic digital illustration with soft visible brush texture, volumetric light and rich atmosphere. Palette: deep navy night tones, dark weathered stone, glowing teal water, fine glowing golden circuit-board traces, warm golden light. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-01": {
+      "seed": 2001,
+      "section": "intro",
+      "prompt": "Macro view across the surface of a dark silicon chip at night, rows of square processor tiles stretching to the horizon like a city, faint teal light. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-02": {
+      "seed": 2002,
+      "section": "intro",
+      "prompt": "A canyon between towering stacks of circuit layers, golden traces running along the walls like roads, teal mist at the bottom. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-03": {
+      "seed": 2003,
+      "section": "intro",
+      "prompt": "A grid of square glowing tiles seen from above, a few tiles waking up one by one with teal light, the rest dark navy. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-04": {
+      "seed": 2004,
+      "section": "intro",
+      "prompt": "Golden data streams flowing like rivers through channels in a dark circuit landscape, sparks of teal light on the surface. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-05": {
+      "seed": 2005,
+      "section": "verse 1",
+      "prompt": "Two parallel glowing silicon plateaus side by side in a dark circuit world, connected by thick bridges of light, like twin cities at night. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-06": {
+      "seed": 2006,
+      "section": "verse 1",
+      "prompt": "A giant cooling fan as big as a cathedral turning slowly above a circuit landscape, golden light rays through the blades, teal haze. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-07": {
+      "seed": 2007,
+      "section": "verse 1",
+      "prompt": "Fifty translucent layers of noise stacked like glass sheets, the front ones chaotic static, the back ones gradually becoming a clear golden pattern. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-08": {
+      "seed": 2008,
+      "section": "verse 1",
+      "prompt": "A shape assembling itself from square tiles in a dark grid world, the tiles flying in and locking into place, teal and gold sparks. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-09": {
+      "seed": 2009,
+      "section": "pre-chorus 1",
+      "prompt": "A wall of pure static noise made of tiny teal and grey squares, filling the whole view, a faint golden glow behind it. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-10": {
+      "seed": 2010,
+      "section": "pre-chorus 1",
+      "prompt": "The static noise starting to organise into lines and blocks, like a circuit layout emerging from snow, teal and gold. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-11": {
+      "seed": 2011,
+      "section": "pre-chorus 1",
+      "prompt": "A castle built out of circuit-board architecture, chip towers and golden traces, standing on a silicon island surrounded by a moat of glowing teal liquid light. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-12": {
+      "seed": 2012,
+      "section": "chorus 1",
+      "prompt": "Pixels falling like a waterfall of teal and golden cubes into a perfectly ordered grid at the bottom, dark navy depth. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-13": {
+      "seed": 2013,
+      "section": "chorus 1",
+      "prompt": "A tiny home computer floating alone in the dark circuit world, connected to nothing, glowing warm and self-contained, two teal cards inside it. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-14": {
+      "seed": 2014,
+      "section": "chorus 1",
+      "prompt": "Two processor tiles side by side drawing a picture together with beams of golden light onto a dark canvas made of pixels. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-15": {
+      "seed": 2015,
+      "section": "chorus 1",
+      "prompt": "A storm of grey noise particles collapsing inward and turning into a single bright beam of golden light shooting upward through a circuit landscape. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-16": {
+      "seed": 2016,
+      "section": "verse 2",
+      "prompt": "Abstract view of eight glowing golden lanes narrowing into a fast tunnel of light, a shortcut cutting straight through a circuit maze. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-17": {
+      "seed": 2017,
+      "section": "verse 2",
+      "prompt": "An inspection lens of light scanning row after row of tiny glowing picture frames on a conveyor of circuit traces, teal glow. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-18": {
+      "seed": 2018,
+      "section": "verse 2",
+      "prompt": "A power line of golden energy pressing against a glowing ceiling of red light in a dark circuit world, heat shimmer, sparks. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-19": {
+      "seed": 2019,
+      "section": "verse 2",
+      "prompt": "Golden data threads being tied into tidy knots by beams of teal light, a glowing hourglass made of circuits ticking beside them. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-20": {
+      "seed": 2020,
+      "section": "pre-chorus 2",
+      "prompt": "Hundreds of glowing seeds of light falling into the soil of a dark circuit field, each one sprouting a different tiny picture. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-21": {
+      "seed": 2021,
+      "section": "pre-chorus 2",
+      "prompt": "Rows of small glowing picture tiles, each one slightly different, arranged like a seed catalogue on a dark circuit wall. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-22": {
+      "seed": 2022,
+      "section": "pre-chorus 2",
+      "prompt": "A vast banner of light stretched between two chip towers in a dark circuit world, with the words \"EXIT THE MOAT\" in large clean bold capitals glowing gold. Spell the text exactly like this. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition.",
+      "negative": "logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, misspelled text, extra letters, blurry, low quality, jpeg artifacts"
+    },
+    "s2-23": {
+      "seed": 2023,
+      "section": "chorus 2",
+      "prompt": "A cascade of golden pixels falling into line across a dark grid, forming the shape of a castle as they land, teal light below. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-24": {
+      "seed": 2024,
+      "section": "chorus 2",
+      "prompt": "A self-contained glowing machine in the dark with no wires going out, rain of tiny clouds evaporating before they reach it. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-25": {
+      "seed": 2025,
+      "section": "chorus 2",
+      "prompt": "Two glowing processor tiles working side by side, streams of finished small paintings flying out of them like a printing press of light. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-26": {
+      "seed": 2026,
+      "section": "chorus 2",
+      "prompt": "A teal and golden light breaking through a dense fog of static noise inside a chip tunnel, the tunnel exit blazing. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-27": {
+      "seed": 2027,
+      "section": "bridge",
+      "prompt": "A single giant green-lit gate in the dark circuit world, the only door anyone uses, a quiet side path of golden traces leading around it. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-28": {
+      "seed": 2028,
+      "section": "bridge",
+      "prompt": "A long staircase of processor tiles climbing slowly upward into the darkness of the circuit world, each step faintly lit in teal. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-29": {
+      "seed": 2029,
+      "section": "final chorus",
+      "prompt": "An explosion of pixels raining down and snapping into a perfect glowing grid, the whole circuit landscape lighting up teal and gold. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-30": {
+      "seed": 2030,
+      "section": "final chorus",
+      "prompt": "A great mosaic of the sunrise forming on a chip surface, tile by tile, warm golden light spreading across the silicon. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-31": {
+      "seed": 2031,
+      "section": "final chorus",
+      "prompt": "A small home computer floating in the circuit world, beams of light coming out of it and painting pictures in the air around it. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-32": {
+      "seed": 2032,
+      "section": "final chorus",
+      "prompt": "Two twin silicon towers glowing teal and gold, connected by four bright bridges of light, pictures streaming between them. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-33": {
+      "seed": 2033,
+      "section": "final chorus",
+      "prompt": "A surge of golden energy racing along circuit traces like a sprinter, light trails curving through a dark chip landscape. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-34": {
+      "seed": 2034,
+      "section": "final chorus",
+      "prompt": "The dark noise of a circuit world breaking open into pure golden light, square tiles flying outward, a sunrise rising out of the silicon. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-35": {
+      "seed": 2035,
+      "section": "final chorus",
+      "prompt": "A climb up the outside wall of a chip castle made of circuit towers, the top glowing in golden light, the teal liquid moat far below. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-36": {
+      "seed": 2036,
+      "section": "outro",
+      "prompt": "The circuit world at dawn seen from high above, golden light flowing through every trace, the teal moat around the chip castle calm. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-37": {
+      "seed": 2037,
+      "section": "outro",
+      "prompt": "A bridge of golden circuit traces leading out of the chip landscape toward a horizon of soft golden light. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-38": {
+      "seed": 2038,
+      "section": "outro",
+      "prompt": "Square tiles of light slowly rising into the sky like lanterns above the circuit world, teal and gold, peaceful. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s2-39": {
+      "seed": 2039,
+      "section": "outro",
+      "prompt": "A last wide view of the chip castle on its silicon island in the teal moat, glowing softly, the lights slowly dimming. Painterly, cinematic digital illustration of a world inside a computer chip: architecture made of circuit traces, square processor tiles and glowing grids, like a macro view that feels like a landscape. Soft brush texture, volumetric light. Palette: deep navy and near-black, glowing teal light, molten golden circuit traces, small warm amber highlights. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-01": {
+      "seed": 3001,
+      "section": "intro",
+      "prompt": "A dark stone castle on a hill under a navy sky before dawn, a glowing teal moat around it, a tiny lit window in its basement. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-02": {
+      "seed": 3002,
+      "section": "intro",
+      "prompt": "Rain-wet cobblestones leading to the castle gate at night, puddles reflecting teal light and golden circuit traces in the stones. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-03": {
+      "seed": 3003,
+      "section": "intro",
+      "prompt": "A basement window of the castle seen from outside, warm golden light and a teal glow of machines inside, ivy on the stone. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-04": {
+      "seed": 3004,
+      "section": "intro",
+      "prompt": "Steep dark castle walls rising straight out of the teal moat, iron rings and old ladders on the stone, golden traces glowing faintly. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-05": {
+      "seed": 3005,
+      "section": "verse 1",
+      "prompt": "Two glowing lanterns side by side on the castle's basement floor, their teal light reaching up the stone stairs. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-06": {
+      "seed": 3006,
+      "section": "verse 1",
+      "prompt": "Wind turning the vanes of an old windmill next to the castle at night, golden lamplight in its windows, teal moat below. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-07": {
+      "seed": 3007,
+      "section": "verse 1",
+      "prompt": "A path of fifty stepping stones leading across the teal moat, the first stones rough and blurry, the last ones sharp and polished. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-08": {
+      "seed": 3008,
+      "section": "verse 1",
+      "prompt": "A carved stone face on the castle wall slowly coming into focus out of mist, golden morning light touching its edges. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-09": {
+      "seed": 3009,
+      "section": "pre-chorus 1",
+      "prompt": "Thick grey fog swirling above the moat, nothing visible but faint teal glows inside it. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-10": {
+      "seed": 3010,
+      "section": "pre-chorus 1",
+      "prompt": "The fog lifting to reveal the dark castle and its wide glowing teal moat, golden circuit traces lit in its walls, the first light of dawn behind it. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-11": {
+      "seed": 3011,
+      "section": "chorus 1",
+      "prompt": "Golden leaves falling from the sky and settling in perfect rows on the courtyard stones of the castle, teal moat beyond the walls. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-12": {
+      "seed": 3012,
+      "section": "chorus 1",
+      "prompt": "A small cottage with a lit window beside the castle, smoke from its chimney, no power lines anywhere, open meadows, dawn light. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-13": {
+      "seed": 3013,
+      "section": "chorus 1",
+      "prompt": "Two glowing lanterns on a hill painting the valley below with beams of teal and golden light like a projector. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-14": {
+      "seed": 3014,
+      "section": "chorus 1",
+      "prompt": "A runner seen from behind at a distance, sprinting down a long golden road away from the castle at dawn. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-15": {
+      "seed": 3015,
+      "section": "chorus 1",
+      "prompt": "Sunlight breaking through dark storm clouds over the moat, golden rays striking the water. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-16": {
+      "seed": 3016,
+      "section": "chorus 1",
+      "prompt": "A rope ladder hanging down the outside of the castle wall, a figure seen from behind climbing it, the moat glowing teal below. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-17": {
+      "seed": 3017,
+      "section": "verse 2",
+      "prompt": "A narrow shortcut path cut straight through a dense dark forest beside the castle, golden lanterns marking it. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-18": {
+      "seed": 3018,
+      "section": "verse 2",
+      "prompt": "A long gallery of small paintings hung on the castle's outer wall, each lit by a lantern, inspected by a lantern-carrying figure seen from behind. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-19": {
+      "seed": 3019,
+      "section": "verse 2",
+      "prompt": "A glowing forge in the castle courtyard pushed to its limit, white-hot coals, sparks flying, teal moat behind. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-20": {
+      "seed": 3020,
+      "section": "verse 2",
+      "prompt": "A ship's ropes being tied into neat knots at the castle's little harbour, an hourglass on a barrel, golden evening light. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-21": {
+      "seed": 3021,
+      "section": "pre-chorus 2",
+      "prompt": "A gardener's hands scattering glowing golden seeds over dark soil beside the moat, tiny sprouts lighting up teal. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-22": {
+      "seed": 3022,
+      "section": "pre-chorus 2",
+      "prompt": "A huge cloth banner unfurling down the castle wall in golden morning light above the teal moat, with the words \"EXIT THE MOAT\" in large clean bold capitals. Spell the text exactly like this. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition.",
+      "negative": "logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, misspelled text, extra letters, blurry, low quality, jpeg artifacts"
+    },
+    "s3-23": {
+      "seed": 3023,
+      "section": "chorus 2",
+      "prompt": "Flocks of golden birds falling into a perfect formation over the castle and the teal moat at sunrise. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-24": {
+      "seed": 3024,
+      "section": "chorus 2",
+      "prompt": "A small self-sufficient homestead on a hill with a lit window, a windmill and a garden, no roads or cables leading in. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-25": {
+      "seed": 3025,
+      "section": "chorus 2",
+      "prompt": "Two lanterns on a stone wall projecting a picture of a sunrise onto the morning mist. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-26": {
+      "seed": 3026,
+      "section": "chorus 2",
+      "prompt": "Two riders seen from behind at a distance galloping along the moat at sunrise, light trails behind them. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-27": {
+      "seed": 3027,
+      "section": "chorus 2",
+      "prompt": "A golden sunrise flooding a dark stone valley, mist burning away, the teal moat glowing. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-28": {
+      "seed": 3028,
+      "section": "chorus 2",
+      "prompt": "A figure seen from behind halfway up the castle wall on a ladder, looking up at the golden sky. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-29": {
+      "seed": 3029,
+      "section": "bridge",
+      "prompt": "A single crowded toll gate on the only paved road out of the valley, a green lamp above it, a long queue of carts, dusk. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-30": {
+      "seed": 3030,
+      "section": "bridge",
+      "prompt": "A long winding dirt road leading away from the castle over far hills, nobody on it, evening light. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-31": {
+      "seed": 3031,
+      "section": "bridge",
+      "prompt": "An endless stone staircase climbing a mountain cliff, small lanterns along it, the castle and moat tiny far below. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-32": {
+      "seed": 3032,
+      "section": "build",
+      "prompt": "A traveller seen from behind at the foot of the mountain stairs, a heavy pack, lanterns leading up into golden clouds. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-33": {
+      "seed": 3033,
+      "section": "build",
+      "prompt": "The staircase halfway up the cliff, the view opening wide over the castle, the teal moat and the valley in morning light. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-34": {
+      "seed": 3034,
+      "section": "build",
+      "prompt": "Clouds parting above the mountain stairs, golden rays streaming down, the top of the stairs in sight. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-35": {
+      "seed": 3035,
+      "section": "build",
+      "prompt": "The last steps of a stone staircase at the top of a cliff, a burst of golden sunlight beyond the edge. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-36": {
+      "seed": 3036,
+      "section": "final chorus",
+      "prompt": "Thousands of golden lights rising from the valley and falling into neat rows like a field of stars at sunrise. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-37": {
+      "seed": 3037,
+      "section": "final chorus",
+      "prompt": "Open country at sunrise, golden fields, a small home with a glowing window, the castle and its moat far behind. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-38": {
+      "seed": 3038,
+      "section": "final chorus",
+      "prompt": "Two glowing lanterns at a hilltop lookout painting the whole landscape in golden light. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-39": {
+      "seed": 3039,
+      "section": "final chorus",
+      "prompt": "A figure seen from behind running across open golden meadows away from the distant castle, arms wide. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-40": {
+      "seed": 3040,
+      "section": "final chorus",
+      "prompt": "Darkness breaking into a brilliant sunrise over an open landscape, the old castle and its teal moat small and far behind. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-41": {
+      "seed": 3041,
+      "section": "final chorus",
+      "prompt": "A figure seen from behind standing on top of the outer castle wall with the ladder below, the whole golden open country ahead. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    },
+    "s3-42": {
+      "seed": 3042,
+      "section": "outro",
+      "prompt": "A wide calm landscape in golden evening light, a long road leading over the hills, the castle with its teal moat tiny on the horizon. Painterly, cinematic digital illustration, epic landscape painting with soft brush texture and volumetric light. Palette: dark weathered stone castle, glowing teal moat water, fine golden circuit-board traces in the stone, warm golden sunlight over open country, navy shadows. Wide 16:9 landscape composition. No text, no letters, no logos.",
+      "negative": "text, letters, words, numbers, writing, caption, logo, brand mark, emblem, watermark, signature, frame, border, face close-up, realistic person, deformed hands, extra limbs, blurry, low quality, jpeg artifacts"
+    }
+  }
+}

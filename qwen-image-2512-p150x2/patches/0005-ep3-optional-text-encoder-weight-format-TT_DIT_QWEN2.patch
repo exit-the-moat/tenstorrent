@@ -1,0 +1,90 @@
+From a4f4ae42ca9deac2b6329aefc8ed46b5870fd780 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 04:05:05 +0100
+Subject: [PATCH 05/22] ep3: optional text-encoder weight format
+ (TT_DIT_QWEN25VL_WEIGHTS=bf8|bf4, default bf16)
+
+---
+ .../tt_dit/encoders/qwen25vl/encoder_pair.py  | 45 +++++++++++--------
+ 1 file changed, 27 insertions(+), 18 deletions(-)
+
+diff --git a/models/tt_dit/encoders/qwen25vl/encoder_pair.py b/models/tt_dit/encoders/qwen25vl/encoder_pair.py
+index 7861160e2..c22e829fe 100644
+--- a/models/tt_dit/encoders/qwen25vl/encoder_pair.py
++++ b/models/tt_dit/encoders/qwen25vl/encoder_pair.py
+@@ -41,6 +41,7 @@ class Qwen25VlTokenizerEncoderPair:
+         self._checkpoint = checkpoint
+         self._encoder_subfolder = encoder_subfolder
+         self._use_torch = use_torch
++        self._weights_tag = ""
+         self._encoder_loaded = True
+         self._is_fsdp = is_fsdp
+ 
+@@ -72,22 +73,30 @@ class Qwen25VlTokenizerEncoderPair:
+         rope_params = getattr(text_config, "rope_parameters", None) or getattr(text_config, "rope_scaling", None) or {}
+         rope_theta = getattr(text_config, "rope_theta", None) or rope_params.get("rope_theta")
+ 
+-        model = Qwen25VlTextEncoder(
+-            vocab_size=text_config.vocab_size,
+-            hidden_size=text_config.hidden_size,
+-            intermediate_size=text_config.intermediate_size,
+-            hidden_act=text_config.hidden_act,
+-            num_hidden_layers=text_config.num_hidden_layers,
+-            num_attention_heads=text_config.num_attention_heads,
+-            num_key_value_heads=text_config.num_key_value_heads,
+-            rms_norm_eps=text_config.rms_norm_eps,
+-            rope_theta=rope_theta,
+-            mrope_section=rope_params["mrope_section"],
+-            device=self._device,
+-            ccl_manager=self._ccl_manager,
+-            parallel_config=self._parallel_config,
+-            is_fsdp=self._is_fsdp,
+-        )
++        import os as _os
++        from contextlib import nullcontext as _nullcontext
++        from ...layers.linear import weight_dtype_override as _wdo
++
++        _w = _os.environ.get("TT_DIT_QWEN25VL_WEIGHTS", "bf16")  # ep3 switch, default bf16 (unchanged)
++        _dt = {"bf16": None, "bf8": ttnn.bfloat8_b, "bf4": ttnn.bfloat4_b}[_w]
++        self._weights_tag = "" if _dt is None else f"_{_w}"
++        with (_wdo(_dt) if _dt is not None else _nullcontext()):
++          model = Qwen25VlTextEncoder(
++              vocab_size=text_config.vocab_size,
++              hidden_size=text_config.hidden_size,
++              intermediate_size=text_config.intermediate_size,
++              hidden_act=text_config.hidden_act,
++              num_hidden_layers=text_config.num_hidden_layers,
++              num_attention_heads=text_config.num_attention_heads,
++              num_key_value_heads=text_config.num_key_value_heads,
++              rms_norm_eps=text_config.rms_norm_eps,
++              rope_theta=rope_theta,
++              mrope_section=rope_params["mrope_section"],
++              device=self._device,
++              ccl_manager=self._ccl_manager,
++              parallel_config=self._parallel_config,
++              is_fsdp=self._is_fsdp,
++          )
+ 
+         torch_text_model = torch_model.model.language_model
+ 
+@@ -105,7 +114,7 @@ class Qwen25VlTokenizerEncoderPair:
+             tt_model=model,
+             get_torch_state_dict=lambda: torch_state_dict,
+             model_name=checkpoint,
+-            subfolder=subfolder if subfolder is not None else "",
++            subfolder=(subfolder if subfolder is not None else "") + self._weights_tag,
+             parallel_config=self._parallel_config,
+             mesh_shape=tuple(self._device.shape),
+             mesh_device=self._device,
+@@ -127,7 +136,7 @@ class Qwen25VlTokenizerEncoderPair:
+             tt_model=self._encoder,
+             get_torch_state_dict=lambda: self._encoder_state_dict,
+             model_name=self._checkpoint,
+-            subfolder=self._encoder_subfolder if self._encoder_subfolder is not None else "",
++            subfolder=(self._encoder_subfolder if self._encoder_subfolder is not None else "") + self._weights_tag,
+             parallel_config=self._parallel_config,
+             mesh_shape=tuple(self._device.shape),
+             mesh_device=self._device,
+-- 
+2.54.0
+

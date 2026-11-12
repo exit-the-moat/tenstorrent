@@ -1,0 +1,106 @@
+From ca3dc9eed11fad3240a0a82af0961cebc2421cd5 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 02:33:27 +0100
+Subject: [PATCH 03/22] ep3: traced denoising for the real-length path (whole
+ step in one trace, host-copied timestep and dt, in-place Euler update)
+
+---
+ .../pipelines/qwenimage/pipeline_qwenimage.py | 61 ++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 1 deletion(-)
+
+diff --git a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+index 7f0980971..e774df9e4 100644
+--- a/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
++++ b/models/tt_dit/pipelines/qwenimage/pipeline_qwenimage.py
+@@ -483,7 +483,7 @@ class QwenImagePipeline(PipelineAPIMixin):
+         branch_lens = [int(n) for n in _prompt_mask.sum(dim=1).tolist()] if trim else None
+         cp_factor = self._parallel_config.cfg_parallel.factor
+         if trim:
+-            assert not traced, "ep3: trim_prompt with tracing is not implemented"
++            assert not traced or cp_factor == 1, "ep3: traced trim_prompt needs one submesh (tensor split or one card)"
+             assert self._cfg_enabled, "ep3: trim_prompt needs CFG branches"
+             logger.info(f"real-length prompts: branch lengths {branch_lens} (uncond, cond)")
+ 
+@@ -543,6 +543,41 @@ class QwenImagePipeline(PipelineAPIMixin):
+             on_event(SectionStart(f"denoising_step_{i}"))
+ 
+             velocity_preds = []
++            if trim and cp_factor == 1 and (traced or os.environ.get("EP3_TRACE_SAME_DT") == "1"):
++                # ep3: whole step as one function (both branches, combine, Euler update in place); traced from step 1.
++                dt_value = sigmas[i + 1] - sigmas[i]
++                ts_host = ttnn.from_torch(torch.full([1, 1], float(t)), dtype=ttnn.float32, layout=ttnn.TILE_LAYOUT)
++                dt_host = ttnn.from_torch(torch.full([1, 1], float(dt_value)), dtype=ttnn.float32, layout=ttnn.TILE_LAYOUT)
++                step_kwargs = dict(
++                    latents=latents[0],
++                    prompt0=branch_context[0],
++                    prompt1=branch_context[1],
++                    rope0=branch_rope[0],
++                    rope1=branch_rope[1],
++                    spatial_rope=(latents_rope_cos[0], latents_rope_sin[0]),
++                    spatial_sequence_length=latents_sequence_length,
++                    len0=branch_lens[0],
++                    len1=branch_lens[1],
++                    cfg_scale=float(cfg_scale),
++                )
++                if i == 0 or not traced:
++                    step_kwargs["timestep"] = ts_host.to(self._submesh_devices[0])
++                    step_kwargs["dt"] = dt_host.to(self._submesh_devices[0])
++                    self._trim_full_step(**step_kwargs)
++                    if traced and i == 0:
++                        step_tracer = Tracer(self._trim_full_step, device=self._submesh_devices[0], prep_run=False)
++                else:
++                    step_kwargs["timestep"] = ts_host
++                    step_kwargs["dt"] = dt_host
++                    step_tracer(**step_kwargs, traced=True, tracer_blocking_execution=False)
++                    if i == 1:
++                        latents = [step_tracer.inputs["latents"]]
++                self.synchronize_devices()
++                if os.environ.get("EP3_DUMP_LAT") and i == int(os.environ.get("EP3_DUMP_STEP", "25")):
++                    dump = ttnn.to_torch(ttnn.get_device_tensors(latents[0])[0])
++                    torch.save({"latents": dump, "step": i, "t": float(t), "seed": seed}, os.environ["EP3_DUMP_LAT"] + f"_s{seed}_i{i}.pt")
++                on_event(SectionEnd(f"denoising_step_{i}"))
++                continue
+             if trim and cp_factor == 1:
+                 # ep3: one submesh, one forward per CFG branch at its own real prompt length.
+                 timestep = ttnn.full([1, 1], fill_value=t, layout=ttnn.TILE_LAYOUT, dtype=ttnn.float32, device=self._submesh_devices[0])
+@@ -613,6 +648,9 @@ class QwenImagePipeline(PipelineAPIMixin):
+ 
+             on_event(SectionEnd(f"denoising_step_{i}"))
+         on_event(SectionEnd("denoising"))
++        if trim and traced and cp_factor == 1:
++            step_tracer.release_trace()
++            step_tracer.release_function()
+ 
+         logger.info("decoding image...")
+ 
+@@ -628,6 +666,27 @@ class QwenImagePipeline(PipelineAPIMixin):
+ 
+         return output
+ 
++    def _trim_full_step(
++        self, *, latents, prompt0, prompt1, rope0, rope1, spatial_rope, timestep, dt, spatial_sequence_length, len0, len1, cfg_scale
++    ) -> ttnn.Tensor:
++        """ep3: one denoising step with real-length prompts: two forwards, CFG combine, Euler update in place."""
++        preds = []
++        for prompt, rope, n in ((prompt0, rope0, len0), (prompt1, rope1, len1)):
++            preds.append(
++                self.transformers[0].forward(
++                    spatial=latents,
++                    prompt=prompt,
++                    timestep=timestep,
++                    spatial_rope=spatial_rope,
++                    prompt_rope=rope,
++                    spatial_sequence_length=spatial_sequence_length,
++                    prompt_sequence_length=n,
++                )
++            )
++        (velocity,) = self._cfg_combiner.combine(preds, cfg_scale)
++        ttnn.add(latents, ttnn.multiply(velocity, dt), output_tensor=latents)
++        return latents
++
+     def _traced_step(self, *, cfg_enabled: bool, submesh_idx: int, latents: ttnn.Tensor, **kwargs: Any) -> ttnn.Tensor:
+         if cfg_enabled and self._parallel_config.cfg_parallel.factor == 1:
+             latents = ttnn.concat([latents, latents])
+-- 
+2.54.0
+

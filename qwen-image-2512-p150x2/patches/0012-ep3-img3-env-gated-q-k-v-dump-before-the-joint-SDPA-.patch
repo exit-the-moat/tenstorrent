@@ -1,0 +1,27 @@
+From a57540d3693d0b569728cde15cfb289dbb6d7857 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 10 Nov 2026 23:46:07 +0100
+Subject: [PATCH 12/22] ep3 (img3): env-gated q/k/v dump before the joint SDPA
+ (EP3_DUMP_QKV, EP3_DUMP_BLOCK), default off
+
+---
+ models/tt_dit/models/transformers/transformer_qwenimage.py | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/models/tt_dit/models/transformers/transformer_qwenimage.py b/models/tt_dit/models/transformers/transformer_qwenimage.py
+index 6ebf31620..ec47f57fb 100644
+--- a/models/tt_dit/models/transformers/transformer_qwenimage.py
++++ b/models/tt_dit/models/transformers/transformer_qwenimage.py
+@@ -143,6 +143,9 @@ class QwenImageTransformerBlock(TransformerBlock):
+         if at.context_head_factors is not None:
+             aq = aq * at.context_head_factors.data
+         assert spatial_sequence_length == spatial.shape[1]
++        if __import__("os").environ.get("EP3_DUMP_QKV") and getattr(self, "_ep3_idx", -1) == int(__import__("os").environ.get("EP3_DUMP_BLOCK", "30")):
++            _g = lambda t: ttnn.to_torch(ttnn.get_device_tensors(t)[0]).float()
++            torch.save(dict(q=_g(q), k=_g(k), v=_g(v), jq=_g(aq), jk=_g(ak), jv=_g(av)), __import__("os").environ["EP3_DUMP_QKV"])
+         s_att, p_att = ttnn.transformer.joint_scaled_dot_product_attention(
+             q, k, v, aq, ak, av, joint_strategy="rear",
+             program_config=at.sdpa_program_config, compute_kernel_config=at.sdpa_compute_kernel_config)
+-- 
+2.54.0
+
