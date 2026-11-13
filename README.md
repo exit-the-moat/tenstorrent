@@ -37,6 +37,26 @@ For comparison, a forum post reports 61.0 s per picture for Qwen-Image-2512 at 1
 (published, not our run:
 [forums.developer.nvidia.com](https://forums.developer.nvidia.com/t/image-diffusion-speeds/369095)).
 
+## Episode 2 follow-up (12 Nov 2026): 4 parallel chats on 2 x p150a
+
+After the video, the 2-card setup of Episode 2 got batching for several chats at once and a new GDN verify kernel
+(WY / block form). Same model, same lossless DFlash2 output, same `serve.sh --cards 2`; the Episode 2 release stays one
+flag away (`--ep2`). Measured through `serve.sh` with `check/steady.py` (512 tokens out, median of 3 rounds after a
+warm-up), 12 Nov 2026. Details, the switches and the development runs:
+[`qwen38-27b-p150-dflash2/`](qwen38-27b-p150-dflash2) (section "Update (12 Nov 2026)").
+
+| total tok/s while all chats decode | 1 chat | 2 chats | 3 chats | 4 chats |
+|---|---|---|---|---|
+| `--ep2` (the Episode 2 release) | 156.4 | 174.1 | 226.3 | 264.5 |
+| `--no-wy` (Episode 2 + batching) | 156.0 | 249.5 | 327.1 | 382.3 |
+| **default `--cards 2`** (+ WY verify kernel) | **157.5** | **274.7** | **363.0** | **459.1** |
+| default, including the first-token wait and queued prefills | 145.9 | 237.7 | 302.1 | 363.6 |
+
+So 4 chats at once went from 1.7x to 2.9x the speed of one chat (about 115 tok/s each). Checks of the default start:
+outputs exact 5/5 against the reference and 5/5 between two separate starts, GSM8K 59/60 (4 workers), needle in a
+haystack 6/6. The `steady.py` harness differs from the Episode 2 table below (other prompts and output length), so
+compare rows within one table.
+
 ## Episode 2 in numbers: Qwen 3.8 27B with DFlash2 on 1 and 2 Tenstorrent p150a
 
 Lossless speculative decoding, one switch per setup, 2026-11-09. Decode = mean over the same 8 coding prompts (about 580 tokens each), one request at a
@@ -99,7 +119,7 @@ optimization.
 | # | Topic | Folder |
 |---|---|---|
 | 3 | Episode 3 · Qwen-Image-2512 on 2 Tenstorrent Blackholes: THE RENDER SPRINT (full-HD pictures on 1 and 2 p150a, four ways to split the work, the music-video prompts) | [`qwen-image-2512-p150x2/`](qwen-image-2512-p150x2) · video: [YouTube](https://youtu.be/pllVxuibc_g) |
-| 2 | Qwen 3.8 27B on 2 Tenstorrent p150: optimization results (DFlash2 on 1 and 2 cards, one switch per setup) | [`qwen38-27b-p150-dflash2/`](qwen38-27b-p150-dflash2) · video: [YouTube](https://youtu.be/TFR_2J9H__Q) |
+| 2 | Qwen 3.8 27B on 2 Tenstorrent p150: optimization results (DFlash2 on 1 and 2 cards, one switch per setup; follow-up 12 Nov: 4 parallel chats, 459 tok/s total) | [`qwen38-27b-p150-dflash2/`](qwen38-27b-p150-dflash2) · video: [YouTube](https://youtu.be/TFR_2J9H__Q) |
 | 1 | Qwen 3.8 27B on 2 Tenstorrent p150: getting started (vLLM-TT on 1 and 2 cards, the team benchmark, the patches) | [`qwen38-27b-p150x2/`](qwen38-27b-p150x2) · video: [YouTube](https://youtu.be/3AvhL99p77M) |
 | 0 | I almost returned two Tenstorrent AI cards. It was the cable. (Fish Audio Drama 3 on one p150) | [`fish-drama3-p150/`](fish-drama3-p150) · weights: [Hugging Face](https://huggingface.co/exit-the-moat/drama-3-exit-the-moat-tenstorrent-p150) · video: [YouTube](https://youtu.be/mpleglhA_Dg) |
 
