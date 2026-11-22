@@ -1,0 +1,307 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Thu, 19 Nov 2026 15:17:46 +0100
+Subject: [PATCH] ep4 (ltx1): overlap chaining carry (O1) + 1080p memory work
+ (M1-M6)
+
+O1: _ltx_carry / _ltx_last: condition a chunk on the previous chunk tail latents (official next_video_carry_frames method).
+M1: LTX_MEMLOG=1 DRAM ledger lines (+ LTX_MEMDUMP allocator dump).
+M2: LTX_AUX_EVICT=1 frees VAE/upsampler/audio weights before the denoise (off: reload costs time).
+M3: key-padding mask SDPA in query chunks sharing one (1,1,chunk,Sk) mask instead of an N x N mask (bit-identical).
+M4: one key-mask cache for all attention modules (was one copy per module).
+M5: LTX_CCL_FREE=1 frees per-shape CCL ping-pong buffers after each stage and the VAE (bit-identical; +16 s warm at 121 frames, so only for long single passes).
+M6: LTX_FFN_CHUNK sequence-chunked FFN (off: +10 s at 121 frames, does not fix 241/249).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JA5v8QiubPz82RUkMyCToU
+---
+ .../models/transformers/ltx/attention_ltx.py  | 49 ++++++++++++-----
+ .../transformers/ltx/transformer_ltx.py       | 19 +++++++
+ models/tt_dit/pipelines/ltx/pipeline_ltx.py   | 25 +++++++++
+ .../pipelines/ltx/pipeline_ltx_distilled.py   | 54 ++++++++++++++++++-
+ 4 files changed, 134 insertions(+), 13 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/ltx/attention_ltx.py b/models/tt_dit/models/transformers/ltx/attention_ltx.py
+index 990a5f89d627..00d13bc6b3b9 100644
+--- a/models/tt_dit/models/transformers/ltx/attention_ltx.py
++++ b/models/tt_dit/models/transformers/ltx/attention_ltx.py
+@@ -20,6 +20,8 @@ from ....utils.matmul import get_matmul_config
+ from ....utils.substate import pop_substate, rename_substate
+ from ....utils.tensor import bf16_tensor
+ 
++_LTX_SHARED_MASKS = {}  # ltx1 M4
++
+ 
+ class LTXAttention(Module):
+     # Map from (is_blackhole, sp_factor, tp_factor) -> (q_chunk_size, k_chunk_size)
+@@ -243,10 +245,32 @@ class LTXAttention(Module):
+             packer_l1_acc=True,
+         )
+ 
++    def _ltx_sdpa_keypad(self, q, k, v, n_valid, program_config):
++        """ltx1 M3: SDPA that ignores keys >= n_valid; queries in chunks sharing one (1,1,chunk,Sk) mask so the mask
++        stays O(chunk*Sk) instead of O(N^2)."""
++        sq, sk = q.shape[2], k.shape[2]
++        cq = int(os.environ.get("LTX_MASK_QCHUNK", "2048"))
++        if sq <= cq:
++            return ttnn.transformer.scaled_dot_product_attention(
++                q, k, v, attn_mask=self._ltx_key_pad_mask(sq, sk, n_valid), is_causal=False,
++                program_config=program_config, compute_kernel_config=self.sdpa_compute_kernel_config)
++        outs = []
++        for i in range(0, sq, cq):
++            qi = q[:, :, i:min(i + cq, sq), :]
++            outs.append(ttnn.transformer.scaled_dot_product_attention(
++                qi, k, v, attn_mask=self._ltx_key_pad_mask(qi.shape[2], sk, n_valid), is_causal=False,
++                program_config=program_config, compute_kernel_config=self.sdpa_compute_kernel_config))
++            ttnn.deallocate(qi)
++        out = ttnn.concat(outs, dim=2)
++        for o in outs:
++            ttnn.deallocate(o)
++        return out
++
+     def _ltx_key_pad_mask(self, sq: int, sk: int, n_valid: int):
+         """ltx1: cached additive SDPA mask (1,1,sq,sk): 0 for keys < n_valid, -inf for padding keys."""
+-        cache = self.__dict__.setdefault("_ltx_mask_cache", {})
+-        key = (sq, sk, n_valid)
++        # ltx1 M4: one cache for all attention modules (was per module: 48+ identical copies, GBs at long clips)
++        cache = _LTX_SHARED_MASKS
++        key = (id(self.mesh_device), sq, sk, n_valid)
+         if key not in cache:
+             m = torch.zeros(1, 1, sq, sk)
+             m[..., n_valid:] = float("-inf")
+@@ -567,16 +591,17 @@ class LTXAttention(Module):
+                 )
+             else:
+                 if attn_mask is None and N is not None and N < k_BHNE.shape[2]:  # ltx1: mask SP=1 padding keys
+-                    attn_mask = self._ltx_key_pad_mask(q_BHNE.shape[2], k_BHNE.shape[2], N)
+-                spatial_BHNE = ttnn.transformer.scaled_dot_product_attention(
+-                    q_BHNE,
+-                    k_BHNE,
+-                    v_BHNE,
+-                    attn_mask=attn_mask,
+-                    is_causal=False,
+-                    program_config=self.sdpa_program_config,
+-                    compute_kernel_config=self.sdpa_compute_kernel_config,
+-                )
++                    spatial_BHNE = self._ltx_sdpa_keypad(q_BHNE, k_BHNE, v_BHNE, N, self.sdpa_program_config)
++                else:
++                    spatial_BHNE = ttnn.transformer.scaled_dot_product_attention(
++                        q_BHNE,
++                        k_BHNE,
++                        v_BHNE,
++                        attn_mask=attn_mask,
++                        is_causal=False,
++                        program_config=self.sdpa_program_config,
++                        compute_kernel_config=self.sdpa_compute_kernel_config,
++                    )
+         elif use_ring_cross:
+             # Short audio Q attends non-causally to the SP-sharded video K/V; is_cross fuses the
+             # K/V gather into the ring SDPA. Output is the per-device Q shard (same as local SDPA).
+diff --git a/models/tt_dit/models/transformers/ltx/transformer_ltx.py b/models/tt_dit/models/transformers/ltx/transformer_ltx.py
+index d562450e12e1..b89f4e6878fe 100644
+--- a/models/tt_dit/models/transformers/ltx/transformer_ltx.py
++++ b/models/tt_dit/models/transformers/ltx/transformer_ltx.py
+@@ -282,6 +282,25 @@ class LTXTransformerBlock(Module):
+                 state[key] = t.to(dtype=torch.bfloat16)
+ 
+     def _modulated_ffn(self, ffn, norm, x_1BND, shift_ff, scale_ff_p1, gate_ff):
++        """ltx1 M6 wrapper: optional sequence chunking (LTX_FFN_CHUNK)."""
++        n = x_1BND.shape[2]
++        c = int(os.environ.get("LTX_FFN_CHUNK", "0"))
++        if c <= 0 or n <= c:
++            return self._modulated_ffn_full(ffn, norm, x_1BND, shift_ff, scale_ff_p1, gate_ff)
++        c = max(32, c // 32 * 32)
++        outs = []
++        for i in range(0, n, c):
++            e = min(i + c, n)
++            sl = lambda t: t[:, :, i:e, :] if (t.shape[2] == n and n > 1) else t
++            xi = sl(x_1BND)
++            outs.append(self._modulated_ffn_full(ffn, norm, xi, sl(shift_ff), sl(scale_ff_p1), sl(gate_ff)))
++            ttnn.deallocate(xi)
++        out = ttnn.concat(outs, dim=2)
++        for o in outs:
++            ttnn.deallocate(o)
++        return out
++
++    def _modulated_ffn_full(self, ffn, norm, x_1BND, shift_ff, scale_ff_p1, gate_ff):
+         """norm -> AdaLN (shift + x * scale_p1) -> gated FFN residual.
+ 
+         Ring fuses ff1(AG) + ff2 + RS + addcmul; Linear needs explicit AG + plain ffn().
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx.py b/models/tt_dit/pipelines/ltx/pipeline_ltx.py
+index cc5c9bacb5bd..0b61bd10922c 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx.py
+@@ -44,6 +44,26 @@ from ...utils.tensor import bf16_tensor
+ from ...utils.tracing import StateTensor
+ from ...utils.video import Audio
+ 
++
++def _ltx_dram_mb(mesh):
++    """ltx1 M1: DRAM allocated per card (MB) from the allocator view."""
++    try:
++        v = ttnn.get_memory_view(mesh, ttnn.BufferType.DRAM)
++        return round(v.total_bytes_allocated_per_bank * v.num_banks / 1e6)
++    except Exception:  # noqa: BLE001
++        return -1
++
++
++def _ltx_memlog(mesh, tag):
++    if os.environ.get("LTX_MEMLOG") == "1":
++        ttnn.synchronize_device(mesh)
++        logger.info(f"MEMLOG {tag} {_ltx_dram_mb(mesh)} MB/card")
++        if os.environ.get("LTX_MEMDUMP") == "1" and "after_step0" in tag:
++            try:
++                ttnn.dump_device_memory_state(mesh, prefix="ltx_" + tag.replace(" ", "_").replace(":", "_").replace("=", "") + "_")
++            except Exception as e:  # noqa: BLE001
++                logger.warning(f"memdump failed: {e}")
++
+ LTX_UPSAMPLER_HF_REF = "Lightricks/LTX-2.3:ltx-2.3-spatial-upscaler-x2-1.1.safetensors"
+ 
+ DEFAULT_NEGATIVE_PROMPT = (
+@@ -626,10 +646,15 @@ class LTXPipeline:
+         DRAM after ``__init__`` (matches Wan's reverse-use-order priming)."""
+         for idx in range(len(self.transformer_states) - 1, 0, -1):
+             self._prepare_transformer(idx)
++        _ltx_memlog(self.mesh_device, "prime:start")
+         self._prepare_vae()
++        _ltx_memlog(self.mesh_device, "prime:+vae_decoder")
+         self._prepare_upsampler()
++        _ltx_memlog(self.mesh_device, "prime:+upsampler")
+         self._prepare_audio_decoder()
++        _ltx_memlog(self.mesh_device, "prime:+audio_decoder")
+         self._prepare_transformer(0)
++        _ltx_memlog(self.mesh_device, "prime:+transformer")
+ 
+     def _prepare_transformer(self, idx: int = 0) -> None:
+         state = self.transformer_states[idx]
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+index 7f06fec935b9..c16d34720631 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+@@ -23,7 +23,7 @@ from ...utils.ltx import load_conditioning_image
+ from ...utils.patchifiers import AudioLatentShape, VideoPixelShape
+ from ...utils.tensor import bf16_tensor
+ from ...utils.video import export_video_audio
+-from .pipeline_ltx import SPATIAL_COMPRESSION, TEMPORAL_COMPRESSION, LTXPipeline, LTXTransformerState, latent_grid
++from .pipeline_ltx import SPATIAL_COMPRESSION, TEMPORAL_COMPRESSION, LTXPipeline, LTXTransformerState, latent_grid, _ltx_memlog
+ 
+ # Distilled sigma schedules for the two stages.
+ DISTILLED_SIGMA_VALUES = [1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0]
+@@ -49,6 +49,35 @@ def _ltx_ancestral_coeffs(sigma: float, sigma_next: float, eta: float = 1.0):
+     return float(k * r), float(k * (1.0 - r)), float(c)
+ 
+ 
++def _ltx_free_ccl(pipe, tag):
++    """ltx1 M5."""
++    if os.environ.get("LTX_CCL_FREE") != "1" or getattr(pipe, "_traced", False):
++        return
++    import ttnn as _ttnn
++    _ttnn.synchronize_device(pipe.mesh_device)
++    seen = set()
++    for m in (getattr(pipe, "ccl_manager", None), getattr(pipe, "vae_ccl_manager", None)):
++        if m is None or id(m) in seen:
++            continue
++        seen.add(id(m))
++        def _free(x):
++            if isinstance(x, (list, tuple)):
++                for y in x:
++                    _free(y)
++            elif isinstance(x, dict):
++                for y in x.values():
++                    _free(y)
++            elif x is not None and hasattr(x, "is_allocated"):
++                try:
++                    if x.is_allocated():
++                        _ttnn.deallocate(x)
++                except Exception:  # noqa: BLE001
++                    pass
++        _free(m._ping_pong_buffer_cache); m._ping_pong_buffer_cache.clear(); m._ping_pong_buffer_indices.clear()
++        _free(m._fused_norm_stats_buffer_cache); m._fused_norm_stats_buffer_cache.clear()
++    _ltx_memlog(pipe.mesh_device, f"ccl_freed:{tag}")
++
++
+ @dataclass
+ class _I2VConditioning:
+     """Frame-0 image conditioning for one denoise stage — the tt analog of the reference
+@@ -572,6 +601,7 @@ class LTXDistilledPipeline(LTXPipeline):
+             tt_i2v_mask, tt_i2v_clean = state.tt_i2v_mask, state.tt_i2v_clean
+ 
+         self.transformer._ltx_kf_add = getattr(state, "_ltx_kf_add", None)
++        _ltx_memlog(self.mesh_device, f"denoise:ready N={video_N}")
+         for _blk in self.transformer.transformer_blocks:  # ltx1 L4b: real audio length for the A2V key mask
+             _blk._ltx_audio_n_real = audio_N_real
+         for step_idx in range(num_steps):
+@@ -680,6 +710,8 @@ class LTXDistilledPipeline(LTXPipeline):
+                     nxt = ttnn.multiply(ttnn.typecast(nxt, ttnn.bfloat16), pmask)
+                     ttnn.copy(nxt, lat_tt)
+                 logger.info(f"  Step {step_idx + 1}/{num_steps}: σ {sigma:.4f} → {sigma_next:.4f} (ancestral)")
++                if step_idx == 0:
++                    _ltx_memlog(self.mesh_device, f"denoise:after_step0 N={video_N}")
+                 continue
+             v_vel = ttnn.typecast(v_out, ttnn.bfloat16)
+             ttnn.multiply_(v_vel, state.tt_video_pad_mask)
+@@ -769,6 +801,10 @@ class LTXDistilledPipeline(LTXPipeline):
+ 
+         s1_cond_latent = full_cond_latent = None
+         cond_strength = 1.0
++        _carry = getattr(self, "_ltx_carry", None)
++        if _carry is not None:  # ltx1 O1: previous chunk's tail latents as multi-frame conditioning
++            s1_cond_latent, full_cond_latent = _carry["s1"].float(), _carry["s2"].float()
++            images = None
+         if images:
+             cond_imgs = [img for img in images if img[1] == 0]
+             if len(cond_imgs) != len(images):
+@@ -803,6 +839,14 @@ class LTXDistilledPipeline(LTXPipeline):
+         self._prepare_transformer(0)
+         if self.dynamic_load:
+             logger.info(f"Transformer prepare: {time.time() - t0:.1f}s")
++        if os.environ.get("LTX_AUX_EVICT") == "1":  # ltx1 M2
++            _mods = [self.vae_decoder, self.vae_encoder, self.upsampler, getattr(getattr(self, "_ltx_tile_vae", None), "decoder", None)]
++            if self._audio_adapter is not None:
++                _mods += [self._audio_adapter.mel_decoder, self._audio_adapter.vocoder_with_bwe]
++            for _m in _mods:
++                if _m is not None and _m.is_loaded():
++                    _m.deallocate_weights()
++            _ltx_memlog(self.mesh_device, "generate:aux_evicted")
+ 
+         logger.info(f"Stage 1: {s1_height}x{s1_width}, {len(DISTILLED_SIGMA_VALUES) - 1} steps")
+         t0 = time.time()
+@@ -822,10 +866,12 @@ class LTXDistilledPipeline(LTXPipeline):
+         t_stage1 = time.time() - t0
+         timings.append(("Stage 1 denoise", t_stage1))
+         logger.info(f"Stage 1 denoise: {t_stage1:.1f}s")
++        _ltx_free_ccl(self, "s1")
+ 
+         latent_frames = (num_frames - 1) // TEMPORAL_COMPRESSION + 1
+         s1_h, s1_w = s1_height // SPATIAL_COMPRESSION, s1_width // SPATIAL_COMPRESSION
+         s1_spatial = s1_video.reshape(1, latent_frames, s1_h, s1_w, 128).permute(0, 4, 1, 2, 3)
++        self._ltx_last = {"s1": s1_spatial.clone()}
+         t0 = time.time()
+         self._prepare_upsampler()
+         upsampled = upsample_latent(self.upsampler, s1_spatial, *self._vae_per_channel_stats())
+@@ -854,9 +900,14 @@ class LTXDistilledPipeline(LTXPipeline):
+             trace_key="s2",
+         )
+         t_stage2 = time.time() - t0
++        self._ltx_last["s2"] = s2_video.reshape(
++            1, latent_frames, height // SPATIAL_COMPRESSION, width // SPATIAL_COMPRESSION, 128
++        ).permute(0, 4, 1, 2, 3).clone()
+         timings.append(("Stage 2 denoise", t_stage2))
+         logger.info(f"Stage 2 denoise: {t_stage2:.1f}s")
++        _ltx_free_ccl(self, "s2")
+ 
++        _ltx_memlog(self.mesh_device, "generate:before_vae")
+         t0 = time.time()
+         self._prepare_vae()
+         if self.dynamic_load:
+@@ -872,6 +923,7 @@ class LTXDistilledPipeline(LTXPipeline):
+         video_pixels = self.decode_latents(s2_video, latent_frames, latent_h, latent_w, output_type=decode_type)
+         t_vae_decode = time.time() - t0
+         timings.append(("VAE decode", t_vae_decode))
++        _ltx_free_ccl(self, "vae")
+         logger.info(f"VAE decode (forward): {t_vae_decode:.1f}s — {tuple(video_pixels.shape)}")
+ 
+         t0 = time.time()
+-- 
+2.54.0
+

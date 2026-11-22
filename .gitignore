@@ -16,3 +16,8 @@ __pycache__/
 qwen-image-2512-p150x2/work/
 qwen-image-2512-p150x2/out/
 qwen-image-2512-p150x2/runs/
+# Episode 4 packages: set-up copy, clips, logs
+wan22-a14b-p150x2/work/
+wan22-a14b-p150x2/out/
+ltx25-p150x2/work/
+ltx25-p150x2/out/

@@ -1,0 +1,125 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 18 Nov 2026 23:14:13 +0100
+Subject: [PATCH] ep4 (ltx1): L4 key-padding masks for SP=1 meshes (video
+ self-attn and V2A/A2V cross-attn attended tile-padding tokens: 364->384
+ video, 26->32 audio). Teacher-forced PCC vs CPU ref r0 stage 1 step 0: video
+ 0.940 -> 0.990, audio 0.998 -> 0.9997; step 7 0.9983 -> 0.9990. Also
+ LTX_DUMP_BLOCKS debug dump
+
+---
+ .../models/transformers/ltx/attention_ltx.py  | 14 +++++++++++
+ .../transformers/ltx/transformer_ltx.py       | 23 +++++++++++++++++++
+ .../pipelines/ltx/pipeline_ltx_distilled.py   |  2 ++
+ 3 files changed, 39 insertions(+)
+
+diff --git a/models/tt_dit/models/transformers/ltx/attention_ltx.py b/models/tt_dit/models/transformers/ltx/attention_ltx.py
+index be6d6fc216a3..99cb53b8822c 100644
+--- a/models/tt_dit/models/transformers/ltx/attention_ltx.py
++++ b/models/tt_dit/models/transformers/ltx/attention_ltx.py
+@@ -240,6 +240,16 @@ class LTXAttention(Module):
+             packer_l1_acc=True,
+         )
+ 
++    def _ltx_key_pad_mask(self, sq: int, sk: int, n_valid: int):
++        """ltx1: cached additive SDPA mask (1,1,sq,sk): 0 for keys < n_valid, -inf for padding keys."""
++        cache = self.__dict__.setdefault("_ltx_mask_cache", {})
++        key = (sq, sk, n_valid)
++        if key not in cache:
++            m = torch.zeros(1, 1, sq, sk)
++            m[..., n_valid:] = float("-inf")
++            cache[key] = bf16_tensor(m, device=self.mesh_device)
++        return cache[key]
++
+     def _prepare_torch_state(self, state: dict[str, torch.Tensor]) -> None:
+         rename_substate(state, "to_out.0", "to_out")
+         rename_substate(state, "q_norm", "norm_q")
+@@ -553,6 +563,8 @@ class LTXAttention(Module):
+                     compute_kernel_config=self.sdpa_compute_kernel_config,
+                 )
+             else:
++                if attn_mask is None and N is not None and N < k_BHNE.shape[2]:  # ltx1: mask SP=1 padding keys
++                    attn_mask = self._ltx_key_pad_mask(q_BHNE.shape[2], k_BHNE.shape[2], N)
+                 spatial_BHNE = ttnn.transformer.scaled_dot_product_attention(
+                     q_BHNE,
+                     k_BHNE,
+@@ -592,6 +604,8 @@ class LTXAttention(Module):
+             )
+         else:
+             # Cross-attention: K/V full-seq, Q SP-sharded so local SDPA returns the local shard.
++            if attn_mask is None and kv_logical_n is not None and kv_logical_n < k_BHNE.shape[2]:  # ltx1 (V2A, SP=1)
++                attn_mask = self._ltx_key_pad_mask(q_BHNE.shape[2], k_BHNE.shape[2], kv_logical_n)
+             spatial_BHNE = ttnn.transformer.scaled_dot_product_attention(
+                 q_BHNE,
+                 k_BHNE,
+diff --git a/models/tt_dit/models/transformers/ltx/transformer_ltx.py b/models/tt_dit/models/transformers/ltx/transformer_ltx.py
+index 8c4fd80f446d..d562450e12e1 100644
+--- a/models/tt_dit/models/transformers/ltx/transformer_ltx.py
++++ b/models/tt_dit/models/transformers/ltx/transformer_ltx.py
+@@ -466,6 +466,11 @@ class LTXTransformerBlock(Module):
+                 k_rope_cos=audio_cross_pe_cos_full,
+                 k_rope_sin=audio_cross_pe_sin_full,
+                 trans_mat=trans_mat,
++                kv_logical_n=(
++                    getattr(self, "_ltx_audio_n_real", None)
++                    if self.parallel_config.sequence_parallel.factor == 1
++                    else None
++                ),
+             )
+             video_1BND = ttnn.addcmul(video_1BND, a2v_output, v_ca_gate)
+ 
+@@ -941,6 +946,7 @@ class LTXTransformerModel(Module):
+         audio_1BND = self.audio_patchify_proj(audio_1BNI) if self.has_audio else None
+ 
+         skip_self_attn_set = frozenset(skip_self_attn_blocks) if skip_self_attn_blocks else frozenset()
++        _v0, _a0 = video_1BND, audio_1BND
+ 
+         # Transformer blocks
+         for block_idx, block in enumerate(self.transformer_blocks):
+@@ -979,6 +985,14 @@ class LTXTransformerModel(Module):
+                 video_1BND, audio_1BND = result
+             else:
+                 video_1BND = result
++            _dump = os.environ.get("LTX_DUMP_BLOCKS")
++            if _dump:
++                if block_idx == 0:
++                    self._ltx_dump = [self._ltx_host(_v0), self._ltx_host(_a0) if _a0 is not None else None]
++                self._ltx_dump.append((self._ltx_host(video_1BND), self._ltx_host(audio_1BND) if self.has_audio else None))
++                if block_idx == len(self.transformer_blocks) - 1:
++                    torch.save(self._ltx_dump, _dump)
++                    logger.info(f"dumped {len(self._ltx_dump)} block states -> {_dump}")
+ 
+         v_inner_local = video_emb_ts.shape[-1]
+         if self.image_conditioning:
+@@ -1055,6 +1069,15 @@ class LTXTransformerModel(Module):
+             return video_out, audio_out
+         return video_out
+ 
++    @staticmethod
++    def _ltx_host(t):
++        """ltx1 debug: device tensor -> host torch, TP shards concatenated on the last dim when fractured."""
++        devs = ttnn.get_device_tensors(t)
++        parts = [ttnn.to_torch(d).float() for d in devs]
++        if len(parts) > 1 and not torch.equal(parts[0], parts[1]):
++            return torch.cat(parts, dim=-1)
++        return parts[0]
++
+     @staticmethod
+     def device_to_host(
+         tt_tensor: ttnn.Tensor,
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+index 02275d8272a8..e6df3b05eb4e 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+@@ -560,6 +560,8 @@ class LTXDistilledPipeline(LTXPipeline):
+             tt_i2v_mask, tt_i2v_clean = state.tt_i2v_mask, state.tt_i2v_clean
+ 
+         self.transformer._ltx_kf_add = getattr(state, "_ltx_kf_add", None)
++        for _blk in self.transformer.transformer_blocks:  # ltx1 L4b: real audio length for the A2V key mask
++            _blk._ltx_audio_n_real = audio_N_real
+         for step_idx in range(num_steps):
+             sigma = sigmas[step_idx].item()
+             sigma_next = sigmas[step_idx + 1].item()
+-- 
+2.54.0
+

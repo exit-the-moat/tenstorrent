@@ -1,0 +1,5 @@
+time,gpu,res,job,seed,frames,steps,total_s,encoder_s,denoise_s,s_per_step,vae_s,video_min_per_hour,max_mem_gb,offload,torch,diffusers,cuda,host
+2026-11-18 09:36:43,NVIDIA RTX PRO 6000 Blackwell Server Edition,480p,motion,101,81,40,545.32,0.055,540.72,13.518,4.55,0.557,86.3,False,2.8.0.dev20250319+cu128,0.38.0,12.8,3f270a5ed3f4
+2026-11-18 09:45:38,NVIDIA RTX PRO 6000 Blackwell Server Edition,480p,face,102,81,40,533.31,0.066,528.7,13.218,4.54,0.57,86.3,False,2.8.0.dev20250319+cu128,0.38.0,12.8,3f270a5ed3f4
+2026-11-18 09:54:43,NVIDIA RTX PRO 6000 Blackwell Server Edition,480p,text,103,81,40,542.8,0.067,538.18,13.455,4.55,0.56,86.3,False,2.8.0.dev20250319+cu128,0.38.0,12.8,3f270a5ed3f4
+2026-11-18 10:04:05,NVIDIA RTX PRO 6000 Blackwell Server Edition,480p,crowd,104,81,40,559.5,0.067,554.88,13.872,4.55,0.543,86.3,False,2.8.0.dev20250319+cu128,0.38.0,12.8,3f270a5ed3f4

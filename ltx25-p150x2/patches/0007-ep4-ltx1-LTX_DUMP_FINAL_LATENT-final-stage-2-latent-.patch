@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Thu, 19 Nov 2026 12:05:21 +0100
+Subject: [PATCH] ep4 (ltx1): LTX_DUMP_FINAL_LATENT (final stage-2 latent for
+ offline decoders; used for the DiffVAE vs conv VAE check)
+
+---
+ models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+index bc4ea82210ea..7f06fec935b9 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+@@ -863,6 +863,9 @@ class LTXDistilledPipeline(LTXPipeline):
+             logger.info(f"VAE prepare: {time.time() - t0:.1f}s")
+ 
+         latent_h, latent_w = height // SPATIAL_COMPRESSION, width // SPATIAL_COMPRESSION
++        if os.environ.get("LTX_DUMP_FINAL_LATENT"):  # ltx1: (1,128,F,H,W) normalized latent for offline decoders
++            torch.save({"args": [s2_video.reshape(1, latent_frames, latent_h, latent_w, 128).permute(0, 4, 1, 2, 3).contiguous().bfloat16()]},
++                       os.environ["LTX_DUMP_FINAL_LATENT"] + f"_{seed}.pt")
+         # export_video_audio needs float [-1,1]; the frame-return path uses the requested output_type.
+         decode_type = "float" if output_path is not None else output_type
+         t0 = time.time()
+-- 
+2.54.0
+

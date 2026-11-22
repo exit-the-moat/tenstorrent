@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Thu, 19 Nov 2026 20:05:40 +0100
+Subject: [PATCH] ep4 (ltx2): free the vocoder CCL buffers after the audio
+ decode under LTX_CCL_FREE (R4)
+
+They are sized by the clip length (+3.0 GB at 249 frames, +4.8 GB at 377) and stayed into the next clip. With R4 the
+second clip of a process starts at the same DRAM level as the first (+0.5 GB). Numerics unchanged.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JA5v8QiubPz82RUkMyCToU
+---
+ models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+index 660db6b4f2cd..4a73e9814773 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+@@ -943,6 +943,7 @@ class LTXDistilledPipeline(LTXPipeline):
+         t_audio_decode = time.time() - t0
+         timings.append(("Audio decode", t_audio_decode))
+         logger.info(f"Audio decode: {t_audio_decode:.1f}s")
++        _ltx_free_ccl(self, "audio")  # ltx2 R4: the vocoder's per-length CCL buffers (3-5 GB at 10-16 s) stayed to the next clip
+ 
+         self.last_timings = list(timings)
+         if output_path is None:
+-- 
+2.54.0
+

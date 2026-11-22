@@ -10,6 +10,29 @@ Every number in a video comes from the code and the `results/` data in this repo
 - Hugging Face: [exit-the-moat](https://huggingface.co/exit-the-moat) (converted weights)
 - Patreon: [Exit the Moat](https://patreon.com/Exitthemoat) (support the channel)
 
+## Episode 4 in numbers: Wan 2.2 and LTX-2.5 on 2 Tenstorrent p150a
+
+Video clips with the open-weights video models, everything on the two cards (text encoder, diffusion transformer, VAE),
+17-20 November 2026. Seconds per clip, counted on two runs each after a warm-up. Details, method, patches and the
+commands: [`wan22-a14b-p150x2/`](wan22-a14b-p150x2) and [`ltx25-p150x2/`](ltx25-p150x2).
+
+| model, clip | 2 x p150a | one rented RTX PRO 6000, stock software |
+|---|---|---|
+| Wan 2.2 T2V-A14B, 480p, 81 frames (5 s), 40 steps, stock code | 642.7 / 647.1 s | 554.5 / 558.6 s |
+| Wan 2.2 T2V-A14B, 480p, our best preset (bf8) | **503.1 / 502.6 s** | |
+| Wan 2.2 T2V-A14B, 720p, best preset | **1,825.9 s** | 1,858.3 / 1,876.7 s |
+| Wan 2.2 Lightning (distilled, 4 steps), 480p / 720p | **30.7 / 31.0 s** / 111.2 s | |
+| LTX-2.5 distilled, 121 frames (5 s) + audio, 720p, prompt encoded | **20.51 / 20.58 s** | 15.72 / 15.75 s |
+| LTX-2.5 distilled, 1080p, prompt encoded | **55.03 / 54.84 s** | 36.45 / 36.91 s |
+| LTX-2.5 image-to-video, 1080p, one pass of 249 frames (10.4 s) | 178.9 s | 89.91 s |
+
+Wan 2.2: the best preset is -24 % against our first 2-card clip (661 s); the target of -30 % was missed (the cards run
+power-capped at ~970-1,150 of 1,350 MHz). LTX-2.5: -59 % at 720p against the first working version (49.8 s). The
+RTX numbers are our own runs on a rented GPU with the stock pipelines (no FP8, no FlashAttention, no compile). Every
+clip these packages make is AI-generated.
+
+Video: (link added at release)
+
 ## Episode 3 in numbers: Qwen-Image-2512 on 1 and 2 Tenstorrent p150a
 
 Text-to-image with the full base model (no turbo version), 8-bit (BF8) weights, 50 steps, guidance 4, full HD (made at
@@ -118,6 +141,7 @@ optimization.
 
 | # | Topic | Folder |
 |---|---|---|
+| 4 | Wan 2.2 and LTX 2.5 on 2 Tenstorrent p150 Blackhole: The Motion Picture (text-to-video, image-to-video, distilled models, video with sound) | [`wan22-a14b-p150x2/`](wan22-a14b-p150x2) · [`ltx25-p150x2/`](ltx25-p150x2) · video: (link added at release) |
 | 3 | Episode 3 · Qwen-Image-2512 on 2 Tenstorrent Blackholes: THE RENDER SPRINT (full-HD pictures on 1 and 2 p150a, four ways to split the work, the music-video prompts) | [`qwen-image-2512-p150x2/`](qwen-image-2512-p150x2) · video: [YouTube](https://youtu.be/pllVxuibc_g) |
 | 2 | Qwen 3.8 27B on 2 Tenstorrent p150: optimization results (DFlash2 on 1 and 2 cards, one switch per setup; follow-up 12 Nov: 4 parallel chats, 459 tok/s total) | [`qwen38-27b-p150-dflash2/`](qwen38-27b-p150-dflash2) · video: [YouTube](https://youtu.be/TFR_2J9H__Q) |
 | 1 | Qwen 3.8 27B on 2 Tenstorrent p150: getting started (vLLM-TT on 1 and 2 cards, the team benchmark, the patches) | [`qwen38-27b-p150x2/`](qwen38-27b-p150x2) · video: [YouTube](https://youtu.be/3AvhL99p77M) |
@@ -128,5 +152,5 @@ New episodes are added here when they are published.
 ## License
 
 Apache-2.0, see [LICENSE](LICENSE). Model weights follow their own licences (Drama 3: Fish Audio Community License,
-see [`fish-drama3-p150/`](fish-drama3-p150)). No Qwen-Image weights are in this repo; the 8-bit conversion happens in
-your own cache.
+see [`fish-drama3-p150/`](fish-drama3-p150)). No Qwen-Image, Wan or LTX weights are in this repo; the 8-bit conversion happens in your own cache. The LTX-2.5
+package follows the LTX-2.x Community License (see [`ltx25-p150x2/`](ltx25-p150x2)).

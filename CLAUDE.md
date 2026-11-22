@@ -13,6 +13,8 @@ plans or names of episodes that are not out yet (Sebastian, 2026-10-31).
 |---|---|---|
 | `fish-drama3-p150/` | 0 | Fish Audio Drama 3 on one p150: the port (`drama3/`), tt-metal patch, setup, bench scripts, eval lines + scorer |
 | `qwen-image-2512-p150x2/` | 3 | Qwen-Image-2512 on 1 or 2 p150: `run.sh` (setup / gen / queue / verify), 22 patches on tt-metal `de59f8a658b1` `models/tt_dit`, harness, checks, results |
+| `wan22-a14b-p150x2/` | 4 | Wan 2.2 A14B (T2V, I2V, lightx2v distill, Lightning, SVI) on 2 p150: `run.sh`, 13 patches on tt-metal `de59f8a658b1` `models/tt_dit`, runners, PCC tools, RTX reference, results |
+| `ltx25-p150x2/` | 4 | LTX-2.5 distilled (T2V/I2V with audio) on 2 p150: `run.sh`, 12 patches on top of the Wan ones, runner, CPU reference + PCC tools, RTX reference, results, `LICENSE-LTX-2.x` |
 | `results/` | 0 | `drama3.csv`, `drama3-runs/` (Episode 0 run directories), `rtx-pro-6000-reference/` (the GPU comparison) |
 
 Weights go to Hugging Face (org https://huggingface.co/exit-the-moat), not into git. Episode 0:
@@ -245,3 +247,41 @@ that should not change numerics (e.g. `modcache`).
 - Qwen2.5-VL text encoder: subtracting the mean key in attention (`TT_DIT_QWEN25VL_CENTER_K=1`) fixes a layer-0
   precision loss; exact in math.
 - Licence: Qwen-Image-2512 is Apache-2.0, but publish code and numbers only, no converted weights.
+
+## Episode 4: Wan 2.2 A14B and LTX-2.5 on 2 p150 (video)
+
+Both ports start from the serving image's `models/tt_dit` (tt-metal `de59f8a`, tree `b414bc48`, same base as Episode 3,
+none of its patches). Wan: 13 patches, best preset "L4" in `wan22-a14b-p150x2/run.sh`; LTX: 12 more on top. Gates:
+per-step PCC >= 0.99 against a CPU reference fed the card's exact inputs (Wan: diffusers fp32, block-streamed; LTX:
+the official `ltx_pipelines` in bf16), two counted runs, same-seed side-by-sides judged by eye, sha256 for levers that
+must not change numerics (same-config repeats were bit-identical on both models).
+
+- **Host RAM first:** stock `WanCheckpoint` loads both fp32 experts + umT5 at start (~137 GB). Lazy bf16 loading only
+  while the cache is built. LTX's bf8 cache build reads the whole 42 GB bf16 file once.
+- **No 2-chip presets.** Pass parallel configs yourself: tensor split `sp=(1,0), tp=(2,1)`, VAE height-split 2,
+  `FABRIC_1D`, Linear topology. tp = 1 (sequence split, CFG per card) fails: the fused distributed LayerNorm at width
+  5120 needs more L1 than a core has.
+- **1-row meshes attend tile padding** in tt_dit's LTX attention unless masked (stage-1 PCC 0.940 -> 0.990). Masked
+  SDPA is ~6x slower than unmasked; pick frame counts whose token count is a tile multiple (121, 249, 377, 505).
+- **Untuned shapes fall back silently.** LTX's conv3d had 1x1x1 fallback blockings on our mesh: borrowing the 8/32-chip
+  sweep values cut the 720p VAE 28.9 -> 2.87 s (the whole -59 %). But the borrowed table hung the cards twice at a
+  25-frame shape: off below 121 frames. Wan's matmul blocking sweep gave nothing (defaults ~265 TFLOPS).
+- **Clock, not host:** Wan's device span equals the wall time; trace changes nothing. Cards ran ~970-1,150 of 1,350 MHz
+  (power cap; open frame +4-5 % at 480p, nothing at 720p). The tracy profiler converts cycles at the nominal 1.35 GHz:
+  rescale by the real clock before calling anything "host gap".
+- Levers that held (Wan): bf8 weights (both experts resident at 480p), attention chunks 512x512 with bf8 q/k/v (cast
+  after the norm, output back to bf16; changes per-seed details, accepted by eye), 4 links (bit-identical). LTX: borrowed
+  conv3d blockings, 4 links. The "falling back to 1 link" log line is cosmetic (another helper); 4 links measurably help.
+- **Memory plans:** 720p Wan and every Wan I2V run need umT5 evicted after encoding + VAE and transformers never
+  co-resident + expert swap. LTX: Gemma 4 and the 720p transformer do not fit together (reload 11.7 s per new prompt);
+  1080p VAE in width tiles; long single passes need shared masks, CCL ping-pong buffers freed per stage (they pile up
+  per shape) and a two-row I2V AdaLN.
+- **LoRA on bf16/bf8 weights:** tt_dit's runtime fuse rounds away ~1-ULP deltas (Lightning kept 45-63 %). Merge on the
+  host in fp32 before quantising, tensor by tensor (whole-expert merge OOMs at 62 GB).
+- **4-step distills need the reference sampler:** tt_dit's default schedule never reaches the low-noise expert.
+- Open: Lightning step 2 PCC 0.971 (fused SDPA keeps bf16 intermediates: 1.4-4.7 % local error; fixing it -> 0.980;
+  rest unexplained). LTX T2V free-running diverges from the reference composition (per-step PCC fine; I2V matches).
+- Never trace the LTX text encoder (second replay hung the cards). Wrap every card job in a timeout; 5 resets in total
+  over both ports, all cleared by `tt-smi -r` + smoke.
+- Licences: Wan 2.2, lightx2v models/LoRAs Apache-2.0; SVI 2.0 Pro MIT; LTX-2.x Community License (ship its full text,
+  label outputs as machine-generated, keep provenance features); Gemma 4 its own terms. Code and numbers only, no weights.

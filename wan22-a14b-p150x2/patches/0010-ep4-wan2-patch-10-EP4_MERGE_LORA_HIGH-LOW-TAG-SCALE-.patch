@@ -1,0 +1,179 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 18 Nov 2026 14:43:32 +0100
+Subject: [PATCH] ep4 (wan2): patch 10 EP4_MERGE_LORA_HIGH/LOW/TAG[/SCALE]:
+ merge a LoRA on the host in fp32 before the TT cache is built (own cache key
+ -<tag>; fp32 base -> RTN bf16, bf16-only distill base -> stochastic
+ rounding). Default off. Reason: the runtime-LoRA fuse on the cards keeps only
+ 45-63 % of ~1-ULP LoRA deltas (Lightning PCC 0.958-0.975); host merge keeps
+ 99.8 % (PCC 0.99985 in the CPU simulation)
+
+---
+ .../pipelines/pipeline_wan_distill.py         | 22 +++--
+ .../transformers/wan2_2/transformer_wan.py    | 94 ++++++++++++++++++-
+ 2 files changed, 108 insertions(+), 8 deletions(-)
+
+diff --git a/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py b/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py
+index 964627cbd405..6446c35456c6 100644
+--- a/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py
++++ b/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py
+@@ -151,22 +151,30 @@ class WanDistillPipelineI2V(WanPipelineI2V):
+             return
+ 
+         filename = self.HIGH_NOISE_FILE if idx == 0 else self.LOW_NOISE_FILE
+-        from models.tt_dit.models.transformers.wan2_2.transformer_wan import _ep4_weight_dtype
++        from models.tt_dit.models.transformers.wan2_2.transformer_wan import (
++            _ep4_cache_suffix,
++            _ep4_merge_lora,
++            _ep4_weight_dtype,
++        )
+ 
++        sub = state.checkpoint.subfolder
+         cache.load_model(
+             state.model,
+             dtype=_ep4_weight_dtype()[1],
+-            model_name=self.CACHE_NAMESPACE,
++            model_name=self.CACHE_NAMESPACE + _ep4_cache_suffix(sub),
+             subfolder=state.checkpoint.subfolder,
+             parallel_config=self.parallel_config,
+             mesh_shape=tuple(self.mesh_device.shape),
+             mesh_device=self.mesh_device,
+             is_fsdp=self.is_fsdp,
+-            get_torch_state_dict=lambda f=filename: load_lightx2v_state_dict(
+-                self.LIGHTX2V_REPO,
+-                f,
+-                allow_download=self._allow_download,
+-                local_dir=self._lightx2v_local_dir,
++            get_torch_state_dict=lambda f=filename, sub=sub: _ep4_merge_lora(
++                load_lightx2v_state_dict(
++                    self.LIGHTX2V_REPO,
++                    f,
++                    allow_download=self._allow_download,
++                    local_dir=self._lightx2v_local_dir,
++                ),
++                sub,
+             ),
+         )
+ 
+diff --git a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+index 8926a1b7298f..95dd0035983f 100644
+--- a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
++++ b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+@@ -725,6 +725,82 @@ def _ep4_weight_dtype():
+     raise ValueError(f"EP4_DIT_WEIGHTS={v}")
+ 
+ 
++_EP4_LORA_MAP = {"self_attn.q": "attn1.to_q", "self_attn.k": "attn1.to_k", "self_attn.v": "attn1.to_v",
++                 "self_attn.o": "attn1.to_out.0", "cross_attn.q": "attn2.to_q", "cross_attn.k": "attn2.to_k",
++                 "cross_attn.v": "attn2.to_v", "cross_attn.o": "attn2.to_out.0", "ffn.0": "ffn.net.0.proj",
++                 "ffn.2": "ffn.net.2"}
++
++
++def _ep4_merge_spec(subfolder: str):
++    """(lora path, cache-key suffix, scale) for this expert from EP4_MERGE_LORA_*, or None (default: off)."""
++    path = os.environ.get("EP4_MERGE_LORA_HIGH" if subfolder == "transformer" else "EP4_MERGE_LORA_LOW")
++    if not path:
++        return None
++    tag = os.environ.get("EP4_MERGE_LORA_TAG")
++    if not tag:
++        raise ValueError("EP4_MERGE_LORA_TAG is required with EP4_MERGE_LORA_HIGH/LOW (separate TT cache)")
++    return path, "-" + tag, float(os.environ.get("EP4_MERGE_LORA_SCALE", "1.0"))
++
++
++def _ep4_cache_suffix(subfolder: str) -> str:
++    sp = _ep4_merge_spec(subfolder)
++    return sp[1] if sp else ""
++
++
++def _ep4_lora_deltas(path: str, scale: float) -> dict:
++    """{diffusers weight name: (down fp32 [r,in], up fp32 [out,r], scale*alpha/r)} from a Wan-native (lora_down/up +
++    alpha) or PEFT (lora_A/B[.default], no alpha -> alpha = r) LoRA file."""
++    import re
++
++    from safetensors.torch import load_file
++
++    raw = load_file(path)
++    out = {}
++    for k in raw:
++        m = re.match(r"^(?:diffusion_model\.)?(blocks\.\d+)\.(.+?)\.lora_(down|A)(?:\.[^.]+)?\.weight$", k)
++        if not m:
++            continue
++        blk, mod, slot = m.group(1), m.group(2), m.group(3)
++        up_k = k.replace(".lora_down.", ".lora_up.") if slot == "down" else k.replace(".lora_A.", ".lora_B.")
++        down, up = raw[k].float(), raw[up_k].float()
++        r = down.shape[0]
++        a_k = f"{k.split('.lora_')[0]}.alpha"
++        alpha = float(raw[a_k].item()) if a_k in raw else float(r)
++        out[f"{blk}.{_EP4_LORA_MAP[mod]}.weight"] = (down, up, scale * alpha / r)
++    if not out:
++        raise RuntimeError(f"no LoRA pairs in {path}")
++    return out
++
++
++def _ep4_stochastic_bf16(x: torch.Tensor, gen: torch.Generator) -> torch.Tensor:
++    """fp32 -> bf16 with stochastic rounding (unbiased: E[result] = x)."""
++    i = x.contiguous().view(torch.int32)
++    noise = torch.randint(0, 1 << 16, i.shape, dtype=torch.int32, generator=gen)
++    return ((i + noise) & ~0xFFFF).view(torch.float32).to(torch.bfloat16)
++
++
++def _ep4_merge_lora(sd: dict, subfolder: str, fp32_source=None) -> dict:
++    """Merge the configured LoRA into sd in place. fp32_source(name) -> fp32 base tensor (round-to-nearest bf16);
++    without it the bf16 tensor in sd is the base and the sum is stochastically rounded."""
++    sp = _ep4_merge_spec(subfolder)
++    if sp is None:
++        return sd
++    deltas = _ep4_lora_deltas(sp[0], sp[2])
++    gen = torch.Generator().manual_seed(1234 + (subfolder == "transformer_2"))
++    n = 0
++    for name, (down, up, sc) in deltas.items():
++        if name not in sd:
++            raise KeyError(f"LoRA target {name} not in the {subfolder} state dict")
++        w = fp32_source(name) if fp32_source is not None else sd[name].float()
++        w = w + sc * (up @ down)
++        sd[name] = w.to(torch.bfloat16) if fp32_source is not None else _ep4_stochastic_bf16(w, gen)
++        n += 1
++    logger.info(f"ep4: merged {n} LoRA deltas from {sp[0]} into {subfolder} on the host "
++                f"({'fp32 base, RTN' if fp32_source is not None else 'bf16 base, stochastic rounding'}), scale*alpha/r "
++                f"{next(iter(deltas.values()))[2]}")
++    return sd
++
++
+ class WanCheckpoint:
+     """A Wan transformer-subfolder checkpoint: fetches weights and builds loaded transformers."""
+ 
+@@ -746,6 +822,22 @@ class WanCheckpoint:
+             )
+             torch_transformer.eval()
+             self._state_dict = torch_transformer.state_dict()
++            if _ep4_merge_spec(self._subfolder) is not None:  # ep4 patch 10: host fp32 LoRA merge
++                import json
++
++                from safetensors import safe_open
++
++                d = os.path.join(self._name, self._subfolder)
++                wmap = json.load(open(os.path.join(d, "diffusion_pytorch_model.safetensors.index.json")))["weight_map"]
++                handles = {}
++
++                def _fp32(name):
++                    f = wmap[name]
++                    if f not in handles:
++                        handles[f] = safe_open(os.path.join(d, f), framework="pt")
++                    return handles[f].get_tensor(name).float()
++
++                _ep4_merge_lora(self._state_dict, self._subfolder, fp32_source=_fp32)
+         return self._state_dict
+ 
+     def release_torch(self) -> None:
+@@ -809,7 +901,7 @@ class WanCheckpoint:
+             tt_model=model,
+             get_torch_state_dict=self._load_state_dict,
+             dtype=_ep4_weight_dtype()[1],
+-            model_name=os.path.basename(self._name),
++            model_name=os.path.basename(self._name) + _ep4_cache_suffix(self._subfolder),
+             subfolder=self._subfolder,
+             parallel_config=parallel_config,
+             mesh_shape=tuple(mesh_device.shape),
+-- 
+2.54.0
+

@@ -1,0 +1,42 @@
+06:10:53 BOOT
+06:15:15 pip done rc=0
+06:52:09 BOOT
+06:52:10 pip done rc=0
+06:54:55 download rc=0 165 s 122G
+06:54:57 versions: NVIDIA RTX PRO 6000 Blackwell Server Edition, 595.112.07
+06:54:57 inputs ready
+06:54:57 start r480
+07:04:37 end r480 rc=1 
+07:04:37 start r720
+07:05:33 end r720 rc=143 
+07:05:33 start h480
+07:06:05 end h480 rc=143 
+07:06:05 DONE
+07:06:06 pass1 OOM in VAE decode; pass2 with --offload starting
+07:06:06 start r480 (offload)
+07:16:27 end r480 rc=1 
+07:16:27 start r720 (offload)
+07:17:42 pass2 OOM again in VAE decode (offload); pass3 with offload + vae tiling
+07:17:42 start r480 (offload+vae tiling)
+07:27:12 end r480 rc=1 
+07:27:12 start r720 (offload+vae tiling)
+07:28:23 pass3 OOM in VAE (offload hooks kept experts); pass4: experts+umT5 moved to CPU before VAE decode (move time logged separately)
+07:28:23 start r480 (experts to CPU for VAE)
+07:38:13 end r480 rc=1 
+07:38:13 start r720 (experts to CPU for VAE)
+07:38:56 pass4 OOM: fp32 VAE decode alone ~89 GB; pass5 = experts to CPU + VAE tiling + expandable_segments
+07:38:56 start r480 (experts to CPU + VAE tiling)
+07:48:40 end r480 rc=1 
+07:48:40 start r720 (experts to CPU + VAE tiling)
+07:50:04 pass5 OOM in VAE again; testing VAE alone
+07:50:55 VAE alone 9.3 GB peak: cause = VAE decode outside no_grad (autograd). pass6 = original script + no_grad, no offload/tiling
+07:50:55 start r480 (no_grad fix)
+08:02:27 warm-up patched to 2 steps for r720/h480 (r480 still has the 40-step warm-up)
+08:19:05 end r480 rc=0 {"time": "2026-11-18 08:19:04", "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition", "res": "480p", "job": "cats_r2", "seed": 42, "frames": 81, "steps": 40, "
+08:19:05 start r720 (no_grad fix)
+08:21:00 end r720 rc=1 
+08:21:00 start h480 (no_grad fix)
+08:21:38 r720 OOM in VAE (fp32 VAE at 720p next to 70 GB of models); restart: r720 with --vae-solo first, then h480
+08:21:38 start r720 (experts to CPU for VAE)
+09:26:35 end r720 rc=0 {"time": "2026-11-18 09:26:34", "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition", "res": "720p", "job": "cats_r2", "seed": 42, "frames": 81, "steps": 40, "
+09:26:35 start h480 (no_grad fix)

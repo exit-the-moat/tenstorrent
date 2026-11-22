@@ -1,0 +1,3 @@
+time,gpu,res,job,seed,frames,steps,total_s,encoder_s,denoise_s,s_per_step,vae_s,video_min_per_hour,max_mem_gb,offload,torch,diffusers,cuda,host
+2026-11-18 08:09:43,NVIDIA RTX PRO 6000 Blackwell Server Edition,480p,cats_r1,42,81,40,554.54,0.055,549.93,13.748,4.56,0.548,86.3,False,2.8.0.dev20250319+cu128,0.38.0,12.8,3f270a5ed3f4
+2026-11-18 08:19:04,NVIDIA RTX PRO 6000 Blackwell Server Edition,480p,cats_r2,42,81,40,558.56,0.065,553.93,13.848,4.56,0.544,86.3,False,2.8.0.dev20250319+cu128,0.38.0,12.8,3f270a5ed3f4

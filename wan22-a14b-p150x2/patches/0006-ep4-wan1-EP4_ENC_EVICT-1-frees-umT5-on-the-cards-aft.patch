@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 17 Nov 2026 22:03:20 +0100
+Subject: [PATCH] ep4 (wan1): EP4_ENC_EVICT=1 frees umT5 on the cards after
+ encoding (720p OOM fix; default off)
+
+---
+ models/tt_dit/pipelines/wan/pipeline_wan.py | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/models/tt_dit/pipelines/wan/pipeline_wan.py b/models/tt_dit/pipelines/wan/pipeline_wan.py
+index 99f90e1d4c2d..16861e0eb501 100644
+--- a/models/tt_dit/pipelines/wan/pipeline_wan.py
++++ b/models/tt_dit/pipelines/wan/pipeline_wan.py
+@@ -32,6 +32,10 @@ if TYPE_CHECKING:
+ 
+ _UNSET = object()  # sentinel for "use config default" in WanPipelineConfig.default
+ 
++import os as _ep4_os
++
++_EP4_ENC_EVICT = _ep4_os.environ.get("EP4_ENC_EVICT") == "1"
++
+ _DEFAULT_CHECKPOINT = "Wan-AI/Wan2.2-T2V-A14B-Diffusers"
+ 
+ _PRESETS_WH: dict[tuple[int, ...], dict] = {
+@@ -598,6 +602,9 @@ class WanPipeline(PipelineAPIMixin):
+             num_videos_per_prompt=num_videos_per_prompt,
+             on_event=on_event,
+         )
++        if _EP4_ENC_EVICT:
++            ttnn.synchronize_device(self.mesh_device)
++            self._text_encoder._tt_encoder.deallocate_weights()
+         on_event(SectionEnd("encoder"))
+ 
+         # 4. Prepare schedule
+-- 
+2.54.0
+

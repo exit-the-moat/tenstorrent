@@ -1,0 +1,217 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 17 Nov 2026 19:02:09 +0100
+Subject: [PATCH] ep4 (wan1): EP4_DIT_WEIGHTS=bf8 (Linear weights built+cached
+ as bf8, self-attn to_out stays bf16 for the fused addcmul) and
+ EP4_SDPA_CHUNKS / EP4_XSDPA_CHUNKS; defaults unchanged. bf8 functional: both
+ experts resident, 480p 615 s in a run sharing the host with the CPU reference
+ (not counted), 23.8 dB vs bf16 same seed, same scene by eye
+
+---
+ models/tt_dit/layers/linear.py                | 34 +++++++++++++--
+ .../transformers/wan2_2/attention_wan.py      | 43 ++++++++++++++-----
+ .../transformers/wan2_2/transformer_wan.py    | 19 +++++++-
+ 3 files changed, 81 insertions(+), 15 deletions(-)
+
+diff --git a/models/tt_dit/layers/linear.py b/models/tt_dit/layers/linear.py
+index 27d1de62141a..160c632cea42 100644
+--- a/models/tt_dit/layers/linear.py
++++ b/models/tt_dit/layers/linear.py
+@@ -2,6 +2,8 @@
+ 
+ # SPDX-License-Identifier: Apache-2.0
+ 
++import contextlib
++import contextvars
+ import math
+ 
+ import torch
+@@ -18,6 +20,28 @@ MATH_FIDELITY = {
+     ttnn.float32: ttnn.MathFidelity.HiFi4,
+ }
+ 
++# Optional weight format override for big layers (ep3), opt-in via weight_dtype_override(); default off.
++_WEIGHT_DTYPE_OVERRIDE = contextvars.ContextVar("tt_dit_weight_dtype", default=None)
++_WEIGHT_OVERRIDE_MIN_ELEMENTS = 1 << 20
++
++
++@contextlib.contextmanager
++def weight_dtype_override(dtype):
++    """While active, Linear-style weights of at least 2**20 elements are created with `dtype` (bias stays bf16)."""
++    token = _WEIGHT_DTYPE_OVERRIDE.set(dtype)
++    try:
++        yield
++    finally:
++        _WEIGHT_DTYPE_OVERRIDE.reset(token)
++
++
++def _resolve_weight_dtype(dtype, in_features, out_features):
++    override = _WEIGHT_DTYPE_OVERRIDE.get()
++    if override is None or dtype != ttnn.bfloat16 or in_features * out_features < _WEIGHT_OVERRIDE_MIN_ELEMENTS:
++        return dtype
++    return override
++
++
+ # Activation strings accepted by Linear / ColParallelLinear `activation_fn`,
+ # mapped to the values the matmul fused-activation path expects. Each value is
+ # either a bare ttnn.UnaryOpType (no parameter) or a (UnaryOpType, param0)
+@@ -76,7 +100,11 @@ class Linear(Module):
+             packer_l1_acc=True,
+         )
+ 
+-        self.weight = Parameter(total_shape=[self.in_features, self.out_features], device=mesh_device, dtype=dtype)
++        self.weight = Parameter(
++            total_shape=[self.in_features, self.out_features],
++            device=mesh_device,
++            dtype=_resolve_weight_dtype(dtype, self.in_features, self.out_features),
++        )
+         self.bias = Parameter(total_shape=[1, self.out_features], device=mesh_device, dtype=dtype) if bias else None
+ 
+     def _prepare_torch_state(self, state: dict[str, torch.Tensor]) -> None:
+@@ -179,7 +207,7 @@ class ColParallelLinear(Module):
+             total_shape=[self.in_features, self.out_features],
+             mesh_axes=[fsdp_mesh_axis, mesh_axis],
+             device=mesh_device,
+-            dtype=dtype,
++            dtype=_resolve_weight_dtype(dtype, self.in_features, self.out_features),
+         )
+         self.bias = (
+             Parameter(total_shape=[1, self.out_features], mesh_axes=[None, mesh_axis], device=mesh_device, dtype=dtype)
+@@ -349,7 +377,7 @@ class RowParallelLinear(Module):
+             total_shape=[self.in_features, self.out_features],
+             mesh_axes=[mesh_axis, fsdp_mesh_axis],
+             device=mesh_device,
+-            dtype=dtype,
++            dtype=_resolve_weight_dtype(dtype, self.in_features, self.out_features),
+         )
+         self.bias = (
+             Parameter(
+diff --git a/models/tt_dit/models/transformers/wan2_2/attention_wan.py b/models/tt_dit/models/transformers/wan2_2/attention_wan.py
+index 7c7f7e1cc1fc..44c3dbbc7702 100644
+--- a/models/tt_dit/models/transformers/wan2_2/attention_wan.py
++++ b/models/tt_dit/models/transformers/wan2_2/attention_wan.py
+@@ -104,15 +104,19 @@ class WanAttention(Module):
+                 **col_parallel_kwargs,
+             )
+ 
+-        self.to_out = ColCls(
+-            dim,
+-            dim,
+-            bias=True,
+-            mesh_device=mesh_device,
+-            mesh_axis=parallel_config.tensor_parallel.mesh_axis,
+-            fsdp_mesh_axis=fsdp_mesh_axis,
+-            ccl_manager=ccl_manager,
+-        )
++        from ....layers.linear import weight_dtype_override as _wdo
++        import contextlib as _cl
++
++        with _wdo(None) if is_self else _cl.nullcontext():  # ep4: fused addcmul needs bf16 weights
++            self.to_out = ColCls(
++                dim,
++                dim,
++                bias=True,
++                mesh_device=mesh_device,
++                mesh_axis=parallel_config.tensor_parallel.mesh_axis,
++                fsdp_mesh_axis=fsdp_mesh_axis,
++                ccl_manager=ccl_manager,
++            )
+ 
+         self.dummy_joint_input = bf16_tensor(torch.zeros((1, self.n_local_heads, 0, self.head_dim)), device=mesh_device)
+ 
+@@ -124,6 +128,23 @@ class WanAttention(Module):
+             exp_approx_mode=False,  # NOTE: False is more correct
+         )
+ 
++        # ep4: optional chunk sizes for the non-ring self- and cross-attention SDPA (default = the config above)
++        import os as _os
++
++        def _ep4_cfg(var):
++            v = _os.environ.get(var)
++            if not v:
++                return self.sdpa_program_config
++            q, k = (int(x) for x in v.lower().split("x"))
++            return ttnn.SDPAProgramConfig(
++                compute_with_storage_grid_size=full_grid,
++                q_chunk_size=q,
++                k_chunk_size=k,
++                exp_approx_mode=False,
++            )
++
++        self.self_sdpa_program_config = _ep4_cfg("EP4_SDPA_CHUNKS")
++        self.cross_sdpa_program_config = _ep4_cfg("EP4_XSDPA_CHUNKS")
+         self.sdpa_worker_grid = (full_grid.x - 1, full_grid.y)  # Reserve last column for CCL
+         chunk_lookup = {**self.sdpa_chunk_size_map, **(sdpa_chunk_size_overrides or {})}
+         ring_sdpa_chunk_size = chunk_lookup.get(
+@@ -486,7 +507,7 @@ class WanAttention(Module):
+                     k_BHNE,
+                     v_BHNE,
+                     is_causal=False,
+-                    program_config=self.sdpa_program_config,
++                    program_config=self.self_sdpa_program_config,
+                     compute_kernel_config=self.sdpa_compute_kernel_config,
+                 )
+         else:
+@@ -497,7 +518,7 @@ class WanAttention(Module):
+                 v_BHNE,
+                 is_causal=False,
+                 attn_mask=cross_attn_mask,
+-                program_config=self.sdpa_program_config,
++                program_config=self.cross_sdpa_program_config,
+                 compute_kernel_config=self.sdpa_compute_kernel_config,
+             )
+ 
+diff --git a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+index 501b8308324e..6c3faf58ca08 100644
+--- a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
++++ b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+@@ -20,7 +20,7 @@ import ttnn
+ 
+ from ....layers.embeddings import WanPatchEmbed, WanTimeTextImageEmbedding
+ from ....layers.feedforward import ParallelFeedForward
+-from ....layers.linear import Linear
++from ....layers.linear import Linear, weight_dtype_override
+ from ....layers.module import Module, ModuleList, Parameter
+ from ....layers.normalization import DistributedLayerNorm
+ from ....parallel.config import DiTParallelConfig
+@@ -702,6 +702,18 @@ class WanTransformer3DModel(Module):
+         return combined
+ 
+ 
++def _ep4_weight_dtype():
++    """(ttnn dtype or None, cache key) from EP4_DIT_WEIGHTS (unset/bf16 = stock bf16)."""
++    v = os.environ.get("EP4_DIT_WEIGHTS", "bf16")
++    if v == "bf16":
++        return None, "bf16"
++    if v == "bf8":
++        return ttnn.bfloat8_b, "bf8"
++    if v == "bf4":
++        return ttnn.bfloat4_b, "bf4"
++    raise ValueError(f"EP4_DIT_WEIGHTS={v}")
++
++
+ class WanCheckpoint:
+     """A Wan transformer-subfolder checkpoint: fetches weights and builds loaded transformers."""
+ 
+@@ -749,6 +761,10 @@ class WanCheckpoint:
+         Loading is deferred so the caller can manage the lifecycle (deallocate / reload).
+         """
+         c = self._config
++        with weight_dtype_override(_ep4_weight_dtype()[0]):
++            return self._build(c, ccl_manager, parallel_config, is_fsdp, model_type, lora_enabled)
++
++    def _build(self, c, ccl_manager, parallel_config, is_fsdp, model_type, lora_enabled):
+         return WanTransformer3DModel(
+             patch_size=c.patch_size,
+             num_heads=c.num_attention_heads,
+@@ -781,6 +797,7 @@ class WanCheckpoint:
+         cache.load_model(
+             tt_model=model,
+             get_torch_state_dict=self._load_state_dict,
++            dtype=_ep4_weight_dtype()[1],
+             model_name=os.path.basename(self._name),
+             subfolder=self._subfolder,
+             parallel_config=parallel_config,
+-- 
+2.54.0
+

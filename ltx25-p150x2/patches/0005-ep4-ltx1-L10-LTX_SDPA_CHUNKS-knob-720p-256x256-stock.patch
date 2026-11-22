@@ -1,0 +1,74 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Thu, 19 Nov 2026 02:13:10 +0100
+Subject: [PATCH] ep4 (ltx1): L10 LTX_SDPA_CHUNKS knob (720p: 256x256 stock
+ 22.0 s; 512x256 22.2/22.6; 128x512 23.7/23.7; 512x512 TT_THROW) ; L11 no
+ encoder trace (2nd-clip replay hang, reset by main) + LTX_ENC_EVICT; gen:
+ encode prompts up front on the cards (0.24 s each, Gemma bf8 PCC final
+ 0.99996) then free Gemma. Links 4: 720p 20.7/20.6 s vs 22.0 (bit-identical
+ first clip). Fix: stage-1 noise generator restarts per clip (a same-seed
+ repeat continued the previous stream)
+
+---
+ .../models/transformers/ltx/attention_ltx.py      |  5 +++--
+ .../pipelines/ltx/pipeline_ltx_distilled.py       | 15 +++++++++++++--
+ 2 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/ltx/attention_ltx.py b/models/tt_dit/models/transformers/ltx/attention_ltx.py
+index 3734cd5c16f3..990a5f89d627 100644
+--- a/models/tt_dit/models/transformers/ltx/attention_ltx.py
++++ b/models/tt_dit/models/transformers/ltx/attention_ltx.py
+@@ -161,10 +161,11 @@ class LTXAttention(Module):
+         self.dummy_joint_input = bf16_tensor(torch.zeros((1, self.n_local_heads, 0, self.head_dim)), device=mesh_device)
+ 
+         full_grid = self.mesh_device.compute_with_storage_grid_size()
++        _qc, _kc = (int(v) for v in os.environ.get("LTX_SDPA_CHUNKS", "256x256").lower().split("x"))  # ltx1 L10
+         self.sdpa_program_config = ttnn.SDPAProgramConfig(
+             compute_with_storage_grid_size=full_grid,
+-            q_chunk_size=256,
+-            k_chunk_size=256,
++            q_chunk_size=_qc,
++            k_chunk_size=_kc,
+             exp_approx_mode=False,
+         )
+ 
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+index eadcc83026fe..5f26624ee289 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+@@ -486,11 +486,13 @@ class LTXDistilledPipeline(LTXPipeline):
+         ltx25 = self._ltx_sampler() == "ancestral" and not image_cond
+         if ltx25:
+             # ltx1: GaussianNoiser with the run's shared generator: lerp(base, noise, scale) per modality.
++            stage2 = initial_video_latent is not None
+             gen = getattr(self, "_ltx_gen", None)
+-            if gen is None or getattr(self, "_ltx_gen_seed", None) != seed:
++            if gen is None or not stage2 or getattr(self, "_ltx_gen_seed", None) != seed:
++                # stage 1 always starts a fresh generator(seed) (the reference's per-run noiser); stage 2 continues it.
++                # ltx1 fix: before, a repeat with the same seed continued the previous clip's stream.
+                 gen = torch.Generator().manual_seed(seed)
+                 self._ltx_gen, self._ltx_gen_seed = gen, seed
+-            stage2 = initial_video_latent is not None
+             scale = float(sigmas[0]) if stage2 else 1.0
+             nv = torch.randn(B, video_N_real, self.in_channels, dtype=torch.bfloat16, generator=gen)
+             video_lat_real = torch.lerp(base_v.float(), nv.float(), scale).to(torch.bfloat16).float()
+@@ -726,7 +728,16 @@ class LTXDistilledPipeline(LTXPipeline):
+         cached = os.path.exists(self._device_embed_cache_path([prompt])) and not nocache
+         if not cached:
+             self.gemma_encoder_pair.ensure_loaded()
++        if os.environ.get("LTX_ENC_TRACE", "0") != "1":
++            # ltx1 L11: never trace the encoder here: a capture during clip 1 + later DiT/VAE allocations overlapping
++            # its region made the 2nd clip's replay hang both cards (h480, reset by main 01:48)
++            self.gemma_encoder_pair._encoder_trace = False
+         enc = self.encode_prompts([prompt], use_cache=not nocache)
++        if not cached and os.environ.get("LTX_ENC_EVICT") == "1":  # ltx1 L11: free Gemma for the DiT/VAE (720p+)
++            _p = self.gemma_encoder_pair
++            for _m in (_p.gemma_encoder, _p.feature_extractor, _p.video_connector, _p.audio_connector):
++                if _m is not None and _m.is_loaded():
++                    _m.deallocate_weights()
+         v_embeds, a_embeds = enc[0][0].float(), enc[0][1].float()
+         t_encode = time.time() - t0
+         timings.append(("Encoder (cache)" if cached else "Encoder", t_encode))
+-- 
+2.54.0
+

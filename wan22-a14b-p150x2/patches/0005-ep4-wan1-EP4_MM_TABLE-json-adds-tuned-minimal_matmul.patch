@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 17 Nov 2026 21:29:51 +0100
+Subject: [PATCH] ep4 (wan1): EP4_MM_TABLE=<json> adds tuned minimal_matmul
+ blockings to the 11x10 table (default off)
+
+---
+ models/tt_dit/utils/matmul.py | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/models/tt_dit/utils/matmul.py b/models/tt_dit/utils/matmul.py
+index 65c95062646e..cc10d2a21fee 100644
+--- a/models/tt_dit/utils/matmul.py
++++ b/models/tt_dit/utils/matmul.py
+@@ -186,6 +186,21 @@ grid_12_9_configs = {
+ }
+ 
+ 
++def _ep4_load_mm_table():
++    import json
++    import os
++
++    f = os.environ.get("EP4_MM_TABLE")
++    if not f:
++        return
++    for k, v in json.load(open(f)).items():
++        m, kk, n = (int(x) for x in k.split(","))
++        grid_11_10_configs[(m, kk, n)] = (v[0], v[1], v[2], tuple(v[3]))
++
++
++_ep4_load_mm_table()
++
++
+ def get_matmul_config(M, K, N, core_grid, default_block_size=None):
+     # Default to 8x8x8 with subblock 2x2 when unknown
+     subblock_h = 2
+-- 
+2.54.0
+

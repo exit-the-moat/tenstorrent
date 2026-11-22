@@ -1,0 +1,49 @@
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "256x256", "fid": "HiFi2", "dtype": "bf16", "ms": 68.58, "pcc_vs_stock": 1.0}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "256x256", "fid": "HiFi2", "dtype": "bf8", "ms": 59.67, "pcc_vs_stock": 0.999527}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "256x256", "fid": "LoFi", "dtype": "bf16", "ms": 67.88, "pcc_vs_stock": 0.822228}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "256x256", "fid": "LoFi", "dtype": "bf8", "ms": 49.28, "pcc_vs_stock": 0.822343}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "128x512", "fid": "HiFi2", "dtype": "bf16", "ms": 153.81, "pcc_vs_stock": 0.999799}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "128x512", "fid": "HiFi2", "dtype": "bf8", "ms": 77.86, "pcc_vs_stock": 0.999522}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "128x512", "fid": "LoFi", "dtype": "bf16", "ms": 153.14, "pcc_vs_stock": 0.938803}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "128x512", "fid": "LoFi", "dtype": "bf8", "ms": 78.72, "pcc_vs_stock": 0.938955}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "256x512", "fid": "HiFi2", "dtype": "bf16", "ms": 75.32, "pcc_vs_stock": 0.999796}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "256x512", "fid": "HiFi2", "dtype": "bf8", "ms": 53.59, "pcc_vs_stock": 0.999517}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "256x512", "fid": "LoFi", "dtype": "bf16", "ms": 71.84, "pcc_vs_stock": 0.938687}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "256x512", "fid": "LoFi", "dtype": "bf8", "ms": 42.97, "pcc_vs_stock": 0.938839}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "512x256", "fid": "HiFi2", "dtype": "bf16", "ms": 57.59, "pcc_vs_stock": 0.999986}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "512x256", "fid": "HiFi2", "dtype": "bf8", "ms": 58.95, "pcc_vs_stock": 0.999525}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "512x256", "fid": "LoFi", "dtype": "bf16", "ms": 48.08, "pcc_vs_stock": 0.822098}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "512x256", "fid": "LoFi", "dtype": "bf8", "ms": 48.54, "pcc_vs_stock": 0.822212}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "512x512", "fid": "HiFi2", "dtype": "bf16", "error": "TT_THROW @ /home/container_app_user/tt-metal/tt_metal/impl/program/program.cpp:1706: tt::exception\ninfo:\nStatically allocated circular buffers on core range [0-0 - 10-9] grow to 1887104 B which is bey"}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "512x512", "fid": "HiFi2", "dtype": "bf8", "ms": 52.7, "pcc_vs_stock": 0.999512}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "512x512", "fid": "LoFi", "dtype": "bf16", "error": "TT_THROW @ /home/container_app_user/tt-metal/tt_metal/impl/program/program.cpp:1706: tt::exception\ninfo:\nStatically allocated circular buffers on core range [0-0 - 10-9] grow to 1887104 B which is bey"}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "512x512", "fid": "LoFi", "dtype": "bf8", "ms": 42.46, "pcc_vs_stock": 0.938779}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "128x256", "fid": "HiFi2", "dtype": "bf16", "ms": 150.02, "pcc_vs_stock": 0.999972}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "128x256", "fid": "HiFi2", "dtype": "bf8", "ms": 68.06, "pcc_vs_stock": 0.999526}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "128x256", "fid": "LoFi", "dtype": "bf16", "ms": 150.1, "pcc_vs_stock": 0.822491}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "128x256", "fid": "LoFi", "dtype": "bf8", "ms": 66.93, "pcc_vs_stock": 0.822607}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "384x512", "fid": "HiFi2", "dtype": "bf16", "error": "TT_THROW @ /home/container_app_user/tt-metal/tt_metal/impl/program/program.cpp:1706: tt::exception\ninfo:\nStatically allocated circular buffers on core range [0-0 - 10-9] grow to 1586048 B which is bey"}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "384x512", "fid": "HiFi2", "dtype": "bf8", "ms": 53.3, "pcc_vs_stock": 0.999512}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "384x512", "fid": "LoFi", "dtype": "bf16", "error": "TT_THROW @ /home/container_app_user/tt-metal/tt_metal/impl/program/program.cpp:1706: tt::exception\ninfo:\nStatically allocated circular buffers on core range [0-0 - 10-9] grow to 1586048 B which is bey"}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "384x512", "fid": "LoFi", "dtype": "bf8", "ms": 43.35, "pcc_vs_stock": 0.938798}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "64x512", "fid": "HiFi2", "dtype": "bf16", "ms": 245.24, "pcc_vs_stock": 0.999814}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "64x512", "fid": "HiFi2", "dtype": "bf8", "ms": 137.1, "pcc_vs_stock": 0.999539}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "64x512", "fid": "LoFi", "dtype": "bf16", "ms": 245.03, "pcc_vs_stock": 0.93904}
+{"tag": "dev_480_720", "n": 32768, "heads": 20, "chunks": "64x512", "fid": "LoFi", "dtype": "bf8", "ms": 137.29, "pcc_vs_stock": 0.93919}
+{"tag": "dev_480_720", "n": 75616, "heads": 20, "chunks": "256x256", "fid": "HiFi2", "dtype": "bf16", "ms": 464.13, "pcc_vs_stock": 1.0}
+{"tag": "dev_480_720", "n": 75616, "heads": 20, "chunks": "256x256", "fid": "HiFi2", "dtype": "bf8", "ms": 364.69, "pcc_vs_stock": 0.999349}
+{"tag": "dev_480_720", "n": 75616, "heads": 20, "chunks": "256x256", "fid": "LoFi", "dtype": "bf16", "ms": 387.47, "pcc_vs_stock": 0.586646}
+{"tag": "dev_480_720", "n": 75616, "heads": 20, "chunks": "256x256", "fid": "LoFi", "dtype": "bf8", "ms": 275.33, "pcc_vs_stock": 0.586667}
+{"tag": "dev_480_720", "n": 75616, "heads": 20, "chunks": "128x512", "fid": "HiFi2", "dtype": "bf16", "ms": 744.65, "pcc_vs_stock": 0.999366}
+{"tag": "dev_480_720", "n": 75616, "heads": 20, "chunks": "128x512", "fid": "HiFi2", "dtype": "bf8", "ms": 445.54, "pcc_vs_stock": 0.999092}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "256x256", "fid": "HiFi2", "dtype": "bf16", "ms": 429.3, "pcc_vs_stock": 1.0}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "512x256", "fid": "HiFi2", "dtype": "bf16", "ms": 356.48, "pcc_vs_stock": 0.999978}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "512x256", "fid": "HiFi2", "dtype": "bf8", "ms": 341.12, "pcc_vs_stock": 0.999347}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "256x512", "fid": "HiFi2", "dtype": "bf16", "ms": 461.41, "pcc_vs_stock": 0.999363}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "256x512", "fid": "HiFi2", "dtype": "bf8", "ms": 312.66, "pcc_vs_stock": 0.999086}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "384x256", "fid": "HiFi2", "dtype": "bf16", "ms": 367.43, "pcc_vs_stock": 0.999957}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "384x256", "fid": "HiFi2", "dtype": "bf8", "ms": 349.56, "pcc_vs_stock": 0.999347}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "512x384", "fid": "HiFi2", "dtype": "bf16", "error": "TT_THROW @ /home/container_app_user/tt-metal/tt_metal/impl/program/program.cpp:1706: tt::exception\ninfo:\nStatically allocated circular buffers on core range [0-0 - 10-9] grow to 1627008 B which is bey"}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "512x384", "fid": "HiFi2", "dtype": "bf8", "ms": 317.16, "pcc_vs_stock": 0.99903}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "384x512", "fid": "HiFi2", "dtype": "bf16", "error": "TT_THROW @ /home/container_app_user/tt-metal/tt_metal/impl/program/program.cpp:1706: tt::exception\ninfo:\nStatically allocated circular buffers on core range [0-0 - 10-9] grow to 1586048 B which is bey"}
+{"tag": "dev_720b", "n": 75616, "heads": 20, "chunks": "384x512", "fid": "HiFi2", "dtype": "bf8", "ms": 307.81, "pcc_vs_stock": 0.999081}

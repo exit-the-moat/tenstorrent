@@ -1,0 +1,127 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Thu, 19 Nov 2026 08:55:04 +0100
+Subject: [PATCH] ep4 (ltx1): I1 image-to-video for LTX-2.5: ancestral sampler
+ with frame-0 conditioning like ltx_pipelines (noise initial latent, pin cond
+ tokens by the denoise mask, mask-corrected x0, post-process after each step,
+ per-token timesteps via the compact pin path); host-preprocessed stills
+ (<dir>/<H>x<W>.pt from prep_img.py: CRF 18 re-compression, resize + centre
+ crop); LTX_EXPORT_CRF; borrowed conv3d table only at T>=17 (2nd 25-frame
+ hang, i2v1). PCC vs ltx_core CPU (Moatwatcher, 448x832x25, seed 0): image
+ latent s1 0.99964 / s2 0.99919, s1 step0 video 0.99828 audio 0.99865, step7
+ 0.99978 / 0.99997, cond tokens exactly clean
+
+---
+ .../pipelines/ltx/pipeline_ltx_distilled.py   | 38 ++++++++++++++++---
+ models/tt_dit/utils/conv3d.py                 |  4 +-
+ models/tt_dit/utils/video.py                  |  2 +-
+ 3 files changed, 37 insertions(+), 7 deletions(-)
+
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+index 5f26624ee289..bc4ea82210ea 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+@@ -483,7 +483,7 @@ class LTXDistilledPipeline(LTXPipeline):
+             ), f"initial_video_latent seq dim {base_v.shape[1]} != video_N_real {video_N_real}"
+         else:  # T2V S1: pure noise from zeros
+             base_v = torch.zeros(B, video_N_real, self.in_channels)
+-        ltx25 = self._ltx_sampler() == "ancestral" and not image_cond
++        ltx25 = self._ltx_sampler() == "ancestral"
+         if ltx25:
+             # ltx1: GaussianNoiser with the run's shared generator: lerp(base, noise, scale) per modality.
+             stage2 = initial_video_latent is not None
+@@ -495,7 +495,17 @@ class LTXDistilledPipeline(LTXPipeline):
+                 self._ltx_gen, self._ltx_gen_seed = gen, seed
+             scale = float(sigmas[0]) if stage2 else 1.0
+             nv = torch.randn(B, video_N_real, self.in_channels, dtype=torch.bfloat16, generator=gen)
+-            video_lat_real = torch.lerp(base_v.float(), nv.float(), scale).to(torch.bfloat16).float()
++            if image_cond:  # ltx1 I1: noise the initial latent, then pin the cond tokens toward clean by the mask
++                init_v = (
++                    initial_video_latent.float().reshape(B, video_N_real, self.in_channels)
++                    if initial_video_latent is not None
++                    else torch.zeros(B, video_N_real, self.in_channels)
++                )
++                noised = torch.lerp(init_v, nv.float(), scale)
++                video_lat_real = torch.lerp(i2v.clean_latent.float(), noised, i2v.denoise_mask.float())
++                video_lat_real = video_lat_real.to(torch.bfloat16).float()
++            else:
++                video_lat_real = torch.lerp(base_v.float(), nv.float(), scale).to(torch.bfloat16).float()
+             na = torch.randn(B, audio_N_real, self.in_channels, dtype=torch.bfloat16, generator=gen)
+             base_a = (
+                 initial_audio_latent[:, :audio_N_real, :].float()
+@@ -635,7 +645,19 @@ class LTXDistilledPipeline(LTXPipeline):
+                 ):
+                     x32 = ttnn.typecast(lat_tt, ttnn.float32)
+                     v32 = ttnn.typecast(out_tt, ttnn.float32) if out_tt.get_dtype() != ttnn.float32 else out_tt
+-                    nxt = ttnn.add(ttnn.multiply(x32, ca), ttnn.multiply(v32, cv))
++                    pin = image_cond and lat_tt is state.tt_video_lat
++                    if pin:  # ltx1 I1: mask-corrected x0, ancestral step, post-process again
++                        m32 = ttnn.typecast(tt_i2v_mask, ttnn.float32)
++                        c32 = ttnn.typecast(tt_i2v_clean, ttnn.float32)
++                        om32 = ttnn.rsub(m32, 1.0)
++                        x0 = ttnn.add(x32, ttnn.multiply(v32, -sigma))
++                        x0 = ttnn.add(ttnn.multiply(x0, m32), ttnn.multiply(c32, om32))
++                        if sigma_next == 0.0:
++                            nxt = x0
++                        else:
++                            nxt = ttnn.add(ttnn.multiply(x32, A), ttnn.multiply(x0, Bc))
++                    else:
++                        nxt = ttnn.add(ttnn.multiply(x32, ca), ttnn.multiply(v32, cv))
+                     if cn > 0.0:
+                         nz = torch.zeros(1, 1, n_pad, self.in_channels)
+                         nz[0, 0, :n_real] = torch.randn(
+@@ -653,6 +675,8 @@ class LTXDistilledPipeline(LTXPipeline):
+                             ),
+                         )
+                         nxt = ttnn.add(nxt, ttnn.multiply(nz_tt, cn))
++                    if pin and sigma_next != 0.0:
++                        nxt = ttnn.add(ttnn.multiply(nxt, m32), ttnn.multiply(c32, om32))
+                     nxt = ttnn.multiply(ttnn.typecast(nxt, ttnn.bfloat16), pmask)
+                     ttnn.copy(nxt, lat_tt)
+                 logger.info(f"  Step {step_idx + 1}/{num_steps}: σ {sigma:.4f} → {sigma_next:.4f} (ancestral)")
+@@ -764,8 +788,12 @@ class LTXDistilledPipeline(LTXPipeline):
+                 else:
+                     logger.info(f"I2V: encoding conditioning image {img_path} (strength={cond_strength})")
+                     t0 = time.time()
+-                    img_s1 = load_conditioning_image(img_path, s1_height, s1_width)
+-                    img_full = load_conditioning_image(img_path, height, width)
++                    if os.path.isdir(img_path):  # ltx1: host-preprocessed stills (prep_img.py, ltx_pipelines rules)
++                        img_s1 = torch.load(f"{img_path}/{s1_height}x{s1_width}.pt").float()
++                        img_full = torch.load(f"{img_path}/{height}x{width}.pt").float()
++                    else:
++                        img_s1 = load_conditioning_image(img_path, s1_height, s1_width)
++                        img_full = load_conditioning_image(img_path, height, width)
+                     s1_cond_latent = cache[s1_key] = self.encode_image(img_s1)
+                     full_cond_latent = cache[full_key] = self.encode_image(img_full)
+                     timings.append(("Image encode", time.time() - t0))
+diff --git a/models/tt_dit/utils/conv3d.py b/models/tt_dit/utils/conv3d.py
+index 813754b08f24..c06dee3f302d 100644
+--- a/models/tt_dit/utils/conv3d.py
++++ b/models/tt_dit/utils/conv3d.py
+@@ -624,7 +624,9 @@ def get_conv3d_config(
+     channel_key = (in_channels, out_channels, kernel_size)
+ 
+     exact = _BLOCKINGS.get(blocking_key)
+-    if exact is None and os.environ.get("LTX_CONV3D_BORROW", "0") == "1":  # ltx1 L9
++    if exact is None and os.environ.get("LTX_CONV3D_BORROW", "0") == "1" and T >= 17:  # ltx1 L9
++        # T >= 17 (layer T incl. pad): 25-frame shapes (latent T 4..25 through the decoder) hung the cards twice
++        # (aux2, i2v1) with the borrowed table; 121-frame clips (T >= 18 at the first decoder layer) are verified
+         exact = _LTX_BORROW.get(channel_key)
+         if exact is not None and (T <= 0 or exact[2] > max(1, T - 2)):
+             # short clips (e.g. 25 frames): a T_out_block larger than T_out hung the card (aux2, 19 Nov): use it
+diff --git a/models/tt_dit/utils/video.py b/models/tt_dit/utils/video.py
+index 7313329d4ab6..3deb6d546116 100644
+--- a/models/tt_dit/utils/video.py
++++ b/models/tt_dit/utils/video.py
+@@ -128,7 +128,7 @@ def export_video_audio(video_pixels: torch.Tensor, output_path: str, fps: int =
+     stream.pix_fmt = "yuv420p"
+     # "veryfast" preset + multi-threaded encode is ~5-8x faster than libx264's
+     # default "medium" single-threaded path, while crf 23 keeps the quality higher.
+-    stream.options = {"preset": "veryfast", "crf": "23"}
++    stream.options = {"preset": "veryfast", "crf": __import__("os").environ.get("LTX_EXPORT_CRF", "23")}  # ltx1: masters at 17
+     stream.thread_type = "AUTO"
+ 
+     # Prepare audio stream if provided
+-- 
+2.54.0
+

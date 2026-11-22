@@ -1,0 +1,90 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Thu, 19 Nov 2026 15:55:35 +0100
+Subject: [PATCH] ep4 (ltx1): A1 frozen audio (a2vid-style lip-sync test)
+
+pipe._ltx_audio_frozen: clean source audio latent in both stages, never stepped; audio sigma 0 for the audio AdaLN,
+audio prompt AdaLN, audio cross-attn scale/shift and the video a2v gate (official frozen-modality wiring).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JA5v8QiubPz82RUkMyCToU
+---
+ .../tt_dit/models/transformers/ltx/transformer_ltx.py  | 10 ++++++----
+ models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py  |  9 +++++++++
+ 2 files changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/ltx/transformer_ltx.py b/models/tt_dit/models/transformers/ltx/transformer_ltx.py
+index b89f4e6878fe..6ddd23a51365 100644
+--- a/models/tt_dit/models/transformers/ltx/transformer_ltx.py
++++ b/models/tt_dit/models/transformers/ltx/transformer_ltx.py
+@@ -921,8 +921,10 @@ class LTXTransformerModel(Module):
+         av_ca_audio_temb = None
+         audio_emb_ts = None
+ 
++        # ltx1 A1: frozen audio -> audio sigma 0 (own AdaLN, prompt AdaLN, audio cross scale/shift, video a2v gate)
++        ts_a = ttnn.multiply(timestep, 0.0) if getattr(self, "_ltx_audio_frozen", False) else timestep
+         if self.has_audio:
+-            audio_modulation, audio_emb_ts = self.audio_adaln_single(timestep)
++            audio_modulation, audio_emb_ts = self.audio_adaln_single(ts_a)
+             audio_mod_CB1D = ttnn.reshape(audio_modulation, (1, B, adaln_coeff, self.audio_inner_dim))
+             if self.parallel_config.tensor_parallel.factor > 1:
+                 audio_mod_CB1D = ttnn.mesh_partition(
+@@ -931,18 +933,18 @@ class LTXTransformerModel(Module):
+             audio_mod_CB1D = ttnn.permute(audio_mod_CB1D, (2, 1, 0, 3))
+ 
+             if self.cross_attention_adaln:
+-                audio_prompt_mod, _ = self.audio_prompt_adaln_single(timestep)
++                audio_prompt_mod, _ = self.audio_prompt_adaln_single(ts_a)
+                 audio_prompt_2B1D = ttnn.reshape(audio_prompt_mod, (1, B, 2, self.audio_inner_dim))
+                 audio_prompt_2B1D = ttnn.permute(audio_prompt_2B1D, (2, 1, 0, 3))
+ 
+             # Cross-attention timestep conditioning; concat on the param axis (dim 0).
+             av_ca_video_ss, _ = self.av_ca_video_scale_shift_adaln_single(timestep)
+             av_ca_video_ss = ttnn.permute(ttnn.reshape(av_ca_video_ss, (1, B, 4, self.inner_dim)), (2, 1, 0, 3))
+-            av_ca_a2v_gate, _ = self.av_ca_a2v_gate_adaln_single(timestep)
++            av_ca_a2v_gate, _ = self.av_ca_a2v_gate_adaln_single(ts_a)
+             av_ca_a2v_gate = ttnn.permute(ttnn.reshape(av_ca_a2v_gate, (1, B, 1, self.inner_dim)), (2, 1, 0, 3))
+             av_ca_video_temb = ttnn.concat([av_ca_video_ss, av_ca_a2v_gate], dim=0)
+ 
+-            av_ca_audio_ss, _ = self.av_ca_audio_scale_shift_adaln_single(timestep)
++            av_ca_audio_ss, _ = self.av_ca_audio_scale_shift_adaln_single(ts_a)
+             av_ca_audio_ss = ttnn.permute(ttnn.reshape(av_ca_audio_ss, (1, B, 4, self.audio_inner_dim)), (2, 1, 0, 3))
+             av_ca_v2a_gate, _ = self.av_ca_v2a_gate_adaln_single(timestep)
+             av_ca_v2a_gate = ttnn.permute(ttnn.reshape(av_ca_v2a_gate, (1, B, 1, self.audio_inner_dim)), (2, 1, 0, 3))
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+index c16d34720631..a4a0ca71a5b8 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+@@ -542,6 +542,10 @@ class LTXDistilledPipeline(LTXPipeline):
+                 else torch.zeros(B, audio_N_real, self.in_channels)
+             )
+             audio_lat_real25 = torch.lerp(base_a, na.float(), scale).to(torch.bfloat16).float()
++            _afz = getattr(self, "_ltx_audio_frozen", None)
++            if _afz is not None:  # ltx1 A1: frozen audio = clean source latent, no noise (draws still consumed)
++                assert _afz.shape[1] >= audio_N_real, (_afz.shape, audio_N_real)
++                audio_lat_real25 = _afz[:, :audio_N_real, :].to(torch.bfloat16).float()
+             if os.environ.get("LTX_TF_EXACT") == "1":  # ltx1 PCC tool: teacher-forced inputs, no noising
+                 video_lat_real, audio_lat_real25 = base_v.float(), base_a.float()
+             loop_gen = torch.Generator().manual_seed(seed + (20000 if stage2 else 10000))
+@@ -601,6 +605,7 @@ class LTXDistilledPipeline(LTXPipeline):
+             tt_i2v_mask, tt_i2v_clean = state.tt_i2v_mask, state.tt_i2v_clean
+ 
+         self.transformer._ltx_kf_add = getattr(state, "_ltx_kf_add", None)
++        self.transformer._ltx_audio_frozen = getattr(self, "_ltx_audio_frozen", None) is not None  # ltx1 A1
+         _ltx_memlog(self.mesh_device, f"denoise:ready N={video_N}")
+         for _blk in self.transformer.transformer_blocks:  # ltx1 L4b: real audio length for the A2V key mask
+             _blk._ltx_audio_n_real = audio_N_real
+@@ -673,6 +678,10 @@ class LTXDistilledPipeline(LTXPipeline):
+                     (state.tt_video_lat, v_out, video_N_real, video_N, state.tt_video_pad_mask),
+                     (state.tt_audio_lat, a_out, audio_N_real, audio_N, state.tt_audio_pad_mask),
+                 ):
++                    if lat_tt is state.tt_audio_lat and getattr(self, "_ltx_audio_frozen", None) is not None:
++                        if cn > 0.0:  # ltx1 A1: keep the noise stream identical, but never step frozen audio
++                            torch.randn(1, n_real, self.in_channels, dtype=torch.bfloat16, generator=loop_gen)
++                        continue
+                     x32 = ttnn.typecast(lat_tt, ttnn.float32)
+                     v32 = ttnn.typecast(out_tt, ttnn.float32) if out_tt.get_dtype() != ttnn.float32 else out_tt
+                     pin = image_cond and lat_tt is state.tt_video_lat
+-- 
+2.54.0
+

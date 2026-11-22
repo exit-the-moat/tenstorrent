@@ -1,0 +1,823 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 18 Nov 2026 22:28:18 +0100
+Subject: [PATCH] ep4 (ltx1): LTX-2.5 support L1-L3: zero FFN biases, keyframe
+ marker on first-frame tokens, LTX_DIT_WEIGHTS=bf8 (to_out bf16), aux
+ VAE/audio checkpoint, local upsampler, ancestral sampler with reference noise
+ streams, Gemma 4 text encoder on device (new model_gemma4.py). PCC vs
+ ltx_core CPU: Gemma 4 hidden states >=0.993 (49 states), final embeds video
+ 0.99995 audio 0.99969; conv VAE decode 0.99996; audio decode 0.9964
+
+---
+ models/tt_dit/encoders/gemma/encoder_pair.py  |  66 +++-
+ models/tt_dit/encoders/gemma/model_gemma4.py  | 306 ++++++++++++++++++
+ .../models/transformers/ltx/attention_ltx.py  |  26 +-
+ .../transformers/ltx/transformer_ltx.py       |  62 +++-
+ models/tt_dit/pipelines/ltx/pipeline_ltx.py   |  10 +-
+ .../pipelines/ltx/pipeline_ltx_distilled.py   | 129 +++++++-
+ 6 files changed, 576 insertions(+), 23 deletions(-)
+ create mode 100644 models/tt_dit/encoders/gemma/model_gemma4.py
+
+diff --git a/models/tt_dit/encoders/gemma/encoder_pair.py b/models/tt_dit/encoders/gemma/encoder_pair.py
+index 2e89c6136583..f392bfd214ab 100644
+--- a/models/tt_dit/encoders/gemma/encoder_pair.py
++++ b/models/tt_dit/encoders/gemma/encoder_pair.py
+@@ -29,6 +29,48 @@ from ...utils.tracing import traced_function
+ from .embeddings_connector import EmbeddingsConnector
+ from .feature_extractor import GemmaFeatureExtractor
+ from .model_gemma import GemmaConfig, GemmaEncoder
++from .model_gemma4 import Gemma4Config, Gemma4Encoder
++
++
++def _is_gemma4_file(path: str | None) -> bool:
++    """ltx1: LTX-2.5 single-file Gemma 4 text encoder (metadata gemma_config.model_type == gemma4_unified)."""
++    if not path or not os.path.isfile(path):
++        return False
++    import json as _json
++
++    with open(path, "rb") as f:
++        n = int.from_bytes(f.read(8), "little")
++        meta = _json.loads(f.read(n)).get("__metadata__", {}) or {}
++    try:
++        return _json.loads(meta.get("gemma_config", "{}")).get("model_type") == "gemma4_unified"
++    except Exception:  # noqa: BLE001
++        return False
++
++
++class _Gemma4LTXTokenizer:
++    """ltx1: ltx_core LTXGemmaTokenizer semantics on the tokenizer embedded in the LTX-2.5 TE file."""
++
++    def __init__(self, path: str, bos_id: int = 2, pad_id: int = 0):
++        from tokenizers import Tokenizer
++
++        with safe_open(path, "pt") as f:
++            raw = f.get_tensor("tokenizer_json").numpy().tobytes().decode("utf-8")
++        self.tok = Tokenizer.from_str(raw)
++        self.tok.no_padding()
++        self.tok.no_truncation()
++        self.bos_id, self.pad_id = bos_id, pad_id
++
++    def __call__(self, prompt, return_tensors="pt", padding="max_length", max_length=1024, truncation=True):
++        from types import SimpleNamespace
++
++        ids = self.tok.encode(prompt.strip(), add_special_tokens=True).ids[:max_length]
++        if not ids or ids[0] != self.bos_id:
++            ids = [self.bos_id, *ids][:max_length]
++        pad = max_length - len(ids)
++        return SimpleNamespace(
++            input_ids=torch.tensor([[self.pad_id] * pad + ids], dtype=torch.int64),
++            attention_mask=torch.tensor([[0] * pad + [1] * len(ids)], dtype=torch.int64),
++        )
+ 
+ GEMMA_SEQUENCE_LENGTH = 1024
+ VIDEO_EMBED_DIM = 4096
+@@ -46,7 +88,7 @@ def _resolve_gemma_dir(gemma: str) -> str:
+     """Resolve a Gemma reference to a local directory: a local dir is returned as-is, a
+     HuggingFace repo id is snapshot-downloaded (cached). The original reference — not this
+     resolved snapshot dir, whose basename is an opaque revision hash — names the cache."""
+-    if os.path.isdir(gemma):
++    if os.path.isdir(gemma) or os.path.isfile(gemma):  # ltx1: single-file LTX-2.5 TE
+         return gemma
+     logger.info(f"Resolving HuggingFace Gemma repo {gemma} (auto-download if missing)")
+     return snapshot_download(repo_id=gemma)
+@@ -55,6 +97,9 @@ def _resolve_gemma_dir(gemma: str) -> str:
+ # --- source state dicts (lazy: only read on a cache miss) -------------------
+ def _gemma_state_dict(gemma_path: str) -> dict[str, torch.Tensor]:
+     """All Gemma encoder weights, from the HF safetensors shards."""
++    if os.path.isfile(gemma_path):  # ltx1: LTX-2.5 single file; only the language model ("model.*")
++        with safe_open(gemma_path, "pt") as f:
++            return {k: f.get_tensor(k) for k in f.keys() if k.startswith("model.")}
+     weight_files = sorted(glob.glob(f"{gemma_path}/model-*.safetensors")) or sorted(
+         glob.glob(f"{gemma_path}/*.safetensors")
+     )
+@@ -192,17 +237,26 @@ class GemmaTokenizerEncoderPair:
+         if self.is_loaded():
+             return
+         self.load_gemma_encoder()
+-        self.load_embeddings_connectors(
+-            connector_state
+-            if connector_state is not None
+-            else (lambda: _read_connector_checkpoint(self.checkpoint_name))
+-        )
++
++        def _conn_state():
++            st = _read_connector_checkpoint(self.checkpoint_name)
++            if self.gemma_path and os.path.isfile(self.gemma_path):  # ltx1: LTX-2.5 keeps the projections here
++                st.update(_read_connector_checkpoint(self.gemma_path))
++            return st
++
++        self.load_embeddings_connectors(connector_state if connector_state is not None else _conn_state)
+ 
+     def load_gemma_encoder(self, gemma_path: str | None = None) -> None:
+         """Load the TTNN Gemma-3 encoder. Built once and reused across reloads; weights reload
+         from the shared cache (no re-tilizing 12B params). The CCLManager is supplied by the
+         pipeline (shared with the connectors), so reloads never rebuild it."""
+         gemma_path = gemma_path or self.gemma_path
++        if self.gemma_encoder is None and _is_gemma4_file(gemma_path):  # ltx1: LTX-2.5
++            config = Gemma4Config(num_hidden_layers=self._num_layers, max_position_embeddings=self._sequence_length)
++            self.gemma_encoder = Gemma4Encoder(config, self.mesh_device, self.ccl_manager, self.parallel_config)
++            self._register_exclusions(self.gemma_encoder)
++            self.tokenizer = _Gemma4LTXTokenizer(gemma_path)
++            logger.info("Gemma 4 (LTX-2.5) text encoder on device")
+         if self.gemma_encoder is None:
+             config = GemmaConfig(
+                 num_hidden_layers=self._num_layers,
+diff --git a/models/tt_dit/encoders/gemma/model_gemma4.py b/models/tt_dit/encoders/gemma/model_gemma4.py
+new file mode 100644
+index 000000000000..c8abec69d79d
+--- /dev/null
++++ b/models/tt_dit/encoders/gemma/model_gemma4.py
+@@ -0,0 +1,306 @@
++# SPDX-FileCopyrightText: © 2025 Tenstorrent AI ULC
++# SPDX-License-Identifier: Apache-2.0
++# Modified by ltx1 (Exit the Moat, Episode 4, 2026-11-18): new file, Gemma 4 "unified" 12B text encoder for LTX-2.5,
++# built from model_gemma.py (Gemma 3). Reference: transformers 5.14.1 models/gemma4_unified/modeling_gemma4_unified.py.
++
++"""TTNN Gemma-4 (unified, 12B) text encoder for LTX-2.5.
++
++Differences to Gemma 3 (model_gemma.py), all per the HF reference:
++- RMSNorm weights are applied as-is (no ``1 + w``); v gets an unscaled RMSNorm.
++- Attention scaling 1.0 (q/k norms carry the scale).
++- Sliding layers: head_dim 256, 8 KV heads, RoPE theta 1e4 (sliding window 1024 >= the 1024-token prompt, so the
++  window never cuts: plain causal).
++- Every 6th layer is global: head_dim 512, ONE KV head, k = v (no v_proj; v is the raw k_proj output, then the
++  unscaled v-norm; k gets k_norm + RoPE), proportional RoPE theta 1e6 with partial rotary 0.25 (the other 3/4 of the
++  frequencies are 0 -> cos 1 / sin 0).
++- Each layer ends with ``hidden *= layer_scalar``.
++- Embedding scale sqrt(3840) rounded to bf16 (= 62.0), like HF.
++The single global KV head is replicated on both TP shards: the fused per-shard [q | k | v] weight carries a copy of
++k_proj as both k and v, so nlp_create_qkv_heads splits it like the sliding layers.
++"""
++
++from __future__ import annotations
++
++import torch
++
++import ttnn
++
++from ...layers.embeddings import Embedding
++from ...layers.linear import ColParallelLinear
++from ...layers.module import Module, ModuleList, Parameter
++from ...layers.normalization import RMSNorm
++from ...parallel.config import EncoderParallelConfig
++from ...parallel.manager import CCLManager
++from ...utils.substate import pop_substate, rename_substate
++from ...utils.tracing import StateTensor
++from .model_gemma import GemmaFF
++
++
++class Gemma4Config:
++    def __init__(
++        self,
++        vocab_size: int = 262144,
++        hidden_size: int = 3840,
++        intermediate_size: int = 15360,
++        num_hidden_layers: int = 48,
++        num_attention_heads: int = 16,
++        num_key_value_heads: int = 8,
++        head_dim: int = 256,
++        global_head_dim: int = 512,
++        num_global_key_value_heads: int = 1,
++        rms_norm_eps: float = 1e-6,
++        rope_theta_global: float = 1000000.0,
++        rope_theta_local: float = 10000.0,
++        partial_rotary_factor_global: float = 0.25,
++        sliding_window_pattern: int = 6,
++        max_position_embeddings: int = 1024,
++        hidden_layer_index: int = -1,
++    ):
++        self.vocab_size = vocab_size
++        self.hidden_size = hidden_size
++        self.intermediate_size = intermediate_size
++        self.num_hidden_layers = num_hidden_layers
++        self.num_attention_heads = num_attention_heads
++        self.num_key_value_heads = num_key_value_heads
++        self.head_dim = head_dim
++        self.global_head_dim = global_head_dim
++        self.num_global_key_value_heads = num_global_key_value_heads
++        self.rms_norm_eps = rms_norm_eps
++        self.rope_theta_global = rope_theta_global
++        self.rope_theta_local = rope_theta_local
++        self.partial_rotary_factor_global = partial_rotary_factor_global
++        self.sliding_window_pattern = sliding_window_pattern
++        self.max_position_embeddings = max_position_embeddings
++        self.hidden_layer_index = hidden_layer_index
++
++    def is_global(self, idx: int) -> bool:
++        return (idx + 1) % self.sliding_window_pattern == 0
++
++
++class Gemma4RMSNorm(RMSNorm):
++    """Gemma 4 RMSNorm: x * rsqrt(mean(x^2) + eps) * w (weight used as-is). affine=False -> no weight (v-norm)."""
++
++    def __init__(self, dim: int, eps: float, mesh_device, affine: bool = True):
++        super().__init__(embedding_dim=dim, norm_eps=eps, norm_elementwise_affine=affine, bias=False,
++                         mesh_device=mesh_device)
++
++
++class Gemma4Rope(Module):
++    """HF-format cos/sin [1,1,seq,head_dim] for rotary_embedding_hf; resident once per seq_len."""
++
++    def __init__(self, head_dim: int, base: float, mesh_device, max_seq: int, partial: float = 1.0):
++        super().__init__()
++        self.mesh_device = mesh_device
++        rope_angles = int(partial * head_dim // 2)
++        inv = 1.0 / (base ** (torch.arange(0, 2 * rope_angles, 2, dtype=torch.int64).float() / head_dim))
++        if head_dim // 2 - rope_angles > 0:
++            inv = torch.cat([inv, torch.zeros(head_dim // 2 - rope_angles)])
++        t = torch.arange(max_seq, dtype=torch.float32)
++        freqs = torch.outer(t, inv)  # fp32 like HF (inv_freq @ positions in fp32)
++        emb = torch.cat([freqs, freqs], dim=-1)
++        self._cos = emb.cos()[None, None]
++        self._sin = emb.sin()[None, None]
++        self._tt_cos = StateTensor()
++        self._tt_sin = StateTensor()
++
++    def forward(self, seq_len: int):
++        if self._tt_cos.value is None:
++            for st, src in ((self._tt_cos, self._cos), (self._tt_sin, self._sin)):
++                st.update(
++                    ttnn.from_torch(src[:, :, :seq_len, :].bfloat16(), device=self.mesh_device,
++                                    layout=ttnn.TILE_LAYOUT, dtype=ttnn.bfloat16),
++                    False,
++                )
++        return self._tt_cos.value, self._tt_sin.value
++
++
++class Gemma4Attention(Module):
++    def __init__(self, config: Gemma4Config, layer_idx: int, mesh_device, ccl_manager: CCLManager,
++                 parallel_config: EncoderParallelConfig):
++        super().__init__()
++        self.config = config
++        self.mesh_device = mesh_device
++        self.ccl_manager = ccl_manager
++        self.parallel_config = parallel_config
++        self.is_global = config.is_global(layer_idx)
++        self.num_heads = config.num_attention_heads
++        self.head_dim = config.global_head_dim if self.is_global else config.head_dim
++        self.num_kv_heads = config.num_global_key_value_heads if self.is_global else config.num_key_value_heads
++        self.hidden_size = config.hidden_size
++        tp = parallel_config.tensor_parallel.factor
++        self.tp = tp
++        self.num_local_heads = self.num_heads // tp
++        # A single global KV head is replicated on every shard.
++        self.kv_replicated = self.num_kv_heads < tp
++        self.num_local_kv_heads = self.num_kv_heads if self.kv_replicated else self.num_kv_heads // tp
++
++        col_kwargs = {"bias": False, "mesh_device": mesh_device, "mesh_axis": parallel_config.tensor_parallel.mesh_axis}
++        qkv_out = tp * (self.num_local_heads + 2 * self.num_local_kv_heads) * self.head_dim
++        self.wqkv = ColParallelLinear(self.hidden_size, qkv_out, **col_kwargs)
++        o_kwargs = dict(col_kwargs)
++        o_kwargs["ccl_manager"] = ccl_manager
++        self.o_proj = ColParallelLinear(self.num_heads * self.head_dim, self.hidden_size, **o_kwargs)
++
++        eps = config.rms_norm_eps
++        self.input_layernorm = Gemma4RMSNorm(self.hidden_size, eps, mesh_device)
++        self.post_attention_layernorm = Gemma4RMSNorm(self.hidden_size, eps, mesh_device)
++        self.q_norm = Gemma4RMSNorm(self.head_dim, eps, mesh_device)
++        self.k_norm = Gemma4RMSNorm(self.head_dim, eps, mesh_device)
++        self.v_norm = Gemma4RMSNorm(self.head_dim, eps, mesh_device, affine=False)
++
++        chunk = 64 if self.head_dim > 256 else 128
++        self.sdpa_config = ttnn.SDPAProgramConfig(
++            compute_with_storage_grid_size=mesh_device.compute_with_storage_grid_size(),
++            q_chunk_size=chunk,
++            k_chunk_size=chunk,
++            exp_approx_mode=False,
++        )
++        self.compute_config = ttnn.init_device_compute_kernel_config(
++            mesh_device.arch(), math_fidelity=ttnn.MathFidelity.HiFi2, math_approx_mode=False,
++            fp32_dest_acc_en=True, packer_l1_acc=True,
++        )
++
++    def _prepare_torch_state(self, state: dict[str, torch.Tensor]) -> None:
++        q = pop_substate(state, "q_proj")["weight"]
++        k = pop_substate(state, "k_proj")["weight"]
++        vs = pop_substate(state, "v_proj")
++        v = vs["weight"] if "weight" in vs else k  # global layers: k = v (raw k_proj output)
++        tp, d, H = self.tp, self.head_dim, self.hidden_size
++        qh = q.T.reshape(H, tp, self.num_local_heads, d)
++        if self.kv_replicated:
++            kh = k.T.reshape(H, 1, self.num_kv_heads, d).expand(H, tp, self.num_kv_heads, d)
++            vh = v.T.reshape(H, 1, self.num_kv_heads, d).expand(H, tp, self.num_kv_heads, d)
++        else:
++            kh = k.T.reshape(H, tp, self.num_local_kv_heads, d)
++            vh = v.T.reshape(H, tp, self.num_local_kv_heads, d)
++        qkv = torch.cat([qh, kh, vh], dim=2)
++        state["wqkv.weight"] = qkv.reshape(H, -1).T.contiguous()
++
++    def forward(self, hidden_states, cos, sin, attn_mask=None):
++        residual = hidden_states
++        x = self.input_layernorm(hidden_states)
++        qkv = self.wqkv(x, compute_kernel_config=self.compute_config)
++        qkv = ttnn.reshape(qkv, (qkv.shape[0], 1, qkv.shape[1], qkv.shape[2]))
++        q, k, v = ttnn.experimental.nlp_create_qkv_heads(
++            qkv, num_heads=self.num_local_heads, num_kv_heads=self.num_local_kv_heads, transpose_k_heads=False,
++            memory_config=ttnn.DRAM_MEMORY_CONFIG,
++        )
++        q = self.q_norm(q)
++        k = self.k_norm(k)
++        v = self.v_norm(v)
++        q = ttnn.experimental.rotary_embedding_hf(q, cos, sin, is_decode_mode=False)
++        k = ttnn.experimental.rotary_embedding_hf(k, cos, sin, is_decode_mode=False)
++        if self.num_local_kv_heads < self.num_local_heads:
++            rep = self.num_local_heads // self.num_local_kv_heads
++            k = ttnn.repeat_interleave(k, rep, dim=1)
++            v = ttnn.repeat_interleave(v, rep, dim=1)
++        q = ttnn.to_memory_config(q, ttnn.DRAM_MEMORY_CONFIG)
++        k = ttnn.to_memory_config(k, ttnn.DRAM_MEMORY_CONFIG)
++        v = ttnn.to_memory_config(v, ttnn.DRAM_MEMORY_CONFIG)
++        attn = ttnn.transformer.scaled_dot_product_attention(
++            q, k, v, is_causal=(attn_mask is None), attn_mask=attn_mask, scale=1.0,
++            program_config=self.sdpa_config, compute_kernel_config=self.compute_config,
++        )
++        attn = ttnn.transformer.concatenate_heads(attn)
++        attn = ttnn.unsqueeze(attn, 0)
++        if self.tp > 1:
++            attn = self.ccl_manager.all_gather(attn, dim=3, mesh_axis=self.parallel_config.tensor_parallel.mesh_axis,
++                                               use_hyperparams=True)
++        out = self.o_proj(attn, compute_kernel_config=self.compute_config)
++        if self.tp > 1:
++            out = self.ccl_manager.all_gather(out, dim=3, mesh_axis=self.parallel_config.tensor_parallel.mesh_axis,
++                                              use_hyperparams=True)
++        out = ttnn.squeeze(out, 0)
++        out = self.post_attention_layernorm(out)
++        return out + residual
++
++
++class _Gemma4FF(GemmaFF):
++    """Gemma 3 FF block with Gemma 4 norms (weights as-is)."""
++
++    def __init__(self, config, mesh_device, ccl_manager, parallel_config):
++        super().__init__(config, mesh_device, ccl_manager, parallel_config)
++        self.pre_feedforward_layernorm = Gemma4RMSNorm(config.hidden_size, config.rms_norm_eps, mesh_device)
++        self.post_feedforward_layernorm = Gemma4RMSNorm(config.hidden_size, config.rms_norm_eps, mesh_device)
++
++
++class Gemma4EncoderLayer(Module):
++    def __init__(self, config, layer_idx, mesh_device, ccl_manager, parallel_config):
++        super().__init__()
++        self.self_attn = Gemma4Attention(config, layer_idx, mesh_device, ccl_manager, parallel_config)
++        self.ff = _Gemma4FF(config, mesh_device, ccl_manager, parallel_config)
++        self.layer_scalar = Parameter(total_shape=[1, 1], device=mesh_device, dtype=ttnn.bfloat16)
++
++    def _prepare_torch_state(self, state):
++        rename_substate(state, "input_layernorm", "self_attn.input_layernorm")
++        rename_substate(state, "post_attention_layernorm", "self_attn.post_attention_layernorm")
++        rename_substate(state, "pre_feedforward_layernorm", "ff.pre_feedforward_layernorm")
++        rename_substate(state, "post_feedforward_layernorm", "ff.post_feedforward_layernorm")
++        rename_substate(state, "mlp.gate_proj", "ff.gate_proj")
++        rename_substate(state, "mlp.up_proj", "ff.up_proj")
++        rename_substate(state, "mlp.down_proj", "ff.down_proj")
++        if "layer_scalar" in state:
++            state["layer_scalar"] = state["layer_scalar"].reshape(1, 1)
++
++    def forward(self, hidden_states, cos, sin, attn_mask=None):
++        h = self.self_attn(hidden_states, cos, sin, attn_mask=attn_mask)
++        h = self.ff(h)
++        return ttnn.multiply(h, self.layer_scalar.data)
++
++
++class Gemma4Encoder(Module):
++    """Embed -> 48 layers -> final norm. Returns [embed, L0..L47, final_norm] (like GemmaEncoder)."""
++
++    def __init__(self, config: Gemma4Config, mesh_device, ccl_manager: CCLManager,
++                 parallel_config: EncoderParallelConfig):
++        super().__init__()
++        self.config = config
++        self.mesh_device = mesh_device
++        self.embed_tokens = Embedding(config.vocab_size, config.hidden_size, device=mesh_device)
++        self.rope_global = Gemma4Rope(config.global_head_dim, config.rope_theta_global, mesh_device,
++                                      config.max_position_embeddings, partial=config.partial_rotary_factor_global)
++        self.rope_local = Gemma4Rope(config.head_dim, config.rope_theta_local, mesh_device,
++                                     config.max_position_embeddings)
++        self.layers = ModuleList(
++            Gemma4EncoderLayer(config, i, mesh_device, ccl_manager, parallel_config)
++            for i in range(config.num_hidden_layers)
++        )
++        self.norm = Gemma4RMSNorm(config.hidden_size, config.rms_norm_eps, mesh_device)
++        # HF: embed_scale = hidden_size**0.5 cast to the weight dtype (bf16) -> 62.0
++        self.embed_scale = float(torch.tensor(config.hidden_size**0.5).to(torch.bfloat16))
++
++    def _prepare_torch_state(self, state: dict[str, torch.Tensor]) -> None:
++        prefix = "model."
++        for k in list(state.keys()):
++            if k.startswith(prefix):
++                state[k[len(prefix):]] = state.pop(k)
++        for p in ("audio_projector", "multi_modal_projector", "text_embedding_projection", "vision_model",
++                  "lm_head"):
++            pop_substate(state, p)
++        for k in [k for k in state if k.startswith(("hf_asset__", "tokenizer_json"))]:
++            del state[k]
++
++    build_attn_mask = None  # set below (shared with Gemma 3)
++
++    def forward(self, token_ids: ttnn.Tensor, *, tt_attn_mask: ttnn.Tensor | None = None) -> list[ttnn.Tensor]:
++        h = self.embed_tokens(token_ids)
++        h = ttnn.multiply(h, self.embed_scale)
++        seq_len = token_ids.shape[-1]
++        cg, sg = self.rope_global(seq_len)
++        cl, sl = self.rope_local(seq_len)
++        outs = [h]
++        for idx, layer in enumerate(self.layers):
++            c, s = (cg, sg) if self.config.is_global(idx) else (cl, sl)
++            h = layer(h, c, s, attn_mask=tt_attn_mask)
++            outs.append(h)
++        outs.append(self.norm(h))
++        return outs
++
++
++def _bind_mask_builder():
++    from .model_gemma import GemmaEncoder
++
++    Gemma4Encoder.build_attn_mask = GemmaEncoder.build_attn_mask
++
++
++_bind_mask_builder()
+diff --git a/models/tt_dit/models/transformers/ltx/attention_ltx.py b/models/tt_dit/models/transformers/ltx/attention_ltx.py
+index c385fa8a2eb0..be6d6fc216a3 100644
+--- a/models/tt_dit/models/transformers/ltx/attention_ltx.py
++++ b/models/tt_dit/models/transformers/ltx/attention_ltx.py
+@@ -9,7 +9,9 @@ import torch
+ import ttnn
+ from models.common.utility_functions import is_blackhole
+ 
+-from ....layers.linear import ColParallelLinear, LoRAColParallelLinear
++import os
++
++from ....layers.linear import ColParallelLinear, LoRAColParallelLinear, weight_dtype_override
+ from ....layers.module import Module
+ from ....layers.normalization import DistributedRMSNorm
+ from ....parallel.config import DiTParallelConfig
+@@ -126,15 +128,19 @@ class LTXAttention(Module):
+             self.to_q = ColCls(self.query_input_dim, dim, **col_parallel_kwargs)
+             self.to_kv = ColCls(self.kv_input_dim, 2 * dim, chunks=2, **col_parallel_kwargs)
+ 
+-        self.to_out = ColCls(
+-            dim,
+-            self.output_dim,
+-            bias=True,
+-            mesh_device=mesh_device,
+-            mesh_axis=parallel_config.tensor_parallel.mesh_axis,
+-            fsdp_mesh_axis=fsdp_mesh_axis,
+-            ccl_manager=ccl_manager,
+-        )
++        # ltx1: to_out stays bf16 under LTX_DIT_WEIGHTS=bf8 (fused matmul+addcmul kernel), unless LTX_TO_OUT_LOWP=1
++        import contextlib as _cl
++
++        with weight_dtype_override(None) if os.environ.get("LTX_TO_OUT_LOWP", "0") != "1" else _cl.nullcontext():
++            self.to_out = ColCls(
++                dim,
++                self.output_dim,
++                bias=True,
++                mesh_device=mesh_device,
++                mesh_axis=parallel_config.tensor_parallel.mesh_axis,
++                fsdp_mesh_axis=fsdp_mesh_axis,
++                ccl_manager=ccl_manager,
++            )
+ 
+         # Per-head gate, sharded on num_heads to match the SDPA-output head layout. bf16 matches the
+         # reference (which runs the gate in the model's working dtype). Sigmoid is a standalone op:
+diff --git a/models/tt_dit/models/transformers/ltx/transformer_ltx.py b/models/tt_dit/models/transformers/ltx/transformer_ltx.py
+index 10c02f2ad070..8c4fd80f446d 100644
+--- a/models/tt_dit/models/transformers/ltx/transformer_ltx.py
++++ b/models/tt_dit/models/transformers/ltx/transformer_ltx.py
+@@ -15,7 +15,7 @@ import ttnn
+ 
+ from ....layers.embeddings import LTXAdaLayerNormSingle
+ from ....layers.feedforward import ParallelFeedForward
+-from ....layers.linear import ColParallelLinear, Linear
++from ....layers.linear import ColParallelLinear, Linear, weight_dtype_override
+ from ....layers.module import Module, ModuleList, Parameter
+ from ....layers.normalization import DistributedLayerNorm, DistributedRMSNorm
+ from ....parallel.config import DiTParallelConfig
+@@ -251,6 +251,12 @@ class LTXTransformerBlock(Module):
+             rename_substate(state, "audio_ff.net.0.proj", "audio_ff.ff1")
+             rename_substate(state, "audio_ff.net.2", "audio_ff.ff2")
+ 
++        # ltx1 (LTX-2.5): ff_bias=false checkpoints have no FFN biases; the layers keep bias=True,
++        # so insert zeros (math identical).
++        for ff in ("ffn.ff1", "ffn.ff2", "audio_ff.ff1", "audio_ff.ff2"):
++            if f"{ff}.weight" in state and f"{ff}.bias" not in state:
++                state[f"{ff}.bias"] = torch.zeros(state[f"{ff}.weight"].shape[0], dtype=state[f"{ff}.weight"].dtype)
++
+         # Scale slots pre-incremented (+1) and cast to bf16 so each runtime
+         # modulation fuses to one ttnn.addcmul(shift, x, scale_p1).
+         tables_scale_idxs: dict[str, list[int]] = {}
+@@ -695,6 +701,8 @@ class LTXTransformerModel(Module):
+                 state[key] = t.to(dtype=torch.bfloat16)
+ 
+         # Remove keys not implemented in TTNN
++        # ltx1 (LTX-2.5): learned keyframe-slot marker, only used for keyframe conditioning (not T2V).
++        state.pop("keyframes_abs_pos_embedding", None)
+         pop_substate(state, "video_embeddings_connector")
+         pop_substate(state, "audio_embeddings_connector")
+         # Caption projection is a 19B-distilled-only artifact, not implemented in TTNN.
+@@ -926,6 +934,10 @@ class LTXTransformerModel(Module):
+ 
+         # Patchify
+         video_1BND = self.patchify_proj(video_1BNI)
++        # ltx1 (LTX-2.5): learned keyframe marker on the first latent frame's tokens (static per-shape additive).
++        _kf_add = getattr(self, "_ltx_kf_add", None)
++        if _kf_add is not None:
++            video_1BND = ttnn.add(video_1BND, _kf_add)
+         audio_1BND = self.audio_patchify_proj(audio_1BNI) if self.has_audio else None
+ 
+         skip_self_attn_set = frozenset(skip_self_attn_blocks) if skip_self_attn_blocks else frozenset()
+@@ -1068,6 +1080,18 @@ class LTXTransformerModel(Module):
+         return ttnn.to_torch(ttnn.get_device_tensors(tt_tensor)[0]).float()
+ 
+ 
++def _ltx_weight_dtype():
++    """(ttnn dtype or None, cache-key suffix) from LTX_DIT_WEIGHTS (unset/bf16 = stock bf16). ltx1."""
++    v = os.environ.get("LTX_DIT_WEIGHTS", "bf16")
++    if v == "bf16":
++        return None, ""
++    if v == "bf8":
++        return ttnn.bfloat8_b, "-bf8"
++    if v == "bf4":
++        return ttnn.bfloat4_b, "-bf4"
++    raise ValueError(f"LTX_DIT_WEIGHTS={v}")
++
++
+ class LTXTransformerCheckpoint:
+     """An LTX transformer checkpoint: parses variant config, builds transformers, and loads weights.
+ 
+@@ -1104,7 +1128,7 @@ class LTXTransformerCheckpoint:
+     def cache_name(self, lora_specs: list[LoraSpec]) -> str:
+         """Cache key for ``cache_module.load_model``. LoRA-tagged so fused and
+         base weights don't alias in ``TT_DIT_CACHE_DIR``."""
+-        base = os.path.basename(self._checkpoint_path).removesuffix(".safetensors")
++        base = os.path.basename(self._checkpoint_path).removesuffix(".safetensors") + _ltx_weight_dtype()[1]
+         if not lora_specs:
+             return base
+         tag = "+".join(f"{os.path.basename(s.path).removesuffix('.safetensors')}@{s.strength}" for s in lora_specs)
+@@ -1131,6 +1155,40 @@ class LTXTransformerCheckpoint:
+ 
+         Loading is deferred so the caller can manage the lifecycle (deallocate / reload).
+         """
++        with weight_dtype_override(_ltx_weight_dtype()[0]):
++            return self._build_model(
++                num_attention_heads=num_attention_heads,
++                attention_head_dim=attention_head_dim,
++                in_channels=in_channels,
++                out_channels=out_channels,
++                num_layers=num_layers,
++                cross_attention_dim=cross_attention_dim,
++                mesh_device=mesh_device,
++                ccl_manager=ccl_manager,
++                parallel_config=parallel_config,
++                is_fsdp=is_fsdp,
++                has_audio=has_audio,
++                image_conditioning=image_conditioning,
++                lora_enabled=lora_enabled,
++            )
++
++    def _build_model(
++        self,
++        *,
++        num_attention_heads,
++        attention_head_dim,
++        in_channels,
++        out_channels,
++        num_layers,
++        cross_attention_dim,
++        mesh_device,
++        ccl_manager,
++        parallel_config,
++        is_fsdp,
++        has_audio,
++        image_conditioning,
++        lora_enabled,
++    ) -> LTXTransformerModel:
+         return LTXTransformerModel(
+             num_attention_heads=num_attention_heads,
+             attention_head_dim=attention_head_dim,
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx.py b/models/tt_dit/pipelines/ltx/pipeline_ltx.py
+index 34d9de5e6897..c6804a20f78f 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx.py
+@@ -515,8 +515,10 @@ class LTXPipeline:
+         ``_prime_caches`` (next) attaches them."""
+         # VAE adapter first: it parses the VAE config that the transformer's ``image_conditioning``
+         # flag depends on (whether encoder blocks exist).
++        # ltx1: LTX_AUX_CHECKPOINT = small file with vae.* / audio_vae.* / vocoder.* (+ merged config)
++        self.aux_checkpoint_name = os.environ.get("LTX_AUX_CHECKPOINT") or self.checkpoint_name
+         self.vae = LTXVideoVAEAdapter(
+-            self.checkpoint_name,
++            self.aux_checkpoint_name,
+             mesh_device=self.mesh_device,
+             vae_parallel_config=self.vae_parallel_config,
+             vae_ccl_manager=self.vae_ccl_manager,
+@@ -544,7 +546,9 @@ class LTXPipeline:
+             assert (
+                 self._init_height > 0 and self._init_width > 0 and self._init_num_frames > 0
+             ), f"{type(self).__name__} requires num_frames/height/width at create_pipeline."
+-            self._upsampler_path = LTXPipeline._resolve_checkpoint_file(LTX_UPSAMPLER_HF_REF)
++            self._upsampler_path = os.environ.get("LTX_UPSAMPLER_PATH") or LTXPipeline._resolve_checkpoint_file(
++                LTX_UPSAMPLER_HF_REF
++            )
+             # Spatial-2x latent upsampler at stage-1 shape: input H/W = full // (SPATIAL_COMPRESSION*2)
+             # (stage 1 runs at half-res, then the VAE compresses by SPATIAL_COMPRESSION),
+             # latent_frames = (num_frames - 1) // TEMPORAL_COMPRESSION + 1. The pipeline computes the
+@@ -570,7 +574,7 @@ class LTXPipeline:
+             # Audio decode stack (mel-VAE decoder + vocoder/BWE). No weights are loaded here —
+             # ``_prepare_audio_decoder`` attaches them via the disk cache, like ``_prepare_vae``.
+             self._audio_adapter = LTXAudioDecoderAdapter(
+-                self.checkpoint_name,
++                self.aux_checkpoint_name,
+                 mesh_device=self.mesh_device,
+                 vae_ccl_manager=self.vae_ccl_manager,
+                 dit_parallel_config=self.parallel_config,
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+index c0041d656a05..02275d8272a8 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+@@ -6,6 +6,7 @@
+ 
+ from __future__ import annotations
+ 
++import json
+ import os
+ import time
+ from dataclasses import dataclass
+@@ -29,6 +30,25 @@ DISTILLED_SIGMA_VALUES = [1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725,
+ STAGE_2_DISTILLED_SIGMA_VALUES = [0.909375, 0.725, 0.421875, 0.0]
+ 
+ 
++def _ltx_ckpt_meta(path: str) -> dict:
++    """safetensors JSON metadata (no tensor loads)."""
++    with open(path, "rb") as f:
++        n = int.from_bytes(f.read(8), "little")
++        return json.loads(f.read(n)).get("__metadata__", {}) or {}
++
++
++def _ltx_ancestral_coeffs(sigma: float, sigma_next: float, eta: float = 1.0):
++    """EulerAncestralDiffusionStep (ltx_core, rectified flow): x_next = A*x + Bc*x0 + c*noise."""
++    s = torch.tensor(sigma, dtype=torch.float32)
++    sn = torch.tensor(sigma_next, dtype=torch.float32)
++    sd = sn * (1.0 + (sn / s - 1.0) * eta)
++    r = sd / s
++    an, ad = 1.0 - sn, 1.0 - sd
++    c = (sn**2 - sd**2 * an**2 / ad**2).clamp(min=0) ** 0.5
++    k = an / ad
++    return float(k * r), float(k * (1.0 - r)), float(c)
++
++
+ @dataclass
+ class _I2VConditioning:
+     """Frame-0 image conditioning for one denoise stage — the tt analog of the reference
+@@ -103,6 +123,32 @@ class LTXDistilledPipeline(LTXPipeline):
+             logger.info(f"I2V: pinning {n_cond} frame-0 tokens (strength={image_cond_strength})")
+         return _I2VConditioning(denoise_mask=denoise_mask, clean_latent=clean_latent, n_cond=n_cond)
+ 
++    def _ltx_kf_embedding(self):
++        """(1, D) keyframe marker from the checkpoint, or None (pre-2.5 / LTX_KF_EMB=0). Cached."""
++        if not hasattr(self, "_ltx_kf_cache"):
++            self._ltx_kf_cache = None
++            if os.environ.get("LTX_KF_EMB", "1") == "1" and self.checkpoint_name:
++                from safetensors import safe_open
++
++                with safe_open(self.checkpoint_name, framework="pt") as f:
++                    key = "model.diffusion_model.keyframes_abs_pos_embedding"
++                    if key in f.keys():
++                        self._ltx_kf_cache = f.get_tensor(key).float()
++                        logger.info("LTX-2.5 keyframe marker on first-frame tokens: on")
++        return self._ltx_kf_cache
++
++    def _ltx_sampler(self) -> str:
++        """'ancestral' (LTX >= 2.5, as ltx_pipelines) or 'euler' (2.3 tt_dit stock). LTX_SAMPLER overrides."""
++        if not hasattr(self, "_ltx_sampler_cache"):
++            v = os.environ.get("LTX_SAMPLER", "auto")
++            if v == "auto":
++                mv = _ltx_ckpt_meta(self.checkpoint_name).get("model_version", "0") if self.checkpoint_name else "0"
++                parts = [int(x) for x in mv.split(".")[:2] if x.isdigit()] + [0, 0]
++                v = "ancestral" if tuple(parts[:2]) >= (2, 5) else "euler"
++            self._ltx_sampler_cache = v
++            logger.info(f"LTX sampler: {v}")
++        return self._ltx_sampler_cache
++
+     def warmup_buffers(
+         self,
+         *,
+@@ -273,6 +319,23 @@ class LTXDistilledPipeline(LTXPipeline):
+         state._tt_video_padding_mask.update(
+             build_video_pad_mask(video_N, video_N_real, mesh_device=self.mesh_device, sp_axis=sp_axis), False
+         )
++        # ltx1: first-latent-frame keyframe marker (LTX-2.5), tokens are (f, h, w) ordered.
++        state._ltx_kf_add = None
++        kf = self._ltx_kf_embedding()
++        if kf is not None:
++            add = torch.zeros(1, 1, video_N, kf.shape[-1])
++            add[:, :, : latent_h * latent_w, :] = kf.float().reshape(1, 1, 1, -1)
++            state._ltx_kf_add = ttnn.from_torch(
++                add,
++                dtype=ttnn.bfloat16,
++                layout=ttnn.TILE_LAYOUT,
++                device=self.mesh_device,
++                mesh_mapper=ttnn.ShardTensor2dMesh(
++                    self.mesh_device,
++                    mesh_shape=tuple(self.mesh_device.shape),
++                    dims=[2 if sp_axis == 0 else 3, 3 if sp_axis == 0 else 2],
++                ),
++            )
+         v_mask = torch.ones(1, 1, video_N, self.in_channels)
+         v_mask[:, :, video_N_real:, :] = 0.0
+         a_mask = torch.ones(1, 1, audio_N, self.in_channels)
+@@ -420,7 +483,29 @@ class LTXDistilledPipeline(LTXPipeline):
+             ), f"initial_video_latent seq dim {base_v.shape[1]} != video_N_real {video_N_real}"
+         else:  # T2V S1: pure noise from zeros
+             base_v = torch.zeros(B, video_N_real, self.in_channels)
+-        video_lat_real = self._noise_video_latent(base_v, i2v.denoise_mask, sigmas[0], seed)
++        ltx25 = self._ltx_sampler() == "ancestral" and not image_cond
++        if ltx25:
++            # ltx1: GaussianNoiser with the run's shared generator: lerp(base, noise, scale) per modality.
++            gen = getattr(self, "_ltx_gen", None)
++            if gen is None or getattr(self, "_ltx_gen_seed", None) != seed:
++                gen = torch.Generator().manual_seed(seed)
++                self._ltx_gen, self._ltx_gen_seed = gen, seed
++            stage2 = initial_video_latent is not None
++            scale = float(sigmas[0]) if stage2 else 1.0
++            nv = torch.randn(B, video_N_real, self.in_channels, dtype=torch.bfloat16, generator=gen)
++            video_lat_real = torch.lerp(base_v.float(), nv.float(), scale).to(torch.bfloat16).float()
++            na = torch.randn(B, audio_N_real, self.in_channels, dtype=torch.bfloat16, generator=gen)
++            base_a = (
++                initial_audio_latent[:, :audio_N_real, :].float()
++                if initial_audio_latent is not None
++                else torch.zeros(B, audio_N_real, self.in_channels)
++            )
++            audio_lat_real25 = torch.lerp(base_a, na.float(), scale).to(torch.bfloat16).float()
++            if os.environ.get("LTX_TF_EXACT") == "1":  # ltx1 PCC tool: teacher-forced inputs, no noising
++                video_lat_real, audio_lat_real25 = base_v.float(), base_a.float()
++            loop_gen = torch.Generator().manual_seed(seed + (20000 if stage2 else 10000))
++        else:
++            video_lat_real = self._noise_video_latent(base_v, i2v.denoise_mask, sigmas[0], seed)
+ 
+         if video_N > video_N_real:
+             video_lat = torch.zeros(B, video_N, self.in_channels)
+@@ -429,7 +514,10 @@ class LTXDistilledPipeline(LTXPipeline):
+             video_lat = video_lat_real
+ 
+         # ----- Audio latent init (unchanged: already padded to audio_N) -----
+-        if initial_audio_latent is not None:
++        if ltx25:
++            audio_lat = torch.zeros(B, audio_N, self.in_channels)
++            audio_lat[:, :audio_N_real, :] = audio_lat_real25
++        elif initial_audio_latent is not None:
+             audio_lat = torch.zeros(B, audio_N, self.in_channels)
+             audio_lat[:, :audio_N_real, :] = initial_audio_latent[:, :audio_N_real, :].float()
+             torch.manual_seed(seed + 1)
+@@ -471,6 +559,7 @@ class LTXDistilledPipeline(LTXPipeline):
+             )
+             tt_i2v_mask, tt_i2v_clean = state.tt_i2v_mask, state.tt_i2v_clean
+ 
++        self.transformer._ltx_kf_add = getattr(state, "_ltx_kf_add", None)
+         for step_idx in range(num_steps):
+             sigma = sigmas[step_idx].item()
+             sigma_next = sigmas[step_idx + 1].item()
+@@ -528,6 +617,42 @@ class LTXDistilledPipeline(LTXPipeline):
+             # Flow-matching Euler (latents += dt*velocity, SP-padding slots zeroed) so the trace's
+             # baked latent address holds across replays.
+             dt = sigma_next - sigma
++            if ltx25:
++                # ltx1: ancestral Euler (eta=1). x0 = x - sigma*v; x_next = A*x + Bc*x0 + c*noise
++                # = (A+Bc)*x - Bc*sigma*v + c*noise; terminal step (sigma_next == 0) -> x0. fp32 math, bf16 latent.
++                if sigma_next == 0.0:
++                    ca, cv, cn = 1.0, -sigma, 0.0
++                else:
++                    A, Bc, cn = _ltx_ancestral_coeffs(sigma, sigma_next)
++                    ca, cv = A + Bc, -Bc * sigma
++                for lat_tt, out_tt, n_real, n_pad, pmask in (
++                    (state.tt_video_lat, v_out, video_N_real, video_N, state.tt_video_pad_mask),
++                    (state.tt_audio_lat, a_out, audio_N_real, audio_N, state.tt_audio_pad_mask),
++                ):
++                    x32 = ttnn.typecast(lat_tt, ttnn.float32)
++                    v32 = ttnn.typecast(out_tt, ttnn.float32) if out_tt.get_dtype() != ttnn.float32 else out_tt
++                    nxt = ttnn.add(ttnn.multiply(x32, ca), ttnn.multiply(v32, cv))
++                    if cn > 0.0:
++                        nz = torch.zeros(1, 1, n_pad, self.in_channels)
++                        nz[0, 0, :n_real] = torch.randn(
++                            1, n_real, self.in_channels, dtype=torch.bfloat16, generator=loop_gen
++                        ).float()[0]
++                        nz_tt = ttnn.from_torch(
++                            nz,
++                            dtype=ttnn.float32,
++                            layout=ttnn.TILE_LAYOUT,
++                            device=self.mesh_device,
++                            mesh_mapper=ttnn.ShardTensor2dMesh(
++                                self.mesh_device,
++                                mesh_shape=tuple(self.mesh_device.shape),
++                                dims=[2 if sp_axis == 0 else None, None if sp_axis == 0 else 2],
++                            ),
++                        )
++                        nxt = ttnn.add(nxt, ttnn.multiply(nz_tt, cn))
++                    nxt = ttnn.multiply(ttnn.typecast(nxt, ttnn.bfloat16), pmask)
++                    ttnn.copy(nxt, lat_tt)
++                logger.info(f"  Step {step_idx + 1}/{num_steps}: σ {sigma:.4f} → {sigma_next:.4f} (ancestral)")
++                continue
+             v_vel = ttnn.typecast(v_out, ttnn.bfloat16)
+             ttnn.multiply_(v_vel, state.tt_video_pad_mask)
+             if image_cond:
+-- 
+2.54.0
+

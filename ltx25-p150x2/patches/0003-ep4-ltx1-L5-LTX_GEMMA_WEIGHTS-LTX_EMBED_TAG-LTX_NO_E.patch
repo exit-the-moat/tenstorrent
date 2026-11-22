@@ -1,0 +1,189 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Thu, 19 Nov 2026 00:28:22 +0100
+Subject: [PATCH] ep4 (ltx1): L5 LTX_GEMMA_WEIGHTS + LTX_EMBED_TAG +
+ LTX_NO_EMBED_CACHE; L6 LTX_VAE_WTILES width-tiled VAE decode (1080p fits: 4
+ tiles, DiT resident, 134.8 s/clip provisional); L7 LTX_UPS_PAD=mask (zero pad
+ + logical masks instead of replicate pad for odd stage-1 heights): upsampler
+ PCC vs ref 0.974 -> 0.986 (fp32 CPU arbiter: ref 0.9989, tt 0.987); stage-2
+ teacher-forced PCC 0.987/0.996/0.999
+
+---
+ models/tt_dit/encoders/gemma/encoder_pair.py  | 10 ++-
+ models/tt_dit/models/vae/vae_ltx.py           |  5 +-
+ models/tt_dit/pipelines/ltx/pipeline_ltx.py   | 70 +++++++++++++++++--
+ .../pipelines/ltx/pipeline_ltx_distilled.py   |  5 +-
+ 4 files changed, 81 insertions(+), 9 deletions(-)
+
+diff --git a/models/tt_dit/encoders/gemma/encoder_pair.py b/models/tt_dit/encoders/gemma/encoder_pair.py
+index f392bfd214ab..62dddc0ef757 100644
+--- a/models/tt_dit/encoders/gemma/encoder_pair.py
++++ b/models/tt_dit/encoders/gemma/encoder_pair.py
+@@ -253,7 +253,13 @@ class GemmaTokenizerEncoderPair:
+         gemma_path = gemma_path or self.gemma_path
+         if self.gemma_encoder is None and _is_gemma4_file(gemma_path):  # ltx1: LTX-2.5
+             config = Gemma4Config(num_hidden_layers=self._num_layers, max_position_embeddings=self._sequence_length)
+-            self.gemma_encoder = Gemma4Encoder(config, self.mesh_device, self.ccl_manager, self.parallel_config)
++            from ...layers.linear import weight_dtype_override
++
++            _gw = os.environ.get("LTX_GEMMA_WEIGHTS", "bf16")
++            _gdt = {"bf16": None, "bf8": ttnn.bfloat8_b, "bf4": ttnn.bfloat4_b}[_gw]
++            self._gemma_cache_suffix = "" if _gdt is None else f"-{_gw}"
++            with weight_dtype_override(_gdt):
++                self.gemma_encoder = Gemma4Encoder(config, self.mesh_device, self.ccl_manager, self.parallel_config)
+             self._register_exclusions(self.gemma_encoder)
+             self.tokenizer = _Gemma4LTXTokenizer(gemma_path)
+             logger.info("Gemma 4 (LTX-2.5) text encoder on device")
+@@ -272,7 +278,7 @@ class GemmaTokenizerEncoderPair:
+         t0 = time.time()
+         cache_module.load_model(
+             self.gemma_encoder,
+-            model_name=os.path.basename(os.path.normpath(self.gemma_ref)),
++            model_name=os.path.basename(os.path.normpath(self.gemma_ref)) + getattr(self, "_gemma_cache_suffix", ""),
+             subfolder="text_encoder",
+             parallel_config=self.parallel_config,
+             mesh_shape=tuple(self.mesh_device.shape),
+diff --git a/models/tt_dit/models/vae/vae_ltx.py b/models/tt_dit/models/vae/vae_ltx.py
+index 6d885aa8a81a..a6df3ba835f4 100644
+--- a/models/tt_dit/models/vae/vae_ltx.py
++++ b/models/tt_dit/models/vae/vae_ltx.py
+@@ -1526,7 +1526,10 @@ def upsample_latent(
+     # off to preserve the field of view. The upsampler is built at these rounded dims so its
+     # pinned GroupNorm/conv shapes match.
+     pc = upsampler.parallel_config
+-    x, H, W = pad_hw_replicate(x, pc.height_parallel.factor, pc.width_parallel.factor)
++    if os.environ.get("LTX_UPS_PAD", "replicate") == "replicate":
++        x, H, W = pad_hw_replicate(x, pc.height_parallel.factor, pc.width_parallel.factor)
++    else:  # ltx1: zero pad + logical-size conv masks inside the upsampler (exact at odd heights)
++        H, W = x.shape[-2], x.shape[-1]
+     x = upsampler(x)
+     x = x[:, :, :, : H * 2, : W * 2]
+     return (x.float() - mean) / std
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx.py b/models/tt_dit/pipelines/ltx/pipeline_ltx.py
+index c6804a20f78f..cc5c9bacb5bd 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx.py
+@@ -554,8 +554,22 @@ class LTXPipeline:
+             # latent_frames = (num_frames - 1) // TEMPORAL_COMPRESSION + 1. The pipeline computes the
+             # stage-1 shape and passes it in; the model reads its own JSON config from the checkpoint.
+             upsampler_latent_frames = (self._init_num_frames - 1) // TEMPORAL_COMPRESSION + 1
+-            hf = self.vae_parallel_config.height_parallel.factor
+-            wf = self.vae_parallel_config.width_parallel.factor
++            ups_pc = self.vae_parallel_config
++            _lh, _lw = self._init_height // (SPATIAL_COMPRESSION * 2), self._init_width // (SPATIAL_COMPRESSION * 2)
++            _split = os.environ.get("LTX_UPS_SPLIT", "1")
++            if _split == "0" or (
++                _split == "auto"
++                and (_lh % ups_pc.height_parallel.factor or _lw % ups_pc.width_parallel.factor)
++            ):
++                ups_pc = VaeHWParallelConfig(
++                    height_parallel=ParallelFactor(factor=1, mesh_axis=ups_pc.height_parallel.mesh_axis),
++                    width_parallel=ParallelFactor(factor=1, mesh_axis=ups_pc.width_parallel.mesh_axis),
++                )
++                logger.info("ltx1: spatial upsampler unsplit (odd stage-1 latent size)")
++            hf = ups_pc.height_parallel.factor
++            wf = ups_pc.width_parallel.factor
++            if os.environ.get("LTX_UPS_PAD", "replicate") != "replicate":  # ltx1: logical (unpadded) shapes
++                hf = wf = 1
+             upsampler_input_hw = (
+                 ceil_to(self._init_height // (SPATIAL_COMPRESSION * 2), hf),
+                 ceil_to(self._init_width // (SPATIAL_COMPRESSION * 2), wf),
+@@ -565,7 +579,7 @@ class LTXPipeline:
+                 input_hw=upsampler_input_hw,
+                 latent_frames=upsampler_latent_frames,
+                 mesh_device=self.mesh_device,
+-                parallel_config=self.vae_parallel_config,
++                parallel_config=ups_pc,
+                 ccl_manager=self.vae_ccl_manager,
+                 dit_parallel_config=self.parallel_config,
+             )
+@@ -707,7 +721,7 @@ class LTXPipeline:
+         cache_dir = os.environ.get("TT_DIT_CACHE_DIR") or os.path.expanduser("~/.cache/tt-dit")
+         embed_cache_dir = os.path.join(cache_dir, "ltx-embeddings")
+         os.makedirs(embed_cache_dir, exist_ok=True)
+-        key = hashlib.md5(("device||" + "||".join(prompts)).encode()).hexdigest()
++        key = hashlib.md5((os.environ.get("LTX_EMBED_TAG", "device") + "||" + "||".join(prompts)).encode()).hexdigest()
+         return os.path.join(embed_cache_dir, f"{key}.device.pt")
+ 
+     def encode_prompts(
+@@ -772,11 +786,59 @@ class LTXPipeline:
+         latent_spatial = latent.reshape(B, latent_frames, latent_h, latent_w, self.in_channels)
+         latent_spatial = latent_spatial.permute(0, 4, 1, 2, 3)  # BCTHW
+ 
++        n_tiles = int(os.environ.get("LTX_VAE_WTILES", "0"))
++        if n_tiles > 1:
++            video = self._ltx_decode_wtiles(latent_spatial, n_tiles, int(os.environ.get("LTX_VAE_WOVL", "4")))
++            if output_type != "float":
++                return ((video.clamp(-1, 1) + 1.0) * 127.5).round().to(torch.uint8).numpy()
++            return video
+         video = self.vae_decoder(latent_spatial, output_type=output_type)
+         if output_type != "float":
+             return video.numpy()
+         return video
+ 
++    def _ltx_decode_wtiles(self, lat: torch.Tensor, n_tiles: int, ovl: int) -> torch.Tensor:
++        """ltx1: width-tiled VAE decode with linear cross-fade in the overlaps. (B,C,F,H,W) latent -> (B,3,F',H*32,W*32)."""
++        W = lat.shape[-1]
++        tw = -(-(W + (n_tiles - 1) * ovl) // n_tiles)  # ceil
++        tw += tw % 2  # even tile width for the H/W sharding
++        starts = [round(i * (W - tw) / (n_tiles - 1)) for i in range(n_tiles)]
++        key = (lat.shape[2], lat.shape[3], tw)
++        if getattr(self, "_ltx_tile_vae_key", None) != key:
++            from ...models.vae.vae_ltx import LTXVideoVAEAdapter as _A
++
++            nf = (lat.shape[2] - 1) * 8 + 1
++            self._ltx_tile_vae = _A(
++                self.aux_checkpoint_name, mesh_device=self.mesh_device, vae_parallel_config=self.vae_parallel_config,
++                vae_ccl_manager=self.vae_ccl_manager, dit_parallel_config=self.parallel_config,
++                num_frames=nf, height=lat.shape[3] * 32, width=tw * 32,
++            )
++            dec = self._ltx_tile_vae.decoder
++            for m in ([s.model for s in self.transformer_states] if self.dynamic_load else []):
++                m.register_coresident_exclusions(dec)
++                dec.register_coresident_exclusions(m)
++            if self.vae_decoder is not None:
++                self.vae_decoder.register_coresident_exclusions(dec)
++                dec.register_coresident_exclusions(self.vae_decoder)
++            self._ltx_tile_vae_key = key
++        self._ltx_tile_vae.reload_decoder()
++        out, wsum = None, None
++        S = 32
++        for st in starts:
++            tile = self._ltx_tile_vae.decoder(lat[..., st : st + tw].contiguous(), output_type="float").float()
++            if out is None:
++                out = torch.zeros(*tile.shape[:-1], W * S)
++                wsum = torch.zeros(W * S)
++            w = torch.ones(tw * S)
++            ramp = torch.linspace(0, 1, ovl * S + 2)[1:-1]
++            if st > 0:
++                w[: ovl * S] = ramp
++            if st + tw < W:
++                w[-ovl * S :] = ramp.flip(0)
++            out[..., st * S : (st + tw) * S] += tile * w
++            wsum[st * S : (st + tw) * S] += w
++        return out / wsum
++
+     def _vae_per_channel_stats(self) -> tuple[torch.Tensor, torch.Tensor]:
+         """Delegate: cached ``(mean-of-means, std-of-means)`` from the VAE adapter."""
+         return self.vae.per_channel_stats()
+diff --git a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+index e6df3b05eb4e..eadcc83026fe 100644
+--- a/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
++++ b/models/tt_dit/pipelines/ltx/pipeline_ltx_distilled.py
+@@ -722,10 +722,11 @@ class LTXDistilledPipeline(LTXPipeline):
+ 
+         t0 = time.time()
+         # Only load the Gemma encoder (coresident-evicts DiT/VAE) on a cache miss.
+-        cached = os.path.exists(self._device_embed_cache_path([prompt]))
++        nocache = os.environ.get("LTX_NO_EMBED_CACHE") == "1"  # ltx1: count a real encode every clip
++        cached = os.path.exists(self._device_embed_cache_path([prompt])) and not nocache
+         if not cached:
+             self.gemma_encoder_pair.ensure_loaded()
+-        enc = self.encode_prompts([prompt])
++        enc = self.encode_prompts([prompt], use_cache=not nocache)
+         v_embeds, a_embeds = enc[0][0].float(), enc[0][1].float()
+         t_encode = time.time() - t0
+         timings.append(("Encoder (cache)" if cached else "Encoder", t_encode))
+-- 
+2.54.0
+

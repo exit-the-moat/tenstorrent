@@ -1,0 +1,14 @@
+{"t": "2026-11-18 15:53:22", "tag": "lightning_merged_L4_f17", "step": "step2", "pcc_vs_fp32": 0.97143, "rel_vs_fp32": 0.2406, "pcc_vs_bf16act": 0.97225, "rel_vs_bf16act": 0.2371}
+{"t": "2026-11-18 15:53:22", "tag": "pD_merged_L4_rep", "step": "step2", "pcc_vs_fp32": 0.97143, "rel_vs_fp32": 0.2406, "pcc_vs_bf16act": 0.97225, "rel_vs_bf16act": 0.2371}
+{"t": "2026-11-18 15:53:22", "tag": "pC_merged_bf8w_sdpa16", "step": "step2", "pcc_vs_fp32": 0.98476, "rel_vs_fp32": 0.1752, "pcc_vs_bf16act": 0.98557, "rel_vs_bf16act": 0.1703}
+{"t": "2026-11-18 15:53:22", "tag": "lightning_merged_mix_f17", "step": "step2", "pcc_vs_fp32": 0.97173, "rel_vs_fp32": 0.2394, "pcc_vs_bf16act": 0.97245, "rel_vs_bf16act": 0.2362}
+{"t": "2026-11-18 15:53:23", "tag": "pE_mix_sdpa_stock", "step": "step2", "pcc_vs_fp32": 0.98493, "rel_vs_fp32": 0.1742, "pcc_vs_bf16act": 0.9856, "rel_vs_bf16act": 0.1702}
+{"t": "2026-11-18 15:53:23", "tag": "pF_mix_sdpa_hifi4", "step": "step2", "pcc_vs_fp32": 0.98437, "rel_vs_fp32": 0.1774, "pcc_vs_bf16act": 0.98516, "rel_vs_bf16act": 0.1727}
+{"t": "2026-11-18 15:53:23", "tag": "pG_mix_sdpa_mm_hifi4", "step": "step2", "pcc_vs_fp32": 0.98023, "rel_vs_fp32": 0.1997, "pcc_vs_bf16act": 0.9811, "rel_vs_bf16act": 0.1952}
+{"t": "2026-11-18 16:03:56", "tag": "lightning_merged_L4_f17", "step": "step3", "pcc_vs_fp32": 0.99311, "rel_vs_fp32": 0.1177, "pcc_vs_bf16act": 0.99326, "rel_vs_bf16act": 0.1164}
+{"t": "2026-11-18 16:03:56", "tag": "pD_merged_L4_rep", "step": "step3", "pcc_vs_fp32": 0.99311, "rel_vs_fp32": 0.1177, "pcc_vs_bf16act": 0.99326, "rel_vs_bf16act": 0.1164}
+{"t": "2026-11-18 16:03:56", "tag": "pC_merged_bf8w_sdpa16", "step": "step3", "pcc_vs_fp32": 0.98191, "rel_vs_fp32": 0.1899, "pcc_vs_bf16act": 0.9828, "rel_vs_bf16act": 0.1851}
+{"t": "2026-11-18 16:03:56", "tag": "lightning_merged_mix_f17", "step": "step3", "pcc_vs_fp32": 0.99377, "rel_vs_fp32": 0.1119, "pcc_vs_bf16act": 0.99383, "rel_vs_bf16act": 0.1113}
+{"t": "2026-11-18 16:03:56", "tag": "pE_mix_sdpa_stock", "step": "step3", "pcc_vs_fp32": 0.98326, "rel_vs_fp32": 0.1827, "pcc_vs_bf16act": 0.984, "rel_vs_bf16act": 0.1786}
+{"t": "2026-11-18 16:03:56", "tag": "pF_mix_sdpa_hifi4", "step": "step3", "pcc_vs_fp32": 0.98686, "rel_vs_fp32": 0.162, "pcc_vs_bf16act": 0.98778, "rel_vs_bf16act": 0.1562}
+{"t": "2026-11-18 16:03:56", "tag": "pG_mix_sdpa_mm_hifi4", "step": "step3", "pcc_vs_fp32": 0.993, "rel_vs_fp32": 0.1186, "pcc_vs_bf16act": 0.99374, "rel_vs_bf16act": 0.1121}

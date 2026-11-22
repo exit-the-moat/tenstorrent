@@ -1,0 +1,111 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 18 Nov 2026 18:13:09 +0100
+Subject: [PATCH] ep4 (wan4): patch 13 EP4_XATTN_MANUAL (cross-attn as matmul +
+ fp32 softmax + matmul, query chunks), 13b EP4_SATTN_MANUAL (same for non-ring
+ self-attn, diagnosis), 14 EP4_FF_HIFI4 (FFN matmuls HiFi4). All default off.
+ Lightning step-2 localisation: fused SDPA has 1.4-4.7 % local rel error
+ (manual path 0.25 %), but fixing it lifts step 2 only 0.971 -> 0.980
+
+---
+ .../transformers/wan2_2/attention_wan.py      | 48 +++++++++++++++++++
+ .../transformers/wan2_2/transformer_wan.py    |  3 +-
+ 2 files changed, 50 insertions(+), 1 deletion(-)
+
+diff --git a/models/tt_dit/models/transformers/wan2_2/attention_wan.py b/models/tt_dit/models/transformers/wan2_2/attention_wan.py
+index d0ee1bf66788..3d219fd47448 100644
+--- a/models/tt_dit/models/transformers/wan2_2/attention_wan.py
++++ b/models/tt_dit/models/transformers/wan2_2/attention_wan.py
+@@ -22,6 +22,10 @@ from ....utils.tensor import bf16_tensor
+ import os as _ep4_os
+ 
+ _EP4_SDPA_BF8 = _ep4_os.environ.get("EP4_SDPA_BF8") == "1"
++_EP4_XATTN_MANUAL = _ep4_os.environ.get("EP4_XATTN_MANUAL") == "1"  # ep4 patch 13 (default off)
++_EP4_XATTN_CHUNK = int(_ep4_os.environ.get("EP4_XATTN_CHUNK", "4096"))
++_EP4_SATTN_MANUAL = _ep4_os.environ.get("EP4_SATTN_MANUAL") == "1"  # ep4 patch 13b (default off)
++_EP4_SATTN_CHUNK = int(_ep4_os.environ.get("EP4_SATTN_CHUNK", "1024"))
+ 
+ 
+ class WanAttention(Module):
+@@ -336,6 +340,45 @@ class WanAttention(Module):
+             )
+         return output
+ 
++    def _ep4_manual_cross_attn(self, q_BHNE, k_BHNE, v_BHNE, chunk=None):
++        """ep4 patch 13: softmax(q k^T / sqrt(E)) v with fp32 scores and an fp32 softmax; queries in chunks."""
++        if not hasattr(self, "_ep4_xck"):
++            self._ep4_xck = ttnn.init_device_compute_kernel_config(
++                self.mesh_device.arch(),
++                math_fidelity=ttnn.MathFidelity.HiFi4,
++                math_approx_mode=False,
++                fp32_dest_acc_en=True,
++                packer_l1_acc=False,
++            )
++        ck = self._ep4_xck
++        scale = 1.0 / (q_BHNE.shape[-1] ** 0.5)
++        kT = ttnn.transpose(k_BHNE, -2, -1)
++        b, h, n, e = q_BHNE.shape
++        outs = []
++        chunk = chunk or _EP4_XATTN_CHUNK
++        for s0 in range(0, n, chunk):
++            s1 = min(n, s0 + chunk)
++            whole = s0 == 0 and s1 == n
++            qc = q_BHNE if whole else ttnn.slice(q_BHNE, [0, 0, s0, 0], [b, h, s1, e])
++            S = ttnn.matmul(qc, kT, dtype=ttnn.float32, compute_kernel_config=ck)
++            S2 = ttnn.multiply(S, scale)
++            ttnn.deallocate(S)
++            P = ttnn.softmax(S2, dim=-1, numeric_stable=True, compute_kernel_config=ck)
++            ttnn.deallocate(S2)
++            Pb = ttnn.typecast(P, ttnn.bfloat16)
++            ttnn.deallocate(P)
++            outs.append(ttnn.matmul(Pb, v_BHNE, dtype=ttnn.bfloat16, compute_kernel_config=ck))
++            ttnn.deallocate(Pb)
++            if not whole:
++                ttnn.deallocate(qc)
++        ttnn.deallocate(kT)
++        if len(outs) == 1:
++            return outs[0]
++        o = ttnn.concat(outs, dim=2)
++        for x in outs:
++            ttnn.deallocate(x)
++        return o
++
+     def forward(
+         self,
+         spatial_1BND: ttnn.Tensor,
+@@ -509,6 +552,8 @@ class WanAttention(Module):
+                         ccl_core_grid_offset=(self.sdpa_worker_grid[0], 0),
+                         use_column_major_ccl=True,
+                     )
++            elif _EP4_SATTN_MANUAL:  # ep4 patch 13b (diagnosis, default off)
++                spatial_BHNE = self._ep4_manual_cross_attn(q_BHNE, k_BHNE, v_BHNE, chunk=_EP4_SATTN_CHUNK)
+             else:
+                 if ep4_bf8:  # the fused distributed rmsnorm only writes bf16 here: cast after it
+                     q_BHNE, k_BHNE, v_BHNE = (
+@@ -522,6 +567,9 @@ class WanAttention(Module):
+                     program_config=self.self_sdpa_program_config,
+                     compute_kernel_config=self.sdpa_compute_kernel_config,
+                 )
++        elif _EP4_XATTN_MANUAL and cross_attn_mask is None:
++            # ep4 patch 13: cross-attention with fp32 scores + fp32 softmax (the fused SDPA kernel loses 2-3 % here)
++            spatial_BHNE = self._ep4_manual_cross_attn(q_BHNE, k_BHNE, v_BHNE)
+         else:
+             # Cross attention
+             spatial_BHNE = ttnn.transformer.scaled_dot_product_attention(
+diff --git a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+index 5f3c20508b54..a025b3d8adf6 100644
+--- a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
++++ b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+@@ -144,7 +144,8 @@ class WanTransformerBlock(Module):
+ 
+         self.ff_compute_kernel_config = ttnn.init_device_compute_kernel_config(
+             mesh_device.arch(),
+-            math_fidelity=ttnn.MathFidelity.HiFi2,
++            # ep4 patch 14: EP4_FF_HIFI4=1 -> FFN matmuls at HiFi4 (diagnosis, default off)
++            math_fidelity=ttnn.MathFidelity.HiFi4 if os.environ.get("EP4_FF_HIFI4") == "1" else ttnn.MathFidelity.HiFi2,
+             math_approx_mode=False,
+             fp32_dest_acc_en=True,
+             packer_l1_acc=True,
+-- 
+2.54.0
+

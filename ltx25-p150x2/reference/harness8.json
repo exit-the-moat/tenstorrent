@@ -1,0 +1,10 @@
+[
+ {"name": "motion", "seed": 101, "prompt": "A red sports car drifts around a wet racetrack corner at dusk, spraying water, motion blur, the camera tracking alongside at low height."},
+ {"name": "face", "seed": 102, "prompt": "Close-up portrait of an elderly fisherman with a weathered face and a grey beard, slowly turning his head toward the camera and smiling, soft morning light, shallow depth of field."},
+ {"name": "text", "seed": 103, "prompt": "A neon sign reading \"OPEN LATE\" flickers on above the door of a small noodle shop on a rainy street at night, reflections in the puddles."},
+ {"name": "crowd", "seed": 104, "prompt": "A busy pedestrian crossing in Tokyo seen from above, hundreds of people with umbrellas crossing in all directions, light rain."},
+ {"name": "pan", "seed": 105, "prompt": "Slow camera pan from left to right across a mountain lake at sunrise, pine forest, mist on the water, snow-capped peaks in the background."},
+ {"name": "hands", "seed": 106, "prompt": "Hands of a potter shaping a clay bowl on a spinning wheel, wet clay, close-up, warm workshop light."},
+ {"name": "animal", "seed": 107, "prompt": "A golden retriever puppy runs through a field of tall grass toward the camera, ears flapping, late afternoon sun."},
+ {"name": "moat", "seed": 108, "prompt": "A dark stone castle built of circuit boards stands behind a glowing teal moat at night; a small figure climbs a golden ladder out of the moat while the sun rises behind the hills, cinematic, slow push-in."}
+]

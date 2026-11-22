@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 17 Nov 2026 19:23:16 +0100
+Subject: [PATCH] ep4 (wan1): EP4_SDPA_BF8 fixed: cast q/k/v after the fused
+ distributed rmsnorm (it only writes bf16) and the SDPA output back to bf16
+ (else the residual stream turns bf8). PCC vs CPU fp32 at steps 0/10/30: cond
+ 0.99989/0.99991/0.99950 (bf16 stock 0.99985/0.99992/0.99950)
+
+---
+ .../tt_dit/models/transformers/wan2_2/attention_wan.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/wan2_2/attention_wan.py b/models/tt_dit/models/transformers/wan2_2/attention_wan.py
+index f32fdd054517..7d1f24f497f1 100644
+--- a/models/tt_dit/models/transformers/wan2_2/attention_wan.py
++++ b/models/tt_dit/models/transformers/wan2_2/attention_wan.py
+@@ -405,8 +405,6 @@ class WanAttention(Module):
+         use_ring_sdpa = self.parallel_config.sequence_parallel.factor > 1
+         norm_output_dtype = sdpa_input_dtype if (use_ring_sdpa and prompt_1BLP is None) else None
+         ep4_bf8 = (not use_ring_sdpa) and prompt_1BLP is None and _EP4_SDPA_BF8
+-        if ep4_bf8:
+-            norm_output_dtype = ttnn.bfloat8_b
+ 
+         # Norm spatial before splitting heads
+         q_BHNE = self.norm_q(
+@@ -510,8 +508,10 @@ class WanAttention(Module):
+                         use_column_major_ccl=True,
+                     )
+             else:
+-                if ep4_bf8 and v_BHNE.dtype != ttnn.bfloat8_b:
+-                    v_BHNE = ttnn.typecast(v_BHNE, ttnn.bfloat8_b)
++                if ep4_bf8:  # the fused distributed rmsnorm only writes bf16 here: cast after it
++                    q_BHNE, k_BHNE, v_BHNE = (
++                        ttnn.typecast(x, ttnn.bfloat8_b) if x.dtype != ttnn.bfloat8_b else x for x in (q_BHNE, k_BHNE, v_BHNE)
++                    )
+                 spatial_BHNE = ttnn.transformer.scaled_dot_product_attention(
+                     q_BHNE,
+                     k_BHNE,
+@@ -532,6 +532,8 @@ class WanAttention(Module):
+                 compute_kernel_config=self.sdpa_compute_kernel_config,
+             )
+ 
++        if spatial_BHNE.dtype == ttnn.bfloat8_b and _EP4_SDPA_BF8:  # ep4: keep the residual stream in bf16
++            spatial_BHNE = ttnn.typecast(spatial_BHNE, ttnn.bfloat16)
+         spatial_1BND = ttnn.transformer.concatenate_heads(spatial_BHNE)
+         spatial_1BND = ttnn.unsqueeze(spatial_1BND, 0)
+ 
+-- 
+2.54.0
+

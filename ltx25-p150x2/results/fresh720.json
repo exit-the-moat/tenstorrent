@@ -1,0 +1,13 @@
+{
+ "source": "/ltx/logs/fresh720.log (run fresh_720p, 19 Nov 2026 01:55-01:59 UTC, 720p best preset)",
+ "gemma_load_s": 26.53,
+ "first_encode_compile_s": 7.98,
+ "encode_s": {
+  "motion": 0.655,
+  "face": 0.511,
+  "text": 0.497
+ },
+ "gemma_free_s": 0.01,
+ "gemma_reload_s": 11.67,
+ "reload_encode_s": 0.34
+}

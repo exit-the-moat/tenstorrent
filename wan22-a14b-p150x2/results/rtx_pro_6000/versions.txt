@@ -1,0 +1,41 @@
+## nvidia-smi
+Wed Nov 18 06:54:55 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.112.07             Driver Version: 595.112.07     CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:03:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+name, driver_version, memory.total [MiB], power.limit [W], clocks.max.sm [MHz], compute_cap
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 595.112.07, 97887 MiB, 600.00 W, 2430 MHz, 12.0
+## python
+3.11.11 (main, Dec  4 2024, 08:55:07) [GCC 11.4.0]
+torch 2.8.0.dev20250319+cu128 cuda 12.8
+NVIDIA RTX PRO 6000 Blackwell Server Edition
+## packages
+accelerate                1.16.0
+diffusers                 0.38.0
+huggingface_hub           1.33.0
+torch                     2.8.0.dev20250319+cu128
+torchaudio                2.6.0.dev20250319+cu128
+torchvision               0.22.0.dev20250319+cu128
+transformers              5.23.0
+## cpu
+128
+model name	: AMD EPYC 9355 32-Core Processor
+               total        used        free      shared  buff/cache   available
+Mem:            2015          54        1052          64         908        1886
+Swap:              0           0           0

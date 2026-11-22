@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 18 Nov 2026 16:14:12 +0100
+Subject: [PATCH] ep4 (wan2): patch 12 EP4_SDPA_HIFI4 / EP4_MM_HIFI4 (HiFi4 +
+ fp32 dest acc for SDPA, HiFi4 no-approx for attention matmuls); default off;
+ numerics A/B for the Lightning step-2 PCC gap
+
+---
+ .../tt_dit/models/transformers/wan2_2/attention_wan.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/models/tt_dit/models/transformers/wan2_2/attention_wan.py b/models/tt_dit/models/transformers/wan2_2/attention_wan.py
+index 7d1f24f497f1..d0ee1bf66788 100644
+--- a/models/tt_dit/models/transformers/wan2_2/attention_wan.py
++++ b/models/tt_dit/models/transformers/wan2_2/attention_wan.py
+@@ -180,11 +180,12 @@ class WanAttention(Module):
+                 exp_approx_mode=False,
+             )
+ 
++        _hifi = _ep4_os.environ.get("EP4_SDPA_HIFI4") == "1"  # ep4 patch 12 (default off)
+         self.sdpa_compute_kernel_config = ttnn.init_device_compute_kernel_config(
+             self.mesh_device.arch(),
+-            math_fidelity=ttnn.MathFidelity.HiFi2,
++            math_fidelity=ttnn.MathFidelity.HiFi4 if _hifi else ttnn.MathFidelity.HiFi2,
+             math_approx_mode=False,
+-            fp32_dest_acc_en=False,  # NOTE: Set to True if there's a correctness issue
++            fp32_dest_acc_en=_hifi,  # NOTE: Set to True if there's a correctness issue
+         )
+ 
+         self.rope_compute_kernel_config = ttnn.init_device_compute_kernel_config(
+@@ -198,10 +199,11 @@ class WanAttention(Module):
+         device_grid = self.mesh_device.compute_with_storage_grid_size()
+         self.core_grid = ttnn.CoreGrid(x=device_grid.x, y=device_grid.y)
+ 
++        _mmhifi = _ep4_os.environ.get("EP4_MM_HIFI4") == "1"  # ep4 patch 12 (default off)
+         self.mm_compute_kernel_config = ttnn.init_device_compute_kernel_config(
+             self.mesh_device.arch(),
+-            math_fidelity=ttnn.MathFidelity.HiFi2,
+-            math_approx_mode=True,
++            math_fidelity=ttnn.MathFidelity.HiFi4 if _mmhifi else ttnn.MathFidelity.HiFi2,
++            math_approx_mode=not _mmhifi,
+             fp32_dest_acc_en=True,
+             packer_l1_acc=True,
+         )
+-- 
+2.54.0
+

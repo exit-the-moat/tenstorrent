@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 18 Nov 2026 08:35:39 +0100
+Subject: [PATCH] ep4 (wan1): distill pipeline passes the EP4 weight-dtype
+ cache key (bf8 cache labelled bf8)
+
+---
+ models/tt_dit/experimental/pipelines/pipeline_wan_distill.py | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py b/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py
+index d0d1a4aa9452..964627cbd405 100644
+--- a/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py
++++ b/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py
+@@ -151,8 +151,11 @@ class WanDistillPipelineI2V(WanPipelineI2V):
+             return
+ 
+         filename = self.HIGH_NOISE_FILE if idx == 0 else self.LOW_NOISE_FILE
++        from models.tt_dit.models.transformers.wan2_2.transformer_wan import _ep4_weight_dtype
++
+         cache.load_model(
+             state.model,
++            dtype=_ep4_weight_dtype()[1],
+             model_name=self.CACHE_NAMESPACE,
+             subfolder=state.checkpoint.subfolder,
+             parallel_config=self.parallel_config,
+-- 
+2.54.0
+

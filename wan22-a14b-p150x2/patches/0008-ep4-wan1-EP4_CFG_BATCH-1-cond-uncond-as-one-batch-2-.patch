@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 18 Nov 2026 03:43:57 +0100
+Subject: [PATCH] ep4 (wan1): EP4_CFG_BATCH=1: cond+uncond as one batch-2
+ forward (default off, under test)
+
+---
+ .../models/transformers/wan2_2/transformer_wan.py     | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+index 6c3faf58ca08..8926a1b7298f 100644
+--- a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
++++ b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+@@ -673,6 +673,17 @@ class WanTransformer3DModel(Module):
+         *,
+         gather_output: bool = True,
+     ) -> ttnn.Tensor:
++        if do_classifier_free_guidance and os.environ.get("EP4_CFG_BATCH") == "1":
++            spatial_2 = ttnn.concat([spatial_1BNI, spatial_1BNI], dim=1)
++            prompt_2 = ttnn.concat([prompt_1BLP, negative_prompt_1BLP], dim=1)
++            both = self.inner_step(
++                spatial_2, prompt_2, rope_cos_1HND, rope_sin_1HND, trans_mat, N, timestep, gather_output=gather_output
++            )
++            B2 = both.shape[1]
++            cond = ttnn.slice(both, [0, 0, 0, 0], [both.shape[0], B2 // 2, both.shape[2], both.shape[3]])
++            uncond = ttnn.slice(both, [0, B2 // 2, 0, 0], [both.shape[0], B2, both.shape[2], both.shape[3]])
++            return ttnn.lerp(uncond, cond, guidance_scale)
++
+         cond = self.inner_step(
+             spatial_1BNI,
+             prompt_1BLP,
+-- 
+2.54.0
+

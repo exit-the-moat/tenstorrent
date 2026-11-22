@@ -1,0 +1,67 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Wed, 18 Nov 2026 15:52:30 +0100
+Subject: [PATCH] ep4 (wan2): patch 11 EP4_DIT_WEIGHTS_HIGH /
+ EP4_DIT_WEIGHTS_LOW per-expert weight dtype (default unset =
+ EP4_DIT_WEIGHTS). For Lightning: merged low-noise expert in bf16 (bf8 drops
+ the ~1-ULP LoRA delta again: step-2 PCC 0.971 bf8 vs base 0.998)
+
+---
+ .../experimental/pipelines/pipeline_wan_distill.py   |  2 +-
+ .../models/transformers/wan2_2/transformer_wan.py    | 12 ++++++++----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py b/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py
+index 6446c35456c6..b675ad9efb2b 100644
+--- a/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py
++++ b/models/tt_dit/experimental/pipelines/pipeline_wan_distill.py
+@@ -160,7 +160,7 @@ class WanDistillPipelineI2V(WanPipelineI2V):
+         sub = state.checkpoint.subfolder
+         cache.load_model(
+             state.model,
+-            dtype=_ep4_weight_dtype()[1],
++            dtype=_ep4_weight_dtype(sub)[1],
+             model_name=self.CACHE_NAMESPACE + _ep4_cache_suffix(sub),
+             subfolder=state.checkpoint.subfolder,
+             parallel_config=self.parallel_config,
+diff --git a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+index 95dd0035983f..5f3c20508b54 100644
+--- a/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
++++ b/models/tt_dit/models/transformers/wan2_2/transformer_wan.py
+@@ -713,9 +713,13 @@ class WanTransformer3DModel(Module):
+         return combined
+ 
+ 
+-def _ep4_weight_dtype():
+-    """(ttnn dtype or None, cache key) from EP4_DIT_WEIGHTS (unset/bf16 = stock bf16)."""
++def _ep4_weight_dtype(subfolder: str | None = None):
++    """(ttnn dtype or None, cache key) from EP4_DIT_WEIGHTS (unset/bf16 = stock bf16); per expert, EP4_DIT_WEIGHTS_HIGH
++    (transformer) / EP4_DIT_WEIGHTS_LOW (transformer_2) override it (ep4 patch 11)."""
+     v = os.environ.get("EP4_DIT_WEIGHTS", "bf16")
++    per = {"transformer": "EP4_DIT_WEIGHTS_HIGH", "transformer_2": "EP4_DIT_WEIGHTS_LOW"}.get(subfolder or "")
++    if per and os.environ.get(per):
++        v = os.environ[per]
+     if v == "bf16":
+         return None, "bf16"
+     if v == "bf8":
+@@ -864,7 +868,7 @@ class WanCheckpoint:
+         Loading is deferred so the caller can manage the lifecycle (deallocate / reload).
+         """
+         c = self._config
+-        with weight_dtype_override(_ep4_weight_dtype()[0]):
++        with weight_dtype_override(_ep4_weight_dtype(self._subfolder)[0]):
+             return self._build(c, ccl_manager, parallel_config, is_fsdp, model_type, lora_enabled)
+ 
+     def _build(self, c, ccl_manager, parallel_config, is_fsdp, model_type, lora_enabled):
+@@ -900,7 +904,7 @@ class WanCheckpoint:
+         cache.load_model(
+             tt_model=model,
+             get_torch_state_dict=self._load_state_dict,
+-            dtype=_ep4_weight_dtype()[1],
++            dtype=_ep4_weight_dtype(self._subfolder)[1],
+             model_name=os.path.basename(self._name) + _ep4_cache_suffix(self._subfolder),
+             subfolder=self._subfolder,
+             parallel_config=parallel_config,
+-- 
+2.54.0
+

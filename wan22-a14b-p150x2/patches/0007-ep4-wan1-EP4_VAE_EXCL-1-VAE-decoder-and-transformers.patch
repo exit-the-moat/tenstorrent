@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Exit the Moat <no-reply@exit-the-moat.com>
+Date: Tue, 17 Nov 2026 22:10:56 +0100
+Subject: [PATCH] ep4 (wan1): EP4_VAE_EXCL=1: VAE decoder and transformers
+ never co-resident (720p VAE OOM fix; default off)
+
+---
+ models/tt_dit/pipelines/wan/pipeline_wan.py | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/models/tt_dit/pipelines/wan/pipeline_wan.py b/models/tt_dit/pipelines/wan/pipeline_wan.py
+index 16861e0eb501..69c30d4dacb5 100644
+--- a/models/tt_dit/pipelines/wan/pipeline_wan.py
++++ b/models/tt_dit/pipelines/wan/pipeline_wan.py
+@@ -392,6 +392,11 @@ class WanPipeline(PipelineAPIMixin):
+                 self.transformer_2.register_coresident_exclusions(self.transformer, self._vae.decoder)
+                 self._vae.decoder.register_coresident_exclusions(self.transformer, self.transformer_2)
+ 
++        if _ep4_os.environ.get("EP4_VAE_EXCL") == "1":
++            self.transformer.register_coresident_exclusions(self._vae.decoder)
++            self.transformer_2.register_coresident_exclusions(self._vae.decoder)
++            self._vae.decoder.register_coresident_exclusions(self.transformer, self.transformer_2)
++
+         # Cache warmup: Load in reverse order of use to ensure the earliest required models stay loaded before call.
+         self._prepare_transformer(1)
+         self._prepare_transformer(0)
+-- 
+2.54.0
+
