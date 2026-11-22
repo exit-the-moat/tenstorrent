@@ -31,7 +31,7 @@ power-capped at ~970-1,150 of 1,350 MHz). LTX-2.5: -59 % at 720p against the fir
 RTX numbers are our own runs on a rented GPU with the stock pipelines (no FP8, no FlashAttention, no compile). Every
 clip these packages make is AI-generated.
 
-Video: (link added at release)
+Video: https://youtu.be/JnCu-uGYe9A
 
 ## Episode 3 in numbers: Qwen-Image-2512 on 1 and 2 Tenstorrent p150a
 
@@ -141,7 +141,7 @@ optimization.
 
 | # | Topic | Folder |
 |---|---|---|
-| 4 | Wan 2.2 and LTX 2.5 on 2 Tenstorrent p150 Blackhole: The Motion Picture (text-to-video, image-to-video, distilled models, video with sound) | [`wan22-a14b-p150x2/`](wan22-a14b-p150x2) · [`ltx25-p150x2/`](ltx25-p150x2) · video: (link added at release) |
+| 4 | Wan 2.2 and LTX 2.5 on 2 Tenstorrent p150 Blackhole: The Motion Picture (text-to-video, image-to-video, distilled models, video with sound) | [`wan22-a14b-p150x2/`](wan22-a14b-p150x2) · [`ltx25-p150x2/`](ltx25-p150x2) · video: [YouTube](https://youtu.be/JnCu-uGYe9A) |
 | 3 | Episode 3 · Qwen-Image-2512 on 2 Tenstorrent Blackholes: THE RENDER SPRINT (full-HD pictures on 1 and 2 p150a, four ways to split the work, the music-video prompts) | [`qwen-image-2512-p150x2/`](qwen-image-2512-p150x2) · video: [YouTube](https://youtu.be/pllVxuibc_g) |
 | 2 | Qwen 3.8 27B on 2 Tenstorrent p150: optimization results (DFlash2 on 1 and 2 cards, one switch per setup; follow-up 12 Nov: 4 parallel chats, 459 tok/s total) | [`qwen38-27b-p150-dflash2/`](qwen38-27b-p150-dflash2) · video: [YouTube](https://youtu.be/TFR_2J9H__Q) |
 | 1 | Qwen 3.8 27B on 2 Tenstorrent p150: getting started (vLLM-TT on 1 and 2 cards, the team benchmark, the patches) | [`qwen38-27b-p150x2/`](qwen38-27b-p150x2) · video: [YouTube](https://youtu.be/3AvhL99p77M) |
